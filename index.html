@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yan He · 贺岩 — Complex Geometry</title>
+<meta name="description" content="Yan He (贺岩), Assistant Professor of Mathematics at Guangzhou University. Complex and algebraic geometry: Ohsawa–Takegoshi extension, pluripotential theory, Nevanlinna theory." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous" />
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --bg-soft: #f3f1ea;
+    --ink: #1c1b19;
+    --ink-soft: #565248;
+    --line: #e2ded3;
+    --accent: #7a2e1d;
+    --accent-soft: #a85c44;
+    --max: 760px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14130f;
+      --bg-soft: #1d1b16;
+      --ink: #eceae3;
+      --ink-soft: #a8a195;
+      --line: #2c2922;
+      --accent: #d98b6f;
+      --accent-soft: #c5755a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-soft); text-decoration: underline; text-underline-offset: 3px; }
+  h1, h2, h3 { font-family: "Newsreader", Georgia, serif; font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; }
+
+  /* ---------- Header / hero ---------- */
+  header { padding: 88px 0 56px; }
+  .eyebrow {
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 18px;
+  }
+  h1 { font-size: clamp(2.6rem, 7vw, 3.9rem); margin: 0 0 6px; }
+  h1 .cn { font-size: 0.5em; color: var(--ink-soft); font-weight: 400; margin-left: 0.4em; letter-spacing: 0.05em; }
+  .role { font-size: 1.15rem; color: var(--ink-soft); margin: 0 0 26px; font-family: "Newsreader", serif; font-style: italic; }
+  .lede { font-size: 1.18rem; max-width: 60ch; color: var(--ink); }
+  .lede strong { font-weight: 600; }
+
+  nav.top {
+    display: flex; gap: 26px; flex-wrap: wrap; margin-top: 38px;
+    font-size: 14px; letter-spacing: 0.02em;
+  }
+  nav.top a { color: var(--ink-soft); font-weight: 500; }
+  nav.top a:hover { color: var(--accent); text-decoration: none; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 46px 0; border-top: 1px solid var(--line); }
+  .sec-head {
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-soft); font-weight: 600; margin: 0 0 28px;
+  }
+  h2 { font-size: 1.9rem; margin: 0 0 18px; }
+  h3 { font-size: 1.2rem; margin: 0 0 6px; }
+  p { margin: 0 0 16px; }
+  .muted { color: var(--ink-soft); }
+
+  .eq {
+    background: var(--bg-soft); border: 1px solid var(--line); border-radius: 10px;
+    padding: 22px 20px; margin: 24px 0; overflow-x: auto; text-align: center;
+  }
+  .eq .cap { font-size: 13px; color: var(--ink-soft); margin-top: 12px; font-family: "Inter", sans-serif; }
+
+  ul.themes { list-style: none; padding: 0; margin: 22px 0 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  ul.themes li { background: var(--bg); padding: 14px 18px; display: flex; gap: 14px; align-items: baseline; }
+  ul.themes li b { font-family: "Newsreader", serif; font-weight: 500; }
+  ul.themes li span { color: var(--ink-soft); font-size: 0.95em; }
+
+  .pub { padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .pub:last-child { border-bottom: none; }
+  .pub .title { font-family: "Newsreader", serif; font-size: 1.12rem; font-weight: 500; }
+  .pub .meta { color: var(--ink-soft); font-size: 0.95em; margin-top: 3px; }
+  .pub .venue { font-style: italic; }
+  .pub .year { float: right; font-family: "JetBrains Mono", monospace; font-size: 0.85em; color: var(--accent); }
+
+  .timeline { margin: 6px 0 0; }
+  .tl { display: grid; grid-template-columns: 130px 1fr; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .tl:last-child { border-bottom: none; }
+  .tl .when { font-family: "JetBrains Mono", monospace; font-size: 0.82em; color: var(--ink-soft); padding-top: 4px; }
+  .tl .what b { font-family: "Newsreader", serif; font-weight: 500; font-size: 1.08rem; }
+  .tl .what .where { color: var(--ink-soft); }
+
+  .beyond p { max-width: 62ch; }
+  .feature {
+    background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 10px; padding: 22px 24px; margin: 22px 0 30px;
+  }
+  .feature .kicker { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .feature h3 { font-size: 1.35rem; margin: 8px 0 10px; }
+  .feature p { margin: 0; color: var(--ink); }
+  .projects { list-style: none; padding: 0; margin: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .projects li { background: var(--bg); padding: 16px 18px; }
+  .projects li b { font-family: "Newsreader", serif; font-weight: 500; font-size: 1.08rem; }
+  .projects li p { margin: 4px 0 0; color: var(--ink-soft); font-size: 0.96em; max-width: none; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .tags span {
+    font-family: "JetBrains Mono", monospace; font-size: 12px;
+    background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink-soft);
+    padding: 5px 11px; border-radius: 100px;
+  }
+
+  .contact a { font-family: "Newsreader", serif; font-size: 1.15rem; }
+  .contact .row { display: flex; gap: 12px; align-items: baseline; margin-bottom: 10px; }
+  .contact .k { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); width: 92px; flex: none; }
+
+  footer { padding: 40px 0 70px; color: var(--ink-soft); font-size: 13px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 540px) {
+    .tl { grid-template-columns: 1fr; gap: 2px; }
+    .pub .year { float: none; display: block; margin-bottom: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Complex &amp; Algebraic Geometry · 数学</div>
+    <h1>Yan He<span class="cn">贺岩</span></h1>
+    <p class="role">Assistant Professor (<em>Jiangshi</em>) by special appointment (<em>Quanzhitepin</em>), also a faculty postdoc (<em>Shizi Bohou</em>) · School of Mathematics &amp; Information Science, Guangzhou University</p>
+    <p class="lede">I work in <strong>complex and algebraic geometry</strong> — the analytic side of it. My research centers on the <strong>Ohsawa–Takegoshi extension theorem</strong> and pluripotential theory, with separate interests in <strong>Nevanlinna theory</strong> and hyperbolicity. I also build things: small, sharp software systems that let me work the way I want to.</p>
+    <nav class="top">
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="#path">Path</a>
+      <a href="#building">AI &amp; building</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section id="research">
+    <div class="sec-head">Research</div>
+    <h2>The optimal constant, and what geometry hides inside it</h2>
+    <p>The Ohsawa–Takegoshi extension theorem is one of the central analytic tools of modern complex and algebraic geometry: it guarantees that a holomorphic function defined on a subvariety extends to the whole space, with explicit <em>L²</em> control. The size of the constant in that control is not a technicality — it ties directly to Bergman kernel estimates, the Suita conjecture, Skoda's division theorem, and the existence of sections in algebraic geometry.</p>
+
+    <div class="eq">
+      <span id="formula"></span>
+      <div class="cap">Extension with controlled L² norm — the constant <em>C</em> is where the geometry lives.</div>
+    </div>
+
+    <p>Using the <strong>Berndtsson–Lempert method</strong> together with geodesics in the space of Kähler metrics and the <strong>Ross–Witt Nyström correspondence</strong>, I work toward understanding and computing this optimal constant — and toward turning that understanding into new proofs of Skoda's <em>L²</em> division theorem and new effective criteria around the existence of holomorphic sections of <em>K<sub>X</sub> + L</em> (the Fujita-conjecture circle of problems).</p>
+
+    <p>A separate line of work runs through <strong>value distribution theory</strong>: developing a Nevanlinna-theoretic notion of hyperbolicity, and asking whether it is equivalent to Kobayashi hyperbolicity.</p>
+
+    <ul class="themes">
+      <li><b>Extension &amp; L² methods</b> <span>Ohsawa–Takegoshi, optimal constants, Bergman kernels</span></li>
+      <li><b>Pluripotential theory</b> <span>geodesics in spaces of Kähler metrics, Berndtsson–Lempert</span></li>
+      <li><b>Algebraic geometry</b> <span>Skoda division, sections of K<sub>X</sub>+L, Fujita conjecture</span></li>
+      <li><b>Value distribution</b> <span>Nevanlinna theory, hyperbolicity</span></li>
+    </ul>
+  </section>
+
+  <section id="publications">
+    <div class="sec-head">Selected Publications</div>
+    <h2>Papers</h2>
+
+    <div class="pub">
+      <span class="year">preprint</span>
+      <div class="title"><a href="https://arxiv.org/abs/2311.03840">Ross–Witt Nyström correspondence and Ohsawa–Takegoshi extension</a></div>
+      <div class="meta">Yan He, Johannes Testorf, Xu Wang · <span class="venue">arXiv:2311.03840</span></div>
+    </div>
+
+    <div class="pub">
+      <span class="year">2021</span>
+      <div class="title">Nevanlinna and algebraic hyperbolicity</div>
+      <div class="meta">Yan He, Min Ru · <span class="venue">International Journal of Mathematics</span></div>
+    </div>
+
+    <div class="pub">
+      <span class="year">2021</span>
+      <div class="title">Nevanlinna theory through the Brownian motion</div>
+      <div class="meta">Xianjing Dong, Yan He, Min Ru · <span class="venue">Science China Mathematics</span></div>
+    </div>
+
+    <div class="pub">
+      <span class="year">2021</span>
+      <div class="title">A generalized subspace theorem for closed subschemes in subgeneral position</div>
+      <div class="meta"><span class="venue">Journal of Number Theory</span></div>
+    </div>
+
+    <p class="muted" style="margin-top:22px; font-size:0.95em;">Current work in preparation: optimal constants in the Ohsawa–Takegoshi theorem via Berndtsson–Lempert, and partial Bergman kernel estimates on compact Riemann surfaces.</p>
+  </section>
+
+  <section id="path">
+    <div class="sec-head">Path</div>
+    <h2>Where I've been</h2>
+    <div class="timeline">
+      <div class="tl">
+        <div class="when">2026 —</div>
+        <div class="what"><b>Assistant Professor</b><div class="where">Guangzhou University · School of Mathematics &amp; Information Science</div></div>
+      </div>
+      <div class="tl">
+        <div class="when">2022 – 2025</div>
+        <div class="what"><b>Postdoctoral Researcher</b><div class="where">Norwegian University of Science and Technology (NTNU), Trondheim · with Xu Wang</div></div>
+      </div>
+      <div class="tl">
+        <div class="when">2016 – 2021</div>
+        <div class="what"><b>Ph.D. in Mathematics</b><div class="where">University of Houston · advisor Min Ru</div></div>
+      </div>
+      <div class="tl">
+        <div class="when">2012 – 2016</div>
+        <div class="what"><b>B.S. in Mathematics</b><div class="where">Renmin University of China, Beijing</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="building" class="beyond">
+    <div class="sec-head">AI &amp; Building</div>
+    <h2>I build the tools I work with</h2>
+    <p>Alongside the mathematics, I design and build software — usually small, sharp systems that get language models to do real, reliable work instead of demos. The instinct is the same one I bring to a proof: find the actual structure, then make it clean.</p>
+
+    <div class="feature">
+      <div class="kicker">Flagship · 2026</div>
+      <h3>A Modular Framework for AI-Assisted Math Research</h3>
+      <p>A document system that makes the dependency structure of mathematics explicit: every lemma, computation, or definition is a node in a directed acyclic graph, with machine-readable links to its context, prerequisites, and consequents. Numbered, individually-annotated proof steps let me tell an AI collaborator <em>exactly</em> which step is unclear — and any subtopic can be promoted to a self-contained subproject, anchored to its parent. The design borrows a principle from scheme theory: there is no absolute object, only an object <em>over its base</em>.</p>
+      <p style="margin-top:14px; font-size:0.95em;"><a href="https://github.com/dazhima/math-ai-framework">github.com/dazhima/math-ai-framework&nbsp;→</a></p>
+    </div>
+
+    <ul class="projects">
+      <li>
+        <b>Paperwork agent</b>
+        <p>A local-first assistant that reads Chinese academic and administrative forms, reuses durable facts, and produces copy-paste fill sheets — turning a recurring tax of academic life into a few clicks.</p>
+      </li>
+      <li>
+        <b>Self-hosted message hub</b>
+        <p>An AI agent node on a home VM that collects messages from WeChat, WeCom, and email, then syncs them to my working machine for downstream processing.</p>
+      </li>
+      <li>
+        <b>Live football explainer</b>
+        <p>A real-time feed that turns live match commentary into plain-English explanation — speech-to-text into a streaming language model.</p>
+      </li>
+      <li>
+        <b>Personal compute fabric</b>
+        <p>A private network layer that routes my machines through my own infrastructure, plus a reverse-tunnel setup that turns a second laptop into an on-demand remote-compute node.</p>
+      </li>
+    </ul>
+
+    <div class="tags">
+      <span>complex geometry</span>
+      <span>L² methods</span>
+      <span>Nevanlinna theory</span>
+      <span>AI agents</span>
+      <span>knowledge systems</span>
+      <span>automation</span>
+      <span>self-hosting</span>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="sec-head">Contact</div>
+    <h2>Get in touch</h2>
+    <div class="row"><div class="k">Email</div><span><a href="mailto:yanhe@gzhu.edu.cn">yanhe@gzhu.edu.cn</a> · <a href="mailto:yanhe@posteo.de">yanhe@posteo.de</a></span></div>
+    <div class="row"><div class="k">Office</div><span class="muted">Room 222, 行政西楼后座 · School of Mathematics &amp; Information Science, Guangzhou University · University Town, Panyu, Guangzhou</span></div>
+    <p class="muted" style="margin-top:18px;">Open to collaboration in complex/algebraic geometry, students interested in several complex variables, and conversations about AI-assisted research workflows.</p>
+  </section>
+
+  <footer>
+    © 2026 Yan He · 贺岩 — Built from scratch, like everything worth keeping.
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script>
+  try {
+    katex.render(
+      "\\int_{X} |F|^2\\, e^{-\\varphi}\\, dV_X \\;\\le\\; C \\int_{V} |f|^2\\, e^{-\\varphi}\\, dV_V",
+      document.getElementById("formula"),
+      { throwOnError: false, displayMode: true }
+    );
+  } catch (e) {
+    document.getElementById("formula").textContent =
+      "∫_X |F|² e^(−φ) dV  ≤  C · ∫_V |f|² e^(−φ) dV";
+  }
+</script>
+
+</body>
+</html>
