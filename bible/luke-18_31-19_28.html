@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路加福音 18:31–19:28 · 三语共读</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+    --blue:#3d6d99; --blue-soft:#dde8f2;
+    --brown:#8b6a3f; --brown-soft:#efe3cd;
+    --wine:#8c3d4f; --wine-soft:#f3e0e3;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:1.4rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  header.doc .kjv-note{margin-top:.7rem; padding:.7rem .9rem; background:var(--blue-soft);
+    border:1px solid #c7d9e8; border-left:3px solid var(--blue); border-radius:6px;
+    font-family:system-ui,sans-serif; font-size:.82rem; line-height:1.8; color:#2c4a63}
+  header.doc .kjv-note b{color:#1f3a50}
+  .mapbox{margin:1.2rem 0; padding:1rem 1rem .8rem; background:#fdfbf5; border:1px solid var(--line); border-radius:8px}
+  #geomap{width:100%; height:420px; border-radius:8px; border:1px solid var(--line)}
+  .leaflet-tooltip.map-region-label{background:transparent; border:none; box-shadow:none;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-weight:700; font-size:.85rem;
+    color:#5c2a35; text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff}
+  .map-cap{margin-top:.6rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; line-height:1.7; color:var(--muted); text-align:center}
+  .toc{font-family:system-ui,"PingFang SC",sans-serif; font-size:.8rem; color:var(--muted); margin-bottom:2rem; line-height:1.9}
+  .toc a{color:var(--amber); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid var(--line)}
+  section h2{font-size:1.25rem; margin:0 0 .5rem; font-family:"Iowan Old Style",Georgia,serif}
+  .ref-tag{display:inline-block; font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700;
+    letter-spacing:.03em; color:var(--amber); background:var(--amber-soft); border-radius:5px;
+    padding:.08rem .4rem; margin-right:.5rem; vertical-align:.15em}
+  .beat-lead{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.85rem;
+    color:var(--muted); margin-bottom:1.1rem; line-height:1.7}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:.6rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.15rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.4em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby .zh-ruby rt{display:none}
+  .hide-ruby .zh-ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  ruby.eng-ruby rt{font-family:system-ui,sans-serif; font-style:normal; font-size:.52em; color:var(--blue); font-weight:600}
+  .hide-en-notes .eng-ruby rt{display:none}
+  .hide-en-notes .eng-ruby{ -webkit-text-decoration:underline dotted #b9cfe0; text-decoration:underline dotted #b9cfe0}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.88rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks,.en-notes{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .en-notes{background:#f4f8fb; border-left-color:var(--blue)}
+  .hide-remarks .remarks{display:none}
+  .hide-en-notes .en-notes{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .t-en{background:var(--blue-soft); color:var(--blue)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin:1.4rem 0 .4rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .history{margin:0 0 1.3rem; padding:.7rem 1rem; background:var(--brown-soft); border:1px solid #ddc9a3; border-left:3px solid var(--brown); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.84rem; line-height:1.8; color:#4a3a20}
+  .history summary{cursor:pointer; font-size:.88rem; font-weight:700; color:#3d2f18; padding:.15rem 0; list-style:revert}
+  .history summary::marker{color:var(--brown)}
+  .history[open] summary{margin-bottom:.5rem}
+  .history-body p{margin:.5rem 0}
+  .history-body p:first-child{margin-top:0}
+  .history-body p:last-child{margin-bottom:0}
+  .hide-history .history{display:none}
+  .discuss{margin:1.2rem 0 .4rem; padding:.9rem 1rem 1rem; background:var(--wine-soft); border:1px solid #e3c3ca; border-left:3px solid var(--wine); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.87rem; line-height:1.8; color:#5c2a35}
+  .discuss h3{margin:.1rem 0 .6rem; font-size:.92rem; color:#4a1f28}
+  .discuss ol{margin:0; padding-left:1.3rem}
+  .discuss li{margin:.55rem 0}
+  .hide-discuss .discuss{display:none}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">查经</a> &rsaquo; 路加福音 &rsaquo; <b>18:31–19:28</b> &nbsp;·&nbsp; 三语共读</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">KJV</button>
+  <button class="btn" id="t-enotes">英语讲解</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-hist">背景</button>
+  <button class="btn" id="t-disc">查经问题</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>路加福音 18:31–19:28</h1>
+    <div class="sub">和合本(中文, 阅读对象) · Nestle 1904(希腊原文, 锚点) · KJV(英译, 平行参照 — 也可直接读)</div>
+    <div class="lead">
+      与 socrate 项目不同：这里的中文<b>不是</b>现场从希腊语翻译出来的，和合本本身就是一个独立、权威的既有译本，直接作为阅读对象。希腊文只作锚点，只标出个别值得注意的词——不做逐句直译。KJV 作为另一路独立译本，跟和合本平行对照，分歧处会标出来(对照)。<b>释义</b>留白，现场一起填。
+    </div>
+    <div class="kjv-note">
+      <b>怎么读KJV(1611年英语)的几个常见古体：</b> thou/thee/thy/thine = 单数「你/你的」；ye = 复数「你们」；
+      动词词尾 <b>-est/-eth</b> 表第二/第三人称单数现在时(wilt=will、doth=does、hast=have、goeth=goes、saith=says、spake=spoke)；
+      unto = to。这些很常见，就不逐一标注了；下面只标真正会让人卡住的<b>词汇/古今异义词</b>，点「英语讲解」可以单独关/开。
+    </div>
+    <div class="mapbox">
+      <div id="geomap"></div>
+      <div class="map-cap">底图为 OpenStreetMap 实景地图(需要联网加载)。橙色实线=18:31/19:28耶稣此段实际走的耶利哥→耶路撒冷路(约27公里，爬升约1000米)；橙色虚线=当时犹太人从加利利经比利亚(约旦河东岸)绕开撒玛利亚的常规朝圣路线(约瑟夫斯《犹太古史》20.118)。点标记可点击查看说明；两条路线画法为大致标注，不是逐段还原的古道遗址。</div>
+    </div>
+    <div class="toc"><a href="#beat1">18:31–34 第三次预言受难与复活</a> · <a href="#beat2">18:35–43 耶利哥城外的瞎子</a> · <a href="#beat3">19:1–10 撒该</a> · <a href="#beat4">19:11–27 十锭银子的比喻</a> · <a href="#beat5">19:28 过渡句</a></div>
+  </header>
+
+<section id="beat1">
+  <h2><span class="ref-tag">18:31–34</span> 第三次预言受难与复活</h2>
+  <div class="beat-lead">耶稣带门徒第三次预言自己将受难、复活；门徒完全不懂。这是全书上耶路撒冷之路的又一次转折点。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>地理：</b>这段话是耶稣从耶利哥再往上走去耶路撒冷途中说的——耶利哥在海平面以下约250米，耶路撒冷在海拔约750米，两地相距20多公里，要爬升1000米左右，「上耶路撒冷」(ἀναβαίνομεν)首先是字面意义上的爬坡，不只是比喻。这条从加利利经比利亚、耶利哥上耶路撒冷的路线，是当时犹太人为避开撒玛利亚而走的常规朝圣路线(约瑟夫斯《犹太古史》20.118)。</p>
+<p><b>私下告知：</b>耶稣只把这个预言告诉「十二个门徒」，不是对众人说——这符合旧约先知「私下领受启示」的模式(参阿摩司书3:7：「主耶和华若不将奥秘指示他的仆人众先知，就不做什么」)。</p>
+<p><b>受难方式的细节：</b>「鞭打」和「交给外邦人」具体指向罗马式的处决程序——鞭刑是罗马钉十字架前的标准步骤(参约瑟夫斯《犹太战记》2.306, 5.449)，不是犹太律法对亵渎罪的刑罚(用石头打死，参约8:59；徒7:58 司提反被石头打死)。耶稣在这里预言的，具体是罗马人的死法。</p>
+    </div>
+  </details>
+  <div class="unit para-start" id="v18-31">
+    <p class="sent"><span class="zh-body"><span class="n">18:31</span>耶穌帶著十二個門徒, 對他們說, 看哪, 我們上<ruby class="zh-ruby">耶路撒冷<rt>Ierousalēm</rt></ruby>去．先知所寫的一切事, 都要成就在<ruby class="zh-ruby">人子<rt>huiō tou anthrōpou</rt></ruby>身上．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Παραλαβὼν δὲ τοὺς δώδεκα εἶπεν πρὸς αὐτούς Ἰδοὺ ἀναβαίνομεν εἰς Ἱερουσαλήμ,καὶ τελεσθήσεται πάντα τὰ γεγραμμένα διὰ τῶν προφητῶν τῷ Υἱῷ τοῦ ἀνθρώπου·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then he took unto him the twelve, and said unto them, Behold, we go up to Jerusalem, and all things that are written by the prophets concerning the Son of man shall be accomplished.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>Υἱὸς τοῦ ἀνθρώπου</b> · huios tou anthrōpou <span class='zh'>「人子」——耶稣自称最常用的头衔，此处紧接在「先知所写的都要应验」之后，把这个头衔与旧约预言绑在一起。</span></div>
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>此处动词是 <b class='gk'>τελεσθήσεται</b>(将要应验/完成)，而不是路加福音9:22第一次预言受难时用的 <b class='gk'>δεῖ</b>(必须)——「δεῖ τὸν Υἱὸν τοῦ ἀνθρώπου παθεῖν」。两处用词不同：9:22 强调必然性，这里强调「先知所写的」应验。KJV 的 accomplished、和合本的「成就」都传达了这一层。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v18-32">
+    <p class="sent"><span class="zh-body"><span class="n">18:32</span>他將要被<ruby class="zh-ruby">交給<rt>paradothēsetai</rt></ruby>外邦人, 他們要戲弄他, 凌辱他, 吐唾沫在他臉上．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>παραδοθήσεται γὰρ τοῖς ἔθνεσιν καὶ ἐμπαιχθήσεται καὶ ὑβρισθήσεται καὶ ἐμπτυσθήσεται,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For he shall be delivered unto the Gentiles, and shall be mocked, and <ruby class="eng-ruby">spitefully entreated<rt>insulted, treated with contempt</rt></ruby>, and <ruby class="eng-ruby">spitted on<rt>spat on</rt></ruby>:</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>παραδοθήσεται</b> · paradothēsetai <span class='zh'>被动语态，「将被交给」——没有指明施动者。后来犹大「出卖」耶稣用的正是同一个动词词根(παραδίδωμι)。这里比较抽象、笼统，还没有点名谁来「交」。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「spitefully entreated」= 以侮辱/羞辱对待——这里 entreat 是「对待」的古义，不是现代常见的「恳求」；「spitted on」是 spit 的古体过去式，等于现代的 spat on。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v18-33">
+    <p class="sent"><span class="zh-body"><span class="n">18:33</span>並要鞭打他, 殺害他．第三日他要復活.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ μαστιγώσαντες ἀποκτενοῦσιν αὐτόν,καὶ τῇ ἡμέρᾳ τῇ τρίτῃ ἀναστήσεται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they shall scourge him, and put him to death: and the third day he shall rise again.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v18-34">
+    <p class="sent"><span class="zh-body"><span class="n">18:34</span>這些事門徒一樣也不懂得, 意思乃是隱藏的, 他們不曉得所說的是甚麼.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ αὐτοὶ οὐδὲν τούτων συνῆκαν,καὶ ἦν τὸ ῥῆμα τοῦτο κεκρυμμένον ἀπ’αὐτῶν,καὶ οὐκ ἐγίνωσκον τὰ λεγόμενα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they understood none of these things: and this saying was hid from them, neither knew they the things which were spoken.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「不懂得」(συνῆκαν)、「隐藏」(κεκρυμμένον)、「不晓得」(ἐγίνωσκον)——三个不同的动词连续否定门徒的理解。紧接着下一段(18:35-43)的主角是个瞎子，这个先后顺序是巧合还是编排，留给你判断。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    这段用「应验」(τελεσθήσεται)而不是「必须」(δεῖ，参路9:22)——这个动词选择在强调什么，跟9:22比有什么不一样？ 「被交给外邦人」用被动语态，没指明是谁交的——这个模糊想造成什么效果？ 门徒「不懂」「隐藏」「不知道」连用三次，紧接着下一段主角是个瞎子——这个先后顺序，你会怎么读？
+  </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>18:34「他们不懂得」(συνῆκαν)和24:45「他打开他们的心窍，使他们能明白」(διήνοιξεν...τοῦ συνιέναι)用的是同一个希腊词根(συνίημι)——路加把这个「懂/不懂」的问题一路拖到复活之后才收尾，而且解决方式不是耶稣讲得更清楚，是他「打开」了门徒的心窍(24:45)，也打开了以马忤斯路上两个人的眼睛(24:31，διανοίγω)，甚至直接骂他们「无知的人哪，心里迟钝」(24:25)。如果理解不是靠更耐心的解释，而是要等事情真发生、耶稣亲自「打开」才行——这对「信心」和「理解」谁先谁后，说明了什么？</li>
+    <li>这段预言紧接着后面是瞎子得医治、撒该悔改、十锭银子的比喻——一连串跟财富、身份、掌权有关的故事。路加为什么把「受苦的人子」放在这一串故事的开头？</li>
+    </ol>
+  </div>
+</section>
+
+<section id="beat2">
+  <h2><span class="ref-tag">18:35–43</span> 耶利哥城外的瞎子</h2>
+  <div class="beat-lead">将近耶利哥时，一个瞎子听见众人经过，呼喊耶稣，得了医治。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>文本疑难(对观问题)：</b>马可福音10:46说这件事发生在耶稣「出耶利哥的时候」，路加这里却说是「将近耶利哥的时候」——常见的解释是希律时代的耶利哥其实有两座城相邻：旧约时代的耶利哥古城，和希律大王新建的冬宫城区(考古遗址Tulul Abu al-'Alayiq)。耶稣可能正好「出旧城、进新城」，两处经文说的是同一件事的不同瞬间。</p>
+<p><b>「大卫的子孙」——头衔的根源：</b>这个称号呼应撒母耳记下7:12-16神对大卫「永远坚立你的国位」的应许，以赛亚书9:6-7、11:1-10，耶利米书23:5-6持续发展同一条脉络。到第二圣殿晚期已固化成具体的弥赛亚称号——《所罗门诗篇》17篇(约主前1世纪)明确祈求神「为以色列兴起他们的王，大卫的子孙」(17:21)，语气很政治化：赶走外邦统治、洁净耶路撒冷。瞎子在靠近耶路撒冷、逾越节前后的人群中公开喊这个带政治意味的称号，并不是一件安全的事(参18:39众人的反应)。</p>
+<p><b>头衔与「求看见」的内在逻辑：</b>以赛亚书35:5-6、61:1把「瞎子的眼必打开」列为弥赛亚时代来临的标志性预兆。路加福音7:22耶稣回答施洗约翰的问题时，几乎逐条对应这份清单：「瞎子看见(τυφλοὶ ἀναβλέπουσιν)、瘸子行走、长大痲疯的洁净……」——这里的「看见」正是ἀναβλέπω，跟18:41-42瞎子求的「看见」(ἀναβλέψω / Ἀνάβλεψον)是同一个动词。这个瞎子喊「大卫的子孙」不是乱喊：如果耶稣是那位要来的大卫子孙，治好他的眼睛正是那份清单上的标志性动作，头衔和他求的东西在以赛亚书的框架里本来就绑在一起。</p>
+<p><b>补充/存疑：</b>也有学者(如Dennis Duling)提出，「大卫的子孙」在民间用法里可能叠加了「所罗门」(大卫之子)作为驱邪治病能手的传说色彩(约瑟夫斯《犹太古史》8.45-49记载所罗门的驱魔术)，可以部分解释这个头衔为何总是聚集在福音书的治病、赶鬼场景。这层不算确凿共识，标注供参考，不作定论。</p>
+<p><b>失明的现实背景：</b>眼疾(如沙眼)在古代近东因苍蝇、灰尘、卫生条件而相当普遍，失明者若无家人扶养，讨饭几乎是唯一的生存方式——这是当时地中海世界普遍的社会现实。</p>
+    </div>
+  </details>
+  <div class="unit para-start" id="v18-35">
+    <p class="sent"><span class="zh-body"><span class="n">18:35</span>耶穌將近耶利哥的時候, 有一個瞎子坐在路旁討飯.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἐγένετο δὲ ἐν τῷ ἐγγίζειν αὐτὸν εἰς Ἱερειχὼ τυφλός τις ἐκάθητο παρὰ τὴν ὁδὸν ἐπαιτῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And it came to pass, that as he was come nigh unto Jericho, a certain blind man sat by the way side begging:</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>τυφλός</b> · typhlos <span class='zh'>「瞎眼的」——单纯的身体描述，没有比喻色彩，语气很平实。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v18-36">
+    <p class="sent"><span class="zh-body"><span class="n">18:36</span>聽見許多人經過, 就問是甚麼事.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀκούσας δὲ ὄχλου διαπορευομένου ἐπυνθάνετο τί εἴη τοῦτο.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And hearing the multitude pass by, he asked what it meant.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v18-37">
+    <p class="sent"><span class="zh-body"><span class="n">18:37</span>他們告訴他, 是拿撒勒人耶穌經過.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀπήγγειλαν δὲ αὐτῷ ὅτι Ἰησοῦς ὁ Ναζωραῖος παρέρχεται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they told him, that Jesus of Nazareth passeth by.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v18-38">
+    <p class="sent"><span class="zh-body"><span class="n">18:38</span>他就呼叫說, <ruby class="zh-ruby">大衛的子孫<rt>huie Dauid</rt></ruby>耶穌阿, 可憐我罷.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐβόησεν λέγων Ἰησοῦ υἱὲ Δαυείδ,ἐλέησόν με.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he cried, saying, Jesus, thou son of David, have mercy on me.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>瞎子喊耶稣「<b class='gk'>υἱὲ Δαυείδ</b>」(大卫的子孙)——大卫式/王权式的弥赛亚称号，跟耶稣自己在18:31用的「人子」是两套不同的头衔系统，此处并置。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v18-39">
+    <p class="sent"><span class="zh-body"><span class="n">18:39</span>在前頭走的人, 就責備他, 不許他作聲．他卻越發喊叫說, <ruby class="zh-ruby">大衛的子孫<rt>huie Dauid</rt></ruby>, 可憐我罷.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ οἱ προάγοντες ἐπετίμων αὐτῷ ἵνα σιγήσῃ·αὐτὸς δὲ πολλῷ μᾶλλον ἔκραζεν Υἱὲ Δαυείδ,ἐλέησόν με.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they which went before rebuked him, that he should <ruby class="eng-ruby">hold his peace<rt>be quiet</rt></ruby>: but he cried so much the more, Thou son of David, have mercy on me.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「hold his peace」= 保持安静、别出声，固定短语，peace 在此不是「和平」而是「安静」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v18-40">
+    <p class="sent"><span class="zh-body"><span class="n">18:40</span>耶穌站住, 吩咐把他領過來．到了跟前, 就問他說,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>σταθεὶς δὲ ὁ Ἰησοῦς ἐκέλευσεν αὐτὸν ἀχθῆναι πρὸς αὐτόν.ἐγγίσαντος δὲ αὐτοῦ ἐπηρώτησεν αὐτόν</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Jesus stood, and commanded him to be brought unto him: and when he was come near, he asked him,</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v18-41">
+    <p class="sent"><span class="zh-body"><span class="n">18:41</span>你要我為你作甚麼．他說, 主阿, 我要能<ruby class="zh-ruby">看見<rt>anablepsō</rt></ruby>.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Τί σοι θέλεις ποιήσω;ὁ δὲ εἶπεν Κύριε,ἵνα ἀναβλέψω.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Saying, <ruby class="eng-ruby">What wilt thou<rt>what do you want</rt></ruby> that I shall do unto thee? And he said, Lord, that I may receive my sight.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἀναβλέψω</b> · anablepsō <span class='zh'>字面「重新看见/往上看」(ἀνά-βλέπω)。这是新约里「使瞎子得看见」的标准动词，不管这人是不是生来失明都这么用——所以字面的「重新」不一定真的暗示他曾经能看见，这点不确定，别读太重。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「wilt」= will 的古体二三人称单数（thou wilt = you will/want），「What wilt thou that I shall do」直译是「你要我做什么」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v18-42">
+    <p class="sent"><span class="zh-body"><span class="n">18:42</span>耶穌說, 你可以<ruby class="zh-ruby">看見<rt>Anablepson</rt></ruby>．你的信<ruby class="zh-ruby">救<rt>sesōken</rt></ruby>了你了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ὁ Ἰησοῦς εἶπεν αὐτῷ Ἀνάβλεψον·ἡ πίστις σου σέσωκέν σε.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Jesus said unto him, Receive thy sight: thy faith hath saved thee.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>σέσωκέν</b> · sesōken (σῴζω) <span class='zh'>「救」，同一个词根既可以指身体的「痊愈/得救」，也可以指宗教意义上的「救恩」——中英文通常要挑一个意思翻，希腊文本身没有分开。这个词根在19:9-10 又会出现。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v18-43">
+    <p class="sent"><span class="zh-body"><span class="n">18:43</span>瞎子立刻看見了, 就跟隨耶穌, 一路歸榮耀與 神．眾人看見這事, 也讚美 神.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ παραχρῆμα ἀνέβλεψεν,καὶ ἠκολούθει αὐτῷ δοξάζων τὸν Θεόν.καὶ πᾶς ὁ λαὸς ἰδὼν ἔδωκεν αἶνον τῷ Θεῷ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And immediately he received his sight, and followed him, glorifying God: and all the people, when they saw it, gave praise unto God.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    瞎子喊耶稣「大卫的子孙」，耶稣自己刚用「人子」称呼自己(18:31)——这两个称呼分别在强调什么？ 「你的信救了你」——是信让神迹发生，还是神迹反过来证明了信？ ἀναβλέπω字面「重新看见」，但新约里不论对方是否曾经能看见都这么用——这个词源细节要不要影响你怎么理解这个瞎子？
+  </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>瞎子喊「大卫的子孙，可怜我吧」——这是一个带政治意味的弥赛亚称号，在靠近耶路撒冷的人群里公开喊出来其实有风险，也是众人想让他闭嘴的原因之一。他不但没闭嘴反而「越发喊叫」——这份坚持，会不会才是这个故事真正的重点，而不是后面的医治本身？</li>
+    <li>耶稣没有摸他，没有任何仪式动作，只是问：「你要我为你做什么？」然后说「你的信救了你了」。让一个瞎子自己说出他的需要，而不是替他假设——这个提问方式，神学上在讲什么？</li>
+    <li>瞎子得看见以后立刻「跟随耶稣」(18:43)——跟随耶稣走向刚刚才预言的那场苦难。门徒身份在这里是不是被定义成「愿意走向同一个结局」？这个人从瞎眼讨饭到跟随耶稣，实际上失去了什么、又得到了什么？</li>
+    </ol>
+  </div>
+</section>
+
+<section id="beat3">
+  <h2><span class="ref-tag">19:1–10</span> 撒该</h2>
+  <div class="beat-lead">耶稣进耶利哥城，税吏长撒该爬树想看耶稣，耶稣主动提出要住他家，引发众人议论。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>税收制度：</b>罗马治下的犹太行省，税收多半外包给「包税人」——出价竞标某地区收税权，之后征收的钱只要超过承包额都归自己，制度本身就鼓励敲诈勒索。「税吏长」(ἀρχιτελώνης)整本新约仅此一见，大概是管理某税区其他税吏的上级职位。犹太拉比传统后来把税吏与强盗归为一类，视其证词天然不可信(相关讨论见米书拿《公会篇》m. Sanhedrin 3:3 一类关于「不可信见证人」的条文，具体名单因版本而异)。</p>
+<p><b>耶利哥的财富：</b>耶利哥当时是重要的商贸与王室驿站，以出产香脂(巴尔撒姆)与椰枣闻名，也是希律王室的冬宫所在地——普林尼《自然史》12.111-123、斯特拉波《地理志》16.2.41、约瑟夫斯《犹太古史》14.54都提到耶利哥的香脂产业(罗马帝国最贵重的商品之一)。这解释了撒该身为耶利哥税吏长为什么「是个财主」(19:2)。</p>
+<p><b>四倍赔偿：</b>撒该主动承诺「我若讹诈了谁，就还他四倍」，这正是出埃及记22:1(七十士本作21:37)对偷牛盗羊者规定的最高档赔偿标准——撒该对自己用的是律法里最重的赔率，比一般财物纠纷所要求的严厉得多，是他自愿加给自己的。</p>
+<p><b>撒该这个名字：</b>希腊文Ζακχαῖος来自希伯来文זַכַּי(Zakkai)，意思是「纯洁的、无辜的」——同一个名字也出现在被掳归回者的家族名单里(拉2:9；尼7:14)。一个名叫「纯洁」的税吏长，本身带着反讽。</p>
+<p><b>动词时态之争(19:8)——最关键的一处：</b>撒该说的「我给」(δίδωμι)、「我还」(ἀποδίδωμι)在希腊文里都是现在时，不是将来时。传统读法当「将来性现在时」，理解成撒该当场宣布悔改的新决心；但也有学者(如费兹迈尔Fitzmyer《路加福音注释》)主张这是「习惯性现在时」——撒该在陈述自己一贯的做法，等于是在众人指控他「是个罪人」时的自辩。两种读法会把整个故事读成完全不同的样子：前者是「悔改带来救恩」，后者是「一个一直被职业偏见误判的人被公开正名」。</p>
+<p><b>「亚伯拉罕的子孙」：身份还是行为？</b>19:9耶稣给「今天救恩到了这家」的理由是「因为他也是亚伯拉罕的子孙」——讲的是身份(与生俱来)，不是行为(临时悔改)，这点支持「习惯性现在时」的读法。但路加福音3:8施洗约翰警告过「不要自己心里说，有亚伯拉罕为我们的祖……神能从这些石头中给亚伯拉罕兴起子孙来」——暗示光靠血统不构成安全网，「亚伯拉罕的子孙」这个称号某种程度上也要靠行为配得上。撒该迎接耶稣的动作("你快下来"/"他就急忙下来"，σπεύσας)，跟七十士译本创世记18:6亚伯拉罕接待三位天使访客时的用词几乎一样("亚伯拉罕急忙(ἔσπευσεν)进帐棚……说，你速速(σπεῦσον)拿细面调和作饼")——撒该此刻的行为，本身就在重演亚伯拉罕当年接待客旅的样子。</p>
+<p><b>但19:10留了一条不肯合作的尾巴：</b>耶稣自己把整件事总结为「人子来，为要寻找、拯救失丧的人」(τὸ ἀπολωλός)——这个词明确把撒该(或他这类人)归类为「失丧的」，需要被寻找、拯救，这跟「他本来就没问题，只是被冤枉」的读法并不完全兼容。v8现在时、v9的身份理由、v10的「失丧的」，三条线索互相拉扯，经文很可能没打算给出干净的答案。</p>
+    </div>
+  </details>
+  <div class="unit para-start" id="v19-1">
+    <p class="sent"><span class="zh-body"><span class="n">19:1</span>耶穌進了耶利哥, 正經過的時候,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ εἰσελθὼν διήρχετο τὴν Ἱερειχώ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Jesus entered and passed through Jericho.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-2">
+    <p class="sent"><span class="zh-body"><span class="n">19:2</span>有一個人名叫撒該, 作<ruby class="zh-ruby">稅吏長<rt>architelōnēs</rt></ruby>, 是個財主.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ἰδοὺ ἀνὴρ ὀνόματι καλούμενος Ζακχαῖος,καὶ αὐτὸς ἦν ἀρχιτελώνης,καὶ αὐτὸς πλούσιος·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And, behold, there was a man named Zacchaeus, which was the chief among the <ruby class="eng-ruby">publicans<rt>tax collectors</rt></ruby>, and he was rich.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><b class='gk'>ἀρχιτελώνης</b> · architelōnēs <span class='zh'>「税吏长」——整本新约只出现这一次(hapax legomenon)，同时代其他希腊文献里也没有独立佐证，所以这个职位具体管辖范围其实并不十分确定，是翻译者按上下文推断的。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「publican」指罗马税收体系下代收税款的人，通常向本族百姓抽税、又常被怀疑营私舞弊中饱私囊，所以在犹太社会里被视为可耻、近乎「罪人」的同类（对照19:7众人的反应）。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-3">
+    <p class="sent"><span class="zh-body"><span class="n">19:3</span>他要看看耶穌是怎樣的人．只因人多, 他的身量又矮, 所以不得看見.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐζήτει ἰδεῖν τὸν Ἰησοῦν τίς ἐστιν,καὶ οὐκ ἠδύνατο ἀπὸ τοῦ ὄχλου,ὅτι τῇ ἡλικίᾳ μικρὸς ἦν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he sought to see Jesus who he was; and could not <ruby class="eng-ruby">for the press<rt>because of the crowd</rt></ruby>, because he was little of stature.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「press」在这里是名词，指「拥挤的人群」，跟动词「按压」无关——KJV 常这样用。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-4">
+    <p class="sent"><span class="zh-body"><span class="n">19:4</span>就跑到前頭, 爬上桑樹, 要看耶穌, 因為耶穌必從那裡經過.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ προδραμὼν εἰς τὸ ἔμπροσθεν ἀνέβη ἐπὶ συκομορέαν,ἵνα ἴδῃ αὐτόν,ὅτι ἐκείνης ἤμελλεν διέρχεσθαι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he ran before, and climbed up into a <ruby class="eng-ruby">sycomore tree<rt>fig-mulberry tree</rt></ruby> to see him: for he was to pass that way.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">KJV 的「sycomore」不是现代英语常指的 sycamore(法国梧桐)，而是一种无花果/桑树杂交种(Ficus sycomorus)，枝干较低、容易攀爬，这点解释了撒该为什么选它。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-5">
+    <p class="sent"><span class="zh-body"><span class="n">19:5</span>耶穌到了那裡, 抬頭一看, 對他說, 撒該, 快下來, 今天我<ruby class="zh-ruby">必住<rt>dei...meinai</rt></ruby>在你家裡.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ὡς ἦλθεν ἐπὶ τὸν τόπον,ἀναβλέψας ὁ Ἰησοῦς εἶπεν πρὸς αὐτόν Ζακχαῖε,σπεύσας κατάβηθι·σήμερον γὰρ ἐν τῷ οἴκῳ σου δεῖ με μεῖναι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when Jesus came to the place, he looked up, and saw him, and said unto him, Zacchaeus, make haste, and come down; for to day I must <ruby class="eng-ruby">abide<rt>stay, lodge</rt></ruby> at thy house.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b class='gk'>δεῖ</b>(必须)在这整段(18:31-19:28)里只出现这一次，用在「我必须住在你家」——不是用在耶稣受难上，而是用在住进一个被众人厌恶的税吏家里。可以对照18:31的remark，那里换了别的动词。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「abide」= 留宿、住下，比现代常用的 stay 更郑重、书面一些。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-6">
+    <p class="sent"><span class="zh-body"><span class="n">19:6</span>他就急忙下來, 歡歡喜喜的接待耶穌.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ σπεύσας κατέβη,καὶ ὑπεδέξατο αὐτὸν χαίρων.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he made haste, and came down, and received him joyfully.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-7">
+    <p class="sent"><span class="zh-body"><span class="n">19:7</span>眾人看見, 都私下議論說, 他竟到罪人家裡去住宿.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἰδόντες πάντες διεγόγγυζον λέγοντες ὅτι Παρὰ ἁμαρτωλῷ ἀνδρὶ εἰσῆλθεν καταλῦσαι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when they saw it, they all <ruby class="eng-ruby">murmured<rt>grumbled</rt></ruby>, saying, That he was gone to be guest with a man that is a sinner.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「murmured」= 窃窃私语地抱怨、发怨言——旧约里以色列人在旷野「发怨言」用的也是这个词的词族，KJV 常拿它形容群众对某个决定的不满。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-8">
+    <p class="sent"><span class="zh-body"><span class="n">19:8</span>撒該站著, 對主說, 主阿, 我把所有的一半給窮人．我若訛詐了誰, 就還他四倍.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>σταθεὶς δὲ Ζακχαῖος εἶπεν πρὸς τὸν Κύριον Ἰδοὺ τὰ ἡμίσειά μου τῶν ὑπαρχόντων,Κύριε,τοῖς πτωχοῖς δίδωμι,καὶ εἴ τινός τι ἐσυκοφάντησα ἀποδίδωμι τετραπλοῦν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Zacchaeus stood, and said unto the Lord; Behold, Lord, the half of my <ruby class="eng-ruby">goods<rt>possessions, property</rt></ruby> I give to the poor; and if I have taken any thing from any man by false accusation, I restore him fourfold.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「goods」= 财产、所有物，不是现代英语「货物/商品」的意思。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-9">
+    <p class="sent"><span class="zh-body"><span class="n">19:9</span>耶穌說, 今天<ruby class="zh-ruby">救恩<rt>sōtēria</rt></ruby>到了這家, 因為他也是<ruby class="zh-ruby">亞伯拉罕的子孫<rt>huios Abraam</rt></ruby>.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἶπεν δὲ πρὸς αὐτὸν ὁ Ἰησοῦς ὅτι Σήμερον σωτηρία τῷ οἴκῳ τούτῳ ἐγένετο,καθότι καὶ αὐτὸς υἱὸς Ἀβραάμ ἐστιν·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Jesus said unto him, This day is salvation come to this house, <ruby class="eng-ruby">forsomuch as<rt>since, because</rt></ruby> he also is a son of Abraham.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>σωτηρία</b> · sōtēria (σῴζω) <span class='zh'>「救恩」，与18:42瞎子故事里的「救」(σέσωκεν)同一词根——同一段落里，肉身的「痊愈」和撒该家的「救恩」共享着同一个希腊字根。</span></div>
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b class='gk'>υἱὸς Ἀβραάμ</b>(亚伯拉罕的子孙)——第三种「…的子孙/人子」头衔，跟「人子」(18:31)、「大卫的子孙」(18:38-39)并列。三个称号出现在同一段落里，各自的语境不同。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「forsomuch as」= 既然、因为，古体连接词，等于现代的 since/because。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-10">
+    <p class="sent"><span class="zh-body"><span class="n">19:10</span>人子來, 為要<ruby class="zh-ruby">尋找拯救<rt>zētēsai kai sōsai</rt></ruby>失喪的人.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἦλθεν γὰρ ὁ Υἱὸς τοῦ ἀνθρώπου ζητῆσαι καὶ σῶσαι τὸ ἀπολωλός.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For the Son of man is come to seek and to save that which was lost.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ζητῆσαι καὶ σῶσαι</b> · zētēsai kai sōsai <span class='zh'>「寻找、拯救」——σῶσαι 仍是同一个 σῴζω 词根，第三次出现在这段经文里(18:42 / 19:9 / 19:10)。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    撒该没被要求做什么，却主动认罪悔改；耶稣宣告「今天救恩到了这家」是在他表态之前还是之后？这个顺序重要吗？ 「因为他也是亚伯拉罕的子孙」——这句是在回应众人「他到罪人家里去」的议论吗？ 税吏长(ἀρχιτελώνης)全新约仅此一见，我们其实说不准这职位具体管什么——这层不确定要不要紧？
+  </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>19:8撒该说的「我给」「我还」都是希腊文现在时——可能是他当场宣布的新决心(悔改读法)，也可能是他描述一贯的做法(自辩读法，费兹迈尔等学者主张)。但19:10耶稣自己把整件事总结成「寻找拯救失丧的人」，明确把撒该算作「失丧的」。如果撒该本来就在做这些好事，耶稣为什么还说他是「失丧的」？如果他不是「本来就好」，19:9「因为他也是亚伯拉罕的子孙」这个讲身份、不讲行为的理由又怎么解释？经文好像故意不让你把撒该定成「好人」或「坏人」——这个不确定本身，是不是才是这段真正的重点？</li>
+    <li>众人「私下议论」耶稣去罪人家住宿——这个词跟旧约以色列人在旷野「发怨言」是同一个词根。这段故事里真正被考验的，是撒该，还是众人对「谁配称为亚伯拉罕的子孙」的定义？</li>
+    <li>撒该同时被讨厌、被矮化、被富有——经济上的怨恨、身高上的矮小、道德上的鄙视，三种贬低同时压在他身上。这段经文最关心翻转哪一种，又放过了哪一种？</li>
+    </ol>
+  </div>
+</section>
+
+<section id="beat4">
+  <h2><span class="ref-tag">19:11–27</span> 十锭银子的比喻</h2>
+  <div class="beat-lead">因为众人以为神的国快要显现，耶稣讲了一个贵胄出外求国、仆人理财的比喻。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>历史背景——亚基老求王位：</b>不少注释者认为这个比喻直接呼应了听众记忆犹新的真实历史：主前4年希律大王死后，儿子亚基老前往罗马向奥古斯都请求确认王位继承，同时一队犹太/撒玛利亚代表团(约瑟夫斯记载约50人)随后赶到罗马，控诉亚基老、请求罗马不要让他统治他们；奥古斯都最终只封他为「分封王」(ethnarch)而非「王」(约瑟夫斯《犹太古史》17.299-320；《犹太战记》2.80-100)。这个比喻是耶稣在耶利哥讲的——而耶利哥正是希律家族冬宫与工程建设的所在地(亚基老后来还重修过火灾受损的耶利哥王宫，见《犹太古史》17.340)，对当地听众而言，这个「贵胄往远方去要得国回来，本国百姓却打发人去反对」的情节可能相当具体、不是泛泛的譬喻。</p>
+<p><b>弥拿与他连得的换算：</b>1弥拿(mna)=100得拉克马，大约相当于普通工人三、四个月的工资(以马太福音20:2一天一个银钱的工价估算)。马太福音25:14-30平行的「才干的比喻」用的是他连得(talanton)，1他连得=60弥拿——是两个不同版本/场合的比喻，不是同一个故事的两种记法。</p>
+    </div>
+  </details>
+  <div class="unit para-start" id="v19-11">
+    <p class="sent"><span class="zh-body"><span class="n">19:11</span>眾人正在聽見這些話的時候, 耶穌因為將近耶路撒冷, 又因他們以為 神的國快要顯出來, 就另設一個比喻說,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἀκουόντων δὲ αὐτῶν ταῦτα προσθεὶς εἶπεν παραβολὴν,διὰ τὸ ἐγγὺς εἶναι Ἱερουσαλὴμ αὐτὸν καὶ δοκεῖν αὐτοὺς ὅτι παραχρῆμα μέλλει ἡ βασιλεία τοῦ Θεοῦ ἀναφαίνεσθαι·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And as they heard these things, he added and spake a parable, because he was nigh to Jerusalem, and because they thought that the kingdom of God should immediately appear.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-12">
+    <p class="sent"><span class="zh-body"><span class="n">19:12</span>有一個貴冑往遠方去, 要得國回來.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἶπεν οὖν Ἄνθρωπός τις εὐγενὴς ἐπορεύθη εἰς χώραν μακρὰν λαβεῖν ἑαυτῷ βασιλείαν καὶ ὑποστρέψαι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>He said therefore, A certain nobleman went into a far country to receive for himself a kingdom, and to return.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「贵冑往远方去要得国回来」——不少注释者认为这呼应了一个当时听众熟悉的真实事件：主前4年希律亚基老(Archelaus)前往罗马向奥古斯都请封王位，一队犹太代表团随后赶去反对他称王(约瑟夫斯《犹太古史》17.299-320)。这是背景猜测，不是确凿的寓意对应，标注供参考。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-13">
+    <p class="sent"><span class="zh-body"><span class="n">19:13</span>便叫了他的十個僕人來, 交給他們十錠<ruby class="zh-ruby">銀子<rt>mnas</rt></ruby>, 〔錠原文作彌拿一彌拿約銀十兩〕說, 你們去作生意, 直等我回來.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καλέσας δὲ δέκα δούλους ἑαυτοῦ ἔδωκεν αὐτοῖς δέκα μνᾶς,καὶ εἶπεν πρὸς αὐτούς Πραγματεύσασθε ἐν ᾧ ἔρχομαι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he called his ten servants, and delivered them ten pounds, and said unto them, <ruby class="eng-ruby">Occupy till I come<rt>do business/trade until I return</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><b class='gk'>μνᾶ</b> · mna <span class='zh'>「弥拿」，约合100 得拉克马(drachma)，大概是普通工人三、四个月的工资——KJV 译作 pound，和合本注「银十两」，都是换算，原文本身是这个特定的希腊货币单位。马太福音平行的比喻(太25:14-30)用的是「他连得」(talanton，1他连得=60弥拿)，是不同金额、不同版本的比喻，不是同一件事的两种记法。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「occupy」在1611年的英语里是商业用语，意思是「做买卖、经营」，跟现代最常见的「占据」义完全无关——这是KJV最著名的古今异义词之一，容易被现代读者读错。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-14">
+    <p class="sent"><span class="zh-body"><span class="n">19:14</span>他本國的人卻恨他, 打發使者隨後去說, 我們不願意這個人作我們的王.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ πολῖται αὐτοῦ ἐμίσουν αὐτόν,καὶ ἀπέστειλαν πρεσβείαν ὀπίσω αὐτοῦ λέγοντες Οὐ θέλομεν τοῦτον βασιλεῦσαι ἐφ’ἡμᾶς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But his citizens hated him, and sent a message after him, saying, We will not have this man to reign over us.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-15">
+    <p class="sent"><span class="zh-body"><span class="n">19:15</span>他既得國回來, 就吩咐叫那領銀子的僕人來, 要知道他們作生意賺了多少.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐγένετο ἐν τῷ ἐπανελθεῖν αὐτὸν λαβόντα τὴν βασιλείαν καὶ εἶπεν φωνηθῆναι αὐτῷ τοὺς δούλους τούτους οἷς δεδώκει τὸ ἀργύριον,ἵνα γνοῖ τίς τί διεπραγματεύσατο.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And it came to pass, that when he was returned, having received the kingdom, then he commanded these servants to be called unto him, to whom he had given the money, that he might know how much every man had gained by trading.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-16">
+    <p class="sent"><span class="zh-body"><span class="n">19:16</span>頭一個上來說, 主阿, 你的一錠銀子, 已經賺了十錠.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>παρεγένετο δὲ ὁ πρῶτος λέγων Κύριε,ἡ μνᾶ σου δέκα προσηργάσατο μνᾶς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then came the first, saying, Lord, thy pound hath gained ten pounds.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-17">
+    <p class="sent"><span class="zh-body"><span class="n">19:17</span>主人說, 好, 良善的僕人．你既在最小的事上有忠心, 可以有權柄管十座城.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ εἶπεν αὐτῷ Εὖγε,ἀγαθὲ δοῦλε,ὅτι ἐν ἐλαχίστῳ πιστὸς ἐγένου,ἴσθι ἐξουσίαν ἔχων ἐπάνω δέκα πόλεων.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto him, Well, thou good servant: because thou hast been faithful in a very little, have thou authority over ten cities.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-18">
+    <p class="sent"><span class="zh-body"><span class="n">19:18</span>第二個來說, 主阿, 你的一錠銀子, 已經賺了五錠.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἦλθεν ὁ δεύτερος λέγων Ἠ μνᾶ σου,κύριε,ἐποίησεν πέντε μνᾶς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the second came, saying, Lord, thy pound hath gained five pounds.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-19">
+    <p class="sent"><span class="zh-body"><span class="n">19:19</span>主人說, 你也可以管五座城.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἶπεν δὲ καὶ τούτῳ Καὶ σὺ ἐπάνω γίνου πέντε πόλεων.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said likewise to him, Be thou also over five cities.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-20">
+    <p class="sent"><span class="zh-body"><span class="n">19:20</span>又有一個來說, 主阿, 看哪, 你的一錠銀子在這裡, 我把它包在手巾裡存著．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ὁ ἕτερος ἦλθεν λέγων Κύριε,ἰδοὺ ἡ μνᾶ σου,ἣν εἶχον ἀποκειμένην ἐν σουδαρίῳ·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And another came, saying, Lord, behold, here is thy pound, which I have kept laid up in a <ruby class="eng-ruby">napkin<rt>cloth, handkerchief</rt></ruby>:</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「napkin」= 一块布、手巾，不是现代意义的纸巾。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-21">
+    <p class="sent"><span class="zh-body"><span class="n">19:21</span>我原是怕你, 因為你是嚴厲的人．沒有放下的還要去拿, 沒有種下的還要去收.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐφοβούμην γάρ σε,ὅτι ἄνθρωπος αὐστηρὸς εἶ,αἴρεις ὃ οὐκ ἔθηκας,καὶ θερίζεις ὃ οὐκ ἔσπειρας.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For I feared thee, because thou art an <ruby class="eng-ruby">austere<rt>harsh, strict</rt></ruby> man: thou takest up that thou layedst not down, and reapest that thou didst not sow.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「austere」= 严厉、苛刻的，形容人的性情。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-22">
+    <p class="sent"><span class="zh-body"><span class="n">19:22</span>主人對他說, 你這惡僕, 我要憑你的口, 定你的罪．你既知道我是嚴厲的人, 沒有放下的還要去拿, 沒有種下的還要去收．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγει αὐτῷ Ἐκ τοῦ στόματός σου κρίνω σε,πονηρὲ δοῦλε.ᾔδεις ὅτι ἐγὼ ἄνθρωπος αὐστηρός εἰμι,αἴρων ὃ οὐκ ἔθηκα καὶ θερίζων ὃ οὐκ ἔσπειρα;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he saith unto him, Out of thine own mouth will I judge thee, thou wicked servant. Thou knewest that I was an austere man, taking up that I laid not down, and reaping that I did not sow:</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-23">
+    <p class="sent"><span class="zh-body"><span class="n">19:23</span>為甚麼不把我的銀子交給銀行, 等我來的時候, 連本帶利都可以要回來呢.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ διὰ τί οὐκ ἔδωκάς μου τὸ ἀργύριον ἐπὶ τράπεζαν;κἀγὼ ἐλθὼν σὺν τόκῳ ἂν αὐτὸ ἔπραξα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Wherefore then gavest not thou my money <ruby class="eng-ruby">into the bank<rt>to the money-changers' table</rt></ruby>, that at my coming I might have required mine own with <ruby class="eng-ruby">usury<rt>interest</rt></ruby>?</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「bank」在17世纪英语里指「钱庄、兑换银钱的柜台」（呼应希腊文 τράπεζα，字面是「桌子」），不是现代的银行机构；「usury」在KJV里泛指「利息」，不一定带「高利贷」的贬义，是后来这个词才变负面。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-24">
+    <p class="sent"><span class="zh-body"><span class="n">19:24</span>就對旁邊站著的人說, 奪過他這一錠來, 給那有十錠的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ τοῖς παρεστῶσιν εἶπεν Ἄρατε ἀπ’αὐτοῦ τὴν μνᾶν καὶ δότε τῷ τὰς δέκα μνᾶς ἔχοντι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto them that stood by, Take from him the pound, and give it to him that hath ten pounds.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-25">
+    <p class="sent"><span class="zh-body"><span class="n">19:25</span>他們說, 主阿, 他已經有十錠了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ εἶπαν αὐτῷ Κύριε,ἔχει δέκα μνᾶς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>(And they said unto him, Lord, he hath ten pounds.)</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-26">
+    <p class="sent"><span class="zh-body"><span class="n">19:26</span>主人說, 我告訴你們, 凡有的, 還要加給他．沒有的, 連他所有的, 也要奪過來.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγω ὑμῖν ὅτι παντὶ τῷ ἔχοντι δοθήσεται,ἀπὸ δὲ τοῦ μὴ ἔχοντος καὶ ὃ ἔχει ἀρθήσεται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For I say unto you, That unto every one which hath shall be given; and from him that hath not, even that he hath shall be taken away from him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-27">
+    <p class="sent"><span class="zh-body"><span class="n">19:27</span>至於我那些仇敵不要我作他們王的, 把他們拉來, 在我面前殺了罷.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πλὴν τοὺς ἐχθρούς μου τούτους τοὺς μὴ θελήσαντάς με βασιλεῦσαι ἐπ’αὐτοὺς ἀγάγετε ὧδε καὶ κατασφάξατε αὐτοὺς ἔμπροσθέν μου.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But those mine enemies, which would not that I should reign over them, bring hither, and slay them before me.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>比喻以「把敌人拉来杀了」收尾，紧接着19:28「耶稣往耶路撒冷去」——两句挨得很近，怎么读这个衔接，留给你。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    如果贵胄求国的故事背景真的是亚基老求封王位那段历史，比喻里的「贵胄」形象会不会比表面看起来更负面？ 第三个仆人原样奉还银子，理由是「你是严厉的人」——这是真的理解主人，还是误解？比喻到底在奖励什么？ 比喻结尾「把敌人拉来杀了」紧接着19:28「往耶路撒冷去」——两句放在一起读，你怎么理解耶稣即将面对的耶路撒冷？
+  </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>如果比喻里的「贵胄」真的让人想起亚基老这个恶名昭彰、被百姓公开反对的统治者，耶稣是在直接把神/自己比作这个角色，还是故意用这个令人不舒服的比喻来颠覆什么？如果是后者，前两个仆人被称「良善忠心」要怎么读？</li>
+    <li>第三个仆人形容主人「是严厉的人」，主人自己并没有否认，反而用仆人自己的话定他的罪。这个仆人到底是因为懒惰被罚，还是因为害怕，还是因为他准确说出了主人的真面目？</li>
+    <li>「凡有的还要加给他，没有的连他所有的也要夺过来」——放在一个贫富极度不均的社会里听，这是在讲神的国怎么运作的硬道理，还是在警告某种不义的人间经济秩序正冒充「神的国」？</li>
+    <li>比喻以「把不肯让我做王的敌人拉来杀了」收尾，紧接着耶稣「继续往耶路撒冷去」，去经历18:31-34预言的受难。听完这个以王者胜利告终的比喻，再看耶稣自己即将面对的结局，你会怎么读这个并置？</li>
+    </ol>
+  </div>
+</section>
+
+<section id="beat5">
+  <h2><span class="ref-tag">19:28</span> 过渡句</h2>
+  <div class="beat-lead">讲完比喻，耶稣继续前行，上耶路撒冷去——承接18:31开头的宣告，也开启下一段进城的记叙。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>地理收尾：</b>耶利哥在死海附近，海拔约负250米，是世界上最低的有人居住城市之一；耶路撒冷海拔约750米，两地相距不到30公里却要爬升1000米左右。这条路自古以来因治安不靖闻名，也是路加福音10:30-37「好撒玛利亚人」比喻的路（「从耶路撒冷下耶利哥的路上」），约书亚记15:7称这一带的坡道为「亚都冥」(Adummim)。19:28这句看似平淡的过渡句，标记着耶稣从这条著名而危险的下坡路，转身向着受难开始向上爬。</p>
+    </div>
+  </details>
+  <div class="unit para-start" id="v19-28">
+    <p class="sent"><span class="zh-body"><span class="n">19:28</span>耶穌說完了這話, 就在前面走, <ruby class="zh-ruby">上耶路撒冷<rt>anabainōn eis Ierosolyma</rt></ruby>去.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ εἰπὼν ταῦτα ἐπορεύετο ἔμπροσθεν ἀναβαίνων εἰς Ἱεροσόλυμα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when he had thus spoken, he went before, ascending up to Jerusalem.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>18:31开头是「<b class='gk'>ἀναβαίνομεν εἰς Ἱερουσαλήμ</b>」(希伯来化拼法 Ἱερουσαλήμ)，这里收尾是「<b class='gk'>ἀναβαίνων εἰς Ἱεροσόλυμα</b>」(希腊化拼法 Ἱεροσόλυμα)——路加全书确实交替使用这两种「耶路撒冷」拼法，但拼法差异是否真的承载意义，学者意见不一致，这里只标出这个事实本身。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    18:31用Ἱερουσαλήμ，这里用Ἱεροσόλυμα——如果这个拼写差异真的有意义，它会标出什么？还是应该完全看作文体上的随意变化？
+  </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>这一节是整段故事滑向受难周之前，最后一个平静、近乎无声的过渡句。已经知道18:31-34预言了什么，耶稣这时候只是「往前走」——路加为什么选择用这么克制、不渲染的一句话来标记这个转折点？</li>
+    </ol>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-cf">对照</span>希腊/中/英三方比较</span>
+    <span><span class="tag t-zhu">注</span>背景说明</span>
+    <span><span class="tag t-en">英</span>KJV 语言点</span>
+  </div>
+  希腊原文：Nestle 1904 (MACULA Greek, lowfat treebank)。中文：和合本(Chinese Union Version, Big5 数字化本)。英译：King James Version (1611/1769)。三者均为公共领域文本。标点保留原始数字化文本所用的半形符号。
+  <p style="margin-top:.8rem">历史背景部分引用：约瑟夫斯《犹太古史》(Antiquities)、《犹太战记》(Jewish War)；旧约经文(出埃及记、撒母耳记下、阿摩司书、约书亚记等)；《所罗门诗篇》(Psalms of Solomon)；米书拿(Mishnah)；普林尼《自然史》、斯特拉波《地理志》。个别拉比文献条目因版本传抄而异，标注为"参见/相关讨论"的地方建议查经时口头说明这一点，不作确凿引文处理。</p>
+</footer>
+
+<script>
+  const body=document.body;
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-disc':'hide-discuss'};
+  for(const id in toggleMap){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+  const geoMap = L.map('geomap', {scrollWheelZoom:false}).setView([32.1,35.4], 8);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 13
+  }).addTo(geoMap);
+
+  L.rectangle([[32.0,35.05],[32.55,35.45]], {color:'#a8546a', weight:1, fillOpacity:0.08, dashArray:'4 3'})
+    .addTo(geoMap).bindTooltip('撒玛利亚', {permanent:true, direction:'center', className:'map-region-label'});
+  L.rectangle([[31.85,35.55],[32.75,35.85]], {color:'#3f7a6d', weight:1, fillOpacity:0.08, dashArray:'4 3'})
+    .addTo(geoMap).bindTooltip('比利亚(约旦河东岸)', {permanent:true, direction:'center', className:'map-region-label'});
+
+  L.marker([31.7683,35.2137]).addTo(geoMap).bindPopup('<b>耶路撒冷</b><br>约 +750米');
+  L.marker([31.8577,35.4444]).addTo(geoMap).bindPopup('<b>耶利哥</b><br>约 -250米');
+  L.marker([32.8331,35.5844]).addTo(geoMap).bindPopup('<b>加利利海</b>');
+  L.marker([31.55,35.48]).addTo(geoMap).bindPopup('<b>死海</b>');
+
+  L.polyline([[31.7683,35.2137],[31.7767,35.30],[31.8577,35.4444]], {color:'#b07d2b', weight:4})
+    .addTo(geoMap).bindPopup('18:31 / 19:28 · 耶稣此段实际走的路 · 约27公里 · 爬升约1000米');
+
+  L.polyline([[32.8331,35.5844],[32.45,35.63],[32.10,35.58],[31.90,35.53],[31.8577,35.4444]],
+    {color:'#b07d2b', weight:2.5, dashArray:'8 6'})
+    .addTo(geoMap).bindPopup('常规朝圣路线：经比利亚(约旦河东岸)绕开撒玛利亚(约瑟夫斯《犹太古史》20.118)');
+
+  geoMap.fitBounds(L.latLngBounds([[31.45,35.05],[32.9,35.9]]));
+</script>
+
+</body>
+</html>

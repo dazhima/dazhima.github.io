@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>查经 · Yan He</title>
+<meta name="description" content="每日查经：路加福音三语共读（和合本 · 希腊原文 · KJV）。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --bg-soft: #f3f1ea;
+    --ink: #1c1b19;
+    --ink-soft: #565248;
+    --line: #e2ded3;
+    --accent: #7a2e1d;
+    --accent-soft: #a85c44;
+    --max: 760px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14130f;
+      --bg-soft: #1d1b16;
+      --ink: #eceae3;
+      --ink-soft: #a8a195;
+      --line: #2c2922;
+      --accent: #d98b6f;
+      --accent-soft: #c5755a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-soft); text-decoration: underline; text-underline-offset: 3px; }
+  h1, h2, h3 { font-family: "Newsreader", Georgia, serif; font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; }
+
+  .crumb { padding: 28px 0 0; font-size: 13px; color: var(--ink-soft); }
+  .crumb a { color: var(--ink-soft); font-weight: 500; }
+  .crumb a:hover { color: var(--accent); }
+
+  header { padding: 20px 0 48px; }
+  .eyebrow { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 18px; }
+  h1 { font-size: clamp(2.2rem, 6vw, 3rem); margin: 0 0 14px; }
+  .lede { font-size: 1.1rem; max-width: 58ch; color: var(--ink-soft); }
+
+  section { padding: 36px 0; border-top: 1px solid var(--line); }
+  .sec-head { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; margin: 0 0 24px; }
+
+  .today {
+    display: block;
+    background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 10px; padding: 24px 26px; text-decoration: none; color: inherit;
+    transition: border-color .15s, transform .15s;
+  }
+  .today:hover { border-left-color: var(--accent-soft); text-decoration: none; transform: translateX(2px); }
+  .today .date { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--accent); letter-spacing: 0.04em; }
+  .today h2 { font-size: 1.5rem; margin: 8px 0 8px; }
+  .today p { margin: 0; color: var(--ink-soft); font-size: 0.98rem; }
+  .today .go { display: inline-block; margin-top: 14px; font-size: 0.88rem; color: var(--accent); font-weight: 500; }
+
+  ul.archive { list-style: none; padding: 0; margin: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  ul.archive li { background: var(--bg); }
+  ul.archive li a { display: block; padding: 14px 18px; color: inherit; text-decoration: none; }
+  ul.archive li a:hover { background: var(--bg-soft); }
+  ul.archive li b { font-family: "Newsreader", serif; font-weight: 500; }
+  ul.archive li span { display: block; color: var(--ink-soft); font-size: 0.9em; margin-top: 2px; }
+
+  .about p { max-width: 62ch; color: var(--ink-soft); }
+
+  footer { padding: 40px 0 70px; color: var(--ink-soft); font-size: 13px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="crumb"><a href="../index.html">主页</a> &rsaquo; 查经</div>
+
+  <header>
+    <div class="eyebrow">查经 · Bible Study</div>
+    <h1>路加福音，三语共读</h1>
+    <p class="lede">和合本（阅读对象）· Nestle 1904 希腊原文（锚点）· KJV（平行参照）。逐段附历史背景、词义注释、KJV 古体英语讲解，以及留白的查经问题，供个人研读或小组讨论使用。</p>
+  </header>
+
+  <section id="today">
+    <div class="sec-head">今天的内容</div>
+    <a class="today" href="luke-18_31-19_28.html">
+      <div class="date">路加福音 18:31–19:28</div>
+      <h2>第三次预言受难与复活 · 耶利哥城外的瞎子 · 撒该 · 十锭银子的比喻</h2>
+      <p>耶稣第三次向门徒预言受难与复活，随后一路上耶利哥：瞎子呼喊「大卫的子孙」得医治，税吏长撒该悔改，以及一个关于掌权与忠心的比喻。附地图、历史背景、逐节希腊文与 KJV 对照、查经问题。</p>
+      <span class="go">开始阅读 →</span>
+    </a>
+  </section>
+
+  <section id="archive">
+    <div class="sec-head">往期</div>
+    <ul class="archive">
+      <li><a href="luke-18_31-19_28.html"><b>路加福音 18:31–19:28</b><span>第三次预言受难与复活 · 耶利哥瞎子 · 撒该 · 十锭银子的比喻</span></a></li>
+    </ul>
+  </section>
+
+  <section class="about">
+    <div class="sec-head">关于</div>
+    <p>这些页面用来记录个人查经笔记：把和合本、希腊原文、KJV 三个独立译本并排对照，中文作为主要阅读对象，希腊文只作锚点标出值得注意的词，KJV 作为另一路独立译本平行参照。历史背景尽量注明出处（约瑟夫斯、旧约经文、米书拿等），存疑之处标注为"参见/相关讨论"而非确凿结论。释义与查经问题留白，供阅读或讨论时现场填写。</p>
+  </section>
+
+  <footer>
+    © 2026 Yan He · 贺岩
+  </footer>
+
+</div>
+
+</body>
+</html>
