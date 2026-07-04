@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arendt — Marxism Critique Tracker</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F9F7F3;
+  --surface: #FFFFFF;
+  --ink: #1C1917;
+  --ink2: #44403C;
+  --ink3: #78716C;
+  --border: #E7E3DC;
+  --border2: #D5CFC6;
+  --accent: #2D5A3D;
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 3rem 4rem 5rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+
+.subtitle {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--ink3);
+  margin-bottom: 2.5rem;
+}
+
+.layer { margin-bottom: 2.5rem; }
+
+.layer-title {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink3);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.nodes { display: flex; flex-direction: column; gap: 8px; }
+
+.node {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid;
+  border-radius: 0 5px 5px 0;
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.node-id {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 28px;
+  color: var(--ink3);
+}
+
+.node-title {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  flex: 1;
+  line-height: 1.5;
+}
+
+.node-claim {
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.6;
+  flex: 3;
+}
+
+.node-file {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+.status {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.s-draft    { background: #EDE9E3; color: #57534E; }
+.s-progress { background: #FEF3C7; color: #92400E; }
+.s-complete { background: #D1FAE5; color: #065F46; }
+
+/* Layer colors */
+.l-def  { border-left-color: #3D7A52; }
+.l-atk  { border-left-color: #8A6B2A; }
+.l-con  { border-left-color: #3D5A8A; }
+.l-thm  { border-left-color: #8A3D3D; }
+
+/* Summary bar */
+.summary {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--ink3);
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1.5rem;
+}
+.summary span { display: flex; align-items: center; gap: 5px; }
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-draft    { background: #A8A29E; }
+.dot-progress { background: #D97706; }
+.dot-complete { background: #059669; }
+
+.arrow {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  color: var(--ink3);
+  text-align: center;
+  padding: 4px 0;
+  letter-spacing: 3px;
+}
+</style>
+</head>
+<body>
+
+<div style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--ink3);margin-bottom:1.2rem"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; Vita Activa</div>
+<h1>Arendt's Critique of Marxism</h1>
+<p class="subtitle">Vita Activa · Progress tracker · D → A → L → T</p>
+
+<div class="summary">
+  <span><div class="dot dot-draft"></div> Draft: <strong id="cnt-draft">0</strong></span>
+  <span><div class="dot dot-progress"></div> In progress: <strong id="cnt-progress">0</strong></span>
+  <span><div class="dot dot-complete"></div> Complete: <strong id="cnt-complete">0</strong></span>
+  <span>Total: <strong>13</strong></span>
+</div>
+
+<!-- D LAYER -->
+<div class="layer">
+  <div class="layer-title">Layer D — Definitions (Arendt's foundations)</div>
+  <div class="nodes">
+
+    <div class="node l-def" data-status="draft">
+      <span class="node-id">D1</span>
+      <span class="node-title">Arbeit (Labor)</span>
+      <span class="node-claim">Cyclical, consumptive activity tied to biological necessity. Produces nothing durable. Corresponds to <em>animal laborans</em>.</span>
+      <span class="node-file">VA-D1-Arbeit.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-def" data-status="draft">
+      <span class="node-id">D2</span>
+      <span class="node-title">Herstellen (Work)</span>
+      <span class="node-claim">Fabrication — produces durable objects that outlast the act of making. Builds the human <em>Welt</em>. Corresponds to <em>homo faber</em>.</span>
+      <span class="node-file">VA-D2-Herstellen.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-def" data-status="draft">
+      <span class="node-id">D3</span>
+      <span class="node-title">Handeln (Action)</span>
+      <span class="node-claim">The distinctly human activity of beginning something new in the presence of others. Requires plurality. Lives only in the public realm.</span>
+      <span class="node-file">VA-D3-Handeln.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-def" data-status="draft">
+      <span class="node-id">D4</span>
+      <span class="node-title">Die Welt (The World)</span>
+      <span class="node-claim">The durable artificial world built by Work. The precondition for a public realm and for Action. Distinguished from Earth and Universe.</span>
+      <span class="node-file">VA-D4-Welt.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="arrow">↓ ↓ ↓</div>
+
+<!-- A LAYER -->
+<div class="layer">
+  <div class="layer-title">Layer A — Attacks (where Marx goes wrong)</div>
+  <div class="nodes">
+
+    <div class="node l-atk" data-status="draft">
+      <span class="node-id">A1</span>
+      <span class="node-title">The Conflation</span>
+      <span class="node-claim">Marx does not distinguish Arbeit (D1) from Herstellen (D2). His "labor" collapses both. The system is built on an ambiguous foundation.</span>
+      <span class="node-file">VA-A1-Conflation.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-atk" data-status="draft">
+      <span class="node-id">A2</span>
+      <span class="node-title">Glorification of the Lowest</span>
+      <span class="node-claim">Marx elevates Labor — the activity humans share with animals — to the defining human characteristic. <em>Animal laborans</em> becomes the ideal.</span>
+      <span class="node-file">VA-A2-Glorification.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-atk" data-status="draft">
+      <span class="node-id">A3</span>
+      <span class="node-title">Labor Theory of Value</span>
+      <span class="node-claim">By grounding value in Labor, Marx ties all value to a cyclical, consumptive process. He cannot account for durability or world-building.</span>
+      <span class="node-file">VA-A3-LaborValue.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-atk" data-status="draft">
+      <span class="node-id">A4</span>
+      <span class="node-title">Freedom Mislocated</span>
+      <span class="node-claim">For Marx, freedom lies beyond necessity. For Arendt, freedom is Action (D3) — not the absence of necessity. Freedom becomes permanently deferred.</span>
+      <span class="node-file">VA-A4-Freedom.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="arrow">↓ ↓ ↓</div>
+
+<!-- L LAYER -->
+<div class="layer">
+  <div class="layer-title">Layer L — Consequences (lemmas)</div>
+  <div class="nodes">
+
+    <div class="node l-con" data-status="draft">
+      <span class="node-id">L1</span>
+      <span class="node-title">Worldlessness</span>
+      <span class="node-claim">If all human activity is Labor, nothing durable is produced. The World (D4) disappears. Society becomes a cycle of production and consumption — <em>Weltlosigkeit</em>.</span>
+      <span class="node-file">VA-L1-Weltlosigkeit.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-con" data-status="draft">
+      <span class="node-id">L2</span>
+      <span class="node-title">Public Realm Dissolves</span>
+      <span class="node-claim">The public realm requires a durable world as its stage. Without the World (L1), politics becomes mere administration of economic processes.</span>
+      <span class="node-file">VA-L2-PublicRealm.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-con" data-status="draft">
+      <span class="node-id">L3</span>
+      <span class="node-title">Action Becomes Impossible</span>
+      <span class="node-claim">Action (D3) requires the public realm. Without it, humans can only labor and consume — they cannot initiate, appear, or act politically.</span>
+      <span class="node-file">VA-L3-ActionImpossible.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+    <div class="node l-con" data-status="draft">
+      <span class="node-id">L4</span>
+      <span class="node-title">Communist Ideal Inverted</span>
+      <span class="node-claim">Marx's classless society is not liberation but the perfection of <em>animal laborans</em>. Abundance without world. Plenty without durability.</span>
+      <span class="node-file">VA-L4-CommunistIdeal.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="arrow">↓ ↓ ↓</div>
+
+<!-- T LAYER -->
+<div class="layer">
+  <div class="layer-title">Layer T — Theorem</div>
+  <div class="nodes">
+
+    <div class="node l-thm" data-status="draft">
+      <span class="node-id">T</span>
+      <span class="node-title">Marxism destroys the conditions for political freedom</span>
+      <span class="node-claim">By centering all activity on Labor and erasing D1/D2/D3, Marxism cannot theorize the World, the public realm, or Action. The result is the triumph of <em>animal laborans</em>: rich in consumption, poor in world, incapable of politics.</span>
+      <span class="node-file">VA-T-MainCritique.md</span>
+      <span class="status s-draft">draft</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Count statuses
+const nodes = document.querySelectorAll('.node[data-status]');
+let counts = { draft: 0, progress: 0, complete: 0 };
+nodes.forEach(n => {
+  const s = n.dataset.status;
+  if (s === 'draft') counts.draft++;
+  else if (s === 'in-progress') counts.progress++;
+  else if (s === 'complete') counts.complete++;
+});
+document.getElementById('cnt-draft').textContent = counts.draft;
+document.getElementById('cnt-progress').textContent = counts.progress;
+document.getElementById('cnt-complete').textContent = counts.complete;
+</script>
+
+</body>
+</html>

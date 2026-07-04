@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Philosophy Reading Framework</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F9F7F3;
+  --surface: #FFFFFF;
+  --ink: #1C1917;
+  --ink2: #44403C;
+  --ink3: #78716C;
+  --border: #E7E3DC;
+  --border2: #D5CFC6;
+  --accent: #2D5A3D;
+  --sidebar-bg: #1C1917;
+  --sidebar-text: #A8A29E;
+  --sidebar-active: #F9F7F3;
+  --sidebar-section: #57534E;
+}
+
+html, body { height: 100%; font-size: 15px; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--bg);
+  color: var(--ink);
+  display: flex;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 210px;
+  min-width: 210px;
+  background: var(--sidebar-bg);
+  height: 100vh;
+  position: fixed;
+  top: 0; left: 0;
+  overflow-y: auto;
+  padding: 2rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.sidebar-brand {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #78716C;
+  padding: 0 1.25rem 0.25rem;
+}
+.sidebar-tagline {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  color: #57534E;
+  padding: 0 1.25rem 1.75rem;
+  line-height: 1.5;
+  font-style: italic;
+}
+.sidebar-group {
+  margin-bottom: 0.25rem;
+}
+.sidebar-section {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sidebar-section);
+  padding: 1rem 1.25rem 0.35rem;
+}
+.nav-item {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12.5px;
+  color: var(--sidebar-text);
+  padding: 0.42rem 1.25rem;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, border-color 0.12s;
+  user-select: none;
+  display: block;
+}
+.nav-item:hover { color: #D6D3D1; }
+.nav-item.active {
+  color: var(--sidebar-active);
+  border-left-color: #6B9E7A;
+  background: rgba(255,255,255,0.04);
+}
+
+/* ── MAIN ── */
+.main {
+  margin-left: 210px;
+  flex: 1;
+  padding: 3.5rem 4rem 5rem;
+  max-width: 780px;
+}
+
+/* ── TYPOGRAPHY ── */
+.page { display: none; }
+.page.active { display: block; }
+
+.page-title {
+  font-size: 30px;
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.page-sub {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: var(--ink3);
+  margin-bottom: 2.5rem;
+  line-height: 1.65;
+  max-width: 540px;
+}
+h2 {
+  font-size: 19px;
+  font-weight: normal;
+  margin: 2.75rem 0 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+}
+h3 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink3);
+  margin: 1.5rem 0 0.5rem;
+}
+p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink2);
+  margin-bottom: 0.75rem;
+}
+code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  background: #EDE9E3;
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+/* ── PRINCIPLE CARDS ── */
+.principle {
+  border: 1px solid var(--border);
+  border-left: 3px solid;
+  border-radius: 0 6px 6px 0;
+  background: var(--surface);
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 0.85rem;
+}
+.principle h4 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--ink);
+}
+.principle p { font-size: 14px; margin-bottom: 0; }
+.p-green  { border-left-color: #3D7A52; }
+.p-blue   { border-left-color: #3D5A8A; }
+.p-red    { border-left-color: #8A3D3D; }
+.p-amber  { border-left-color: #8A6B2A; }
+.p-purple { border-left-color: #6B3D8A; }
+.p-gray   { border-left-color: #78716C; }
+
+/* ── GENERIC CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 0.85rem;
+}
+.card p { font-size: 14px; margin-bottom: 0.4rem; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── PERMISSION GRID ── */
+.perm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+.perm-col h4 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+.perm-col.allow h4 { color: #2D5A3D; }
+.perm-col.restrict h4 { color: #7A2D2D; }
+.perm-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  color: var(--ink2);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+.pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+.pill-allow   { background: #D7EDE1; color: #1A4A2C; }
+.pill-avoid   { background: #F0DADA; color: #4A1A1A; }
+.pill-restrict{ background: #F0E8D5; color: #4A3010; }
+
+/* ── VOICE TAG TABLE ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 1rem 0;
+}
+th {
+  background: #EDE9E3;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: left;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border2);
+  color: var(--ink3);
+}
+td {
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+tr:nth-child(even) td { background: #FDFCFA; }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.t-text   { background: #D7EDE1; color: #1A4A2C; }
+.t-lang   { background: #D7E6F0; color: #1A2F4A; }
+.t-struct { background: #F0E8D5; color: #4A3010; }
+.t-mp     { background: #E8D7F0; color: #2F1A4A; }
+.t-q      { background: #F0EDD5; color: #4A3A10; }
+.t-ref    { background: #D5F0DD; color: #104A1E; }
+.t-sch    { background: #EDE9E3; color: #3A3530; }
+.t-hyp    { background: #F0D7D7; color: #4A1A1A; }
+.t-ai     { background: #E3E3ED; color: #1A1A4A; }
+
+/* ── DOC TYPE CARDS ── */
+.doctype {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 0.85rem;
+  border-left: 3px solid;
+}
+.doctype h4 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--ink);
+}
+.doctype p { font-size: 14px; margin-bottom: 0.35rem; line-height: 1.65; }
+.doctype .fn { font-size: 12px; color: var(--ink3); margin-top: 0.5rem; margin-bottom: 0; }
+.dt-1 { border-left-color: #3D7A52; }
+.dt-2 { border-left-color: #3D5A8A; }
+.dt-3 { border-left-color: #8A3D3D; }
+.dt-4 { border-left-color: #8A6B2A; }
+.dt-5 { border-left-color: #6B3D8A; }
+.dt-6 { border-left-color: #78716C; }
+
+/* ── TEMPLATES ── */
+.tpl-block {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  line-height: 1.9;
+  background: #F2EEE8;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 1.25rem 1.5rem;
+  white-space: pre-wrap;
+  margin: 0.5rem 0 2rem;
+  color: var(--ink);
+  overflow-x: auto;
+}
+
+/* ── STEPS ── */
+.step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+}
+.step-num {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink3);
+  margin-top: 2px;
+}
+.step-body {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+.step-body strong { color: var(--ink); font-weight: 600; }
+.step-body em { color: var(--ink3); font-style: normal; font-size: 13px; }
+
+/* ── CALLOUT ── */
+.callout {
+  background: #F2EEE8;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+.callout-label {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  margin-bottom: 0.4rem;
+}
+.callout p {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13.5px;
+  margin-bottom: 0;
+  color: var(--ink2);
+  line-height: 1.7;
+}
+
+/* ── RULE ROWS ── */
+.rule-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: var(--ink2);
+  margin-bottom: 0.55rem;
+  line-height: 1.5;
+}
+
+/* ── STATUS BADGES ── */
+.badge {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: #F0E8D5;
+  color: #4A3010;
+}
+
+/* ── FOLDER TREE ── */
+.folder {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  line-height: 2;
+  background: #F2EEE8;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 1.25rem 1.5rem;
+  margin: 0.75rem 0;
+}
+.f-dir  { color: #3D5A8A; }
+.f-file { color: #78716C; }
+.f-note { color: #A8A29E; font-size: 11px; }
+
+/* ── EXAMPLE BLOCKS ── */
+.ex-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin: 0.6rem 0;
+}
+.ex-label {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  margin-bottom: 0.45rem;
+}
+.ex-block p {
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 0.35rem;
+  color: var(--ink2);
+}
+.ex-block p:last-child { margin-bottom: 0; }
+.ex-meta {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  color: var(--ink3);
+  margin-top: 0.5rem;
+}
+
+hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-brand">Phil Reading</div>
+  <div class="sidebar-tagline">AI-assisted,<br>reader-authoritative</div>
+  <div style="margin-top:.5rem"><a href="../index.html" style="font-size:.72rem;color:inherit;opacity:.65;text-decoration:none">&larr; 主页</a></div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-section">Foundation</div>
+    <div class="nav-item active" onclick="go('principles',this)">Core principles</div>
+    <div class="nav-item" onclick="go('permissions',this)">AI permissions</div>
+    <div class="nav-item" onclick="go('tags',this)">Voice tags</div>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-section">Documents</div>
+    <div class="nav-item" onclick="go('doctypes',this)">Document types</div>
+    <div class="nav-item" onclick="go('templates',this)">Templates</div>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-section">Workflows</div>
+    <div class="nav-item" onclick="go('wf-english',this)">English reading</div>
+    <div class="nav-item" onclick="go('wf-nonenglish',this)">Non-English reading</div>
+    <div class="nav-item" onclick="go('wf-mp',this)">Meaning points</div>
+    <div class="nav-item" onclick="go('wf-concept',this)">Concept tracking</div>
+    <div class="nav-item" onclick="go('wf-resource',this)">Resource discovery</div>
+    <div class="nav-item" onclick="go('wf-questions',this)">Question generation</div>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-section">Reference</div>
+    <div class="nav-item" onclick="go('uncertainty',this)">Uncertainty rules</div>
+    <div class="nav-item" onclick="go('structure',this)">Folder structure</div>
+    <div class="nav-item" onclick="go('example',this)">Worked example</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ── PAGE: PRINCIPLES ── -->
+<div id="principles" class="page active">
+  <div class="page-title">Core Principles</div>
+  <p class="page-sub">The framework rests on six commitments. All other rules — AI permissions, document types, workflows — follow from these.</p>
+
+  <div class="principle p-green">
+    <h4>1. Reader authority</h4>
+    <p>All philosophical meaning originates from the reader. AI may not produce, suggest, or imply interpretation without explicit request, and even then its output is marked non-authoritative.</p>
+  </div>
+
+  <div class="principle p-blue">
+    <h4>2. Voice separation</h4>
+    <p>Every claim in a note has a declared source. The framework makes it impossible to confuse primary text, language support, reader meaning, and AI organizational work.</p>
+  </div>
+
+  <div class="principle p-red">
+    <h4>3. Textual accountability</h4>
+    <p>Claims about the text must be tied to a specific passage — book, chapter, page, or paragraph. Claims not tied to text are explicitly marked as reader-generated or AI-generated.</p>
+  </div>
+
+  <div class="principle p-amber">
+    <h4>4. Uncertainty preservation</h4>
+    <p>The framework does not resolve uncertainty the reader has not resolved. Open questions and unclear passages are tracked, not closed. "Unclear" is a legitimate epistemic state, not a failure to be corrected.</p>
+  </div>
+
+  <div class="principle p-purple">
+    <h4>5. Asymmetric verification</h4>
+    <p>Unlike mathematics, philosophical claims cannot always be locally verified. This is a permanent feature of the domain, not a deficiency. The framework accommodates it by strictly separating textual content from interpretation and requiring explicit labels on all interpretive moves.</p>
+  </div>
+
+  <div class="principle p-gray">
+    <h4>6. AI as infrastructure, not interpreter</h4>
+    <p>AI operates at the level of language access, structural observation, organization, and retrieval. It does not operate at the level of meaning, evaluation, or political classification — unless explicitly and narrowly requested.</p>
+  </div>
+</div>
+
+<!-- ── PAGE: PERMISSIONS ── -->
+<div id="permissions" class="page">
+  <div class="page-title">AI Permissions</div>
+  <p class="page-sub">A precise map of what AI may and may not do. When in doubt, default to the restricted side.</p>
+
+  <div class="perm-grid">
+    <div class="perm-col allow">
+      <h4>Permitted</h4>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Sentence-level grammar and vocabulary breakdown</div>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Direct, literal translation (marked as such)</div>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Organizing meaning points by theme and concept</div>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Tagging and indexing the reader's notes</div>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Maintaining reading progress files</div>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Locating terms or themes within provided passages</div>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Generating questions without supplying answers</div>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Finding external resources with full citations</div>
+      <div class="perm-row"><span class="pill pill-allow">allow</span>Noting structural features of a passage (form, not meaning)</div>
+    </div>
+    <div class="perm-col restrict">
+      <h4>Restricted</h4>
+      <div class="perm-row"><span class="pill pill-avoid">avoid</span>Producing philosophical meaning as authoritative</div>
+      <div class="perm-row"><span class="pill pill-avoid">avoid</span>Writing interpretations in the reader's voice</div>
+      <div class="perm-row"><span class="pill pill-avoid">avoid</span>Classifying a thinker politically without full grounding</div>
+      <div class="perm-row"><span class="pill pill-avoid">avoid</span>Flattening a complex thinker into a familiar label</div>
+      <div class="perm-row"><span class="pill pill-avoid">avoid</span>Letting translation silently become interpretation</div>
+      <div class="perm-row"><span class="pill pill-avoid">avoid</span>Summaries that smuggle in a contested reading</div>
+      <div class="perm-row"><span class="pill pill-avoid">avoid</span>Treating secondary scholarship as settled truth</div>
+      <div class="perm-row"><span class="pill pill-avoid">avoid</span>Erasing or resolving the reader's stated uncertainty</div>
+      <div class="perm-row"><span class="pill pill-restrict">restrict</span>[HYP] only on explicit request, with alternatives</div>
+    </div>
+  </div>
+
+  <h2>Prompt discipline</h2>
+  <p>When bringing material to AI, name the mode explicitly. The mode determines what AI is permitted to do in that exchange.</p>
+
+  <div class="card">
+    <h3>Language mode</h3>
+    <p>"Give me a vocabulary and grammar breakdown of this sentence. Do not comment on what it means philosophically."</p>
+  </div>
+  <div class="card">
+    <h3>Organization mode</h3>
+    <p>"Organize these meaning points into the MP template. Do not rewrite any point. Add tags and suggest statuses only."</p>
+  </div>
+  <div class="card">
+    <h3>Question mode</h3>
+    <p>"Generate questions that help me articulate my own understanding of this passage. Do not suggest answers or interpretations."</p>
+  </div>
+  <div class="card">
+    <h3>Resource mode</h3>
+    <p>"Find me verifiable resources on [specific topic]. Give full citations. Do not use the resources to argue for a reading of the text."</p>
+  </div>
+  <div class="card">
+    <h3>Hypothesis mode — explicit only</h3>
+    <p>"I am explicitly asking for an interpretive hypothesis on this passage. Give textual basis, at least one alternative reading, and mark the output [HYP]."</p>
+  </div>
+</div>
+
+<!-- ── PAGE: TAGS ── -->
+<div id="tags" class="page">
+  <div class="page-title">Voice / Provenance Tags</div>
+  <p class="page-sub">Every substantive claim in a note must carry one of these tags. AI does not add, remove, or change the tag on any claim the reader has made. The tag is set by whoever authored the content.</p>
+
+  <table>
+    <thead>
+      <tr><th>Tag</th><th>Name</th><th>What it marks</th><th>Who sets it</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag t-text">[TEXT]</span></td>
+        <td>Primary text</td>
+        <td>Direct quotation or very close paraphrase from the primary source. Must include a location reference: ch. / p. / §.</td>
+        <td>Reader</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-lang">[LANG]</span></td>
+        <td>Language support</td>
+        <td>Grammar explanation, vocabulary note, translation decision, or ambiguity flag. Factual in nature; carries no philosophical weight. May be AI-generated on request.</td>
+        <td>Reader or AI</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-struct">[STRUCT]</span></td>
+        <td>Structural observation</td>
+        <td>Observation about how a passage is organized: paragraph breaks, numbered items, transitions, contrasts, repetitions. Claims form, not meaning.</td>
+        <td>Reader or AI</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-mp">[MP]</span></td>
+        <td>Meaning point</td>
+        <td>A statement, idea, observation, distinction, question, or emerging thought from the reader. May be text-derived or reader-originated — origin is not distinguished at this stage. The primary vehicle of philosophical engagement.</td>
+        <td>Reader only</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-q">[Q]</span></td>
+        <td>Open question</td>
+        <td>A question the reader is posing — to themselves, to the text, or left open. AI does not resolve [Q] entries unless the reader explicitly asks for factual information.</td>
+        <td>Reader only</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-ref">[REF]</span></td>
+        <td>Verifiable reference</td>
+        <td>A cited external resource: edition, article, lecture, historical note. Must include source information sufficient to verify independently.</td>
+        <td>Reader or AI (verified)</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-sch">[SCHOLAR]</span></td>
+        <td>Secondary scholarship</td>
+        <td>A view attributable to a named scholar, with citation. Treated as one possible reading, not as authority. Never merged into [MP] without the reader's action.</td>
+        <td>Reader or AI (cited)</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-hyp">[HYP]</span></td>
+        <td>Interpretive hypothesis</td>
+        <td>An interpretive claim, generated only on explicit reader request. Must include textual basis, at least one alternative reading, and a disclaimer of non-authority. Never generated by default.</td>
+        <td>AI (on request)</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-ai">[AI-ORG]</span></td>
+        <td>AI organizational work</td>
+        <td>Structural or indexing work done by AI: grouping, tagging, cross-referencing, formatting. Never applied to philosophical claims. Clearly separated from reader content.</td>
+        <td>AI</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-label">Critical rule</div>
+    <p>AI must never write content tagged [MP] or [Q]. These tags belong to the reader alone. If AI produces something that looks like a meaning point, it must be tagged [HYP] (if requested) or [AI-ORG] (if organizational), never [MP].</p>
+  </div>
+</div>
+
+<!-- ── PAGE: DOC TYPES ── -->
+<div id="doctypes" class="page">
+  <div class="page-title">Document Types</div>
+  <p class="page-sub">Six note types cover the full reading cycle. Each has a specific function and a defined boundary that prevents one type from absorbing the role of another.</p>
+
+  <div class="doctype dt-1">
+    <h4>1. Passage Note (PN)</h4>
+    <p>Anchors a specific passage from the primary text. For English texts, includes optional inline language annotations. Entry point for all reading. Every other note type traces back to a Passage note.</p>
+    <p class="fn">Filename: <code>[BookSlug]-PN-[ChX]-[001].md</code> &nbsp;·&nbsp; Example: <code>HC-PN-Pr-001.md</code></p>
+  </div>
+
+  <div class="doctype dt-2">
+    <h4>2. Language Table Note (LT)</h4>
+    <p>A separate note containing the 4-column sentence-by-sentence table: original | breakdown &amp; vocabulary | Chinese translation | remarks. Embedded into the Passage note via Obsidian's <code>![[LT-note]]</code> syntax. For English texts this note is optional — create it only when vocabulary or grammar needs dedicated attention.</p>
+    <p class="fn">Filename: <code>[BookSlug]-LT-[ChX]-[001].md</code> &nbsp;·&nbsp; Example: <code>HC-LT-Pr-001.md</code></p>
+  </div>
+
+  <div class="doctype dt-3">
+    <h4>3. Meaning Point Note (MP)</h4>
+    <p>Stores the reader's meaning points for a passage or reading session. Each point is tagged [MP], given a status (tentative / text-supported / unclear), and linked to its source passage. AI may organize and cross-link but never rewrites a point or adds meaning content.</p>
+    <p class="fn">Filename: <code>[BookSlug]-MP-[001].md</code> &nbsp;·&nbsp; Example: <code>HC-MP-001.md</code></p>
+  </div>
+
+  <div class="doctype dt-4">
+    <h4>4. Concept Note (CN)</h4>
+    <p>Tracks a single key term or concept across the book. Does not define it once and for all. Grows as the reader encounters the term in new passages. Records evolving understanding, internal tensions, and open questions. The term's status moves from open → provisional → stable only through the reader's own decisions.</p>
+    <p class="fn">Filename: <code>[BookSlug]-CN-[concept].md</code> &nbsp;·&nbsp; Example: <code>HC-CN-labor.md</code></p>
+  </div>
+
+  <div class="doctype dt-5">
+    <h4>5. Resource Note (RN)</h4>
+    <p>Stores verified external materials: editions, translations, scholarly articles, lectures, historical background. Every entry must include citation information sufficient to verify independently. Separates primary sources, secondary scholarship, and reference material. AI may help locate; reader must verify.</p>
+    <p class="fn">Filename: <code>[BookSlug]-RN-[slug].md</code> &nbsp;·&nbsp; Example: <code>HC-RN-Benhabib1996.md</code></p>
+  </div>
+
+  <div class="doctype dt-6">
+    <h4>6. Reading Log (LOG)</h4>
+    <p>Tracks the reading process: sessions, passages read, notes created, active concepts, open questions, unresolved problems, and a running index of passage → note links. One log per book. Updated at the end of each session. The log is the reader's map of where they are and what remains open.</p>
+    <p class="fn">Filename: <code>[BookSlug]-LOG.md</code> &nbsp;·&nbsp; Example: <code>HC-LOG.md</code></p>
+  </div>
+</div>
+
+<!-- ── PAGE: TEMPLATES ── -->
+<div id="templates" class="page">
+  <div class="page-title">Templates</div>
+  <p class="page-sub">Copy these into your <code>_templates/</code> folder and set them as Obsidian core templates for each note type.</p>
+
+  <h2>Passage Note (PN)</h2>
+<div class="tpl-block">---
+type: passage-note
+book: 
+chapter: 
+section: 
+pages: 
+date-read: 
+language: english
+lang-table: "[[BookSlug-LT-ChX-001]]"
+related-mp: []
+related-cn: []
+status: reading | complete | revisit
+---
+
+## Passage
+
+[TEXT] Paste or transcribe the passage here.
+Source: Ch. X, p. Y.
+
+## Language annotations
+
+[LANG] Vocabulary, term flags, ambiguities noted.
+(Leave blank if none for this passage)
+
+## Structural observations
+
+[STRUCT] Optional. How is this passage organized?
+(Paragraph structure, transitions, numbered items, contrasts)
+
+## Embedded language table (non-English only)
+
+![[BookSlug-LT-ChX-001]]
+
+## Linked meaning points
+
+[AI-ORG] MP notes generated from this passage:
+- [[BookSlug-MP-001]]</div>
+
+  <h2>Language Table Note (LT)</h2>
+<div class="tpl-block">---
+type: language-table
+book: 
+chapter: 
+pages: 
+source-language: french | german | other
+date: 
+---
+
+[LANG]
+
+| Original sentence | Breakdown & vocabulary | Chinese translation | Remarks |
+|---|---|---|---|
+| Sentence 1 | Grammar structure; difficult vocabulary; idioms; philosophical terms; ambiguities | 直译 | Translation decisions; terms to preserve in original; ambiguity warnings |
+| Sentence 2 | ... | ... | ... |
+
+Notes:
+- Translation is kept literal unless otherwise marked in Remarks.
+- Terms left in original language are marked with an asterisk in the Remarks column.
+- Contested philosophical terms should be flagged for a Concept note.</div>
+
+  <h2>Meaning Point Note (MP)</h2>
+<div class="tpl-block">---
+type: meaning-point
+book: 
+session-date: 
+source-passage: "[[BookSlug-PN-ChX-001]]"
+themes: []
+concepts: []
+status: active | archived
+---
+
+## Meaning points
+
+### MP-001
+[MP] Write the point exactly as you have it. No editing for polish.
+Status: tentative | text-supported | unclear
+Textual basis: Ch. X, p. Y (leave blank if reader-originated)
+Related concept: [[BookSlug-CN-concept]]
+
+---
+
+### MP-002
+[MP] ...
+Status: 
+Textual basis: 
+
+---
+
+[AI-ORG] Theme tags applied by AI: []
+[AI-ORG] Linked concept notes suggested: []
+[AI-ORG] No meaning points were rewritten in this session.</div>
+
+  <h2>Concept Note (CN)</h2>
+<div class="tpl-block">---
+type: concept-note
+book: 
+concept: 
+first-encountered: "[[BookSlug-PN-ChX-001]]"
+date-opened: 
+status: open | provisional | stable
+---
+
+## Working understanding
+
+[MP] Reader's current working sense of this concept.
+Last updated: [date]
+(Do not delete earlier entries — append and date them)
+
+---
+[date]: ...
+
+## Passages where this term appears
+
+- [TEXT] Ch. X, p. Y — brief reader note on usage here
+- [TEXT] Ch. Z, p. W — brief reader note on usage here
+
+## Tensions and open questions
+
+[Q] Does the term mean the same thing in passage X as in passage Y?
+[Q] ...
+
+## How my understanding has changed
+
+[MP] [date] — Record shifts in understanding as reading continues.
+Do not overwrite. Append.
+
+## Scholar readings (sought when needed)
+
+[SCHOLAR] Author. "Title." Journal/Book, Year. — One sentence on their reading.
+[AI-ORG] Source verified: yes | no</div>
+
+  <h2>Resource Note (RN)</h2>
+<div class="tpl-block">---
+type: resource-note
+book: 
+category: edition | translation | article | lecture | background | related-primary
+date-added: 
+verified: yes | no | partial
+---
+
+## Citation
+
+[REF] Author. "Title." Publisher / Journal, Year.
+
+Type: primary | secondary | reference
+
+Link or location:
+
+## Reader summary
+
+(2–3 sentences in reader's own words — not copy-pasted from abstract)
+
+## Why this resource is relevant
+
+## Reliability note
+
+[AI-ORG] Source type: academic peer-reviewed | academic press | reference work | popular
+Known caveats or disputes about this source:</div>
+
+  <h2>Reading Log (LOG)</h2>
+<div class="tpl-block">---
+type: reading-log
+book: 
+started: 
+---
+
+## Sessions
+
+### [YYYY-MM-DD]
+Passages read: Ch. X, pp. Y–Z
+Notes created: [[PN-001]], [[MP-001]]
+Concepts opened or updated: [[CN-concept]]
+Open questions from this session:
+- 
+
+---
+
+## Active concepts
+
+- [[CN-concept-1]] — status: open
+- [[CN-concept-2]] — status: provisional
+
+## Unresolved problems
+
+- 
+
+## Passage → notes index
+
+| Passage | PN | MP | LT |
+|---|---|---|---|
+| Ch. 1, §1, pp. 1–6 | [[PN-001]] | [[MP-001]] | — |
+| Ch. 1, §2, pp. 7–14 | [[PN-002]] | [[MP-002]] | — |</div>
+</div>
+
+<!-- ── WORKFLOW: ENGLISH ── -->
+<div id="wf-english" class="page">
+  <div class="page-title">Workflow: English Reading</div>
+  <p class="page-sub">The language barrier is lower but not absent. The key discipline is to complete language support before writing meaning points — the two steps must not happen simultaneously.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Create a Passage note.</strong> Paste or transcribe the passage. Record book, chapter, section, page numbers in frontmatter.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>Read the passage yourself first.</strong> Do not open AI yet. Get your first contact with the text independently.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>Flag language issues.</strong> Mark: difficult vocabulary, philosophical terms that seem loaded, ambiguous phrases, terms that recur suspiciously. Write these as <code>[LANG]</code> annotations directly in the Passage note.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>Ask AI for language help on flagged items only.</strong> Specify mode: "Language mode only — vocabulary definitions, grammar structure, possible Chinese translation alternatives, ambiguity warnings for the terms I have flagged. Do not comment on meaning." Paste the <code>[LANG]</code> output into the note.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>Write your meaning points independently.</strong> Close the AI context. Write <code>[MP]</code> entries in your own words. The language annotations are available in the note, but do not re-open AI while writing meaning points.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body"><strong>Bring points to AI for organization.</strong> Specify mode: "Organization mode — tag these by theme and concept, suggest links to existing Concept notes, do not rewrite any point." Review and approve each suggestion. Everything AI does here is <code>[AI-ORG]</code>.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body"><strong>Update the Reading log</strong> and any active Concept notes with the passage reference and any new [MP] observations about the concept.</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The separation rule</div>
+    <p>Steps 3–4 (language) and step 5 (meaning) must not happen simultaneously. Language support should reduce the access barrier; it must not shape meaning points before the reader has formed them independently. The two steps are sequential, not parallel.</p>
+  </div>
+</div>
+
+<!-- ── WORKFLOW: NON-ENGLISH ── -->
+<div id="wf-nonenglish" class="page">
+  <div class="page-title">Workflow: Non-English Reading</div>
+  <p class="page-sub">For French or German texts. The language table is the primary access tool and lives in a separate LT note embedded into the Passage note. The table reduces the barrier; it does not replace contact with the original.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Create both a Passage note and a Language Table note.</strong> Paste the passage into both. Link the LT from the PN using <code>![[BookSlug-LT-ChX-001]]</code> under the "Embedded language table" section.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>Ask AI to fill the language table sentence by sentence.</strong> Specify: "Language mode — fill the four columns for each sentence. The Chinese translation must be literal unless marked otherwise in the Remarks column. Flag any philosophically contested terms." Paste the result into the LT note.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>Review the table yourself.</strong> Read every row. Flag any translation decision you find suspicious, interpretive, or unclear. Mark these as <code>[Q]</code> in the Remarks column. Contested terms should be preserved in the source language.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>Read the passage using the table as support.</strong> The table is scaffolding. Your primary encounter is with the original text. Terms left in the original language in the Remarks column are candidates for a Concept note.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">5–7</div>
+    <div class="step-body"><strong>Continue as English workflow steps 5–7:</strong> write meaning points independently, bring to AI for organization, update log and concept notes.</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Translation as hidden interpretation</div>
+    <p>A translation can carry philosophical weight invisibly. The Remarks column is where this is surfaced. When AI translates a term that has contested philosophical meaning (e.g., German <em>Welt</em>, <em>Arbeit</em>, <em>Dasein</em>, <em>Öffentlichkeit</em>), the Remarks column must flag the contest and offer alternative translations. The reader then decides whether to preserve the original term.</p>
+  </div>
+</div>
+
+<!-- ── WORKFLOW: MP ── -->
+<div id="wf-mp" class="page">
+  <div class="page-title">Workflow: Organizing Meaning Points</div>
+  <p class="page-sub">Meaning points are written freely first. Organization comes after. AI never writes the points — it only structures what the reader has already written.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Write meaning points freely</strong> during or after reading. Do not self-edit for structure or clarity. Use plain language. A point can be a full observation, an unresolved unease, a noticed distinction, a tentative connection, or just a phrase that stood out and demands attention.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>Bring raw points to AI with this instruction:</strong> "Organization mode — organize these into the MP template. Do not rewrite any point. Add [MP] tags and a status (tentative / text-supported / unclear) to each. Suggest theme tags only. Mark your additions [AI-ORG]."</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>Review AI organization.</strong> Accept or reject each tag, status suggestion, and cross-link. If AI has reworded anything — even slightly — reject it and instruct it to restore the original wording exactly.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>Accept the structured note into your vault.</strong> The <code>[AI-ORG]</code> block at the bottom records what AI did. The reader's words remain unchanged throughout the note.</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">What counts as a meaning point</div>
+    <p>A meaning point can be: a conceptual observation, a noticed distinction, a question about a passage, a tentative connection between passages, a disagreement or unease, a term that seems important, or an idea that emerged while reading but is not directly from the text. All of these are welcome. None need to be polished or resolved.</p>
+  </div>
+</div>
+
+<!-- ── WORKFLOW: CONCEPT ── -->
+<div id="wf-concept" class="page">
+  <div class="page-title">Workflow: Concept Tracking</div>
+  <p class="page-sub">Key terms are not defined once and for all. A Concept note grows with the reading and records how the reader's understanding changes over time.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Open a Concept note</strong> the first time a term seems philosophically important. Write a first working sense of it under "Working understanding" as <code>[MP]</code>. Do not attempt a final definition. Mark the status as <em>open</em>.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>Each time the term reappears in a new passage,</strong> add the passage reference and a brief reader note under "Passages where this term appears."</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>Record tensions as <code>[Q]</code>.</strong> If the term seems used differently in two passages, or if a new usage challenges your working sense, record this as an open question rather than resolving it prematurely.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>Update "How my understanding has changed"</strong> at intervals, dated. Do not overwrite earlier entries — append. This record shows the development of your thinking over the course of the reading.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>Ask AI for scholar readings only when you want them,</strong> marking them <code>[SCHOLAR]</code> with full citation. Scholar readings do not replace or confirm your <code>[MP]</code>. They are one possible reading among others.</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Concept note as living document</div>
+    <p>A Concept note is never finished during active reading. Its status moves from <em>open</em> to <em>provisional</em> only when the reader feels some working stability — not when AI has supplied a definition. <em>Stable</em> is reserved for after the book is complete, if at all.</p>
+  </div>
+</div>
+
+<!-- ── WORKFLOW: RESOURCE ── -->
+<div id="wf-resource" class="page">
+  <div class="page-title">Workflow: Resource Discovery</div>
+  <p class="page-sub">AI may help locate external materials, but every result must be verifiable, and resource discovery is strictly separated from philosophical judgment.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>State a specific resource need.</strong> Examples: "Find me the standard scholarly edition and main available English translations of this book." — "Find me articles by named scholars on [specific topic] in this author's work." — "Give me verifiable historical background on [specific event or term] that this text assumes."</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>AI returns results with full citations.</strong> Each result must include: author, title, publisher or journal, year, and a link where possible. Unsourced general claims — "scholars argue that…" — are not accepted. Every claim must be attributable to a named source.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>You verify the existence</strong> of each resource before it enters a Resource note. Mark <code>verified: yes / no / partial</code> in the frontmatter. AI may have hallucinated a citation; never assume a resource exists until you have confirmed it.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>Resource discovery is separate from philosophical judgment.</strong> AI may not use a discovered resource to argue for an interpretation of the primary text unless the reader explicitly opens a [HYP] session.</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Types of resources worth seeking</div>
+    <p><strong>Editions and translations:</strong> which edition are you using? Are there significant differences between translations? Who translated it and when?<br><br>
+    <strong>Scholarship:</strong> request specific names and works, not general summaries. "Who are the three most cited commentators on this book?" is a better prompt than "summarize what scholars think."<br><br>
+    <strong>Historical context:</strong> events, debates, or intellectual traditions the text assumes. Request sourced background.<br><br>
+    <strong>Reference entries:</strong> encyclopedia or dictionary entries on key terms, for orientation only — mark these [REF], not [SCHOLAR].</p>
+  </div>
+</div>
+
+<!-- ── WORKFLOW: QUESTIONS ── -->
+<div id="wf-questions" class="page">
+  <div class="page-title">Workflow: Question Generation</div>
+  <p class="page-sub">Use when you want to be prompted to think without being interpreted. AI generates questions; you answer them in your own notes, not in conversation with AI.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Bring a passage or a set of meaning points.</strong> Specify mode: "Question mode — generate questions that help me articulate my own understanding of this passage or these points. Do not suggest answers. Do not suggest what the text means."</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>AI returns <code>[Q]</code>-tagged questions only.</strong> Good examples: "What do you think the author means by X in this sentence?" — "Does this connect to anything you read in an earlier chapter?" — "What is the source of your unease with this passage?" — "What would have to be true for this claim to hold?" — "Is your meaning point text-supported or an inference?"</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>You answer in your own notes,</strong> not in the conversation with AI. The questions become a scaffold for new <code>[MP]</code> entries. Close the AI context before writing your answers.</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Why questions and not answers</div>
+    <p>The risk of asking AI "what does this passage mean?" is that a plausible answer arrives, sounds authoritative, and forecloses the reader's own thinking before it has developed. Asking for questions instead keeps the interpretive space open. It also makes it easier to notice when AI has smuggled an interpretation into the phrasing of the question itself — which should be flagged and rejected.</p>
+  </div>
+</div>
+
+<!-- ── UNCERTAINTY ── -->
+<div id="uncertainty" class="page">
+  <div class="page-title">Uncertainty, Hypotheses, and Classification</div>
+  <p class="page-sub">Rules for the hardest cases: what to do when interpretation is tempting, when political labelling is requested, and when translation choices carry hidden weight.</p>
+
+  <h2>Tracking uncertainty</h2>
+  <p>Every meaning point carries a status. The reader sets it; AI may suggest but not override.</p>
+  <div class="card">
+    <div class="rule-row"><span class="badge">tentative</span> — An intuition or impression, not yet supported by a specific passage. Valid to hold and worth recording.</div>
+    <div class="rule-row"><span class="badge">text-supported</span> — The reader can point to a specific passage that grounds this point.</div>
+    <div class="rule-row"><span class="badge">unclear</span> — The reader does not yet understand this. The point is preserved but open. AI does not attempt to resolve it.</div>
+  </div>
+  <p>AI may suggest a status if the reader left it blank, but the reader must approve it. The reader may change a status at any time. AI may never change a status the reader has already set.</p>
+
+  <h2>Interpretive hypotheses [HYP]</h2>
+  <div class="card">
+    <p>AI may only generate [HYP] when the reader explicitly requests it using those words. A valid [HYP] block must include all of the following:</p>
+  </div>
+  <div class="step" style="margin-top:0.75rem">
+    <div class="step-num">a</div>
+    <div class="step-body">A textual basis — specific passage or passages, with location reference.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">b</div>
+    <div class="step-body">At least one alternative reading, stated fairly.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">c</div>
+    <div class="step-body">An explicit disclaimer in the block: "This is an interpretive hypothesis, not an authoritative reading."</div>
+  </div>
+  <div class="step">
+    <div class="step-num">d</div>
+    <div class="step-body">No claim that the hypothesis is correct, probable, standard, or widely held.</div>
+  </div>
+  <div class="callout">
+    <div class="callout-label">Key rule</div>
+    <p>A [HYP] block must never enter the reader's [MP] space. It stays in its own clearly labelled section. The reader may convert a [HYP] into an [MP] by deciding to hold it as their own tentative point — but that conversion is the reader's action, not AI's.</p>
+  </div>
+
+  <h2>Political and historical classification</h2>
+  <p>AI must not assign a thinker a political label (conservative, liberal, republican, totalitarian, etc.) without all four of the following conditions being met:</p>
+  <div class="step" style="margin-top:0.75rem">
+    <div class="step-num">1</div>
+    <div class="step-body">Explicit request from the reader.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">A specific textual basis — passages, not general reputation.</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">Historical context: what did this label mean in the relevant period and intellectual tradition?</div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">Alternative scholarly interpretations — the classification must be presented as contested, not settled.</div>
+  </div>
+  <p>Even when all four conditions are met, labels must not appear in summaries, index entries, or Concept notes without explicit reader authorization.</p>
+
+  <h2>Translation guard rules</h2>
+  <div class="card">
+    <div class="rule-row"><span class="pill pill-restrict">rule</span>All translations are tagged [LANG], never [MP] or [TEXT]</div>
+    <div class="rule-row"><span class="pill pill-restrict">rule</span>Philosophically contested terms are flagged in the Remarks column</div>
+    <div class="rule-row"><span class="pill pill-restrict">rule</span>Alternative translations are offered in Remarks when relevant</div>
+    <div class="rule-row"><span class="pill pill-restrict">rule</span>Key terms are preserved in the source language when translation is disputed</div>
+    <div class="rule-row"><span class="pill pill-restrict">rule</span>A translation is never treated as equivalent to the original in philosophical discussion</div>
+    <div class="rule-row"><span class="pill pill-restrict">rule</span>Reader may mark any translation decision [Q] to flag it as requiring their own scrutiny</div>
+  </div>
+</div>
+
+<!-- ── STRUCTURE ── -->
+<div id="structure" class="page">
+  <div class="page-title">Folder Structure</div>
+  <p class="page-sub">A fresh Obsidian vault organized around books. One subfolder per book. Shared reference materials at the top level.</p>
+
+  <div class="folder">
+<span class="f-dir">PhilReading/</span>
+├── <span class="f-dir">_templates/</span>
+│   ├── <span class="f-file">PASSAGE-NOTE.md</span>
+│   ├── <span class="f-file">LANGUAGE-TABLE.md</span>
+│   ├── <span class="f-file">MEANING-POINT.md</span>
+│   ├── <span class="f-file">CONCEPT-NOTE.md</span>
+│   ├── <span class="f-file">RESOURCE-NOTE.md</span>
+│   └── <span class="f-file">READING-LOG.md</span>
+├── <span class="f-dir">_resources/</span>                 <span class="f-note">← shared across books</span>
+│   └── <span class="f-file">RN-[shared-slug].md</span>
+└── <span class="f-dir">[BookSlug]/</span>                  <span class="f-note">← one folder per book</span>
+    ├── <span class="f-file">[BookSlug]-LOG.md</span>
+    ├── <span class="f-dir">passages/</span>
+    │   ├── <span class="f-file">[BookSlug]-PN-Ch1-001.md</span>
+    │   └── <span class="f-file">[BookSlug]-LT-Ch1-001.md</span>
+    ├── <span class="f-dir">meaning-points/</span>
+    │   ├── <span class="f-file">[BookSlug]-MP-001.md</span>
+    │   └── <span class="f-file">[BookSlug]-MP-002.md</span>
+    ├── <span class="f-dir">concepts/</span>
+    │   ├── <span class="f-file">[BookSlug]-CN-labor.md</span>
+    │   └── <span class="f-file">[BookSlug]-CN-world.md</span>
+    └── <span class="f-dir">resources/</span>
+        └── <span class="f-file">[BookSlug]-RN-Benhabib1996.md</span>
+  </div>
+
+  <h2>Naming conventions</h2>
+  <div class="card">
+    <p><code>[BookSlug]</code> — a short fixed identifier for the book. Examples: <code>HC</code> for The Human Condition, <code>OT</code> for The Origins of Totalitarianism.</p>
+    <p><code>[ChX]</code> — chapter or section code. Examples: <code>Ch1</code>, <code>Pr</code> (Prologue), <code>Ch2S3</code> (Chapter 2, Section 3).</p>
+    <p><code>[001]</code> — a three-digit sequential index, padded to allow sorting: 001, 002, 003…</p>
+    <p><code>[concept]</code> — a lowercase slug for the concept. Examples: <code>labor</code>, <code>public-realm</code>, <code>natality</code>.</p>
+    <p><code>[slug]</code> — a short descriptive identifier for resources. Examples: <code>Benhabib1996</code>, <code>Chicago1998-edition</code>.</p>
+  </div>
+
+  <h2>Obsidian setup</h2>
+  <div class="card">
+    <p>Enable the <strong>Templates</strong> core plugin. Set the template folder to <code>_templates/</code>. Assign a hotkey to insert template.</p>
+    <p>Enable <strong>Backlinks</strong>. This lets you see which Passage notes and Concept notes link to any given MP note — useful for tracing the source of a meaning point.</p>
+    <p>Use <strong>Tags</strong> (Obsidian tags with #) for theme tags applied by AI-ORG, such as <code>#labor</code> or <code>#public-realm</code>. Do not use Obsidian tags for voice/provenance — that is handled by the inline bracket tags [TEXT], [MP], etc.</p>
+    <p>The <code>![[LT-note]]</code> embed in Passage notes renders in Reading View. In Live Preview or Edit mode it appears as a linked filename.</p>
+  </div>
+</div>
+
+<!-- ── EXAMPLE ── -->
+<div id="example" class="page">
+  <div class="page-title">Worked Example</div>
+  <p class="page-sub">A short illustration showing the framework in practice. Every item is labelled by voice tag. The example makes explicit what AI produced versus what the reader produced.</p>
+
+  <h2>Passage Note — HC-PN-Pr-001</h2>
+
+  <div class="ex-block">
+    <div class="ex-label">Frontmatter</div>
+    <p><code>type: passage-note &nbsp;|&nbsp; book: The Human Condition &nbsp;|&nbsp; chapter: Prologue &nbsp;|&nbsp; pages: 1–6 &nbsp;|&nbsp; language: english &nbsp;|&nbsp; status: reading</code></p>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-label"><span class="tag t-text">[TEXT]</span> &nbsp; Primary passage — reader pasted this</div>
+    <p style="font-style:italic">"In 1957, an earth-born object made by man was launched into the universe…"</p>
+    <p class="ex-meta">Source: Prologue, p. 1</p>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-label"><span class="tag t-lang">[LANG]</span> &nbsp; Language annotation — AI generated on reader request (language mode)</div>
+    <p><strong>"earth-born"</strong> — compound adjective, an unusual coinage. In Arendt's German, note the distinction between <em>Erde</em> (earth) and <em>Welt</em> (world). These terms are not interchangeable in her work. The English "earth" may or may not track the German distinction. Worth checking which German term appears in the original.</p>
+    <p><strong>"universe"</strong> — used here rather than "world." This may be a deliberate distinction. Flag as a candidate for a Concept note: <em>earth / world / universe</em>.</p>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-label"><span class="tag t-struct">[STRUCT]</span> &nbsp; Structural observation — reader generated</div>
+    <p>The Prologue opens with a historical event (the Sputnik launch) before moving to philosophical reflection. The shift happens at the paragraph break on p. 2. This is an observation about form — it does not claim what the shift means.</p>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-label"><span class="tag t-ai">[AI-ORG]</span> &nbsp; Organizational work — AI only</div>
+    <p>Concept notes flagged for possible creation: [[HC-CN-earth]], [[HC-CN-world]]. Language annotations generated on reader request in language mode.</p>
+  </div>
+
+  <hr>
+
+  <h2>Meaning Point Note — HC-MP-001</h2>
+
+  <div class="ex-block">
+    <div class="ex-label"><span class="tag t-mp">[MP]</span> &nbsp; Reader meaning point — verbatim, not rewritten by AI</div>
+    <p>The opening sentence feels almost ironic — the launch of the satellite is presented as a triumph, but Arendt seems to be setting up a problem, not celebrating. There is something uneasy in "earth-born object made by man." Why does it matter that it is "made by man"? What else would have made it?</p>
+    <p class="ex-meta">Status: <span class="badge">tentative</span> &nbsp;·&nbsp; Textual basis: Prologue, p. 1</p>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-label"><span class="tag t-q">[Q]</span> &nbsp; Open question — reader generated</div>
+    <p>Is "earth-born" a philosophical category for Arendt or is it descriptive? If it is a category, what does it contrast with? Does it connect to her concept of worldliness?</p>
+  </div>
+
+  <div class="ex-block">
+    <div class="ex-label"><span class="tag t-ai">[AI-ORG]</span> &nbsp; AI organization — after the reader finished writing</div>
+    <p>Theme tags applied: #technology, #earth-world-distinction, #opening-move. Linked to [[HC-CN-world]]. No meaning points were rewritten in this session.</p>
+  </div>
+
+  <hr>
+
+  <div class="callout">
+    <div class="callout-label">What this example shows</div>
+    <p>
+      The reader pasted the text <span class="tag t-text" style="font-size:10px">[TEXT]</span> and asked AI for language help in language mode <span class="tag t-lang" style="font-size:10px">[LANG]</span>. The reader then made a structural observation independently <span class="tag t-struct" style="font-size:10px">[STRUCT]</span> and wrote the meaning point in their own words <span class="tag t-mp" style="font-size:10px">[MP]</span> and posed an open question <span class="tag t-q" style="font-size:10px">[Q]</span>. AI organized and tagged at the end <span class="tag t-ai" style="font-size:10px">[AI-ORG]</span>. No interpretation crossed from AI into the reader's meaning space at any point.
+    </p>
+  </div>
+</div>
+
+</main>
+
+<script>
+function go(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

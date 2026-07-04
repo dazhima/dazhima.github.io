@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phaedrus · Palinode · 252a–252b</title>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.5rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.2rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.3em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.92rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin-top:2rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .pager{display:flex; justify-content:space-between; gap:1rem; margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line); font-family:system-ui,sans-serif; font-size:.82rem}
+  .pager a{color:var(--amber); text-decoration:none}
+  .pager a:hover{text-decoration:underline}
+  .pager .mid{color:var(--muted)}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">Phaedrus</a> &rsaquo; <b>Palinode</b> &rsaquo; 252a–252b &nbsp;·&nbsp; 甘为奴 · 唯一的医者</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">英译</button>
+  <button class="btn" id="t-rem">注释</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Palinode · 252a–252b</h1>
+    <div class="sub">Plato, <i>Phaedrus</i> · 苏格拉底第二篇演讲 · Stephanus 252a–252b</div>
+    <div class="lead">见面之乐既已尝过,灵魂便再不肯离开:忘了母亲、兄弟、朋友,任家产散尽,
+      鄙弃从前自矜的礼法体统,甘愿为奴——只为离所渴慕者最近。因为它在这人身上,
+      找到了自己最大痛苦的<b>唯一医者</b>。这一节正面颠覆了前两篇"恋人是负担"的论调。</div>
+  </header>
+
+  <!-- 1 -->
+  <div class="unit para-start">
+    <p class="sent"><span class="zh-body"><span class="n">1</span>于是,只要<ruby>由得它<rt>hekousa einai</rt></ruby>,它便绝不肯离开那美者,也不把任何人看得比他更重;</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅθεν δὴ ἑκοῦσα εἶναι οὐκ ἀπολείπεται, οὐδέ τινα τοῦ καλοῦ περὶ πλείονος ποιεῖται,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>Therefore the soul will not, if it can help it, be left alone by the beautiful one, but esteems him above all others,</span></p>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">2</span><ruby>母亲<rt>mētēr</rt></ruby>、兄弟、所有朋友,它都<ruby>忘了个干净<rt>lelēstai</rt></ruby>;<ruby>家产<rt>ousia</rt></ruby>因无人照管而散尽,它也<ruby>毫不在意<rt>par' ouden tithetai</rt></ruby>;</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀλλὰ μητέρων τε καὶ ἀδελφῶν καὶ ἑταίρων πάντων λέλησται, καὶ οὐσίας δι᾽ ἀμέλειαν ἀπολλυμένης παρ᾽ οὐδὲν τίθεται,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>forgets for him mother and brothers and all friends, neglects property and cares not for its loss,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">λέλησται</b> · 完成时"已彻底忘却" <span class="zh">与全篇的<b>记忆</b>(<span class="gk">μνήμη</span>)主题成反讽:为了忆起天界的"美",灵魂忘掉了此世的一切牵系(亲族、财产、体面)。一种记忆的代价,是另一种遗忘。</span></div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">3</span>至于种种<ruby>礼法体统<rt>nomima kai euschēmona</rt></ruby>——它从前还<ruby>引以为傲<rt>ekallōpizeto</rt></ruby>的——如今一概<ruby>鄙弃<rt>kataphronēsasa</rt></ruby>:它甘愿<ruby>为奴<rt>douleuein</rt></ruby>,甘愿睡在任何容它栖身、离所渴慕者最近的地方。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>νομίμων δὲ καὶ εὐσχημόνων, οἷς πρὸ τοῦ ἐκαλλωπίζετο, πάντων καταφρονήσασα δουλεύειν ἑτοίμη καὶ κοιμᾶσθαι ὅπου ἂν ἐᾷ τις ἐγγυτάτω τοῦ πόθου·</span></p>
+      <p class="en"><span class="lbl">EN</span><span>and despising all the customs and proprieties in which it formerly took pride, it is ready to be a slave and to sleep wherever it is allowed, as near as possible to the beloved;</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-pun">双关</span><b class="gk">ἐκαλλωπίζετο</b> <span class="zh">"自我妆点、引以为美"——其词根正是 <span class="gk">καλλ-</span>(美, kallos)!从前他用"礼法体统"来<b>装点自己的美</b>;如今为了真正的"美",这些装点统统被弃。美让他放弃了"显得美"。</span></div>
+      <div class="remark"><span class="tag t-cf">对照</span><span class="zh"><b>甘愿为奴</b>(<span class="gk">δουλεύειν</span>)正面推翻了吕西阿斯与苏格拉底前两篇的论点——那里"爱者使人沦为奴隶"是<b>反对</b>爱的理由;翻案演讲里,这奴役是自愿的、是通往神圣的。</span></div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">4</span>因为它不只<ruby>敬畏<rt>sebesthai</rt></ruby>这位"美的拥有者",更在他身上找到了自己<ruby>最大痛苦<rt>megistoi ponoi</rt></ruby>的<ruby>唯一医者<rt>iatros monos</rt></ruby>。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πρὸς γὰρ τῷ σέβεσθαι τὸν τὸ κάλλος ἔχοντα ἰατρὸν ηὕρηκε μόνον τῶν μεγίστων πόνων.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>for it not only reveres him who possesses beauty, but finds in him the only healer of its greatest woes.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ἰατρός</b> · 医者 <span class="zh">所爱者既是<b>致病者</b>(那"流射"刺得灵魂生疼),又是<b>唯一的医者</b>(唯有再见到他能止痛)。爱在此被写成一种只有病源本身才能医治的病——病与药同体。</span></div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    读时可切入:"忘掉亲族、散尽家产、甘愿为奴"——这在前两篇演讲里正是<b>控告爱欲</b>的罪状,翻案演讲却把同样的行为读成神圣。
+    <b>同样的事实,如何因框架不同而从耻辱变成荣耀?</b>
+    "病源即唯一医者"这个悖论,柏拉图是想说爱无解,还是想说爱必须被引向更高的对象(美本身)才能真正痊愈?
+  </div>
+
+  <div class="pager">
+    <a href="palinode-06.html">← 251d–252a 混合的迷狂</a>
+    <a class="mid" href="index.html">目录</a>
+    <a href="palinode-08.html">252b–c 人称爱神,神称生翼者 →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-pun">双关</span>希腊文双关/词源</span>
+    <span><span class="tag t-cf">对照</span>中译/英译比较</span>
+    <span><span class="tag t-zhu">注</span>说明</span>
+  </div>
+  希腊原文:Burnet (OUP 1903)。英译:Fowler, Loeb (1925)。均经 Perseus,公共领域。中文直接译自希腊文。
+</footer>
+
+<script>
+  const body=document.body;
+  const map={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-rem':'hide-remarks'};
+  for(const id in map){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(map[id]); btn.classList.toggle('off'); };}
+</script>
+</body>
+</html>

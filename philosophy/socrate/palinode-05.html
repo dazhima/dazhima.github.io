@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phaedrus · Palinode · 251c–251d</title>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.5rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.2rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.3em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.92rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .punbox{margin:.5rem 0; padding:.7rem .9rem; background:var(--purple-soft); border:1px solid #d9cae8; border-left:3px solid var(--purple); border-radius:6px; font-family:system-ui,"PingFang SC",sans-serif; font-size:.85rem; line-height:1.7; color:#473059}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin-top:2rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .pager{display:flex; justify-content:space-between; gap:1rem; margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line); font-family:system-ui,sans-serif; font-size:.82rem}
+  .pager a{color:var(--amber); text-decoration:none}
+  .pager a:hover{text-decoration:underline}
+  .pager .mid{color:var(--muted)}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">Phaedrus</a> &rsaquo; <b>Palinode</b> &rsaquo; 251c–251d &nbsp;·&nbsp; ἵμερος:渴慕之流</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">英译</button>
+  <button class="btn" id="t-rem">注释</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Palinode · 251c–251d</h1>
+    <div class="sub">Plato, <i>Phaedrus</i> · 苏格拉底第二篇演讲 · Stephanus 251c–251d</div>
+    <div class="lead">羽翼既已萌动,本节给出它的<b>开关</b>:见到所爱者,渴慕之流(<b>ἵμερος</b>)灌入,
+      羽根得润、痛止而喜;一旦分离,通道干涸闭合,被封住的羽芽搏动顶刺,整个灵魂如遭牛虻螫刺。
+      在与不在,就是润与枯、喜与痛。本节藏着全篇最有名的<b>词源双关</b>。</div>
+  </header>
+
+  <!-- 1 -->
+  <div class="unit para-start">
+    <p class="sent"><span class="zh-body"><span class="n">1</span>于是,当灵魂凝望那少年之美,有<ruby>微粒<rt>merē</rt></ruby>自他那边迎面流来——正因这"流来",它才被叫作"<ruby>渴慕<rt>himeros</rt></ruby>"——灵魂承接住这渴慕之流,得了浇灌、得了温热,<ruby>痛楚<rt>odynē</rt></ruby>便止息,转为欢欣;</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅταν μὲν οὖν βλέπουσα πρὸς τὸ τοῦ παιδὸς κάλλος, ἐκεῖθεν μέρη ἐπιόντα καὶ ῥέοντ᾽—ἃ δὴ διὰ ταῦτα ἵμερος καλεῖται—δεχομένη τὸν ἵμερον ἄρδηταί τε καὶ θερμαίνηται, λωφᾷ τε τῆς ὀδύνης καὶ γέγηθεν·</span></p>
+      <p class="en"><span class="lbl">EN</span><span>Then when it gazes upon the beauty of the boy and receives the particles which flow thence to it (for which reason they are called yearning), it is moistened and warmed, ceases from its pain and is filled with joy;</span></p>
+    </div>
+    <div class="punbox">
+      <b>★ 全篇核心双关 — ἵμερος</b><br>
+      柏拉图在此给"渴慕"造了个词源:那些自所爱者身上<b>流来的微粒</b>,希腊文是 <span class="gk">μέρη ἰόντα</span>(merē iónta,"行来的部分")。把这两个词捏在一起 — <span class="gk">ἵ-μερ-ος</span> — 就成了 <b>ἵμερος</b>(渴慕)。<b>渴慕者,即"流入之物"也。</b><br>
+      <span style="color:#6b4e8c">Fowler 在此处自加脚注坦言:</span><i>"The play on the words μέρη and ἵμερος cannot be rendered accurately in English."</i> — 这正是"直接从希腊文读"才看得见、经英文必失的东西。中文同样无法谐音再造,只能如上点破。
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">2</span>可一旦<ruby>分离<rt>chōris</rt></ruby>、<ruby>干涸<rt>auchmēsē</rt></ruby>,羽翼奋力顶出的那些<ruby>通道口<rt>diexodōn stomata</rt></ruby>,便一并枯干、闭合,把正在<ruby>抽芽<rt>blastē</rt></ruby>的羽翼封堵在里头;</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅταν δὲ χωρὶς γένηται καὶ αὐχμήσῃ, τὰ τῶν διεξόδων στόματα ᾗ τὸ πτερὸν ὁρμᾷ, συναυαινόμενα μύσαντα ἀποκλῄει τὴν βλάστην τοῦ πτεροῦ,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>but when it is alone and grows dry, the mouths of the passages in which the feathers begin to grow become dry and close up, shutting in the sprouting feathers,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">αὐχμέω</b> · 干涸 <span class="zh">分离则"干旱"。润/枯的对子贯穿全节:在场=灌溉,缺席=旱。爱的痛苦被写成一种<b>缺水</b>。</span></div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">3</span>那被连同渴慕一起封在里面的羽芽,像<ruby>搏动的脉管<rt>sphyzonta</rt></ruby>一样跳突着,各自<ruby>顶刺<rt>engchriei</rt></ruby>着自己所在的那个通道口,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἡ δ᾽ ἐντὸς μετὰ τοῦ ἱμέρου ἀποκεκλῃμένη, πηδῶσα οἷον τὰ σφύζοντα, τῇ διεξόδῳ ἐγχρίει ἑκάστη τῇ καθ᾽ αὑτήν,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>and the sprouts within, shut in with the yearning, throb like pulsing arteries, and each sprout pricks the passage in which it is,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">σφύζοντα</b> <span class="zh">"搏动之物"——脉搏、动脉的跳动。被堵住的渴慕不会平息,而是像脉一样<b>一下下顶撞</b>,把快乐的器官变成疼痛的来源。</span></div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">4</span>于是整个灵魂周遭被<ruby>螫刺<rt>kentoumenē</rt></ruby>,像遭<ruby>牛虻驱赶<rt>oistrā</rt></ruby>般狂躁、疼痛;然而一旦又<ruby>忆起<rt>mnēmēn echousa</rt></ruby>那美者,它便重新欢欣。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὥστε πᾶσα κεντουμένη κύκλῳ ἡ ψυχὴ οἰστρᾷ καὶ ὀδυνᾶται, μνήμην δ᾽ αὖ ἔχουσα τοῦ καλοῦ γέγηθεν.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>so that the whole soul, stung in every part, rages with pain; and then again, remembering the beautiful one, it rejoices.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">οἰστράω</b> · 被牛虻螫而狂奔 <span class="zh">源自 <span class="gk">οἶστρος</span>(牛虻)。希腊人用牛虻叮咬牲口致其狂奔,来喻一种<b>外力驱迫的疯狂</b>。爱的痛与喜在此交替:刺痛—忆起—复喜,为下一节的"混合迷狂"铺垫。</span></div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    读时可切入:把"渴慕"(ἵμερος)解作"流入的微粒",是<b>玩笑式词源</b>还是认真的物理学?
+    "在场则润、缺席则痛"——柏拉图是否把爱的甘苦<b>完全外化</b>为一套水利/气压装置?这与"爱是灵魂自身回忆理型"之间是否有张力?
+    牛虻(οἰστρᾷ)的"外力驱迫",和此前"灵魂自己长翼"的内生过程,如何并存?
+  </div>
+
+  <div class="pager">
+    <a href="palinode-04.html">← 251a–c 羽翼的生理学</a>
+    <a class="mid" href="index.html">目录</a>
+    <a href="palinode-06.html">251d–252a 混合的迷狂 →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-pun">双关</span>希腊文双关/词源</span>
+    <span><span class="tag t-cf">对照</span>中译/英译比较</span>
+    <span><span class="tag t-zhu">注</span>说明</span>
+  </div>
+  希腊原文:Burnet (OUP 1903)。英译:Fowler, Loeb (1925),含其 251c 关于 μέρη/ἵμερος 的脚注。均经 Perseus,公共领域。中文直接译自希腊文。
+</footer>
+
+<script>
+  const body=document.body;
+  const map={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-rem':'hide-remarks'};
+  for(const id in map){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(map[id]); btn.classList.toggle('off'); };}
+</script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phaedrus · Palinode · 251d–252a</title>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.5rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.2rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.3em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.92rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin-top:2rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .pager{display:flex; justify-content:space-between; gap:1rem; margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line); font-family:system-ui,sans-serif; font-size:.82rem}
+  .pager a{color:var(--amber); text-decoration:none}
+  .pager a:hover{text-decoration:underline}
+  .pager .mid{color:var(--muted)}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">Phaedrus</a> &rsaquo; <b>Palinode</b> &rsaquo; 251d–252a &nbsp;·&nbsp; 混合的迷狂</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">英译</button>
+  <button class="btn" id="t-rem">注释</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Palinode · 251d–252a</h1>
+    <div class="sub">Plato, <i>Phaedrus</i> · 苏格拉底第二篇演讲 · Stephanus 251d–252a</div>
+    <div class="lead">润与枯、喜与痛两种感受搅在一起,生出一种前所未有的迷狂:夜不能寐,昼不能安,
+      只一味奔向能见到所爱者的地方。一旦见到、把渴慕之流引灌进来,郁结尽开,痛止,
+      收获此刻最甘美的快乐。</div>
+  </header>
+
+  <!-- 1 -->
+  <div class="unit para-start">
+    <p class="sent"><span class="zh-body"><span class="n">1</span>这两种感受交织在一起,灵魂便为这<ruby>前所未有的怪异<rt>atopia</rt></ruby>状态而<ruby>惶乱<rt>adēmonei</rt></ruby>,无所适从,<ruby>狂躁如狂<rt>lyttā</rt></ruby>;</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐκ δὲ ἀμφοτέρων μεμειγμένων ἀδημονεῖ τε τῇ ἀτοπίᾳ τοῦ πάθους καὶ ἀποροῦσα λυττᾷ,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>So, because of these two mingled sensations, it is greatly troubled by its strange condition; it is perplexed and maddened,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ἀτοπία</b> · 字面"无处可置" <span class="zh">这状态"没有地方安放"——既非纯苦也非纯乐,无从归类,故而 <span class="gk">ἀπορεῖ</span>(无路可走)。<span class="gk">λυττᾷ</span> 源自 <span class="gk">λύττα</span>(狂犬病),又一个"疯"字。</span></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">2</span>陷于这般<ruby>迷狂<rt>emmanēs</rt></ruby>,它夜里无法成眠,白天也无法在任一处安待,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐμμανὴς οὖσα οὔτε νυκτὸς δύναται καθεύδειν οὔτε μεθ᾽ ἡμέραν οὗ ἂν ᾖ μένειν,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>and in its madness it cannot sleep at night or stay in any one place by day,</span></p>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">3</span>只满怀<ruby>渴想<rt>pothousa</rt></ruby>地奔向任何它以为能见到那"<ruby>拥有美的人<rt>ton echonta to kallos</rt></ruby>"的地方。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>θεῖ δὲ ποθοῦσα ὅπου ἂν οἴηται ὄψεσθαι τὸν ἔχοντα τὸ κάλλος·</span></p>
+      <p class="en"><span class="lbl">EN</span><span>but it is filled with longing and hastens wherever it hopes to see the beautiful one.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class="zh">"拥有美的人" <span class="gk">τὸν ἔχοντα τὸ κάλλος</span> — 措辞微妙:所爱者不是"美"本身,而是<b>美的载体/持有者</b>。爱投向的,始终是透过这人显现的"美"。</span></div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">4</span>一旦见到他、把渴慕之流<ruby>引灌<rt>epocheteusamenē</rt></ruby>进来,先前被堵死的通道便豁然开解;灵魂得了<ruby>喘息<rt>anapnoē</rt></ruby>,从螫刺与<ruby>剧痛<rt>ōdines</rt></ruby>中解脱出来,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἰδοῦσα δὲ καὶ ἐποχετευσαμένη ἵμερον ἔλυσε μὲν τὰ τότε συμπεφραγμένα, ἀναπνοὴν δὲ λαβοῦσα κέντρων τε καὶ ὠδίνων ἔληξεν,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>And when it sees him and is bathed with the waters of yearning, the passages that were sealed are opened, the soul has respite from the stings and is eased of its pain,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ἐποχετεύω / ὠδῖνες</b> <span class="zh"><span class="gk">ἐποχετεύω</span>="开渠引水灌入"(<span class="gk">ὀχετός</span> 沟渠)——延续整段的<b>水利</b>意象。<span class="gk">ὠδῖνες</span> 本指<b>分娩之痛</b>:羽翼的萌发像一场生产,痛与新生并存。</span></div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">5</span>于是在<ruby>此刻<rt>en tō paronti</rt></ruby>,它<ruby>收获<rt>karpoutai</rt></ruby>了这一种最<ruby>甘美<rt>glykytatēn</rt></ruby>的快乐。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἡδονὴν δ᾽ αὖ ταύτην γλυκυτάτην ἐν τῷ παρόντι καρποῦται.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>and this pleasure which it enjoys is the sweetest of pleasures at the time.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">καρποῦται</b> · 收获果实 <span class="zh">"收获"(<span class="gk">καρπός</span> 果实)。植物意象的收束:从抽芽、灌溉,到此刻<b>结果</b>。但注意限定语 <span class="gk">ἐν τῷ παρόντι</span>="就在此刻"——这甘美是当下的、转瞬的,暗示它仍非究竟之乐。</span></div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    读时可切入:这段"夜不能寐、昼不能安、奔走求见"的描写,与现代人说的"相思/上头"几乎一字不差——
+    柏拉图却把它放进神圣迷狂的框架。<b>同一种症状,凭什么一边是病、一边是福?</b>区别只在对象(是否真"美")吗?
+    "最甘美的快乐"为何要加"就在此刻"这个限定?它是否在暗示:见面之乐仍是较低的乐,真正的乐在别处?
+  </div>
+
+  <div class="pager">
+    <a href="palinode-05.html">← 251c–d ἵμερος</a>
+    <a class="mid" href="index.html">目录</a>
+    <a href="palinode-07.html">252a–b 甘为奴 · 唯一的医者 →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-pun">双关</span>希腊文双关/词源</span>
+    <span><span class="tag t-cf">对照</span>中译/英译比较</span>
+    <span><span class="tag t-zhu">注</span>说明</span>
+  </div>
+  希腊原文:Burnet (OUP 1903)。英译:Fowler, Loeb (1925)。均经 Perseus,公共领域。中文直接译自希腊文。
+</footer>
+
+<script>
+  const body=document.body;
+  const map={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-rem':'hide-remarks'};
+  for(const id in map){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(map[id]); btn.classList.toggle('off'); };}
+</script>
+</body>
+</html>

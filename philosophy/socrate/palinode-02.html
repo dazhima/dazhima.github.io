@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phaedrus · Palinode · 250e–251a</title>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.5rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.2rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.3em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.92rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin-top:2rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .pager{display:flex; justify-content:space-between; gap:1rem; margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line); font-family:system-ui,sans-serif; font-size:.82rem}
+  .pager a{color:var(--amber); text-decoration:none}
+  .pager a:hover{text-decoration:underline}
+  .pager .mid{color:var(--muted)}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">Phaedrus</a> &rsaquo; <b>Palinode</b> &rsaquo; 250e–251a &nbsp;·&nbsp; 不敬而纵欲的灵魂</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">英译</button>
+  <button class="btn" id="t-rem">注释</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Palinode · 250e–251a</h1>
+    <div class="sub">Plato, <i>Phaedrus</i> · 苏格拉底第二篇演讲 · Stephanus 250e–251a</div>
+    <div class="lead">承上节:美在此世最显明、最可爱。但同样见到美,反应却两途。<b>本节</b>是反面的一极——
+      未受启示或已被腐蚀的灵魂:它不会从此世之美上升到"美本身",凝望时不生敬畏,只把美当作纵欲的由头,
+      "像四足兽一样"。这是下一节那位"战栗而敬"的恋人的对照底色。</div>
+  </header>
+
+  <!-- 1 -->
+  <div class="unit para-start">
+    <p class="sent"><span class="zh-body"><span class="n">1</span>那不是新近受过<ruby>启示<rt>neotelēs</rt></ruby>、或是已被<ruby>腐蚀<rt>diephtharmenos</rt></ruby>的人,见到此世这分得了"美"之<ruby>名<rt>epōnumia</rt></ruby>的东西,并不会迅速地从这里被带往那边、奔向<ruby>美本身<rt>auto to kallos</rt></ruby>。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ μὲν οὖν μὴ νεοτελὴς ἢ διεφθαρμένος οὐκ ὀξέως ἐνθένδε ἐκεῖσε φέρεται πρὸς αὐτὸ τὸ κάλλος, θεώμενος αὐτοῦ τὴν τῇδε ἐπωνυμίαν,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>Now he who is not newly initiated, or has been corrupted, does not quickly rise from this world to that other world and to absolute beauty when he sees its namesake here,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ἐπωνυμία</b> · epōnumia <span class="zh">"同名、名号"。此世的美物只是分得了"美"之<b>名</b>的摹本,而非"美本身"(<span class="gk">αὐτὸ τὸ κάλλος</span>)。能否从"同名者"上升到"本身",正是两种灵魂的分野。</span></div>
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">νεοτελής / διεφθαρμένος</b> <span class="zh">"新近受启者 / 已被腐蚀者"。<span class="gk">νεοτελής</span> 与下一节的 <span class="gk">ἀρτιτελής</span>(刚受过启示)同根呼应——记忆是否新鲜,决定了见美时的反应。</span></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">2</span>因此他凝望时并不心生<ruby>敬畏<rt>sebetai</rt></ruby>,反倒委身于<ruby>快感<rt>hēdonē</rt></ruby>,试图像<ruby>四足兽<rt>tetrapous</rt></ruby>那样去交合、播种子嗣;</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὥστ᾽ οὐ σέβεται προσορῶν, ἀλλ᾽ ἡδονῇ παραδοὺς τετράποδος νόμον βαίνειν ἐπιχειρεῖ καὶ παιδοσπορεῖν,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>and so he does not revere it when he looks upon it, but gives himself up to pleasure and like a beast proceeds to lust and begetting;</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><b class="gk">βαίνειν</b> <span class="zh">这个动词正是用于<b>牲畜交配</b>("跨骑")的粗词,柏拉图有意用得刺耳。Fowler 译成温和的 "lust and begetting",把这层兽性的直白磨掉了。"四足兽之法"(<span class="gk">τετράποδος νόμον</span>)是对"人之为人"的反讽。</span></div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">3</span>他与<ruby>放纵<rt>hubris</rt></ruby>为伍,既不畏惧、也不羞耻地追逐着<ruby>违逆自然<rt>para physin</rt></ruby>的快感。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ὕβρει προσομιλῶν οὐ δέδοικεν οὐδ᾽ αἰσχύνεται παρὰ φύσιν ἡδονὴν διώκων·</span></p>
+      <p class="en"><span class="lbl">EN</span><span>he makes licence his companion and is not afraid or ashamed to pursue pleasure in violation of nature.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ὕβρις</b> · hubris <span class="zh">放肆、僭越、对界限的践踏。它将作为"坏马"在后文(253e–)的灵魂内斗中重现。<span class="gk">παρὰ φύσιν</span>="违逆自然"——与上节"美得了这样的命分(自然的分派)"恰成反照。</span></div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    读时可切入:为什么柏拉图把"不敬"与"兽性纵欲"直接等同?"敬畏"(<span class="gk">σέβεσθαι</span>)在这里是认识论的(认出美所指向的彼岸)还是伦理的?
+    "违逆自然"指向的是什么"自然"——生育的自然,还是灵魂上升的自然?这一节是纯粹的反面陪衬,还是已经埋下了后文"坏马"的种子?
+  </div>
+
+  <div class="pager">
+    <a href="palinode-01.html">← 250c–250e</a>
+    <a class="mid" href="index.html">目录</a>
+    <a href="palinode-03.html">251a 战栗的恋人 →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-pun">双关</span>希腊文双关/词源</span>
+    <span><span class="tag t-cf">对照</span>中译/英译比较</span>
+    <span><span class="tag t-zhu">注</span>说明</span>
+  </div>
+  希腊原文:Burnet (OUP 1903)。英译:Fowler, Loeb (1925)。均经 Perseus,公共领域。中文直接译自希腊文。
+</footer>
+
+<script>
+  const body=document.body;
+  const map={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-rem':'hide-remarks'};
+  for(const id in map){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(map[id]); btn.classList.toggle('off'); };}
+</script>
+</body>
+</html>

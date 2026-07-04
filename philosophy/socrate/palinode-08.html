@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phaedrus · Palinode · 252b–252c</title>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.5rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.2rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.3em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.92rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .punbox{margin:.5rem 0; padding:.7rem .9rem; background:var(--purple-soft); border:1px solid #d9cae8; border-left:3px solid var(--purple); border-radius:6px; font-family:system-ui,"PingFang SC",sans-serif; font-size:.85rem; line-height:1.7; color:#473059}
+  .verse{margin:.4rem 0 .2rem; padding:.7rem 1rem; background:#f3eee1; border-radius:6px; font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek); font-size:1.05rem; line-height:1.7}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin-top:2rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .pager{display:flex; justify-content:space-between; gap:1rem; margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line); font-family:system-ui,sans-serif; font-size:.82rem}
+  .pager a{color:var(--amber); text-decoration:none}
+  .pager a:hover{text-decoration:underline}
+  .pager .mid{color:var(--muted)}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">Phaedrus</a> &rsaquo; <b>Palinode</b> &rsaquo; 252b–252c &nbsp;·&nbsp; 人称"爱",神称"生翼者"</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">英译</button>
+  <button class="btn" id="t-rem">注释</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Palinode · 252b–252c</h1>
+    <div class="sub">Plato, <i>Phaedrus</i> · 苏格拉底第二篇演讲 · Stephanus 252b–252c · 本段之终</div>
+    <div class="lead">苏格拉底转向他设想中的美少年听者,为整段命名作结:这"遭遇",人间叫它"爱"(<b>ἔρως</b>);
+      而诸神的叫法会让年少者发笑——他引一则戏谑的荷马伪诗:凡人称"有翼的爱",神称"<b>生翼者</b>"(<b>Πτέρως</b>),
+      因那逼人生翼的强力。信不信由你,但恋人的病因与症状,就是这么回事。</div>
+  </header>
+
+  <!-- 1 -->
+  <div class="unit para-start">
+    <p class="sent"><span class="zh-body"><span class="n">1</span>美少年啊——我这一席话正是说给你听的——这一种<ruby>遭遇<rt>pathos</rt></ruby>,人们管它叫"<ruby>爱<rt>erōs</rt></ruby>";至于诸神给它取的名,你一听,大概会因年少而笑出来。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>τοῦτο δὲ τὸ πάθος, ὦ παῖ καλέ, πρὸς ὃν δή μοι ὁ λόγος, ἄνθρωποι μὲν ἔρωτα ὀνομάζουσιν, θεοὶ δὲ ὃ καλοῦσιν ἀκούσας εἰκότως διὰ νεότητα γελάσῃ.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>Now this condition, fair boy, about which I am speaking, is called Love by men, but when you hear what the gods call it, perhaps because of your youth you will laugh.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><b class="gk">ὦ παῖ καλέ</b> <span class="zh">"美少年啊"。苏格拉底全篇假托对一位在场的美少年说话(修辞设置)。命名的揭晓特意点出"你会笑"——为下面那则不太正经的伪诗作铺垫。</span></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">2</span>我记得,有些<ruby>荷马传人<rt>Homēridai</rt></ruby>会从那些不入正典的<ruby>秘藏诗篇<rt>apotheta epē</rt></ruby>里,诵出两行咏"爱"的诗;其中一行相当<ruby>放肆<rt>hubristikon</rt></ruby>,格律也不大工整。他们这样唱道——</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγουσι δὲ οἶμαί τινες Ὁμηριδῶν ἐκ τῶν ἀποθέτων ἐπῶν δύο ἔπη εἰς τὸν ἔρωτα, ὧν τὸ ἕτερον ὑβριστικὸν πάνυ καὶ οὐ σφόδρα τι ἔμμετρον· ὑμνοῦσι δὲ ὧδε—</span></p>
+      <p class="en"><span class="lbl">EN</span><span>But some of the Homeridae, I believe, repeat two verses on Love from the spurious poems of Homer, one of which is very outrageous and not perfectly metrical. They sing them as follows:</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><b class="gk">Ὁμηρίδαι</b> <span class="zh">"荷马的子孙"——一群自称承袭荷马的吟诵者。"秘藏/伪托之诗"(<span class="gk">ἀπόθετα ἔπη</span>)表明这两行并非真荷马,而是苏格拉底半带玩笑地托名引用(很可能他自己现编)。</span></div>
+    </div>
+  </div>
+
+  <!-- 3 — the couplet -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">3</span>凡人把他唤作"<ruby>有翼的爱<rt>erōs potēnos</rt></ruby>",<br>不朽的神却称他"<ruby>生翼者<rt>Pterōs</rt></ruby>"——因那逼人生翼的强力。</span></p>
+    <div class="verse">
+      τὸν δ᾽ ἤτοι θνητοὶ μὲν <b>ἔρωτα</b> καλοῦσι ποτηνόν,<br>
+      ἀθάνατοι δὲ <b>Πτέρωτα</b>, διὰ πτεροφύτορ᾽ ἀνάγκην.
+    </div>
+    <div class="refs">
+      <p class="en"><span class="lbl">EN</span><span>"Mortals call him winged Love, but the immortals call him / The winged One, because he must needs grow wings."</span></p>
+    </div>
+    <div class="punbox">
+      <b>★ 命名的双关 — Ἔρως / Πτέρως</b><br>
+      凡人之名 <span class="gk">Ἔρως</span>(Erōs,爱)与神之名 <span class="gk">Πτέρως</span>(Pterōs,生翼者)<b>几乎同音</b>——后者只在前面加了 <span class="gk">πτ-</span>(翼)。神的命名里嵌进了"翼"的词根,因为爱<b>必然逼人长出翅膀</b>(<span class="gk">διὰ πτεροφύτορ᾽ ἀνάγκην</span>,"由于生翼的强力")。<br>
+      整段的羽翼母题在此收进一个名字:在人看是"爱",在神看就是"那让你长翅膀的东西"。这层谐音英文、中文都无法照搬——只能在原文里看见。
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">4</span>信不信,随你;但恋人们的<ruby>病因<rt>aitia</rt></ruby>与<ruby>遭遇<rt>pathos</rt></ruby>,恰恰就是这么一回事。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>τούτοις δὴ ἔξεστι μὲν πείθεσθαι, ἔξεστιν δὲ μή· ὅμως δὲ ἥ γε αἰτία καὶ τὸ πάθος τῶν ἐρώντων τοῦτο ἐκεῖνο τυγχάνει ὄν.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>You may believe this, or not; but the condition of lovers and the cause of it are just as I have said.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class="zh">"信不信由你"(<span class="gk">ἔξεστι ... ἔξεστιν δὲ μή</span>)——苏格拉底对那则伪诗的真伪不作担保,却对<b>事情本身</b>(αἰτία 病因 + πάθος 症状)斩钉截铁。神话可疑,经验为真。这正是 252c 的收束;其后(本段范围之外)转入"各人依其守护神择爱"。</span></div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    读时可切入:为什么柏拉图让这段崇高的描写,落在一个<b>谐音玩笑</b>(Erōs/Pterōs)上?自嘲、戏谑,与神圣并不矛盾吗?
+    "人称爱,神称生翼者"——同一桩事,人只看见"爱"(欲望),神看见的是"长翅膀"(灵魂上升)。<b>视角的高低,决定了同一经验叫什么名字。</b>这是否正是整篇翻案的缩影?
+    末句"神话可疑、经验为真"——苏格拉底如何同时既用神话又与神话保持距离?
+  </div>
+
+  <div class="pager">
+    <a href="palinode-07.html">← 252a–b 唯一的医者</a>
+    <a class="mid" href="index.html">目录</a>
+    <span style="color:var(--line)">本段终 · 250c–252c</span>
+  </div>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-pun">双关</span>希腊文双关/词源</span>
+    <span><span class="tag t-cf">对照</span>中译/英译比较</span>
+    <span><span class="tag t-zhu">注</span>说明</span>
+  </div>
+  希腊原文:Burnet (OUP 1903)。英译:Fowler, Loeb (1925)。均经 Perseus,公共领域。中文直接译自希腊文。
+</footer>
+
+<script>
+  const body=document.body;
+  const map={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-rem':'hide-remarks'};
+  for(const id in map){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(map[id]); btn.classList.toggle('off'); };}
+</script>
+</body>
+</html>

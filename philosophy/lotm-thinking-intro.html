@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Life of the Mind · Thinking · Introduction</title>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+    line-height:1.85;
+  }
+  /* top bar */
+  .bar{
+    position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;
+  }
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem;
+    cursor:pointer; transition:.15s;
+  }
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  /* page */
+  main{max-width:720px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2.2rem}
+  header.doc h1{font-size:1.7rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  /* sentence units */
+  .sent{margin:0; padding:.35rem 0 .35rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .sent:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.6rem}
+  .stext{font-size:1.16rem}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted);
+     vertical-align:.45em; margin-right:.15em; user-select:none}
+  /* inline chinese ruby */
+  ruby{ruby-position:over}
+  rt{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+     font-size:.58em; color:var(--amber); font-weight:500; letter-spacing:.02em;
+     opacity:.92; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  /* remarks */
+  .remarks{margin:.45rem 0 .2rem; padding:.55rem .8rem;
+    background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber);
+    border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.6}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem}
+  .remark b{color:var(--ink)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em;
+    padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-dian{background:var(--purple-soft); color:var(--purple)}   /* 典故 */
+  .t-yin{background:var(--teal-soft); color:var(--teal)}        /* 引用 */
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}      /* 注 */
+  .t-ci{background:var(--rose-soft); color:var(--rose)}         /* 词 */
+  footer{max-width:720px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
+    font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; Introduction &nbsp;·&nbsp; pp.&nbsp;3–4</div>
+  <button class="btn" id="t-ruby">中文 注音</button>
+  <button class="btn" id="t-rem">注释</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Introduction</h1>
+    <div class="sub">Hannah Arendt, <i>The Life of the Mind</i> · Volume One: Thinking · printed pp. 3–4</div>
+  </header>
+
+  <!-- ¶1 -->
+  <p class="sent para-start"><span class="stext"><span class="n">1</span>The title I have given this lecture series, <i>The Life of the Mind</i>, sounds <ruby>pretentious<rt>自负的</rt></ruby>, and to talk about Thinking seems to me so <ruby>presumptuous<rt>僭越的</rt></ruby> that I feel I should start less with an <ruby>apology<rt>致歉</rt></ruby> than with a <ruby>justification<rt>辩护</rt></ruby>.</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-ci">词</span><b>apology vs. justification</b> — <span class="zh">apology = 致歉、为过失辩解；justification = 给出正当理由、主张权利。她特意选后者：不是道歉，而是说明自己有理由这样做。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">2</span>No justification, of course, is needed for the topic itself, especially not in the framework of <ruby>eminence<rt>崇高地位</rt></ruby> <ruby>inherent<rt>固有的</rt></ruby> in the Gifford Lectures.</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>the Gifford Lectures</b> — <span class="zh">英国著名系列讲座，1888 年设立，主题为自然神学（natural theology）。本书即源自阿伦特 1973 年在阿伯丁大学所做的吉福德讲座。她借其声望说明：主题本身无需辩护。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">3</span>What disturbs me is that I try my hand at it, for I have neither claim nor ambition to be a "philosopher" or be numbered among what Kant, not without irony, called <i>Denker von Gewerbe</i> (professional thinkers).¹</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b><i>Denker von Gewerbe</i></b> — <span class="zh">康德的反讽用语，字面"以思想为行当的人"，即"职业思想家"。阿伦特拒绝这一标签——这奠定全书立场：思考是人人皆可从事的活动，而非行会式的专业。</span></div>
+    <div class="remark"><span class="tag t-zhu">注</span><span class="zh">脚注 1 为阿伦特原注，见原书 pp. 217–238。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">4</span>The question then is, should I not have left these problems in the hands of the experts, and the answer will have to show what prompted me to <ruby>venture<rt>涉险进入</rt></ruby> from the relatively safe fields of political science and theory into these rather <ruby>awesome<rt>令人敬畏的</rt></ruby> matters, instead of leaving well enough alone.</span></p>
+
+  <!-- ¶2 -->
+  <p class="sent para-start"><span class="stext"><span class="n">5</span>Factually, my <ruby>preoccupation<rt>萦怀、专注</rt></ruby> with mental activities has two rather different origins.</span></p>
+
+  <p class="sent"><span class="stext"><span class="n">6</span>The immediate <ruby>impulse<rt>促因、冲动</rt></ruby> came from my attending the Eichmann trial in Jerusalem.</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-dian">典故</span><b>the Eichmann trial</b> — <span class="zh">阿道夫·艾希曼（Adolf Eichmann）是纳粹"最终解决方案"中负责组织犹太人押运的官员；战后逃往阿根廷，1960 年被以色列特工抓获，1961 年在耶路撒冷受审并被处决。阿伦特为《纽约客》全程报道。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">7</span>In my report of it² I spoke of "the banality of evil."</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>"the banality of evil"</b> — <span class="zh">阿伦特自己的著名短语，出自《艾希曼在耶路撒冷》（1963）的副标题"A Report on the Banality of Evil"。banal = 平庸、陈腐。<b>直译应为「恶之平庸（性）」</b>——中心词是 banality（平庸），of evil 是修饰，即"平庸"是用来述说"恶"的那个性质：恶竟然是平庸的。通行译名「平庸之恶」语序被倒置，读如"平庸的恶（banal evil）"，略偏移了阿伦特的本意。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">8</span>Behind that phrase, I held no thesis or doctrine, although I was <ruby>dimly<rt>隐约地</rt></ruby> aware of the fact that it went counter to our tradition of thought—literary, theological, or philosophic—about the phenomenon of evil.</span></p>
+
+  <p class="sent"><span class="stext"><span class="n">9</span>Evil, we have learned, is something <ruby>demonic<rt>恶魔般的</rt></ruby>; its <ruby>incarnation<rt>化身</rt></ruby> is Satan, a "lightning fall from heaven" (Luke 10:18), or Lucifer, the fallen angel ("The devil is an angel too"—Unamuno) whose sin is pride ("proud as Lucifer"), namely, that <i>superbia</i> of which only the best are capable: they don't want to serve God but to be like Him.</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>"lightning fall from heaven" (Luke 10:18)</b> — <span class="zh">《路加福音》10:18，耶稣："我曾看见撒但从天上坠落，像闪电一样。"</span></div>
+    <div class="remark"><span class="tag t-dian">典故</span><b>Lucifer, the fallen angel</b> — <span class="zh">Lucifer 拉丁文意为"光之使者"。传统将其视为因骄傲而背叛上帝、被逐出天堂的堕落天使，并与撒但等同。</span></div>
+    <div class="remark"><span class="tag t-yin">引用</span><b>"The devil is an angel too"—Unamuno</b> — <span class="zh">米格尔·德·乌纳穆诺（Miguel de Unamuno, 1864–1936），西班牙哲学家、作家。</span></div>
+    <div class="remark"><span class="tag t-dian">典故</span><b><i>superbia</i> / "proud as Lucifer"</b> — <span class="zh">superbia 为拉丁文"骄傲"，基督教七宗罪之首，即路西法之罪。"不愿侍奉上帝，而要与上帝相等"——典出反叛者的傲慢（拉丁语 <i>non serviam</i>，"我不侍奉"）。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">10</span>Evil men, we are told, act out of <ruby>envy<rt>嫉妒</rt></ruby>; this may be <ruby>resentment<rt>怨恨</rt></ruby> at not having turned out well through no fault of their own (Richard III) or the envy of Cain, who slew Abel because "the Lord had regard for Abel and his offering, but for Cain and his offering he had no regard."</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-dian">典故</span><b>Richard III</b> — <span class="zh">莎士比亚同名剧的反派；因天生畸形、"未能生得周正"而怨恨世界，遂作恶。</span></div>
+    <div class="remark"><span class="tag t-yin">引用</span><b>Cain and Abel</b> — <span class="zh">《创世记》4 章。该隐因上帝悦纳弟弟亚伯的祭物却不悦纳自己的，出于嫉妒杀死亚伯——人类第一桩谋杀。引文出自创世记 4:4–5。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">11</span>Or they may be prompted by weakness (Macbeth).</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-dian">典故</span><b>Macbeth</b> — <span class="zh">莎士比亚悲剧；麦克白之恶源于意志薄弱，受野心与他人怂恿驱使，而非天性凶残。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">12</span>Or, on the contrary, by the powerful hatred <ruby>wickedness<rt>邪恶</rt></ruby> feels for sheer goodness (Iago's "I hate the Moor: my cause is hearted"; Claggart's hatred for Billy Budd's "barbarian" innocence, a hatred considered by Melville a "depravity according to nature"), or by <ruby>covetousness<rt>贪欲</rt></ruby>, "the root of all evil" (<i>Radix omnium malorum cupiditas</i>).</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>Iago, "I hate the Moor"</b> — <span class="zh">莎士比亚《奥赛罗》中的伊阿古，以近乎无动机的恶谋害摩尔人奥赛罗。"my cause is hearted" = 我的恨意已深植于心。</span></div>
+    <div class="remark"><span class="tag t-dian">典故</span><b>Claggart / Billy Budd</b> — <span class="zh">梅尔维尔（Herman Melville）小说《比利·巴德》：军士长克拉加特憎恨水手比利天真无邪的善良，梅尔维尔称之为"顺乎本性的堕落"（depravity according to nature）。</span></div>
+    <div class="remark"><span class="tag t-yin">引用</span><b><i>Radix omnium malorum cupiditas</i></b> — <span class="zh">拉丁文，"贪欲是万恶之根"，出自《提摩太前书》6:10。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">13</span>However, what I was confronted with was utterly different and still <ruby>undeniably<rt>无可否认地</rt></ruby> factual.</span></p>
+
+  <p class="sent"><span class="stext"><span class="n">14</span>I was struck by a <ruby>manifest<rt>明显的</rt></ruby> <ruby>shallowness<rt>浅薄</rt></ruby> in the doer that made it impossible to trace the <ruby>uncontestable<rt>无可争辩的</rt></ruby> evil of his deeds to any deeper level of roots or motives.</span></p>
+
+  <p class="sent"><span class="stext"><span class="n">15</span>The deeds were <ruby>monstrous<rt>骇人的</rt></ruby>, but the doer—at least the very effective one now on trial—was quite ordinary, <ruby>commonplace<rt>平庸的</rt></ruby>, and neither demonic nor monstrous.</span></p>
+
+  <p class="sent"><span class="stext"><span class="n">16</span>There was no sign in him of firm <ruby>ideological<rt>意识形态的</rt></ruby> convictions or of specific evil motives, and the only notable characteristic one could detect in his past behavior as well as in his behavior during the trial and throughout the pre-trial police examination was something entirely negative: it was not stupidity but <ruby>thoughtlessness<rt>不思考、无思</rt></ruby>.</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-ci">词</span><b>thoughtlessness</b> — <span class="zh">本书的关键词。不是"愚蠢"（stupidity），而是"不思考"：缺乏内在的自我对话与反思。阿伦特由此提出全书的核心问题——思考的活动本身是否能阻止人作恶。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">17</span>In the setting of Israeli court and prison procedures he functioned as well as he had functioned under the Nazi regime but, when confronted with situations for which such routine procedures did not exist, he was helpless, and his <ruby>cliché-ridden<rt>满口陈词滥调的</rt></ruby> language produced on the stand, as it had evidently done in his official life, a kind of <ruby>macabre<rt>阴森可怖的</rt></ruby> comedy.</span></p>
+
+  <p class="sent"><span class="stext"><span class="n">18</span>Clichés, stock phrases, <ruby>adherence<rt>墨守、遵奉</rt></ruby> to <ruby>conventional<rt>因袭的</rt></ruby>, standardized codes of expression and conduct have the socially recognized function of protecting us against reality, that is, against the claim on our thinking attention that all events and facts make by virtue of their existence.</span></p>
+
+  <p class="sent"><span class="stext"><span class="n">19</span>If we were <ruby>responsive<rt>有所回应的</rt></ruby> to this claim all the time, we would soon be exhausted; Eichmann differed from the rest of us only in that he clearly knew of no such claim at all.</span></p>
+
+  <!-- ¶3 -->
+  <p class="sent para-start"><span class="stext"><span class="n">20</span>It was this absence of thinking—which is so ordinary an experience in our everyday life, where we have hardly the time, let alone the <ruby>inclination<rt>意愿、倾向</rt></ruby>, to stop and think—that awakened my interest.</span></p>
+
+  <p class="sent"><span class="stext"><span class="n">21</span>Is evil-doing (the sins of <ruby>omission<rt>不作为、疏漏</rt></ruby>, as well as the sins of <ruby>commission<rt>作为、犯下</rt></ruby>) possible in default of not just "base motives" (as the law calls them) but of any motives whatever, of any particular prompting of interest or <ruby>volition<rt>意志、意愿</rt></ruby>?</span></p>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-zhu">注</span><b>sins of omission / commission</b> — <span class="zh">基督教与法律传统的区分：commission 是"作为之罪"（做了不该做的），omission 是"不作为之罪"（该做而未做）。</span></div>
+    <div class="remark"><span class="tag t-zhu">注</span><b>"base motives" (as the law calls them)</b> — <span class="zh">法律用语，指"卑劣动机"。德国刑法中蓄意谋杀（Mord）的构成要件之一即"出于卑劣动机"。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">22</span>Is wickedness,&nbsp;<span style="color:var(--muted)">… [接下页]</span></span></p>
+
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-dian">典故</span>allusion 典故</span>
+    <span><span class="tag t-yin">引用</span>quotation 引文</span>
+    <span><span class="tag t-zhu">注</span>note 说明</span>
+    <span><span class="tag t-ci">词</span>word 词义</span>
+  </div>
+  Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 3–4. Text transcribed verbatim from the page image. Sample build — Introduction continues on p. 5.
+</footer>
+
+<script>
+  const body=document.body;
+  const tRuby=document.getElementById('t-ruby'), tRem=document.getElementById('t-rem');
+  tRuby.onclick=()=>{body.classList.toggle('hide-ruby'); tRuby.classList.toggle('off');};
+  tRem.onclick =()=>{body.classList.toggle('hide-remarks'); tRem.classList.toggle('off');};
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phaedrus · Palinode · 251a</title>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.5rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.2rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.3em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.92rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin-top:2rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .pager{display:flex; justify-content:space-between; gap:1rem; margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line); font-family:system-ui,sans-serif; font-size:.82rem}
+  .pager a{color:var(--amber); text-decoration:none}
+  .pager a:hover{text-decoration:underline}
+  .pager .mid{color:var(--muted)}
+  .you{margin-top:1.4rem; padding:.7rem .9rem; background:var(--rose-soft); border:1px solid #e6cdd4; border-radius:8px; font-family:system-ui,"PingFang SC",sans-serif; font-size:.84rem; line-height:1.7; color:#7a3a4c}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">Phaedrus</a> &rsaquo; <b>Palinode</b> &rsaquo; 251a &nbsp;·&nbsp; 战栗而敬的恋人</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">英译</button>
+  <button class="btn" id="t-rem">注释</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Palinode · 251a</h1>
+    <div class="sub">Plato, <i>Phaedrus</i> · 苏格拉底第二篇演讲 · Stephanus 251a</div>
+    <div class="lead">与上节的兽性纵欲相对,这里是另一极:刚受过启示、当年观照过许多神圣存在的灵魂,
+      一旦见到一张"神样的面容",先是<b>战栗</b>,继而<b>敬之如神</b>,甚至想向所爱之人献祭——
+      只因怕被当作疯子才忍住。这正是被美"击中"的那一刻。</div>
+  </header>
+
+  <!-- 1 -->
+  <div class="unit para-start">
+    <p class="sent"><span class="zh-body"><span class="n">1</span>但那刚受过<ruby>启示<rt>artitelēs</rt></ruby>、当年<ruby>多有观照<rt>polutheamōn</rt></ruby>的人,一旦见到一张<ruby>神样的面容<rt>theoeides prosōpon</rt></ruby>、一种把美摹仿得极好的形貌,或某种身体的样态——</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ ἀρτιτελής, ὁ τῶν τότε πολυθεάμων, ὅταν θεοειδὲς πρόσωπον ἴδῃ κάλλος εὖ μεμιμημένον ἤ τινα σώματος ἰδέαν,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>But he who is newly initiated, who beheld many of those realities, when he sees a godlike face or form which is a good image of beauty,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ἀρτιτελής</b> · artitelēs <span class="zh">"刚完成密仪的、启示尚新的"。与上节 <span class="gk">νεοτελής</span> 同根却相反命运:同样受过启,但此人记忆鲜活。<span class="gk">εὖ μεμιμημένον</span>="摹仿得好"——此世的脸只是美本身的一个好摹本。</span></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">2</span>起先,他<ruby>战栗<rt>ephrixe</rt></ruby>了一下,当年[在天界]的某种<ruby>敬畏<rt>deimata</rt></ruby>悄然袭上他心头;</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πρῶτον μὲν ἔφριξε καί τι τῶν τότε ὑπῆλθεν αὐτὸν δειμάτων,</span></p>
+      <p class="en"><span class="lbl">EN</span><span>shudders at first, and something of the old awe comes over him,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ἔφριξε</b> · ephrixe <span class="zh">"战栗、毛发竖起"的瞬间(不定过去时,捕捉那一刹)。<span class="gk">δείματα</span>="惊惧/敬畏"——不是怕对方,而是当年面对神圣景象的那种震慑,如今被一张脸重新唤起。</span></div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">3</span>继而凝望之际,他<ruby>敬<rt>sebetai</rt></ruby>之如神;倘若不是怕落下个"<ruby>疯魔已极<rt>sphodra mania</rt></ruby>"的名声,他简直要像对神像、对神明那样,向<ruby>所爱之人<rt>paidika</rt></ruby>献祭了。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἶτα προσορῶν ὡς θεὸν σέβεται, καὶ εἰ μὴ ἐδεδίει τὴν τῆς σφόδρα μανίας δόξαν, θύοι ἂν ὡς ἀγάλματι καὶ θεῷ τοῖς παιδικοῖς.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>then, as he gazes, he reveres the beautiful one as a god, and if he did not fear to be thought stark mad, he would offer sacrifice to his beloved as to an idol or a god.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-pun">双关</span><b class="gk">σφόδρα μανία</b> <span class="zh">"极度的疯狂"。妙处在于:他怕被人看作<b>疯子</b>——而这"疯",正是整篇翻案演讲要为之正名的<b>神圣迷狂</b>(<span class="gk">θεία μανία</span>, 244a 起)。旁人眼中的病,苏格拉底说是神赐的福。</span></div>
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ἄγαλμα / παιδικά</b> <span class="zh"><span class="gk">ἄγαλμα</span>=供奉的神像;<span class="gk">τὰ παιδικά</span>=所爱的少年。"敬美人如敬神像"——把恋慕直接抬升为<b>崇拜</b>。</span></div>
+    </div>
+  </div>
+
+  <div class="you">
+    ✶ 你纪念这次相遇所引的那句,正出自紧接着的 <a href="palinode-04.html" style="color:#7a3a4c;font-weight:600">251b</a>——
+    战栗之后,美经由双眼流入、人受热,羽翼开始萌动。这一节(251a)是那一刻的前半:不敢占有,只敢敬畏。
+  </div>
+
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    读时可切入:"战栗→敬畏→几乎献祭"这条情感升级链,为何终点是<b>宗教</b>动作(献祭)而非占有?
+    他"怕被当作疯子"——苏格拉底让恋人自己也还不懂自己正经历的是神圣迷狂,这层"当事人的不自知"有何用意?
+    "敬之如神"与上一节"不敬、纵欲"之间,真正的分界是不是"记忆"?
+  </div>
+
+  <div class="pager">
+    <a href="palinode-02.html">← 250e–251a 纵欲者</a>
+    <a class="mid" href="index.html">目录</a>
+    <a href="palinode-04.html">251a–c 羽翼的生理学 →</a>
+  </div>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-pun">双关</span>希腊文双关/词源</span>
+    <span><span class="tag t-cf">对照</span>中译/英译比较</span>
+    <span><span class="tag t-zhu">注</span>说明</span>
+  </div>
+  希腊原文:Burnet (OUP 1903)。英译:Fowler, Loeb (1925)。均经 Perseus,公共领域。中文直接译自希腊文。
+</footer>
+
+<script>
+  const body=document.body;
+  const map={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-rem':'hide-remarks'};
+  for(const id in map){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(map[id]); btn.classList.toggle('off'); };}
+</script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phaedrus · Palinode · 250c–250e</title>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+    line-height:1.85;
+  }
+  /* top bar */
+  .bar{
+    position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;
+  }
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem;
+    cursor:pointer; transition:.15s;
+  }
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  /* page */
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem;
+    line-height:1.7; color:var(--ink)}
+  /* sentence units */
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.5rem}
+  /* the chinese body — the thing read */
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",
+     "Iowan Old Style",Georgia,serif; font-size:1.2rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted);
+     vertical-align:.45em; margin-right:.3em; user-select:none}
+  /* ruby = greek transliteration over key chinese terms */
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif;
+     font-style:italic; font-size:.5em; color:var(--amber); font-weight:500;
+     letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  /* reference layers: greek anchor + english */
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.92rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek);
+     font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700;
+     font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px;
+     height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  /* remarks */
+  .remarks{margin:.5rem 0 .2rem; padding:.55rem .8rem;
+    background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber);
+    border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em;
+    padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}        /* 词 */
+  .t-pun{background:var(--purple-soft); color:var(--purple)}   /* 双关 */
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}     /* 注 */
+  .t-cf{background:var(--teal-soft); color:var(--teal)}        /* 对照 */
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
+    font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin-top:2rem; padding:.9rem 1rem; border:1px dashed var(--line);
+    border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif;
+    font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .pager{display:flex; justify-content:space-between; gap:1rem; margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line); font-family:system-ui,sans-serif; font-size:.82rem}
+  .pager a{color:var(--amber); text-decoration:none}
+  .pager a:hover{text-decoration:underline}
+  .pager .mid{color:var(--muted)}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">Phaedrus</a> &rsaquo; <b>Palinode</b> &rsaquo; 250c–250e &nbsp;·&nbsp; 唯有"美"经由视觉显明</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">英译</button>
+  <button class="btn" id="t-rem">注释</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Palinode · 250c–250e</h1>
+    <div class="sub">Plato, <i>Phaedrus</i> · 苏格拉底第二篇演讲(翻案演讲) · Stephanus 250c–250e</div>
+    <div class="lead">中文为直接译自希腊文(Burnet 校勘本)。<b>希腊原文</b>是依据(默认隐藏,可开),
+      <b>英译</b>为 H. N. Fowler(1925, Loeb)译本,仅作对照参考——你读的是中文,英文用来与我的中译相互印证。
+      关键中文词上方的小字是其所本的希腊词(转写)。</div>
+  </header>
+
+  <!-- 1 -->
+  <div class="unit para-start">
+    <p class="sent"><span class="zh-body"><span class="n">1</span>那是至福的<ruby>密仪<rt>teletē</rt></ruby>,我们亲身参与;那时我们自身<ruby>完整无缺<rt>holoklēroi</rt></ruby>,尚未沾染日后等着我们的种种祸患。我们在纯净的光辉中受了启示、<ruby>亲眼观照<rt>epopteuontes</rt></ruby>那些完整、单纯、宁定而有福的<ruby>显象<rt>phasmata</rt></ruby>;我们自身也是纯净的,还<ruby>不曾被囚禁<rt>asēmantoi</rt></ruby>在这具如今随身带着、称作"<ruby>身体<rt>sōma</rt></ruby>"的东西里——像<ruby>牡蛎<rt>ostreon</rt></ruby>被锁在壳中一样。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>μακαριωτάτην, ἣν ὠργιάζομεν ὁλόκληροι μὲν αὐτοὶ ὄντες καὶ ἀπαθεῖς κακῶν ὅσα ἡμᾶς ἐν ὑστέρῳ χρόνῳ ὑπέμενεν, ὁλόκληρα δὲ καὶ ἁπλᾶ καὶ ἀτρεμῆ καὶ εὐδαίμονα φάσματα μυούμενοί τε καὶ ἐποπτεύοντες ἐν αὐγῇ καθαρᾷ, καθαροὶ ὄντες καὶ ἀσήμαντοι τούτου ὃ νῦν δὴ σῶμα περιφέροντες ὀνομάζομεν, ὀστρέου τρόπον δεδεσμευμένοι.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>the most blessed of mysteries, which we celebrated in a state of perfection, when we were without experience of the evils which awaited us in the time to come, being permitted as initiates to the sight of perfect and simple and calm and happy apparitions, which we saw in the pure light, being ourselves pure and not entombed in this which we carry about with us and call the body, in which we are imprisoned like an oyster in its shell.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-pun">双关</span><b class="gk">ἀσήμαντος</b> <span class="zh">字面"未受标记/无印记"——其中 <span class="gk">σῆμα</span> 兼指"记号"与"<b>坟墓</b>"。柏拉图借此呼应古老的 <span class="gk">σῶμα/σῆμα</span>(身体即坟墓)说:身体是囚牢,灵魂困于其中。Fowler 译作 "not entombed"(未被埋葬)正是抓住"坟墓"这一层。</span></div>
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">φάσματα</b> · phasmata <span class="zh">显象、景象。厄琉息斯密仪用语(<span class="gk">μυούμενοι/ἐποπτεύοντες</span> = 入门者/最高阶"亲见者"),移用于灵魂对理型的观照。</span></div>
+      <div class="remark"><span class="tag t-cf">对照</span><span class="zh">"像牡蛎被锁在壳中" <span class="gk">ὀστρέου τρόπον δεδεσμευμένοι</span> — 身体如硬壳,著名比喻;与马车神话里灵魂"坠落、负重"相衔接。</span></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">2</span>这一席话,就算是我献给"<ruby>记忆<rt>mnēmē</rt></ruby>"的吧:正因这记忆,出于对那时所见的<ruby>眷恋<rt>pothos</rt></ruby>,我才说得长了些。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ταῦτα μὲν οὖν μνήμῃ κεχαρίσθω, δι᾽ ἣν πόθῳ τῶν τότε νῦν μακρότερα εἴρηται·</span></p>
+      <p class="en"><span class="lbl">EN</span><span>So much, then, in honor of memory, on account of which I have now spoken at some length, through yearning for the joys of that other time.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">μνήμη / πόθος</b> <span class="zh">记忆 / 眷恋。回忆说(<span class="gk">ἀνάμνησις</span>)主题在此收束。<span class="gk">πόθος</span> 特指对<b>缺席之物</b>的渴想——与下一节将出现的 <span class="gk">ἵμερος</span> 同源相呼应。</span></div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">3</span>至于"<ruby>美<rt>kallos</rt></ruby>"——正如方才所言——它当年在那些神圣存在之列,也曾熠熠生辉地存在着;而我们来到此世以后,仍能凭着我们最清晰的那一种<ruby>感官<rt>aisthēsis</rt></ruby>,见它最清晰地闪耀。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>περὶ δὲ κάλλους, ὥσπερ εἴπομεν, μετ᾽ ἐκείνων τε ἔλαμπεν ὄν, δεῦρό τ᾽ ἐλθόντες κατειλήφαμεν αὐτὸ διὰ τῆς ἐναργεστάτης αἰσθήσεως τῶν ἡμετέρων στίλβον ἐναργέστατα.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>But beauty, as I said before, shone in brilliance among those visions; and since we came to earth we have found it shining most clearly through the clearest of our senses;</span></p>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">4</span>因为在通过身体而来的诸感官当中,<ruby>视觉<rt>opsis</rt></ruby>对我们最为敏锐;然而"<ruby>明智<rt>phronēsis</rt></ruby>"却无法被它看见——否则,明智若能把自身某种如此清晰的影像送入眼帘,该会激起何等强烈可畏的<ruby>爱恋<rt>erōs</rt></ruby>啊!其余一切可爱之物(别的理型)也都如此。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὄψις γὰρ ἡμῖν ὀξυτάτη τῶν διὰ τοῦ σώματος ἔρχεται αἰσθήσεων, ᾗ φρόνησις οὐχ ὁρᾶται—δεινοὺς γὰρ ἂν παρεῖχεν ἔρωτας, εἴ τι τοιοῦτον ἑαυτῆς ἐναργὲς εἴδωλον παρείχετο εἰς ὄψιν ἰόν—καὶ τἆλλα ὅσα ἐραστά·</span></p>
+      <p class="en"><span class="lbl">EN</span><span>for sight is the sharpest of the physical senses, though wisdom is not seen by it, for wisdom would arouse terrible love, if such a clear image of it were granted as would come through sight, and the same is true of the other lovely realities;</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">φρόνησις</b> · phronēsis <span class="zh">明智、智慧。本节的论证支点:智慧最可爱,但<b>无可见的影像</b>,故在此世不激起爱欲;唯独"美"恰好是视觉的对象——这是"美为何独特"的关键。</span></div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="unit">
+    <p class="sent"><span class="zh-body"><span class="n">5</span>唯独"美",在如今得了这样的<ruby>命分<rt>moira</rt></ruby>:它<ruby>最为显明<rt>ekphanestaton</rt></ruby>,也<ruby>最惹人爱恋<rt>erasmiōtaton</rt></ruby>。</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>νῦν δὲ κάλλος μόνον ταύτην ἔσχε μοῖραν, ὥστ᾽ ἐκφανέστατον εἶναι καὶ ἐρασμιώτατον.</span></p>
+      <p class="en"><span class="lbl">EN</span><span>but beauty alone has this privilege, and therefore it is most clearly seen and loveliest.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><b class="gk">μοῖραν</b> <span class="zh">字面"命分、份额"(命运分派的一份),措辞带宿命意味。我译"命分";Fowler 译 "privilege"(特权)——意思达了,但"被分派的命运"这层语感弱了些。可两相对看。</span></div>
+      <div class="remark"><span class="tag t-ci">词</span><b class="gk">ἐκφανέστατον / ἐρασμιώτατον</b> <span class="zh">一对最高级:最显明 / 最可爱。合为"美"的双重特权——既最易被看见,又最易引发爱。</span></div>
+    </div>
+  </div>
+
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    这是"读"的工作,与你一同做,不预先消化。读时可切入的问题(只是 prompts,非答案):
+    为什么由"视觉"而非别的感官承担这一独特角色?论证真正依赖的,是"美恰好是视觉的对象"这个<b>偶然</b>事实,还是美本身?
+    <span class="gk">φρόνησις</span> 那句反事实("否则会激起可畏的爱恋")到底在说什么?
+    身体作"牡蛎之壳"的意象,如何与马车神话里灵魂的坠落衔接?
+    "美得了这样的<b>命分</b>"——这与基督教式"美是登往神的阶梯"有何不同?
+  </div>
+
+  <div class="pager">
+    <span style="color:var(--line)">本段始 · 250c</span>
+    <a class="mid" href="index.html">目录</a>
+    <a href="palinode-02.html">250e–251a 纵欲者 →</a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-pun">双关</span>希腊文双关/词源</span>
+    <span><span class="tag t-cf">对照</span>中译/英译比较</span>
+    <span><span class="tag t-zhu">注</span>说明</span>
+  </div>
+  希腊原文:J. Burnet, <i>Platonis Opera</i> (OUP, 1903)。英译:H. N. Fowler, Loeb (1925)。二者均经 Perseus Digital Library,公共领域。中文直接译自希腊文。
+</footer>
+
+<script>
+  const body=document.body;
+  const map={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-rem':'hide-remarks'};
+  for(const id in map){
+    const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(map[id]); btn.classList.toggle('off'); };
+  }
+</script>
+</body>
+</html>
