@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>World Cup Beijing Time Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <div class="crumb"><a href="../index.html">主页</a> &rsaquo; World Cup</div>
+      <section class="topbar" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Asia/Shanghai</p>
+          <h1 id="page-title">World Cup Match Times</h1>
+        </div>
+        <div class="clock" aria-live="polite">
+          <span class="clock-label">Beijing now</span>
+          <time id="beijing-now">--:--:--</time>
+        </div>
+      </section>
+
+      <section class="next-match" aria-labelledby="next-title">
+        <div>
+          <p class="eyebrow">Next match</p>
+          <h2 id="next-title">Loading...</h2>
+          <p id="next-meta" class="muted"></p>
+        </div>
+        <div class="countdown" id="next-countdown">--</div>
+      </section>
+
+      <section class="controls" aria-label="Match controls">
+        <div class="segmented" role="tablist" aria-label="Filter matches">
+          <button class="active" type="button" data-filter="upcoming">Upcoming</button>
+          <button type="button" data-filter="today">Today</button>
+          <button type="button" data-filter="all">All</button>
+        </div>
+        <div class="conn" aria-live="polite">
+          <span id="conn-dot" class="conn-dot loading"></span>
+          <span id="conn-text">Updating…</span>
+          <button id="refresh" type="button">Refresh now</button>
+        </div>
+        <label class="search">
+          <span>Search</span>
+          <input id="search" type="search" placeholder="Team, group, venue">
+        </label>
+      </section>
+
+      <section class="bracket-wrap" aria-labelledby="bracket-title">
+        <div class="section-head">
+          <div>
+            <h2 id="bracket-title">Knockout Flow — who's left</h2>
+            <p class="data-note">Winners advance (▶, bold); eliminated teams are struck through. Fills in automatically once the knockout rounds begin.</p>
+          </div>
+        </div>
+        <div id="bracket" class="bracket" aria-live="polite"></div>
+      </section>
+
+      <section class="match-list" aria-labelledby="matches-title">
+        <div class="section-head">
+          <div>
+            <h2 id="matches-title">Matches</h2>
+            <p class="data-note">Live fixtures &amp; scores from TheSportsDB · auto-refreshes every minute. Added matches and exports stay local to this browser.</p>
+          </div>
+          <div class="section-actions">
+            <button id="download-all" type="button">Download Calendar</button>
+          </div>
+        </div>
+        <div id="matches" class="matches" aria-live="polite"></div>
+      </section>
+
+      <section class="editor" aria-labelledby="add-title">
+        <h2 id="add-title">Add A Match</h2>
+        <form id="match-form">
+          <label>
+            Team 1
+            <input id="team-a" required placeholder="Portugal">
+          </label>
+          <label>
+            Team 2
+            <input id="team-b" required placeholder="Uzbekistan">
+          </label>
+          <label>
+            Beijing date
+            <input id="date" type="date" required>
+          </label>
+          <label>
+            Beijing time
+            <input id="time" type="time" required>
+          </label>
+          <label>
+            Group / round
+            <input id="round" placeholder="Group stage">
+          </label>
+          <label>
+            Venue
+            <input id="venue" placeholder="MetLife Stadium">
+          </label>
+          <button type="submit">Add Match</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
