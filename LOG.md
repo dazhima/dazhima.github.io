@@ -2,12 +2,13 @@
 
 parent: [CLAUDE.md](CLAUDE.md)
 
-## Status (2026-07-06)
+## Status (2026-07-11)
 
 **Live and working.** Custom domain active, HTTPS enforced, content published across three sections.
 
 - Homepage: hero (identity, satirical title), Research, Publications, Path, AI & Building (flagship: math-ai-framework), Others, Contact.
-- Others → 查经 (bible/), Phaedrus palinode (philosophy/socrate/), Arendt Life of the Mind + Marxism tracker + reading framework (philosophy/).
+- Others → 查经 (bible/), Phaedrus palinode (philosophy/socrate/), Arendt Life of the Mind + Marxism tracker + reading framework (philosophy/), **World Cup Beijing-time tracker (worldcup/)**.
+- **worldcup/** (added 2026-07-11) — self-contained live 2026 World Cup tracker: fixtures + scores + knockout "who's left" flow board, Beijing time, auto-refresh from TheSportsDB. Source of truth is `ai/worldcup/`; the site copy adds a `主页` breadcrumb. Linked from Others + sitemap. Live: https://yanhe-math.com/worldcup/
 - SEO: `robots.txt` + `sitemap.xml` added 2026-07-06, listing all live pages. Not submitted to Google Search Console — decided to let indexing happen naturally (see DECISIONS.md).
 
 ## Domain
