@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>欧拉–埃特尔维因方程 — 简化主干笔记</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+  :root{
+    --ink:#2b2420; --paper:#faf6ef; --panel:#fffdf9; --accent:#8c3b2e; --accent2:#5b6b8c;
+    --rule:#d8cdb8; --pull:#b5432f; --hold:#3c5a86; --peach:#c98f5c; --brown:#7a5230;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Songti SC','Noto Sans CJK SC','Noto Serif CJK SC','Iowan Old Style',Georgia,serif;
+    line-height:1.7;
+  }
+  .layout{ display:flex; min-height:100vh; }
+  nav.toc{
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+    width:230px; flex:0 0 230px; background:var(--panel); border-right:1px solid var(--rule);
+    padding:24px 16px; font-size:13px;
+  }
+  nav.toc h3{ font-size:12px; letter-spacing:.08em; color:var(--accent2); text-transform:uppercase; margin:18px 0 6px; }
+  nav.toc h3:first-child{ margin-top:0; }
+  nav.toc a{ display:block; color:var(--ink); text-decoration:none; padding:3px 0 3px 8px; border-left:2px solid transparent; }
+  nav.toc a:hover{ border-left-color:var(--accent); color:var(--accent); }
+  main{ flex:1; min-width:0; padding: 40px 48px 100px; max-width:900px; }
+  .hero{ text-align:center; margin-bottom:50px; }
+  .hero h1{ color:var(--accent); font-size:32px; margin:0 0 8px; }
+  .hero .sub{ color:#6b5f52; font-style:italic; font-size:16px; }
+  .hero .meta{ color:#8a7c6a; font-size:13px; margin-top:10px; }
+  section{ margin-bottom:56px; padding-top:10px; }
+  section > h2{
+    font-size:22px; color:var(--accent); border-bottom:2px solid var(--rule); padding-bottom:8px;
+  }
+  ol.steps{ padding-left:22px; margin:14px 0; }
+  ol.steps > li{ margin-bottom:16px; }
+  ol.manual-num{ list-style:none; padding-left:8px; }
+  ol.steps ol{ padding-left:20px; margin:8px 0; }
+  ol.steps ol li{ margin-bottom:10px; }
+  ol.steps ol ol{ padding-left:20px; margin:6px 0; }
+  .item-num{ font-weight:700; color:var(--accent); }
+  .note{ background:#f2ece0; border-left:4px solid var(--peach); padding:8px 14px; margin:12px 0; font-size:14.5px; border-radius:0 6px 6px 0; }
+  .example{ background:#fbf6ec; border:1px dashed var(--peach); border-radius:8px; padding:10px 16px; margin:14px 0; }
+  .conclusion{ background:linear-gradient(180deg,#fffaf1,#fdf3e0); border:1.5px solid var(--accent); border-radius:10px; padding:14px 20px; margin:20px 0; }
+  table.datatable{ width:100%; border-collapse:collapse; font-size:14px; margin:16px 0; }
+  table.datatable th, table.datatable td{ border:1px solid var(--rule); padding:7px 12px; text-align:left; }
+  table.datatable th{ background:var(--panel); color:var(--accent2); }
+  .final-result{ text-align:center; background:linear-gradient(180deg,#fffaf1,#fdf3e0); border:2px solid var(--accent); border-radius:14px; padding:24px; margin:24px 0; }
+  .final-result .eq{ font-size:22px; margin:8px 0; }
+  code{ background:#f2ece0; padding:1px 5px; border-radius:4px; font-size:0.92em; }
+  .table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ---- mobile ---- */
+  @media (max-width: 820px){
+    .layout{ display:block; }
+    nav.toc{
+      position:static; top:auto; height:auto; width:auto; flex:none;
+      border-right:none; border-bottom:1px solid var(--rule);
+      padding:14px 16px 10px; overflow-y:visible;
+    }
+    nav.toc h3{ display:inline; margin:0 10px 0 0; }
+    nav.toc h3:not(:first-child){ margin-left:14px; }
+    nav.toc a{
+      display:inline-block; padding:3px 9px; margin:2px 4px 2px 0;
+      border:1px solid var(--rule); border-left:1px solid var(--rule);
+      border-radius:14px; font-size:12.5px;
+    }
+    nav.toc a:hover{ border-color:var(--accent); }
+    main{ padding:22px 16px 60px; max-width:100%; }
+    .hero h1{ font-size:22px; }
+    .hero .sub{ font-size:14px; }
+    section > h2{ font-size:19px; }
+    .note, .example, .conclusion{ padding:12px 14px; font-size:14.5px; }
+    .final-result{ padding:16px 12px; }
+    .final-result .eq{ font-size:17px; }
+    table.datatable{ font-size:12px; }
+    table.datatable th, table.datatable td{ padding:5px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc">
+  <a href="../index.html" style="color:#8a7c6a;font-size:12px">&larr; 主页</a>
+  <h3>欧拉–埃特尔维因</h3>
+  <a href="#core">1–6 · 核心推导</a>
+  <a href="#solve">7 · 解 ODE</a>
+  <a href="#circle">8 · 圆</a>
+  <a href="#ellipse">9 · 椭圆</a>
+  <a href="#concrete">10 · 竹竿实例</a>
+  <a href="#ellipse-link">11 · 椭圆对应</a>
+</nav>
+<main>
+
+  <div class="hero">
+    <h1>欧拉–埃特尔维因方程</h1>
+    <div class="sub">简化主干笔记（Summary）</div>
+    <div class="meta">Frenet 标架 → 力密度 → 张力 → 接触力 → 力平衡 → ODE → 解出张力 → 圆/椭圆算例</div>
+  </div>
+
+  <section id="core">
+    <h2>1–6 · 核心推导</h2>
+    <ol class="steps manual-num">
+      <li><span class="item-num">1. Frenet frame and formula:</span>
+        <ol>
+          <li>$\mathbf{x}(s)$ be a curve with arc-length parametrization. $\mathbf{e}(s) = \mathbf{x}'(s)$ its tangent vector.</li>
+          <li>$|\mathbf{x}'(s)|=1$ because arc-length parametrization means $s = L(s) := \int_{s_0}^{s}|\mathbf{x}'(t)|\,dt$ for some basepoint $s_0$ (the parameter <i>is</i> the length traveled); differentiating both sides, $1 = L'(s) = |\mathbf{x}'(s)|$ by the Fundamental Theorem of Calculus. So $\mathbf{e}(s)$ is a unit vector along $s$.</li>
+          <li>$\boldsymbol\tau(s)$ be $\mathbf{e}(s)$ rotating counter-clockwise by $\frac{\pi}{2}$. The reason: this matches do Carmo's Remark 1 (§1-5) — orienting $\{\mathbf{e},\boldsymbol\tau\}$ the same way as the standard basis — which is exactly what makes $k(s)$ below come out in do Carmo's standard sign convention (positive for a CCW-traversed convex curve, and the classical, un-flipped formula for the ellipse).</li>
+          <li>Frenet formula: Define the curvature $k(s) := \mathbf{e}'(s)\cdot\boldsymbol\tau(s)$ (equivalently $k(s) = \det(\mathbf{e}(s),\mathbf{e}'(s))$). Then
+            <ol>
+              <li>$\mathbf{e}'(s) = k(s)\boldsymbol\tau(s)$.</li>
+              <li>$\boldsymbol\tau'(s) = -k(s)\mathbf{e}(s)$.</li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li><span class="item-num">2. Force:</span>
+        <ol>
+          <li>A force applied on a (measurable) subset $A$ on the rope is given by $\mathbf{F}(A) = \int_{A}\mathbf{f}(s)ds$, where $\mathbf{f}(s)$ is the density of the force.</li>
+        </ol>
+      </li>
+      <li><span class="item-num">3. Tension:</span>
+        <ol>
+          <li>The tension on the rope is always along the direction $\mathbf{e}(s)$. $\mathbf{T}(s)=T(s)\mathbf{e}(s)$. The question can be reformulated as:
+            <ol>
+              <li>Find the dependence of quantity $T(s)$ on $s$.</li>
+              <li>At point $s$, the pulling force (i.e. along direction $\mathbf{e}(s)$) is $\mathbf{T}(s)$; the opposing force is $-\mathbf{T}(s)$ (opposing the moving direction).</li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li><span class="item-num">4. Contact force (pointwise):</span>
+        <ol>
+          <li>The contact force on the rope is defined to be the total force imposed from the bamboo to the rope (= support + friction).</li>
+          <li>Let $\mathbf{f}(s)$ be the density of contact. Then at point $s$, let $\mathbf{n}(s)$ be the density of support force at point $s$, then $\mathbf{n}(s) = -n(s)\boldsymbol\tau(s)$, where $n(s)\ge 0$ is the magnitude of $\mathbf{n}(s)$ (support pushes away from the concave side, i.e. opposite $\boldsymbol\tau$, which points toward it by our choice above).</li>
+          <li>Pointwise version of contact force: by the definitions we have
+            <ol>
+              <li>$\mathbf{f}(s) = \mathbf{n}(s)-\mu n(s)\mathbf{e}(s) = -n(s)\boldsymbol\tau(s)-\mu n(s)\mathbf{e}(s)$. (key1)</li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li><span class="item-num">5. Force on an interval:</span>
+        <ol>
+          <li>On an interval $[s_1,s_2]$, it has three forces: a pulling force $\mathbf{T}(s_2)$, an opposing force $-\mathbf{T}(s_1)$, and a contact force $\int_{s_1}^{s_2}\mathbf{f}(s)ds$.</li>
+          <li>Since the interval $[s_1,s_2]$ is balanced, we have $\mathbf{T}(s_2) +(- \mathbf{T}(s_1)) + \int_{s_1}^{s_2}\mathbf{f}(s)ds = 0$.</li>
+          <li>In particular, $\mathbf{T}(s)$ is differentiable with $\mathbf{T}'(s) = -\mathbf{f}(s)$. (key2)</li>
+        </ol>
+      </li>
+      <li><span class="item-num">6. The differential equation of $T(s)$:</span>
+        <ol>
+          <li>Plug in the definition of $T(s)$ and (key1) into (key2) we get
+            <ol>
+              <li>LHS $= T'(s)\mathbf{e}(s)+T(s)\mathbf{e}'(s)$, by Frenet formula we get LHS $= T'(s)\mathbf{e}(s)+T(s)k(s)\boldsymbol\tau(s)$.</li>
+              <li>RHS $= n(s)\boldsymbol\tau(s)+\mu n(s)\mathbf{e}(s)$.</li>
+              <li>By LHS = RHS, and the fact that $\mathbf{e}(s),\boldsymbol\tau(s)$ is a frame, we get
+                <ol>
+                  <li>$T'(s) = \mu n(s)$</li>
+                  <li>$n(s) = T(s)k(s)$ (consistent with $n(s)\ge0$, since $T,k>0$).
+                    <ol><li>It follows that we have $T'(s) = \mu T(s)k(s)$.</li></ol>
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </section>
+
+  <section id="solve">
+    <h2>Solving the ODE and concrete examples</h2>
+    <ol class="steps manual-num" start="7">
+      <li><span class="item-num">7. Solving the ODE:</span>
+        <ol>
+          <li>Boundary condition: fix a basepoint $s_0$ with known tension $T(s_0)=G>0$ (e.g. where a weight $G$ hangs).</li>
+          <li>Define $\Theta(s):=\int_{s_0}^s k(s')\,ds'$ (total turning of the tangent from $s_0$ to $s$).</li>
+          <li>The ODE $T'(s)=\mu k(s)T(s)$ with $T(s_0)=G$ has unique solution $T(s)=G\,e^{\mu\Theta(s)}$ (integrating factor: $\varphi(s):=T(s)e^{-\mu\Theta(s)}$ has $\varphi'\equiv0$, so $\varphi\equiv\varphi(s_0)=G$).</li>
+          <li>In particular $T(s)>0$ everywhere ($G>0$, $e^{(\cdot)}>0$), consistent with $n(s)=T(s)k(s)\ge0$ from item 6.</li>
+        </ol>
+      </li>
+    </ol>
+  </section>
+
+  <section id="circle">
+    <h2 style="font-size:19px;">8 · Circle example</h2>
+    <ol class="steps" start="1">
+      <li>Radius $R$: $k\equiv 1/R$ (constant).</li>
+      <li>Parametrize by angle $\theta$ (arc length $s=R\theta$): $\Theta(\theta)=\int_0^\theta \frac1R\cdot R\,d\theta' = \theta$.</li>
+      <li>$T(\theta)=G\,e^{\mu\theta}$ — the classical Euler–Eytelwein formula.</li>
+    </ol>
+    <div class="figure" style="text-align:center;">
+      <svg viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg">
+        <line x1="60" y1="220" x2="590" y2="220" stroke="#2b2420" stroke-width="1.5"/>
+        <text x="598" y="225" font-size="14" fill="#2b2420" font-style="italic">&#952;</text>
+        <line x1="80" y1="230" x2="80" y2="30" stroke="#2b2420" stroke-width="1.5"/>
+        <text x="88" y="38" font-size="14" fill="#2b2420" font-style="italic">T(&#952;)</text>
+        <polyline points="80,204.18 140,197.55 200,188.14 260,174.78 320,155.85 380,128.95 440,90.8 500,36.68"
+                  fill="none" stroke="#8c3b2e" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="80" cy="204.18" r="4.5" fill="#8c3b2e"/>
+        <text x="45" y="209" font-size="14" fill="#8c3b2e" text-anchor="end">G</text>
+        <text x="380" y="70" font-size="16" fill="#8c3b2e" font-weight="700">T(&#952;) = G e^{&#956;&#952;}</text>
+      </svg>
+    </div>
+  </section>
+
+  <section id="ellipse">
+    <h2 style="font-size:19px;">9 · Ellipse example</h2>
+    <ol class="steps" start="1">
+      <li>$\boldsymbol\delta(t)=(a\cos t,b\sin t)$, $k(t)=\dfrac{ab}{(a^2\sin^2t+b^2\cos^2t)^{3/2}}$, $v(t)=|\boldsymbol\delta'(t)|=\sqrt{a^2\sin^2t+b^2\cos^2t}$.</li>
+      <li>$\Theta(t)=\int_0^t k(t')v(t')\,dt' = \int_0^t \dfrac{ab}{a^2\sin^2t'+b^2\cos^2t'}\,dt' = \arctan\!\big(\tfrac ab\tan t\big)$ for $t\in(-\tfrac\pi2,\tfrac\pi2)$; extends by $\Theta(k\tfrac\pi2+u)=k\tfrac\pi2+\arctan(\tfrac ab\tan u)$ for integer $k$ (each quarter of the ellipse turns the tangent by exactly $\pi/2$, by symmetry — consistent with the total-turning theorem: a full loop turns by $2\pi$ regardless of shape).</li>
+      <li>So $T(t)=G\,e^{\mu\Theta(t)}$; at the symmetric points $t=\tfrac\pi2,\pi,\tfrac{3\pi}2,2\pi$: $\Theta=\tfrac\pi2,\pi,\tfrac{3\pi}2,2\pi$ <b>exactly</b>, same as the circle at those fractions — the ellipse only differs from the circle at non-symmetric wrap points, e.g. $t=\pi/4$ (with $a=6.25$cm, $b=4$cm): $\Theta(\pi/4)=\arctan(a/b)=\arctan(1.5625)\approx1.0015$ rad ($57.4°$), not $45°$ — curvature is higher near the major-axis tip, so the tangent turns faster there than a naive angle-guess assumes.</li>
+    </ol>
+  </section>
+
+  <section id="concrete">
+    <h2 style="font-size:19px;">10 · 竹竿 + 登山扣 3:1 系统 (Z-drag)，物体 70kg</h2>
+    <ol class="steps" start="1">
+      <li>装置：绳一端固定在物体上（同一固定点也挂一个登山扣）；绳从固定点向上绕竹竿一圈（角度 $\Theta$），向下穿过登山扣（视为无摩擦，张力不变）；再向上绕竹竿第二圈（角度 $\Theta$），向下到拉绳人手中。</li>
+      <li>物体由三股绳拉住：直接固定的一股（张力 $T_0$）+ 穿过登山扣的两股（各 $T_1$）：$T_0+2T_1=70$（单位 kgf）。</li>
+      <li>张力沿绳传递：$T_1=T_0e^{\mu\Theta}$（第一圈绕竹竿），$T_{\text{final}}=T_1e^{\mu\Theta}=T_0e^{2\mu\Theta}$（第二圈绕竹竿，$T_{\text{final}}$ 即人手拉力）。</li>
+      <li>解出：$T_0=\dfrac{70}{1+2e^{\mu\Theta}}$，$T_{\text{final}}=\dfrac{70\,e^{2\mu\Theta}}{1+2e^{\mu\Theta}}$。</li>
+      <li>核对（$\mu\to0$，无摩擦极限）：$T_{\text{final}}\to 70/3\approx23.33$ kgf——经典 3:1 滑轮组（Z 字形省力装置）力学优势，这是"一个女生也能轻松拉动 70kg"的主要原因。</li>
+      <li>摩擦系数 $\mu$ 不确定，取几档比较（$\Theta=\pi$ 半圈，或 $3\pi/2$ 四分之三圈）：
+        <div class="table-scroll">
+        <table class="datatable">
+          <tr><th>$\mu$</th><th>$\Theta$</th><th>$T_0$ (kgf)</th><th>$T_1$ (kgf)</th><th>$T_{\text{final}}$ (kgf)</th></tr>
+          <tr><td>0.1</td><td>$\pi$</td><td>18.73</td><td>25.64</td><td>35.10</td></tr>
+          <tr><td>0.1</td><td>$3\pi/2$</td><td>16.65</td><td>26.68</td><td>42.73</td></tr>
+          <tr><td>0.2</td><td>$\pi$</td><td>14.74</td><td>27.63</td><td>51.79</td></tr>
+          <tr><td>0.2</td><td>$3\pi/2$</td><td>11.41</td><td>29.29</td><td>75.18</td></tr>
+          <tr><td>0.5</td><td>$\pi$</td><td>6.59</td><td>31.71</td><td>152.51</td></tr>
+          <tr><td>0.5</td><td>$3\pi/2$</td><td>3.17</td><td>33.42</td><td>352.57</td></tr>
+        </table>
+        </div>
+      </li>
+      <li>实际手感接近 $\mu\approx0.1$ 一档（$T_{\text{final}}\approx35$–$43$ kgf，比直接拎起一半重量稍多一点，量级上"一个女生能轻松拉动"是合理的）——但 $\mu$ 未经实测，仅为估计；注意结果对 $\mu$ 高度敏感（$\mu$ 从 0.1 到 0.5，$T_{\text{final}}$ 从 ~35 涨到 ~350 kgf，十倍差异）。</li>
+    </ol>
+    <div class="final-result">
+      <div style="font-size:12px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;">Z-drag 张力公式</div>
+      <div class="eq">$$T_{\text{final}} = \frac{70\,e^{2\mu\Theta}}{1+2e^{\mu\Theta}} \ \xrightarrow{\ \mu\to0\ }\ \frac{70}{3}\approx23.33\text{ kgf}$$</div>
+    </div>
+  </section>
+
+  <section id="ellipse-link">
+    <h2 style="font-size:19px;">11 · 与椭圆的联系（备注）</h2>
+    <p>若竹竿截面是椭圆而非圆，只要两圈缠绕的总转角 $\Theta$（不是参数 $t$）仍取 $\pi$、$3\pi/2$ 这类"对称点"，由第 9 条的对称性，$T_{\text{final}}$ 与圆的情形完全相同——形状本身不影响结果，起作用的只是 $\Theta$。真正体现形状差异的，是在非对称的缠绕点（如第 9 条 $t=\pi/4$ 的例子）。</p>
+  </section>
+
+</main>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ]
+    });
+  });
+</script>
+</body>
+</html>

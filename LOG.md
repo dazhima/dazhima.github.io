@@ -2,12 +2,13 @@
 
 parent: [CLAUDE.md](CLAUDE.md)
 
-## Status (2026-07-11)
+## Status (2026-07-16)
 
 **Live and working.** Custom domain active, HTTPS enforced, content published across three sections.
 
 - Homepage: hero (identity, satirical title), Research, Publications, Path, AI & Building (flagship: math-ai-framework), Others, Contact.
-- Others → 查经 (bible/), Phaedrus palinode (philosophy/socrate/), Arendt Life of the Mind + Marxism tracker + reading framework (philosophy/), **World Cup Beijing-time tracker (worldcup/)**.
+- Others → Selected papers (arxiv-daily, external tracker), 查经 (bible/), Phaedrus palinode (philosophy/socrate/), Arendt Life of the Mind + Marxism tracker + reading framework (philosophy/), World Cup Beijing-time tracker (worldcup/), **Some small math (math-notes/)**.
+- **math-notes/** (added 2026-07-16) — landing page "Some small math" for small self-contained derivations (not research). First entry: 欧拉–埃特尔维因方程 (Euler–Eytelwein capstan equation), copied in from `claude/obsidian-ai/math/euler-eytelwein/euler-eytelwein-summary.html` as-is (self-contained, KaTeX via CDN, no relative asset deps), with a `← 主页` link added to its sidebar TOC. New notes: drop the rendered HTML into `math-notes/`, add a `<li>` to `math-notes/index.html`'s notes list, no separate landing needed unless it grows large like bible/philosophy did.
 - **worldcup/** (added 2026-07-11) — self-contained live 2026 World Cup tracker: fixtures + scores + knockout "who's left" flow board, Beijing time, auto-refresh from TheSportsDB. Source of truth is `ai/worldcup/`; the site copy adds a `主页` breadcrumb. Linked from Others + sitemap. Live: https://yanhe-math.com/worldcup/
 - SEO: `robots.txt` + `sitemap.xml` added 2026-07-06, listing all live pages. Not submitted to Google Search Console — decided to let indexing happen naturally (see DECISIONS.md).
 
