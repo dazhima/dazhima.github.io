@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /bible/
 
 Sitemap: https://yanhe-math.com/sitemap.xml
