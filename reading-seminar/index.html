@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Undergraduate reading seminar · Yan He</title>
+<meta name="description" content="Notes from an undergraduate reading seminar in algebraic geometry — schemes, morphisms, blow-ups, working through Hartshorne and beyond." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --bg-soft: #f3f1ea;
+    --ink: #1c1b19;
+    --ink-soft: #565248;
+    --line: #e2ded3;
+    --accent: #7a2e1d;
+    --accent-soft: #a85c44;
+    --max: 760px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14130f;
+      --bg-soft: #1d1b16;
+      --ink: #eceae3;
+      --ink-soft: #a8a195;
+      --line: #2c2922;
+      --accent: #d98b6f;
+      --accent-soft: #c5755a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-soft); text-decoration: underline; text-underline-offset: 3px; }
+  h1, h2, h3 { font-family: "Newsreader", Georgia, serif; font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; }
+
+  .crumb { padding: 28px 0 0; font-size: 13px; color: var(--ink-soft); }
+  .crumb a { color: var(--ink-soft); font-weight: 500; }
+  .crumb a:hover { color: var(--accent); }
+
+  header { padding: 20px 0 48px; }
+  .eyebrow { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 18px; }
+  h1 { font-size: clamp(2.2rem, 6vw, 3rem); margin: 0 0 14px; }
+  .lede { font-size: 1.1rem; max-width: 58ch; color: var(--ink-soft); }
+
+  section { padding: 36px 0; border-top: 1px solid var(--line); }
+  .sec-head { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; margin: 0 0 24px; }
+
+  ul.notes { list-style: none; padding: 0; margin: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  ul.notes li { background: var(--bg); }
+  ul.notes li a { display: block; padding: 16px 18px; color: inherit; text-decoration: none; }
+  ul.notes li a:hover { background: var(--bg-soft); }
+  ul.notes li b { font-family: "Newsreader", serif; font-weight: 500; font-size: 1.08rem; }
+  ul.notes li span { display: block; color: var(--ink-soft); font-size: 0.9em; margin-top: 2px; }
+  ul.notes li .tag { display: inline-block; font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--accent); background: var(--bg-soft); border-radius: 100px; padding: 2px 9px; margin-right: 8px; vertical-align: middle; }
+
+  .about p { max-width: 62ch; color: var(--ink-soft); }
+
+  footer { padding: 40px 0 70px; color: var(--ink-soft); font-size: 13px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="crumb"><a href="../index.html">主页</a> &rsaquo; Undergraduate reading seminar</div>
+
+  <header>
+    <div class="eyebrow">Undergraduate Reading Seminar</div>
+    <h1>Undergraduate reading seminar</h1>
+    <p class="lede">Notes from working through algebraic geometry with undergraduates — schemes, morphisms, sheaves, blow-ups. Written to be checkable: definitions fixed, claims justified step by step, not a polished summary of the source text.</p>
+  </header>
+
+  <section id="notes">
+    <div class="sec-head">Notes</div>
+    <ul class="notes">
+      <li><a href="blow-up-scheme-theoretic.html"><span class="tag">algebraic geometry</span><b>Blow-up — the scheme-theoretic point of view</b><span>Working through the blow-up of a scheme along an ideal sheaf: the category of A-algebras, the local-coordinate computation, and the fiber of the blow-up morphism — reconstructed independently after the seminar discussion.</span></a></li>
+    </ul>
+  </section>
+
+  <section class="about">
+    <div class="sec-head">About</div>
+    <p>These notes come out of a reading seminar working through algebraic geometry from the ground up. Each one is a reconstruction pass — written independently after a discussion, not copied from it — with every claim traced back to a definition or a prior step.</p>
+  </section>
+
+  <footer>
+    © 2026 Yan He · 贺岩
+  </footer>
+
+</div>
+
+</body>
+</html>

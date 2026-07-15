@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Blow-up — the scheme-theoretic point of view</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+  :root {
+    --ink: #1c1a17;
+    --sub: #6b625a;
+    --rule: #e4ddd3;
+    --accent: #7a4fae;
+    --accent-soft: #efe7fb;
+    --amber: #b9782f;
+    --amber-soft: #f8ecdd;
+    --bg: #fbf9f6;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 56px 28px 120px;
+  }
+  header {
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+  }
+  .status {
+    display: inline-block;
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--amber);
+    background: var(--amber-soft);
+    border: 1px solid #e8cda3;
+    border-radius: 999px;
+    padding: 3px 11px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .meta {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    color: var(--sub);
+  }
+  .meta a { color: var(--accent); }
+  .preamble {
+    font-style: italic;
+    color: var(--sub);
+    font-size: 0.98rem;
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 16px;
+    margin: 24px 0 36px;
+  }
+  ol, ul {
+    padding-left: 1.3em;
+  }
+  ol > li, ul > li {
+    margin: 0.55em 0;
+    padding-left: 0.15em;
+  }
+  li::marker {
+    color: var(--accent);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 0.92em;
+  }
+  ul > li::marker { color: var(--amber); }
+  .toplevel > li {
+    margin: 1.6em 0;
+  }
+  .toplevel > li::marker {
+    font-size: 1.05em;
+  }
+  .proof-line {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0.8em 0 0.4em 0.15em;
+  }
+  code { background: var(--accent-soft); border-radius: 3px; padding: 0 3px; }
+  footer {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    color: var(--sub);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div style="font-family:-apple-system,'Segoe UI',sans-serif;font-size:12px;margin-bottom:10px"><a href="index.html" style="color:var(--sub);text-decoration:none">&larr; Undergraduate reading seminar</a></div>
+  <div class="status">in-progress · module</div>
+  <h1>Blow-up — the scheme-theoretic point of view</h1>
+  <div class="meta">id: <code>blowup-scheme-theoretic-viewpoint</code> &nbsp;·&nbsp; parent: <code>_kodaira-network-index.md</code> &nbsp;·&nbsp; depends on: <code>fiber-of-morphism</code></div>
+</header>
+
+<p class="preamble">
+Yan's own summary — written independently, following the discussion of $\widetilde V$ as a
+$V$-scheme, the local-coordinate computation of $B_i\otimes_A\kappa(p)$, and the balancing
+relation for $\otimes_A$. Not co-written — this is the reconstruction pass.
+</p>
+
+<ol class="toplevel">
+
+<li>The category of $A$-algebras.
+  <ol>
+    <li>An $A$-algebra is a ring homomorphism $\phi:A\to B$.
+      <ol>
+        <li>This is compatible with the traditional definition of an $A$-algebra: An $A$-algebra is an $A$-module with a ring structure. To see this, observe that $a\cdot b:=\phi(a)b$ gives $B$ an $A$-module structure.</li>
+        <li>A morphism $f:(B,\phi)\to (D,\psi)$ in the category of $A$-algebras is given by a ring homomorphism $f:B\to D$ satisfying $f(\phi(a)b) = \psi(a)f(b)$.
+          <ol>
+            <li>This is nothing but saying that $f$ is a ring homomorphism $B\to D$ that is $A$-linear.</li>
+          </ol>
+        </li>
+        <li>The tensor product in the category of $A$-algebras is the universal object of the pushout diagram $A\to B, A\to C$, denoted by $B\otimes_A C$.</li>
+        <li>One has $A\otimes_A B \simeq B$ in the category of $A$-algebras.
+          <ol>
+            <li>This follows directly from the universal property of the pushout: $B$ itself, with identity maps, satisfies it — using that a morphism out of $B$ is exactly an $A$-linear ring map (previous point).</li>
+            <li>Precisely, the isomorphism is given by $x\otimes b \mapsto 1\otimes \phi(x)b \mapsto \phi(x)b$ (via the balancing relation, then dropping the redundant $1\otimes\,$).</li>
+          </ol>
+        </li>
+        <li>Balancing relation: for $A$-modules $M,N$ and $a\in A$, $(a\cdot m)\otimes n = m\otimes(a\cdot n)$ inside $M\otimes_A N$ — lets a scalar be &ldquo;slid across&rdquo; the tensor sign. Used above and again below.</li>
+      </ol>
+    </li>
+  </ol>
+</li>
+
+<li>Affine base change lemma: Let $\phi:A\to B$ be an $A$-algebra. Let $I$ be an ideal of $A$, then $B\otimes_A (A/I) = B/(IB)$, where $IB$ is the ideal of $B$ generated by $\phi(I)$.
+  <div class="proof-line">Proof</div>
+  <p>Let $\Phi:B\to B\otimes_A A/I$, $b\mapsto b\otimes \bar{1}$.</p>
+  <ul>
+    <li>$\Phi$ is constant on cosets of $B/(IB)$: if $b-b'\in IB$ then $\Phi(b) = \Phi(b')$. It follows $\Phi$ gives well-defined ring homomorphism $\bar{\Phi}$ on $B/(IB)$.
+      <ul>
+        <li>By the balancing relation, $\phi(x)\otimes\bar1 = 1\otimes(x\cdot\bar1) = 1\otimes\bar x = 0$ for any $x\in I$ (since $\bar x = 0$ in $A/I$). Writing $b-b'=\sum_k c_k\phi(x_k)$ with $x_k\in I$, $c_k\in B$ (as $IB$ is generated by $\phi(I)$), $\Phi(b-b') = \sum_k c_k\big(\phi(x_k)\otimes\bar1\big) = 0$.</li>
+      </ul>
+    </li>
+    <li>$\bar{\Phi}$ is surjective.
+      <ul>
+        <li>By the balancing relation, $b\otimes\bar a = b\otimes(a\cdot\bar1) = (\phi(a)b)\otimes\bar1 = \Phi(\phi(a)b)$ for any simple tensor $b\otimes\bar a$; since these span $B\otimes_A(A/I)$, $\Phi$ is surjective.</li>
+      </ul>
+    </li>
+    <li>$\bar{\Phi}$ is injective. We must prove $\mathrm{ker}\bar{\Phi}= 0$, or $\mathrm{ker}\Phi = IB$.
+      <ul>
+        <li>The defining exact sequence of $I$: $I\to A\to A/I\to 0$;</li>
+        <li>Use the fact that $\otimes_A B$ is a right exact functor we get:
+          <ul>
+            <li>$I\otimes_A B\to A\otimes_A B \to A/I \otimes_A B\to 0$;
+              <ul>
+                <li>The second term is isomorphic to $B$ by $x\otimes b \mapsto 1\otimes \phi(x)b\mapsto \phi(x)b$;</li>
+                <li>It follows that, for $a_1x_1+\cdots+a_nx_n\in I$, where $x_1,\dots,x_n$ are generators of $I$, the first map is $(a_1x_1+\cdots+a_nx_n)\otimes b \mapsto [\phi(a_1)\phi(x_1)+\cdots+\phi(a_n)\phi(x_n)]b\in IB$ on this simple tensor; by additivity the same holds on all of $I\otimes_A B$.</li>
+                <li>$IB$ is the image of the first map.</li>
+                <li>Under $A\otimes_A B\cong B$ and $(A/I)\otimes_A B\cong B\otimes_A(A/I)$ (swap), the second map is exactly $\Phi$.</li>
+                <li>The exactness implies $IB = \mathrm{ker}\Phi$. This is precisely saying $\bar\Phi$ is injective.</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+<li>The Spec of an $A$-algebra $\phi:A\to B$ is a scheme $Y=Spec\ B$ over $X = Spec\ A$, via the induced scheme morphism $f:=Spec\,\phi:Y\to X$. For $\mathfrak p\in Spec\ A$, the fiber of $f$ at $\mathfrak p$ is the base change along $Spec\,k(\mathfrak p)\to X$. The $A$-algebra of the fiber is just the extension of scalars $B\otimes_A k(\mathfrak p)$.
+  <ol>
+    <li>In particular, the case of maximal ideal $\mathfrak m$. The fiber is just $B\otimes_A A/\mathfrak m$. By the affine base change lemma, it is $B/\mathfrak m B$.</li>
+  </ol>
+</li>
+
+<li>Consider the case $V=Spec\ k[z_1,\dots,z_n]$. An affine coordinate of blowing up of $0$ is $U_i = Spec\ k[z_i,y_{1/i},\dots,y_{n/i}]$ without $y_{i/i}$. In algebraic terms, we let $A=k[z_1,\dots,z_n]$, $B=k[z_i,y_{1/i},\dots,y_{n/i}]$, the morphism is given by the $A$-algebra $\phi:A\to B$, $z_i\mapsto z_i$, and $z_j\mapsto z_iy_{j/i}$ for $j\ne i$. Let $\mathfrak m$ be the maximal ideal of $0$. Question: what is the fiber of $\mathfrak m$?
+  <ol>
+    <li>The $A$-algebra of the fiber is $B/\mathfrak m B$ by the affine base change lemma.</li>
+    <li>A general element of $\mathfrak m B$ is $\sum_k b_k\phi(z_k) = b_iz_i+\sum_{j\ne i}b_jz_iy_{j/i} = z_i\big(b_i+\sum_{j\ne i}b_jy_{j/i}\big)$. Since $b_i$ ranges over all of $B$ (independent of the other $b_j$), the bracketed factor sweeps out all of $B$ — it is the unit ideal, not an effective constraint. So $\mathfrak m B = (z_i)$.</li>
+    <li>Hence $B/\mathfrak m B = k[z_i,y_{1/i},\dots,y_{n/i}]/(z_i) \cong k[y_{1/i},\dots,y_{n/i}]$: a plain polynomial ring, reduced (no nilpotents). Contrast: had $\mathfrak m B$ come out as $(z_i^2)$ instead, the fiber would carry a nonreduced (fat-point) structure — it doesn't, because blow-up makes $\mathfrak m$ invertible (principal, generated by one non-zero-divisor), not merely contained with multiplicity.</li>
+  </ol>
+</li>
+
+<li>Gluing the charts: does $E\cap U_i = Spec\ k[y_{1/i},\dots,y_{n/i}]$ glue with $E\cap U_k$ to give $Proj\ k[y_1,\dots,y_n] = \mathbb P^{n-1}$?
+  <ol>
+    <li>On the overlap, $\phi_i(z_j)=z_iy_{j/i}$ and $\phi_k(z_j)=z_ky_{j/k}$ compute the same $z_j$, so $z_iy_{j/i}=z_ky_{j/k}$.</li>
+    <li>Since $z_k=z_iy_{k/i}$ (chart $i$'s own relation), substituting and dividing by $z_i$ gives $y_{j/i} = (z_k/z_i)y_{j/k} = y_{k/i}\,y_{j/k}$, i.e. $y_{j/k}=y_{j/i}/y_{k/i}$.</li>
+    <li>This is exactly the cocycle relation defining how $Proj\ k[y_1,\dots,y_n]$ glues its standard affine charts $D_+(y_i) = Spec\ k[y_1,\dots,y_n]_{(y_i)}$ (coordinatized by $y_j/y_i$). The identity doesn't involve $z_i,z_k$, so it holds on all of $U_i\cap U_k$, including on $E$ where $z_i=z_k=0$.</li>
+    <li>Hence $E \cong Proj\ k[y_1,\dots,y_n] = \mathbb P^{n-1}$, reduced, glued exactly as computed chart-by-chart in (4).</li>
+  </ol>
+</li>
+
+</ol>
+
+<footer>Blow-up — the scheme-theoretic point of view · rendered from the module note · student-surfaces-thesis</footer>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ],
+      throwOnError: false
+    });
+  });
+</script>
+</body>
+</html>
