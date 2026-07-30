@@ -9,6 +9,7 @@
     --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
     --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
     --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --blue:#486a8b; --blue-soft:#e7eef5; --green:#4d7358; --green-soft:#e6efe8;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -33,6 +34,7 @@
   }
   .btn:hover{border-color:var(--amber)}
   .btn.off{opacity:.45; text-decoration:line-through}
+  .btn[aria-pressed="true"]{background:var(--green-soft); border-color:var(--green); color:var(--green)}
   /* page */
   main{max-width:720px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
   header.doc{margin-bottom:2.2rem}
@@ -68,6 +70,135 @@
   .t-yin{background:var(--teal-soft); color:var(--teal)}        /* 引用 */
   .t-zhu{background:var(--amber-soft); color:var(--amber)}      /* 注 */
   .t-ci{background:var(--rose-soft); color:var(--rose)}         /* 词 */
+  /* guided rescue; S32–47 use the validated meaning-first tree */
+  .practice-note{
+    margin:1.7rem 0 1rem; padding:.8rem 1rem; border:1px solid #cfdde8;
+    border-radius:8px; background:#eef4f8; color:#38536d;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.84rem; line-height:1.65;
+  }
+  .practice-note b{display:block; margin-bottom:.15rem}
+  .sentence-aid{
+    margin:.18rem 0 .7rem .9rem;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    transition:opacity .2s, filter .2s;
+  }
+  .sentence-aid details{border-radius:7px; overflow:hidden}
+  .sentence-aid summary{
+    display:flex; align-items:center; gap:.45rem; cursor:pointer; list-style:none;
+    padding:.38rem .65rem; font-size:.77rem; line-height:1.35; user-select:none;
+  }
+  .sentence-aid summary::-webkit-details-marker{display:none}
+  .sentence-aid summary::before{
+    content:"+"; width:1rem; height:1rem; display:inline-grid; place-items:center;
+    border-radius:50%; font-size:.8rem; font-weight:700; flex:0 0 auto;
+  }
+  .sentence-aid details[open] > summary::before{content:"−"}
+  .summary-hint{color:var(--muted); font-size:.7rem}
+  .rescue{border:1px solid #cfdde8; background:#f6f9fb}
+  .rescue > summary{color:var(--blue)}
+  .rescue > summary::before{background:var(--blue-soft); color:var(--blue)}
+  .translation{margin-top:.28rem; border:1px solid #d5e1d7; background:#f7faf7}
+  .translation > summary{color:var(--green)}
+  .translation > summary::before{background:var(--green-soft); color:var(--green)}
+  .rescue-body{padding:.2rem .75rem .75rem}
+  .step{display:grid; grid-template-columns:4.6rem 1fr; gap:.6rem; padding:.58rem 0}
+  .step + .step{border-top:1px dashed #d9e2e8}
+  .step-label{
+    color:var(--blue); font-size:.67rem; font-weight:750; letter-spacing:.04em;
+    text-transform:uppercase; padding-top:.15rem;
+  }
+  .core-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:1rem; line-height:1.55; color:var(--ink)}
+  .core-en strong{font-weight:650; color:#294e70}
+  .cue{margin-top:.2rem; color:#5f5a52; font-size:.76rem; line-height:1.55}
+  .meaning-overview{
+    margin:.5rem 0 .72rem; padding:.72rem .78rem; border:1px solid #c8d8e4;
+    border-radius:8px; background:#fff;
+  }
+  .meaning-kicker{
+    margin-bottom:.28rem; color:var(--blue); font-size:.68rem; font-weight:750;
+    letter-spacing:.045em;
+  }
+  .meaning-thesis{color:#334b5e; font-size:.86rem; line-height:1.68}
+  .meaning-thesis .next-sentence{color:var(--muted); font-size:.74rem}
+  .meaning-tree{margin:.15rem 0 .7rem}
+  .meaning-node{
+    position:relative; display:grid; grid-template-columns:5.3rem minmax(0,1fr);
+    gap:.58rem; align-items:start; margin-top:.18rem; padding:.42rem .52rem;
+    border-left:2px solid #d1dce4; border-radius:0 5px 5px 0;
+  }
+  .meaning-node.main{margin-left:0; border-left:3px solid var(--blue); background:#edf4f8}
+  .meaning-node.d1{margin-left:1.25rem}
+  .meaning-node.d2{margin-left:2.65rem}
+  .meaning-node.d3{margin-left:4.05rem}
+  .meaning-node:not(.main)::before{
+    content:""; position:absolute; left:-.72rem; top:1.05rem; width:.62rem;
+    border-top:1px solid #c2ced7;
+  }
+  .meaning-label{
+    padding-top:.12rem; color:#687887; font-size:.63rem; font-weight:750;
+    letter-spacing:.035em; line-height:1.3;
+  }
+  .meaning-node.main .meaning-label{color:var(--blue)}
+  .meaning-en{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); font-size:.94rem; line-height:1.48;
+  }
+  .meaning-node.main .meaning-en{font-weight:650; color:#294e70}
+  .meaning-zh{margin-top:.12rem; color:#625d55; font-size:.74rem; line-height:1.52}
+  .pair-word{color:#77541e; font-weight:650}
+  .expr-button{
+    appearance:none; margin:0; padding:.02rem .18rem; border:0;
+    border-bottom:1px dotted #a06e20; border-radius:3px; background:#fff2cf;
+    color:#69480f; font:inherit; line-height:inherit; cursor:help;
+  }
+  .expr-button::after{
+    content:"?"; display:inline-grid; place-items:center; width:.78rem; height:.78rem;
+    margin-left:.22rem; border-radius:50%; background:#dba94f; color:#fff;
+    font-family:system-ui,sans-serif; font-size:.55rem; font-weight:800;
+    vertical-align:.12rem;
+  }
+  .expr-button:focus-visible{outline:2px solid #d4a04a; outline-offset:2px}
+  .expr-tip{
+    display:none; margin:.38rem 0 .06rem; padding:.48rem .58rem;
+    border:1px solid #e3c98e; border-radius:6px; background:#fff9e9;
+    color:#594b33; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.72rem; line-height:1.58;
+  }
+  .expr-button:hover ~ .expr-tip,
+  .expr-button:focus ~ .expr-tip{display:block}
+  .expr-tip b{color:#674916}
+  .chunk-list{display:grid; gap:.32rem}
+  .chunk{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    gap:.65rem; align-items:baseline}
+  .chunk-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); line-height:1.45}
+  .chunk-zh{color:#6d665c; font-size:.74rem; line-height:1.45}
+  .read-again{
+    margin-top:.35rem; padding:.55rem .65rem; border-left:3px solid var(--blue);
+    background:#edf3f7; color:#38536d; font-size:.76rem; line-height:1.55;
+  }
+  .translation-text{padding:.6rem .75rem .72rem; border-top:1px solid #dfe8e0;
+    color:#334d39; font-size:.87rem; line-height:1.7}
+  body.rescue-mode main > .sent,
+  body.rescue-mode main > .remarks,
+  body.rescue-mode main > .sentence-aid,
+  body.rescue-mode main > .practice-note{opacity:.14; filter:saturate(.35)}
+  body.rescue-mode main > .sent.active-sentence,
+  body.rescue-mode main > .sentence-aid.active-aid{opacity:1; filter:none}
+  body.rescue-mode main > .sent.active-sentence{
+    border-left-color:var(--blue); background:#fbfcfd;
+  }
+  @media (max-width:600px){
+    .step{grid-template-columns:1fr; gap:.1rem}
+    .chunk{grid-template-columns:1fr; gap:.05rem; padding:.22rem 0}
+    .sentence-aid{margin-left:.35rem}
+    .meaning-node{grid-template-columns:4.15rem minmax(0,1fr); gap:.38rem}
+    .meaning-node.d1{margin-left:.55rem}
+    .meaning-node.d2{margin-left:1.1rem}
+    .meaning-node.d3{margin-left:1.65rem}
+  }
   footer{max-width:720px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
     font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
   .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
@@ -75,15 +206,16 @@
 </head>
 <body>
 <div class="bar">
-  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; Introduction &nbsp;·&nbsp; pp.&nbsp;3–4</div>
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; Introduction &nbsp;·&nbsp; pp.&nbsp;3–8</div>
   <button class="btn" id="t-ruby">中文 注音</button>
   <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-trans" aria-pressed="false">直译 20–47</button>
 </div>
 
 <main id="reader">
   <header class="doc">
     <h1>Introduction</h1>
-    <div class="sub">Hannah Arendt, <i>The Life of the Mind</i> · Volume One: Thinking · printed pp. 3–4</div>
+    <div class="sub">Hannah Arendt, <i>The Life of the Mind</i> · Volume One: Thinking · printed pp. 3–8</div>
   </header>
 
   <!-- ¶1 -->
@@ -164,15 +296,577 @@
   <p class="sent"><span class="stext"><span class="n">19</span>If we were <ruby>responsive<rt>有所回应的</rt></ruby> to this claim all the time, we would soon be exhausted; Eichmann differed from the rest of us only in that he clearly knew of no such claim at all.</span></p>
 
   <!-- ¶3 -->
+  <aside class="practice-note">
+    <b>精读 · sentences 20–47</b>
+    先把英文朗读一至两次。如果声音过去以后意思仍是一片空白，不要继续机械重复：
+    打开“卡住了？”，先看作者在说什么和整句关系；遇到带问号的表达，悬停或点按查看说明。
+    只有在意思仍不落地时才展开直译。最后回到原句完整朗读一次。
+  </aside>
+
   <p class="sent para-start"><span class="stext"><span class="n">20</span>It was this absence of thinking—which is so ordinary an experience in our everyday life, where we have hardly the time, let alone the <ruby>inclination<rt>意愿、倾向</rt></ruby>, to stop and think—that awakened my interest.</span></p>
+  <div class="sentence-aid" data-sentence="20">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">先找到被破折号隔开的主干</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en">It was <strong>this absence of thinking</strong> that awakened my interest.</div><div class="cue">正是“这种不思考”引起了她的兴趣。<i>It was X that Y</i> 是强调结构。</div></div></div>
+        <div class="step"><div class="step-label">2 · 插入层</div><div><div class="core-en">which is so ordinary an experience in our everyday life</div><div class="cue">“不思考”是日常生活中极普通的经验。这里的 <i>which</i> 回指 absence of thinking。</div></div></div>
+        <div class="step"><div class="step-label">3 · 原因</div><div><div class="core-en">we have hardly the time, let alone the inclination, to stop and think</div><div class="cue">我们几乎没有时间停下来思考，更不用说有这种意愿。<i>let alone</i> = 更不用说。</div></div></div>
+        <div class="read-again">现在收起辅助，再完整朗读一次。只回答一个问题：<b>What awakened her interest?</b></div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary>
+      <div class="translation-text">正是这种不思考唤起了我的兴趣——它在我们的日常生活中是一种如此普通的经验：我们几乎没有时间停下来思考，更不用说有这种意愿了。</div>
+    </details>
+  </div>
 
   <p class="sent"><span class="stext"><span class="n">21</span>Is evil-doing (the sins of <ruby>omission<rt>不作为、疏漏</rt></ruby>, as well as the sins of <ruby>commission<rt>作为、犯下</rt></ruby>) possible in default of not just "base motives" (as the law calls them) but of any motives whatever, of any particular prompting of interest or <ruby>volition<rt>意志、意愿</rt></ruby>?</span></p>
+  <div class="sentence-aid" data-sentence="21">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">这句的困难在 in default of 与 not just … but …</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en"><strong>Is evil-doing possible?</strong></div><div class="cue">先只保留问题：作恶是否可能？括号不是主干。</div></div></div>
+        <div class="step"><div class="step-label">2 · 条件</div><div><div class="core-en">in default of any motives whatever</div><div class="cue"><i>in default of</i> = 在缺少……的情况下。条件是：完全没有任何动机。</div></div></div>
+        <div class="step"><div class="step-label">3 · 对比</div><div class="chunk-list">
+          <div class="chunk"><span class="chunk-en">not just “base motives”</span><span class="chunk-zh">不只是没有“卑劣动机”</span></div>
+          <div class="chunk"><span class="chunk-en">but any motives whatever</span><span class="chunk-zh">而是根本没有任何动机</span></div>
+          <div class="chunk"><span class="chunk-en">any particular prompting of interest or volition</span><span class="chunk-zh">没有任何由利害关切或意志产生的特定驱动</span></div>
+        </div></div>
+        <div class="step"><div class="step-label">4 · 括号</div><div><div class="core-en">the sins of omission, as well as the sins of commission</div><div class="cue">它只说明 evil-doing 包括两类：该做而未做，以及做了不该做的。</div></div></div>
+        <div class="read-again">再读时先听见这个骨架：<b>Is evil-doing possible / in default of / any motives whatever?</b></div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">保留否定范围</span></summary>
+      <div class="translation-text">作恶——包括不作为之罪以及作为之罪——是否可能发生在这样一种情况下：所缺少的不只是法律所谓的“卑劣动机”，而是根本没有任何动机，没有任何由利害关切或意志产生的特定驱动？</div>
+    </details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-zhu">注</span><b>sins of omission / commission</b> — <span class="zh">基督教与法律传统的区分：commission 是"作为之罪"（做了不该做的），omission 是"不作为之罪"（该做而未做）。</span></div>
     <div class="remark"><span class="tag t-zhu">注</span><b>"base motives" (as the law calls them)</b> — <span class="zh">法律用语，指"卑劣动机"。德国刑法中蓄意谋杀（Mord）的构成要件之一即"出于卑劣动机"。</span></div>
   </div>
 
-  <p class="sent"><span class="stext"><span class="n">22</span>Is wickedness,&nbsp;<span style="color:var(--muted)">… [接下页]</span></span></p>
+  <p class="sent"><span class="stext"><span class="n">22</span>Is <ruby>wickedness<rt>邪恶、恶意</rt></ruby>, however we may define it, this being “determined to prove a villain,” not a necessary condition for evil-doing?</span></p>
+  <div class="sentence-aid" data-sentence="22">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">先跨过两个插入成分</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en"><strong>Is wickedness not a necessary condition for evil-doing?</strong></div><div class="cue">邪恶难道不是作恶的必要条件吗？这是一个带 <i>not</i> 的试探性反问。</div></div></div>
+        <div class="step"><div class="step-label">2 · 插入层</div><div class="chunk-list">
+          <div class="chunk"><span class="chunk-en">however we may define it</span><span class="chunk-zh">无论我们怎样界定邪恶</span></div>
+          <div class="chunk"><span class="chunk-en">this being “determined to prove a villain”</span><span class="chunk-zh">这里指“决意做一个恶人”这种状态</span></div>
+        </div></div>
+        <div class="read-again">重读时把两个逗号区间读轻一些；声音落在 <b>wickedness</b>、<b>necessary condition</b>、<b>evil-doing</b> 上。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">保留反问形式</span></summary>
+      <div class="translation-text">邪恶——无论我们怎样界定它，这里指的是这种“决意做一个恶人”的状态——难道不是作恶的必要条件吗？</div>
+    </details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>“determined to prove a villain”</b> — <span class="zh">莎士比亚《理查三世》开场独白：“I am determined to prove a villain”（我决意做一个恶人）。理查把自己的作恶说成有意识的决意。阿伦特追问：作恶是否必须以这种“我要作恶”的邪恶意志为条件？</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">23</span>Might the problem of good and evil, our <ruby>faculty<rt>能力、机能</rt></ruby> for telling right from wrong, be connected with our faculty of thought?</span></p>
+  <div class="sentence-aid" data-sentence="23">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">中间是同位说明</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en">Might <strong>the problem of good and evil</strong> be connected with <strong>our faculty of thought</strong>?</div><div class="cue">善恶问题是否可能与思考能力有关？<i>Might</i> 表示试探，不是肯定。</div></div></div>
+        <div class="step"><div class="step-label">2 · 同位语</div><div><div class="core-en">our faculty for telling right from wrong</div><div class="cue">这不是另一个主语，而是在重新说明 “the problem of good and evil”：我们辨别是非的能力。</div></div></div>
+        <div class="read-again">现在只听两端：<b>the problem of good and evil</b> ↔ <b>our faculty of thought</b>。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary>
+      <div class="translation-text">善恶问题——也就是我们辨别是非的能力——是否可能与我们的思考能力有关？</div>
+    </details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">24</span>To be sure, not in the sense that thinking would ever be able to produce the good deed as its result, as though “virtue could be taught” and learned—only habits and customs can be taught, and we know only too well the <ruby>alarming<rt>令人惊忧的</rt></ruby> speed with which they are unlearned and forgotten when new <ruby>circumstances<rt>情势</rt></ruby> demand a change in manners and patterns of behavior.</span></p>
+  <div class="sentence-aid" data-sentence="24">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">这句先否定一种误解，再给出理由</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 接上句</div><div><div class="core-en">To be sure, <strong>not in the sense that …</strong></div><div class="cue">思考与善恶可能有关，但“当然不是说……”；它在排除一种错误理解。</div></div></div>
+        <div class="step"><div class="step-label">2 · 被否定</div><div><div class="core-en">thinking would produce the good deed as its result</div><div class="cue">错误理解：思考会像因果机器一样直接产生善行。</div></div></div>
+        <div class="step"><div class="step-label">3 · 类比</div><div><div class="core-en">as though “virtue could be taught” and learned</div><div class="cue">仿佛德性是一种可以教授、学会的技能。</div></div></div>
+        <div class="step"><div class="step-label">4 · 更正</div><div class="chunk-list">
+          <div class="chunk"><span class="chunk-en">only habits and customs can be taught</span><span class="chunk-zh">能教的是习惯与习俗</span></div>
+          <div class="chunk"><span class="chunk-en">they are unlearned and forgotten</span><span class="chunk-zh">它们也能被迅速抛弃、遗忘</span></div>
+          <div class="chunk"><span class="chunk-en">when new circumstances demand a change</span><span class="chunk-zh">尤其当新环境要求行为改变时</span></div>
+        </div></div>
+        <div class="read-again">朗读路线：<b>not in the sense → as though → only → when</b>。这些连接词就是句子的骨架。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">先看清被否定的意思</span></summary>
+      <div class="translation-text">当然，这种联系并不是说思考能够把善行作为自己的结果产生出来，仿佛“德性可以被教授”并被学会——能被教授的只有习惯和习俗；而我们太清楚了：当新的情势要求礼仪和行为模式发生改变时，它们会以多么惊人的速度被抛弃和遗忘。</div>
+    </details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>“virtue could be taught”</b> — <span class="zh">“德性是否可教”是柏拉图《美诺篇》的中心问题，也是苏格拉底传统中的经典难题。阿伦特在这里排除一种简单理解：思考不会像一门技艺那样被传授，并直接产出善行。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">25</span>(The fact that we usually treat matters of good and evil in courses in “morals” or “ethics” may indicate how little we know about them, for morals comes from <i>mores</i> and ethics from <i>ethos</i>, the Latin and the Greek words for customs and habit, the Latin word being associated with rules of behavior, whereas the Greek is derived from habitat, like our “habits.”)</span></p>
+  <div class="sentence-aid" data-sentence="25">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">整个括号是一句词源旁论</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主张</div><div><div class="core-en"><strong>The fact … may indicate how little we know about them.</strong></div><div class="cue">某个事实可能表明：我们对善恶其实所知甚少。</div></div></div>
+        <div class="step"><div class="step-label">2 · 什么事实</div><div><div class="core-en">we treat matters of good and evil in courses in “morals” or “ethics”</div><div class="cue">我们把善恶放进叫作 morals 或 ethics 的课程里处理。</div></div></div>
+        <div class="step"><div class="step-label">3 · 为什么</div><div class="chunk-list">
+          <div class="chunk"><span class="chunk-en">morals comes from <i>mores</i></span><span class="chunk-zh">morals 源自“风俗”</span></div>
+          <div class="chunk"><span class="chunk-en">ethics comes from <i>ethos</i></span><span class="chunk-zh">ethics 源自“习惯／性情”</span></div>
+          <div class="chunk"><span class="chunk-en">the Latin … rules of behavior</span><span class="chunk-zh">拉丁词偏向行为规则</span></div>
+          <div class="chunk"><span class="chunk-en">whereas the Greek … habitat</span><span class="chunk-zh">而希腊词关联惯常居处</span></div>
+        </div></div>
+        <div class="read-again">不要一次吞下整个括号。按 <b>claim → fact → for → whereas</b> 四段朗读。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">保留括号的旁论性质</span></summary>
+      <div class="translation-text">（我们通常在“道德”或“伦理学”课程中处理善恶问题，这一事实或许表明我们对善恶所知甚少；因为 morals 源于 <i>mores</i>，ethics 源于 <i>ethos</i>，它们分别是拉丁语和希腊语中表示习俗与习惯的词；其中拉丁词与行为规则相联系，而希腊词则源于惯常居处，正如我们的“habits”。）</div>
+    </details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-ci">词</span><b><i>mores</i> / <i>ethos</i></b> — <span class="zh"><i>mores</i> 是拉丁语 <i>mos</i> 的复数，指风俗、惯例；<i>ethos</i> 是希腊语，指习惯、性情，也曾指惯常居处。阿伦特借词源指出一个反讽：所谓 morals 和 ethics，名称本身都牵连于习俗与习惯，而习惯恰会随环境迅速改变。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">26</span>The absence of thought I was confronted with sprang neither from forgetfulness of former, <ruby>presumably<rt>想来、据推定</rt></ruby> good manners and habits nor from stupidity in the sense of inability to <ruby>comprehend<rt>理解</rt></ruby>—not even in the sense of “moral insanity,” for it was just as noticeable in instances that had nothing to do with so-called ethical decisions or matters of conscience.</span></p>
+  <div class="sentence-aid" data-sentence="26">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">抓住 neither … nor …，后面都在限定 stupidity</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en">The absence of thought <strong>sprang neither from A nor from B.</strong></div><div class="cue">这种不思考既不源于 A，也不源于 B。</div></div></div>
+        <div class="step"><div class="step-label">2 · A / B</div><div class="chunk-list">
+          <div class="chunk"><span class="chunk-en">A: forgetfulness of former good manners and habits</span><span class="chunk-zh">忘掉了从前那些良好礼仪和习惯</span></div>
+          <div class="chunk"><span class="chunk-en">B: stupidity</span><span class="chunk-zh">愚蠢</span></div>
+        </div></div>
+        <div class="step"><div class="step-label">3 · 限定 B</div><div><div class="core-en">inability to comprehend—not even “moral insanity”</div><div class="cue">她说的也不是无理解能力，甚至不是所谓“道德性精神失常”。</div></div></div>
+        <div class="step"><div class="step-label">4 · 证据</div><div><div class="core-en">for it was just as noticeable in non-ethical instances</div><div class="cue">因为在与伦理决定或良心无关的场合，这种不思考也同样明显。</div></div></div>
+        <div class="read-again">朗读时把句子压缩成：<b>The absence of thought / sprang neither from A / nor from B / for …</b></div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary>
+      <div class="translation-text">我所面对的这种不思考，既不是由于忘记了从前那些想来良好的礼仪和习惯，也不是由于愚蠢——这里的愚蠢指没有理解能力，甚至也不是所谓“道德性精神失常”；因为这种不思考在与所谓伦理决定或良心问题毫无关系的场合中同样明显。</div>
+    </details>
+  </div>
+
+  <!-- ¶4 -->
+  <p class="sent para-start"><span class="stext"><span class="n">27</span>The question that <ruby>imposed itself<rt>自行逼现</rt></ruby> was: Could the activity of thinking <ruby>as such<rt>就其本身而言</rt></ruby>, the habit of examining whatever happens to <ruby>come to pass<rt>发生</rt></ruby> or to attract attention, regardless of results and specific content, could this activity be among the conditions that make men <ruby>abstain from<rt>克制、不去做</rt></ruby> evil-doing or even actually “condition” them against it?</span></p>
+  <div class="sentence-aid" data-sentence="27">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">同一个主语在插入说明后重复出现</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 外框</div><div><div class="core-en">The question that imposed itself was: <strong>Could X be among the conditions that Y?</strong></div><div class="cue">自行逼现的问题是：X 是否可能成为使 Y 发生的条件之一？</div></div></div>
+        <div class="step"><div class="step-label">2 · X 是什么</div><div><div class="core-en">the activity of thinking as such</div><div class="cue">思考活动本身。后面的 <i>the habit of examining …</i> 是对它的同位解释。</div></div></div>
+        <div class="step"><div class="step-label">3 · 同位解释</div><div><div class="core-en">the habit of examining whatever happens or attracts attention, regardless of results and content</div><div class="cue">审视一切发生之事或引起注意之事的习惯，不论结果与具体内容。</div></div></div>
+        <div class="step"><div class="step-label">4 · Y 是什么</div><div class="chunk-list">
+          <div class="chunk"><span class="chunk-en">make men abstain from evil-doing</span><span class="chunk-zh">使人克制作恶</span></div>
+          <div class="chunk"><span class="chunk-en">or “condition” them against it</span><span class="chunk-zh">甚至“制约”他们去抵制作恶</span></div>
+        </div></div>
+        <div class="read-again">第二个 <b>could this activity</b> 是重新捡回被长插入语打断的主语，不是另起一个问题。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">先看清重复主语</span></summary>
+      <div class="translation-text">自行逼现的问题是：思考活动本身——即审视一切发生之事或一切引起注意之事的习惯，不论其结果和具体内容——这种活动是否可能成为使人们克制作恶、甚至实际“制约”他们抵制作恶的条件之一？</div>
+    </details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">28</span>(The very word “con-science,” at any rate, points in this direction <ruby>insofar as<rt>就……而言</rt></ruby> it means “to know with and by myself,” a kind of knowledge that is <ruby>actualized<rt>实现、成为现实</rt></ruby> in every thinking process.)</span></p>
+  <div class="sentence-aid" data-sentence="28">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">先看 points in this direction，再看 insofar as</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en">The very word “con-science” <strong>points in this direction.</strong></div><div class="cue">con-science 这个词本身就指向上一句提出的方向。</div></div></div>
+        <div class="step"><div class="step-label">2 · 凭什么</div><div><div class="core-en">insofar as it means “to know with and by myself”</div><div class="cue">就这个词意味着“与我自己一道、并由我自己来知道”而言。</div></div></div>
+        <div class="step"><div class="step-label">3 · 再说明</div><div><div class="core-en">a kind of knowledge actualized in every thinking process</div><div class="cue">这是一种在每次思考中成为现实的知识。</div></div></div>
+        <div class="read-again">把 <b>con-science</b> 听成两个部分：<b>con-</b>（与……一道）＋ <b>science</b>（知道）。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary>
+      <div class="translation-text">（无论如何，“con-science”这个词本身就指向这一方向，因为它意味着“与我自己一道、并由我自己来知道”；这是一种在每一思考过程中实现出来的知识。）</div>
+    </details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-ci">词</span><b>con-science</b> — <span class="zh">conscience 源自拉丁语 <i>conscientia</i>，由“共同／与……一道”（<i>con-</i>）与“知道”（<i>scire</i>）构成。阿伦特特意拆写为 <i>con-science</i>，把良知读成“与自己一道知道”：思考中的自己与自己相伴、彼此作证。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">29</span>And is not this <ruby>hypothesis<rt>假设</rt></ruby> <ruby>enforced<rt>得到加强、佐证</rt></ruby> by everything we know about conscience, namely, that a “good conscience” is enjoyed as a rule only by really bad people, criminals and such, while only “good people” are capable of having a bad conscience?</span></p>
+  <div class="sentence-aid" data-sentence="29">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">namely 后面全部是在说明 everything we know</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en">Is not this hypothesis <strong>enforced by everything we know about conscience?</strong></div><div class="cue">我们关于良心所知道的一切，难道不正加强了这个假设吗？</div></div></div>
+        <div class="step"><div class="step-label">2 · namely</div><div><div class="core-en">namely, that …</div><div class="cue"><i>namely</i> = 也就是说。后面不是新论点，而是在展开 “everything we know”。</div></div></div>
+        <div class="step"><div class="step-label">3 · 反常对照</div><div class="chunk-list">
+          <div class="chunk"><span class="chunk-en">a “good conscience” — only really bad people</span><span class="chunk-zh">“问心无愧”——通常只有真正的坏人享有</span></div>
+          <div class="chunk"><span class="chunk-en">a bad conscience — only “good people”</span><span class="chunk-zh">“良心不安”——只有“好人”才可能有</span></div>
+        </div></div>
+        <div class="read-again">这句故意制造悖论。朗读时把 <b>good conscience / bad people</b> 和 <b>good people / bad conscience</b> 两组交叉重读。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">保留 good / bad 的交叉</span></summary>
+      <div class="translation-text">而我们关于良心所知道的一切，难道不正加强了这一假设吗？也就是说，通常只有真正的坏人、罪犯之类才享有一种“好的良心”（问心无愧），而只有“好人”才可能有一种坏的良心（良心不安）。</div>
+    </details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">30</span>To put it differently and use Kantian language: after having been struck by a fact that, <ruby>willy-nilly<rt>不由自主地</rt></ruby>, “put me in possession of a concept” (the banality of evil), I could not help raising the <i>quaestio juris</i> and asking myself “by what right I possessed and used it.”³</span></p>
+  <div class="sentence-aid" data-sentence="30">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">先按时间顺序：事实 → 概念 → 权利问题</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en"><strong>I could not help raising the <i>quaestio juris</i> and asking myself …</strong></div><div class="cue">我不禁提出“权利问题”，并问自己……</div></div></div>
+        <div class="step"><div class="step-label">2 · 此前发生</div><div><div class="core-en">after having been struck by a fact</div><div class="cue">此前，一个事实强烈地撞击了她：艾希曼呈现出的事实。</div></div></div>
+        <div class="step"><div class="step-label">3 · 事实做了什么</div><div><div class="core-en">the fact “put me in possession of a concept”</div><div class="cue">这个事实使她获得了一个概念：<i>the banality of evil</i>，恶之平庸。</div></div></div>
+        <div class="step"><div class="step-label">4 · 她的问题</div><div><div class="core-en">“by what right I possessed and used it”</div><div class="cue">我凭什么权利占有并使用这个概念？这就是康德式的 <i>quaestio juris</i>。</div></div></div>
+        <div class="read-again">按因果链重读：<b>a fact → a concept → by what right?</b>。这样长句就只有三个节点。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">保留康德的法律语言</span></summary>
+      <div class="translation-text">换一种说法，并使用康德式语言：一个事实击中了我，而这个事实不管我情愿与否都“使我占有了一个概念”（恶之平庸）；在这之后，我不禁提出 <i>quaestio juris</i>（权利问题），并问自己：“我凭什么权利占有并使用了这个概念？”</div>
+    </details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b><i>quaestio juris</i></b> — <span class="zh">拉丁语“权利问题／法权问题”。康德区分事实问题（<i>quid facti</i>：事实上我们如何取得一个概念）与权利问题（<i>quid juris</i>：我们凭什么有权使用它）。艾希曼审判这个事实迫使阿伦特得到“恶之平庸”这一概念；她现在要追问的，是自己凭什么有权占有并使用它。</span></div>
+    <div class="remark"><span class="tag t-zhu">注</span><span class="zh">原注 3 将这段康德措辞引至其形而上学笔记：<i>Kants handschriftlicher Nachlass</i>, vol. V, no. 6636。</span></div>
+  </div>
+
+  <!-- ¶5 -->
+  <p class="sent para-start"><span class="stext"><span class="n">31</span>The Eichmann trial, then, first prompted my interest in this subject.</span></p>
+  <div class="sentence-aid" data-sentence="31">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">一句简短的承上总结</span></summary>
+      <div class="rescue-body">
+        <div class="step"><div class="step-label">1 · 主干</div><div><div class="core-en"><strong>The Eichmann trial</strong> first prompted <strong>my interest in this subject.</strong></div><div class="cue">主语是艾希曼审判；它最初引起了阿伦特对“思考”这一主题的兴趣。</div></div></div>
+        <div class="step"><div class="step-label">2 · then</div><div><div class="core-en">The Eichmann trial, <strong>then</strong>, …</div><div class="cue">这里的 <i>then</i> 是“因此／那么说来”，表示她正在总结前面一段，而不是“后来”。</div></div></div>
+        <div class="read-again">重读时听见三点：<b>Eichmann trial → first prompted → interest in thinking</b>。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary>
+      <div class="translation-text">因此，最初促使我对这一主题产生兴趣的是艾希曼审判。</div>
+    </details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">32</span>Second, those moral questions, <ruby>arising from<rt>源自</rt></ruby> factual experience, and <ruby>going counter to<rt>抵触、违背</rt></ruby> the wisdom of the ages—not only to the various traditional answers that “ethics,” a branch of philosophy, has offered to the problem of evil, but also to the much larger answers that philosophy has ready for the much less urgent question What is thinking?—were <ruby>apt to<rt>易于、往往会</rt></ruby> renew in me certain doubts that had been <ruby>plaguing<rt>不断困扰</rt></ruby> me ever since I had finished a study of what my publisher wisely called “The Human Condition,” but which I had intended more modestly as an <ruby>inquiry<rt>探究</rt></ruby> into “The Vita Activa.”</span></p>
+  <div class="sentence-aid" data-sentence="32">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">先看她在说什么；悬停标记短语看表达</span></summary>
+      <div class="rescue-body">
+        <div class="meaning-overview">
+          <div class="meaning-kicker">作者在说什么</div>
+          <div class="meaning-thesis">这些由事实经验引出的道德问题，同时冲撞了伦理学对“恶”的传统答案和哲学对“思考”的宏大答案；也正是这些问题，很容易重新唤起她自《人的境况》以来一直受到困扰的那些疑问。<span class="next-sentence">这些疑问究竟是什么，S33 才开始展开。</span></div>
+        </div>
+        <div class="meaning-tree">
+          <div class="meaning-node main"><div class="meaning-label">起点</div><div><div class="meaning-en">those moral questions</div><div class="meaning-zh">上一句所说的、由艾希曼审判引出的道德问题。</div></div></div>
+          <div class="meaning-node d1"><div class="meaning-label">问题从哪来</div><div><div class="meaning-en"><button class="expr-button" type="button">arising from</button> factual experience<div class="expr-tip"><b>arise from + 名词</b> = “由……产生／源于……”。这里是现在分词短语，回头修饰 <i>moral questions</i>：这些问题来自实际发生的经验，而不是抽象推演。</div></div><div class="meaning-zh">来源：现实中发生的事实。</div></div></div>
+          <div class="meaning-node d1"><div class="meaning-label">为什么有冲击</div><div><div class="meaning-en"><button class="expr-button" type="button">going counter to</button> the wisdom of the ages<div class="expr-tip"><b>go counter to</b> = “与……相抵触／背道而驰”。<i>counter</i> 在这里不是“反击”；整个短语表示这些新问题与世代积累下来的哲学智慧发生冲突。</div></div><div class="meaning-zh">它们不符合哲学传统早已接受的智慧；下面列出被冲撞的两类答案。</div></div></div>
+          <div class="meaning-node d2"><div class="meaning-label">两个对象</div><div><div class="meaning-en"><button class="expr-button" type="button"><span class="pair-word">not only … but also …</span></button><div class="expr-tip">两个 <i>to</i> 短语都接在 <i>going counter to</i> 后面：<b>不仅</b>与第一类答案相抵触，<b>也</b>与第二类答案相抵触。它们不是句子的两个新动作。</div></div><div class="meaning-zh">冲突不是单方面的，而是同时指向伦理学与整个哲学传统。</div></div></div>
+          <div class="meaning-node d3"><div class="meaning-label">第一类答案</div><div><div class="meaning-en">answers that ethics <button class="expr-button" type="button">has offered to</button> the problem of evil<div class="expr-tip"><b>offer an answer to a problem</b> = “针对一个问题提出／给出答案”。主语是 <i>ethics</i>；插入的 <i>a branch of philosophy</i> 只是说明伦理学是哲学的一个分支。</div></div><div class="meaning-zh">伦理学历来怎样回答“恶是什么、恶为何发生”。</div></div></div>
+          <div class="meaning-node d3"><div class="meaning-label">第二类答案</div><div><div class="meaning-en">answers that philosophy <button class="expr-button" type="button">has ready for</button> “What is thinking?”<div class="expr-tip"><b>have an answer ready for a question</b> = “已经为某问题备有答案”。<i>much larger</i> 表示答案更宏大；<i>much less urgent</i> 则把抽象的思考问题与眼前迫切的恶的问题作对比。</div></div><div class="meaning-zh">哲学对“什么是思考？”早已准备好的、更宏大的答案。</div></div></div>
+          <div class="meaning-node main"><div class="meaning-label">产生的结果</div><div><div class="meaning-en"><button class="expr-button" type="button">were apt to renew in me</button> certain doubts<div class="expr-tip"><b>be apt to do</b> = “容易／往往会做某事”；<b>renew something in someone</b> = “使某事在某人心中重新出现”。这是跨过整个长修饰语之后才到达的主句谓语。</div></div><div class="meaning-zh">这些道德问题使某些旧疑问再次浮现。</div></div></div>
+          <div class="meaning-node d1"><div class="meaning-label">什么样的疑问</div><div><div class="meaning-en">doubts that <button class="expr-button" type="button">had been plaguing me ever since</button> …<div class="expr-tip"><b>plague</b> 作动词是“长期折磨／不断困扰”；<b>ever since</b> 表示“从某个时间点开始一直到当时”。这里的起点是她完成那项研究之后。</div></div><div class="meaning-zh">不是刚出现的新问题，而是过去已经长期困扰她的问题。</div></div></div>
+          <div class="meaning-node d2"><div class="meaning-label">追溯到哪项研究</div><div><div class="meaning-en"><i>The Human Condition</i> / <button class="expr-button" type="button">intended … as an inquiry into</button> <i>The Vita Activa</i><div class="expr-tip"><b>intend X as Y</b> = “原本把 X 设想为 Y”；<b>an inquiry into</b> = “对……的探究”。出版者把研究命名为宏大的 <i>The Human Condition</i>，她自己原本只想把它看作对 <i>vita activa</i> 的较谦逊探究。</div></div><div class="meaning-zh">就是后来题为《人的境况》、而她原本只想写成“行动生活研究”的那本书。</div></div></div>
+        </div>
+        <div class="read-again">现在只回到上面的原句一次。朗读时保留三步意思：<b>这些问题从事实而来 → 冲撞两类传统答案 → 重新唤起旧疑问</b>。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">保留主语与谓语的远距离关系</span></summary>
+      <div class="translation-text">第二，这些源自事实经验、并与历代智慧相抵触的道德问题——它们不仅抵触“伦理学”这一哲学分支针对恶的问题所提出的各种传统答案，也抵触哲学为那个远没有那么迫切的问题“什么是思考？”所准备的宏大得多的答案——很容易在我心中重新唤起某些疑问；自从我完成那项研究以来，这些疑问便一直困扰着我——我的出版者颇有见地地把该研究称为《人的境况》，而我自己原本更谦逊地把它设想为对“行动生活”的探究。</div>
+    </details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b><i>The Human Condition</i> / “The Vita Activa”</b> — <span class="zh">指阿伦特 1958 年的《人的境况》。她原本更谦逊地把它理解为对 <i>vita activa</i>（行动生活、积极生活）的探究；书名则是出版者所定。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">33</span>I had been concerned with the problem of Action, the oldest concern of political theory, and what had always troubled me about it was that the very term I adopted for my reflections on the matter, namely, <i>vita activa</i>, was <ruby>coined<rt>创制、铸成</rt></ruby> by men who were devoted to the <ruby>contemplative<rt>沉思的</rt></ruby> way of life and who looked upon all kinds of being alive from that perspective.</span></p>
+  <div class="sentence-aid" data-sentence="33">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">“行动生活”这个名称来自谁的视角？</span></summary>
+      <div class="rescue-body">
+        <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她研究的是政治理论最古老的“行动”问题；但她发现，自己采用的 <i>vita activa</i>（行动生活）一词，恰恰是沉思生活者从沉思立场创造的。也就是说，这个名称本身已经从沉思的视角观看行动。</div></div>
+        <div class="meaning-tree">
+          <div class="meaning-node main"><div class="meaning-label">她的研究</div><div><div class="meaning-en"><button class="expr-button" type="button">had been concerned with</button> the problem of Action<div class="expr-tip"><b>be concerned with</b> 在这里不是“担心”，而是“关注／研究”。过去完成时把这项长期关切放在她后来产生疑问之前。</div></div><div class="meaning-zh">她一直研究“行动”——政治理论最古老的关切。</div></div></div>
+          <div class="meaning-node main"><div class="meaning-label">真正困扰她的</div><div><div class="meaning-en"><button class="expr-button" type="button">what had always troubled me was that …</button><div class="expr-tip"><b>what … was that …</b> = “令我困扰的是这样一个事实：……”。<i>what</i> 引出的整块作主语，<i>that</i> 后面才是这个事实的内容。</div></div><div class="meaning-zh">问题不只是行动本身，而是她用来称呼它的概念来自哪里。</div></div></div>
+          <div class="meaning-node d1"><div class="meaning-label">那个术语</div><div><div class="meaning-en"><button class="expr-button" type="button">the very term</button> <i>vita activa</i><div class="expr-tip"><b>the very + 名词</b> 强调“正是这个……本身”。她强调：问题出在自己采用的那个核心术语本身，而非一个无关紧要的名称。</div></div><div class="meaning-zh">正是她用来思考行动的“行动生活”一词。</div></div></div>
+          <div class="meaning-node d2"><div class="meaning-label">谁创造的</div><div><div class="meaning-en"><button class="expr-button" type="button">was coined by</button> men devoted to contemplation<div class="expr-tip"><b>coin a term</b> = “创造／铸造一个术语”。<i>be devoted to</i> = “献身于”。创造 <i>vita activa</i> 的人自己选择的是沉思生活。</div></div><div class="meaning-zh">由献身沉思生活的人创造，而不是由行动者自我命名。</div></div></div>
+          <div class="meaning-node d3"><div class="meaning-label">他们怎样看</div><div><div class="meaning-en"><button class="expr-button" type="button">looked upon … from that perspective</button><div class="expr-tip"><b>look upon A from B</b> = “从 B 的视角看待 A”。<i>all kinds of being alive</i> 指各种生活／生存方式。</div></div><div class="meaning-zh">他们从沉思者的立场看待一切生活方式，包括行动生活。</div></div></div>
+        </div>
+        <div class="read-again">回到原句时抓住转折：<b>我研究行动 → 但“行动生活”这个名称来自沉思者</b>。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary>
+      <div class="translation-text">我一直关注行动问题——政治理论最古老的关切；而始终令我困扰的是：我在对此问题的思考中所采用的那个术语，即 <i>vita activa</i>（行动生活），竟是由那些献身于沉思生活、并从那种视角看待一切生存方式的人创造的。</div>
+    </details>
+  </div>
+
+  <!-- ¶6 -->
+  <p class="sent para-start"><span class="stext"><span class="n">34</span>Seen from that perspective, the active way of life is “<ruby>laborious<rt>辛劳的</rt></ruby>,” the contemplative way is <ruby>sheer<rt>纯然的</rt></ruby> quietness; the active one goes on in public, the contemplative one in the “desert”; the active one is devoted to “the necessity of one’s neighbor,” the contemplative one to the “vision of God.” (<i>Duae sunt vitae, activa et contemplativa. Activa est in labore, contemplativa in requie. Activa in publico, contemplativa in deserto. Activa in necessitate proximi, contemplativa in visione Dei.</i>)</span></p>
+  <div class="sentence-aid" data-sentence="34">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">沉思者把两种生活排成三组对照</span></summary>
+      <div class="rescue-body">
+        <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">一旦从沉思生活者的立场看，行动生活便显得辛劳、公开、受邻人需要牵制；沉思生活则显得安静、退隐，并朝向上帝。三组对照共同建立了“沉思高于行动”的传统等级。</div></div>
+        <div class="meaning-tree">
+          <div class="meaning-node main"><div class="meaning-label">观看位置</div><div><div class="meaning-en"><button class="expr-button" type="button">Seen from that perspective</button><div class="expr-tip">这是省略形式：<b>When the two lives are seen from that perspective</b>。“那种视角”承接 S33，指献身沉思生活者的视角。</div></div><div class="meaning-zh">下面不是中立描述，而是沉思者眼中的两种生活。</div></div></div>
+          <div class="meaning-node d1"><div class="meaning-label">第一组 · 状态</div><div><div class="meaning-en">active: laborious　↔　contemplative: <button class="expr-button" type="button">sheer quietness</button><div class="expr-tip"><b>sheer</b> = “纯然的／完全的”，加强 <i>quietness</i>。行动被定义为辛劳，沉思则被定义为彻底安静。</div></div><div class="meaning-zh">辛劳 ↔ 纯然安静。</div></div></div>
+          <div class="meaning-node d1"><div class="meaning-label">第二组 · 场所</div><div><div class="meaning-en">active: <button class="expr-button" type="button">goes on in public</button>　↔　contemplative: in the “desert”<div class="expr-tip"><b>go on</b> 在这里是“发生／进行”，不是“继续说”。<i>in public</i> 指公共世界；“desert”指远离公共事务的退隐之地。</div></div><div class="meaning-zh">在公共世界中进行 ↔ 在“荒漠”中退隐。</div></div></div>
+          <div class="meaning-node d1"><div class="meaning-label">第三组 · 朝向</div><div><div class="meaning-en">active: the necessity of one’s neighbor　↔　contemplative: <button class="expr-button" type="button">the vision of God</button><div class="expr-tip"><b>be devoted to</b> = “致力于／献身于”。<i>the necessity of one’s neighbor</i> 是邻人的需要；<i>vision of God</i> 是对上帝的直观／凝视。</div></div><div class="meaning-zh">回应他人的现实需要 ↔ 凝视上帝。</div></div></div>
+          <div class="meaning-node main"><div class="meaning-label">括号中的拉丁文</div><div><div class="meaning-en"><i>Duae sunt vitae …</i></div><div class="meaning-zh">只是把这三组英文对照用拉丁文重述一遍，没有增加第四个论点。</div></div></div>
+        </div>
+        <div class="read-again">每个分号停一次，听成三轮同一结构：<b>行动生活如何 → 沉思生活如何</b>。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">按三组平行关系阅读</span></summary>
+      <div class="translation-text">从那种视角看，行动生活是“辛劳的”，沉思生活则是纯然的安静；前者在公共之中进行，后者在“荒漠”之中；前者致力于“邻人的需要”，后者则致力于“对上帝的凝视”。（有两种生活：行动的与沉思的。行动生活处于劳作中，沉思生活处于安息中；行动生活在公共之中，沉思生活在荒漠之中；行动生活处于邻人的需要之中，沉思生活处于对上帝的凝视之中。）</div>
+    </details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b><i>Duae sunt vitae …</i></b> — <span class="zh">“有两种生活：行动的与沉思的。行动生活在劳作中，沉思生活在安息中；前者在公共之中，后者在荒漠之中；前者为邻人的需要而忙碌，后者凝视上帝。”引文出自十二世纪神学家圣维克多的休（Hugh of St. Victor）。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">35</span>I have quoted from a medieval author⁴ of the twelfth century, almost at random, because the notion that contemplation is the highest state of the mind is as old as Western philosophy.</span></p>
+  <div class="sentence-aid" data-sentence="35">
+    <details class="rescue">
+      <summary><b>卡住了？</b><span class="summary-hint">为什么她说这位作者几乎是随手选的？</span></summary>
+      <div class="rescue-body">
+        <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她引用这位十二世纪作者，并不是因为他特别重要，而是因为“沉思是心灵最高状态”这一观念贯穿整个西方哲学传统；几乎随手选一位传统作者，都能找到同样的等级观。</div></div>
+        <div class="meaning-tree">
+          <div class="meaning-node main"><div class="meaning-label">她做了什么</div><div><div class="meaning-en"><button class="expr-button" type="button">quoted from</button> a medieval author<div class="expr-tip"><b>quote from a person/work</b> = “引用某人／某作品中的话”。这里的 <i>from</i> 标明引文来源。</div></div><div class="meaning-zh">她刚刚引用了一位十二世纪作者。</div></div></div>
+          <div class="meaning-node d1"><div class="meaning-label">怎样选择的</div><div><div class="meaning-en"><button class="expr-button" type="button">almost at random</button><div class="expr-tip"><b>at random</b> = “随意地／随机地”。<i>almost</i> 留有余地：并非严格随机，但这位作者不是唯一或特殊的例证。</div></div><div class="meaning-zh">几乎是随手选的。</div></div></div>
+          <div class="meaning-node main"><div class="meaning-label">为什么随手也可以</div><div><div class="meaning-en">the notion … <button class="expr-button" type="button">is as old as</button> Western philosophy<div class="expr-tip"><b>A is as old as B</b> = “A 与 B 一样古老”。这里不是精确断代，而是说这观念从西方哲学开端就存在。</div></div><div class="meaning-zh">因为把沉思置于最高位置，是西方哲学极古老、极普遍的传统。</div></div></div>
+        </div>
+        <div class="read-again">重读只保留因果：<b>作者几乎随手选 → 因为这个观念遍布整个传统</b>。</div>
+      </div>
+    </details>
+    <details class="translation">
+      <summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary>
+      <div class="translation-text">我几乎是随意地引用了一位十二世纪的中世纪作者，因为把沉思看作心灵最高状态的观念，与西方哲学本身一样古老。</div>
+    </details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">36</span>The thinking activity—according to Plato, the <ruby>soundless<rt>无声的</rt></ruby> dialogue we carry on with ourselves—serves only to open the eyes of the mind, and even the Aristotelian <i>nous</i> is an organ for seeing and beholding the truth.</span></p>
+  <div class="sentence-aid" data-sentence="36">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">古希腊传统把思考理解成“为看见真理作准备”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">在柏拉图和亚里士多德那里，思考本身还不是最高终点：柏拉图式的思考是人与自己的无声对话，它打开“心灵之眼”；亚里士多德的 <i>nous</i> 也是观看真理的器官。二者都用“看见”来理解心灵。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">柏拉图怎样理解思考</div><div><div class="meaning-en">the soundless dialogue we <button class="expr-button" type="button">carry on with ourselves</button><div class="expr-tip"><b>carry on a dialogue with someone</b> = “同某人进行对话”。这里的对象是自己，所以思考被理解为灵魂内部的无声交谈。</div></div><div class="meaning-zh">思考＝我们与自己进行的无声对话。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">它的作用</div><div><div class="meaning-en"><button class="expr-button" type="button">serves only to</button> open the eyes of the mind<div class="expr-tip"><b>serve to do</b> = “起到……的作用”；<i>only</i> 限定其地位：思考只是打开心灵之眼，而不是最终的“看见”本身。</div></div><div class="meaning-zh">它让心灵具备观看真理的能力。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">亚里士多德也一样</div><div><div class="meaning-en"><i>nous</i> is <button class="expr-button" type="button">an organ for</button> seeing and beholding truth<div class="expr-tip"><b>an organ for doing</b> = “用于做某事的器官／能力”。<i>behold</i> 比普通的 <i>see</i> 更接近凝视、观照。</div></div><div class="meaning-zh"><i>nous</i>（理智）也被说成观看、凝视真理的器官。</div></div></div>
+      </div>
+      <div class="read-again">听出共同的视觉比喻：<b>思考打开眼睛 → 理智用这只眼睛凝视真理</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">保留“心灵之眼”的视觉比喻</span></summary><div class="translation-text">思考活动——按照柏拉图的说法，也就是我们同自己进行的无声对话——只起到开启心灵之眼的作用；甚至亚里士多德的 <i>nous</i>（理智）也是用来看见并凝视真理的器官。</div></details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-dian">典故</span><b>Plato’s soundless dialogue</b> — <span class="zh">柏拉图在《泰阿泰德篇》和《智者篇》中把思考描述为灵魂与自己进行的无声对话。</span></div>
+    <div class="remark"><span class="tag t-ci">词</span><b><i>nous</i></b> — <span class="zh">希腊语 νοῦς，心智、理智。阿伦特强调传统用视觉比喻来理解它：心智如同一只“看见”真理的眼睛。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">37</span>In other words, thinking aims at and ends in contemplation, and contemplation is not an activity but a <ruby>passivity<rt>被动状态</rt></ruby>; it is the point where mental activity comes to rest.</span></p>
+  <div class="sentence-aid" data-sentence="37">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">思考是过程；沉思被传统当作终点</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">换句话说，在这一传统里，思考只是通向沉思的活动；一旦抵达沉思，心灵活动便归于静止。因此，最高状态反而被理解为一种被动，而不是另一种更强的活动。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">思考的方向</div><div><div class="meaning-en">thinking <button class="expr-button" type="button">aims at and ends in</button> contemplation<div class="expr-tip"><b>aim at</b> = “以……为目标”；<b>end in</b> = “最终进入／终结于”。两个动词共同把沉思设为思考的目的地。</div></div><div class="meaning-zh">思考朝向沉思，并最终在沉思中结束。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">沉思的性质</div><div><div class="meaning-en"><button class="expr-button" type="button">not an activity but a passivity</button><div class="expr-tip"><b>not A but B</b> 排除 A、确认 B。<i>passivity</i> 不是懒惰，而是不再主动求取、转为接受真理的状态。</div></div><div class="meaning-zh">沉思不是活动，而是一种接受性的被动状态。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">也就是说</div><div><div class="meaning-en">mental activity <button class="expr-button" type="button">comes to rest</button><div class="expr-tip"><b>come to rest</b> = “停止活动／归于静止”。这里说明从思考活动过渡到沉思安静的临界点。</div></div><div class="meaning-zh">心灵的活动到这里停下来。</div></div></div>
+      </div>
+      <div class="read-again">只听一条路线：<b>thinking 活动 → contemplation 终点 → mental activity 停止</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">按“过程 → 终点”阅读</span></summary><div class="translation-text">换句话说，思考以沉思为目标，并终结于沉思；而沉思不是一种活动，而是一种被动状态——它是心灵活动归于静止的那个点。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">38</span>According to traditions of Christian time, when philosophy had become the <ruby>handmaiden<rt>侍女、婢女</rt></ruby> of theology, thinking became meditation, and meditation again ended in contemplation, a kind of blessed state of the soul where the mind was no longer stretching out to know the truth but, in anticipation of a future state, received it temporarily in <ruby>intuition<rt>直观</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="38">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">基督教传统把“思考 → 沉思”改写成宗教道路</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">在基督教时代，哲学服从神学，思考被改造成宗教默想；默想仍以沉思为终点。在那个蒙福状态中，心灵不再主动伸向真理，而是预尝未来的状态，暂时通过直观接受真理。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">制度位置</div><div><div class="meaning-en">philosophy had become <button class="expr-button" type="button">the handmaiden of theology</button><div class="expr-tip"><b>handmaiden</b> 字面是“侍女”。传统公式意为：哲学不再自立，而是服从神学、为神学服务。</div></div><div class="meaning-zh">哲学被置于神学之下。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">精神道路</div><div><div class="meaning-en">thinking became meditation → meditation <button class="expr-button" type="button">ended in</button> contemplation<div class="expr-tip"><b>end in</b> = “最终进入／终结于”。思考先变成宗教默想，默想最后抵达沉思。</div></div><div class="meaning-zh">思考 → 默想 → 沉思。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">沉思是什么</div><div><div class="meaning-en">a <button class="expr-button" type="button">blessed state of the soul</button><div class="expr-tip"><b>blessed</b> 在宗教语境中是“蒙福的／有福的”，不是一般意义的幸运或快乐。</div></div><div class="meaning-zh">灵魂的一种蒙福状态。</div></div></div>
+        <div class="meaning-node d2"><div class="meaning-label">主动求知停止</div><div><div class="meaning-en">no longer <button class="expr-button" type="button">stretching out to know</button> the truth<div class="expr-tip"><b>stretch out to</b> 字面是“伸出去够取”。这里把主动求知写成心灵向真理伸展的动作。</div></div><div class="meaning-zh">心灵不再主动伸向真理。</div></div></div>
+        <div class="meaning-node d2"><div class="meaning-label">改为接受</div><div><div class="meaning-en"><button class="expr-button" type="button">in anticipation of</button> a future state, received it temporarily in intuition<div class="expr-tip"><b>in anticipation of</b> = “预期着／预先体验着”。<i>it</i> 指真理；心灵仿佛预尝未来状态，暂时在直观中接受真理。</div></div><div class="meaning-zh">它预尝未来，暂时以直观接受真理。</div></div></div>
+      </div>
+      <div class="read-again">保留方向变化：<b>主动伸向真理 → 在沉思中被动接受真理</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">注意 no longer … but …</span></summary><div class="translation-text">按照基督教时代的传统，当哲学已经成为神学的婢女时，思考变成了默想，而默想又终结于沉思——一种灵魂的蒙福状态；在那里，心灵不再伸展出去以认识真理，而是在对一种未来状态的预期中，暂时在直观中接受真理。</div></details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-dian">典故</span><b>philosophy, the handmaiden of theology</b> — <span class="zh">中世纪公式 <i>philosophia ancilla theologiae</i>：“哲学是神学的婢女。”哲学与推理被置于启示神学之下，为其服务。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">39</span>(Descartes, characteristically, still influenced by this tradition, called the treatise in which he set out to demonstrate God’s existence <i>Méditations</i>.)</span></p>
+  <div class="sentence-aid" data-sentence="39">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">笛卡尔的书名证明传统仍在延续</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">即使到了近代哲学的笛卡尔，他仍受基督教默想传统影响：他把一部企图论证上帝存在的哲学著作命名为《沉思集》。这个括号是 S38 的历史例证。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">例证人物</div><div><div class="meaning-en">Descartes, <button class="expr-button" type="button">characteristically</button>, still influenced by this tradition<div class="expr-tip"><b>characteristically</b> = “很符合其特点地／颇具代表性地”。阿伦特认为，这个命名典型地显示了笛卡尔仍承接旧传统。</div></div><div class="meaning-zh">笛卡尔虽属近代，仍未完全脱离默想传统。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">他怎样做</div><div><div class="meaning-en">called the treatise … <i>Méditations</i></div><div class="meaning-zh">他把那部哲学论著命名为“沉思”。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">论著的目标</div><div><div class="meaning-en"><button class="expr-button" type="button">set out to demonstrate</button> God’s existence<div class="expr-tip"><b>set out to do</b> = “着手／意图做某事”；<i>demonstrate</i> 在哲学语境中是以论证证明，不只是展示。</div></div><div class="meaning-zh">它要用哲学论证证明上帝存在。</div></div></div>
+      </div>
+      <div class="read-again">把括号听成一个例子：<b>仍受旧传统影响 → 所以哲学证明也叫 Méditations</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">这是对 S38 的括号补充</span></summary><div class="translation-text">（很有代表性的是，笛卡尔仍受这一传统影响；他把那部意在论证上帝存在的论著称为《沉思集》。）</div></details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>Descartes’ <i>Méditations</i></b> — <span class="zh">笛卡尔《第一哲学沉思集》（1641）。书中从系统怀疑出发，论证上帝的存在与心灵、身体的区分；标题仍保留宗教“默想”的传统形式。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">40</span>With the rise of the modern age, thinking became chiefly the handmaiden of science, of organized knowledge; and even though thinking then grew extremely active, following modernity’s crucial conviction that I can know only what I myself make, it was Mathematics, the non-empirical science <i>par excellence</i>, wherein the mind appears to play only with itself, that turned out to be the Science of sciences, delivering the key to those laws of nature and the universe that are <ruby>concealed<rt>遮蔽、隐藏</rt></ruby> by appearances.</span></p>
+  <div class="sentence-aid" data-sentence="40">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">现代性让思考改为服务科学，而数学成为最高模型</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">进入现代后，思考不再主要服侍神学，而改为服侍科学。现代性的关键确信是：人只能真正认识自己制造的东西。因此，最不依赖经验、最像由心灵自行构造的数学，最终成了“科学之科学”，被期待用来揭示表象背后的自然法则。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">历史转变</div><div><div class="meaning-en"><button class="expr-button" type="button">With the rise of</button> the modern age<div class="expr-tip"><b>with the rise of</b> = “随着……的兴起”。它标出新的历史阶段，而不是表示思考与现代性同时物理上升。</div></div><div class="meaning-zh">现代兴起后，思考的服务对象改变了。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">新的从属地位</div><div><div class="meaning-en">thinking became the <button class="expr-button" type="button">handmaiden of science</button><div class="expr-tip"><b>handmaiden of</b> 延续 S38 的“婢女”比喻。过去哲学服务神学；现在思考主要服务科学，也就是有组织的知识。</div></div><div class="meaning-zh">思考成为科学／有组织知识的工具。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">现代性的确信</div><div><div class="meaning-en">I can know only <button class="expr-button" type="button">what I myself make</button><div class="expr-tip"><b>what I myself make</b> = “我亲自制造出来的东西”。<i>myself</i> 加强主体性：真正确定的知识来自心灵自己的构造。</div></div><div class="meaning-zh">我只能真正认识我自己制造的东西。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">最符合它的学科</div><div><div class="meaning-en">Mathematics, the non-empirical science <button class="expr-button" type="button"><i>par excellence</i></button><div class="expr-tip"><b>par excellence</b> = “最卓越的／典型意义上的”。数学被称为最典型的非经验科学，因为它似乎由心灵自行构造，而不依赖感官材料。</div></div><div class="meaning-zh">数学成了这种现代确信的最佳范型。</div></div></div>
+        <div class="meaning-node d2"><div class="meaning-label">为何是数学</div><div><div class="meaning-en">wherein the mind appears to <button class="expr-button" type="button">play only with itself</button><div class="expr-tip"><b>wherein</b> = “在其中”。心灵“只同自己游戏”指数学对象似乎完全在心灵内部运作；<i>appears</i> 表明这是呈现出来的样子。</div></div><div class="meaning-zh">在数学中，心灵似乎只处理自己构造的对象。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">最终地位</div><div><div class="meaning-en"><button class="expr-button" type="button">it was Mathematics … that</button> turned out to be the Science of sciences<div class="expr-tip">这是强调句 <b>it was X that …</b>：最终成为“科学之科学”的正是数学。<b>turn out to be</b> = “结果证明／最终成为”。</div></div><div class="meaning-zh">数学被提升为一切科学的最高科学。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">它承诺什么</div><div><div class="meaning-en"><button class="expr-button" type="button">delivering the key to</button> laws concealed by appearances<div class="expr-tip"><b>deliver the key to</b> = “提供通向……的钥匙”。自然法则被表象遮住，数学被认为能穿透表象、揭示这些法则。</div></div><div class="meaning-zh">为隐藏在表象后的自然与宇宙法则提供钥匙。</div></div></div>
+      </div>
+      <div class="read-again">保留四步：<b>服务科学 → 只知自己所造 → 数学最符合 → 数学揭示隐藏法则</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">主句的强调中心是 Mathematics</span></summary><div class="translation-text">随着现代的兴起，思考主要变成了科学——即有组织知识——的婢女；而尽管思考随后变得极为活跃，遵循着现代性的关键确信——我只能认识我自己制造的东西——但最终成为“科学之科学”的，正是数学：这门最卓越的非经验科学，在其中，心灵似乎只是在同自己游戏；数学提供了通向那些被表象遮蔽的自然与宇宙法则的钥匙。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">41</span>If it was <ruby>axiomatic<rt>不证自明的</rt></ruby> for Plato that the invisible eye of the soul was the organ for beholding invisible truth with the certainty of knowledge, it became axiomatic for Descartes—during the famous night of his “revelation”—that there existed “a fundamental <ruby>accord<rt>一致、契合</rt></ruby> between the laws of nature [which are concealed by appearances and <ruby>deceptive<rt>欺骗性的</rt></ruby> sense perceptions] and the laws of mathematics”;⁵ that is, between the laws of <ruby>discursive<rt>推论式的</rt></ruby> thinking on the highest, most abstract level and the laws of whatever lies behind mere <ruby>semblance<rt>表象、假象</rt></ruby> in nature.</span></p>
+  <div class="sentence-aid" data-sentence="41">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">柏拉图的“心灵之眼”变成笛卡尔的“数学—自然契合”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">柏拉图不证自明地相信灵魂之眼能确定地观看不可见真理；笛卡尔则不证自明地相信，数学法则与被感官表象遮蔽的自然法则根本一致。因此，最高度抽象的推论思考，被认为能够对应并把握表象背后的自然实在。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">柏拉图的公理</div><div><div class="meaning-en"><button class="expr-button" type="button">it was axiomatic for Plato that</button> …<div class="expr-tip"><b>axiomatic</b> = “被当作公理的／不证自明的”。句首 <i>If</i> 在这里引出历史对照：“如果说对柏拉图……，那么对笛卡尔……”。</div></div><div class="meaning-zh">灵魂的不可见之眼能够观看不可见真理。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">所承诺的确定性</div><div><div class="meaning-en">beholding truth <button class="expr-button" type="button">with the certainty of knowledge</button><div class="expr-tip"><b>with the certainty of knowledge</b> 表示这种“观看”不是朦胧直觉，而被赋予知识所要求的确定性。</div></div><div class="meaning-zh">这种心灵观看被认为能产生确定知识。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">笛卡尔的新公理</div><div><div class="meaning-en"><button class="expr-button" type="button">there existed a fundamental accord between</button> …<div class="expr-tip"><b>an accord between A and B</b> = “A 与 B 之间的一致／契合”。<i>fundamental</i> 表示这不是偶然相似，而是根本结构相合。</div></div><div class="meaning-zh">自然法则与数学法则之间存在根本契合。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">自然为何不可直接见</div><div><div class="meaning-en">laws of nature <button class="expr-button" type="button">concealed by appearances</button> and deceptive perceptions<div class="expr-tip"><b>be concealed by</b> = “被……遮蔽”。这里的表象与感官知觉不只是有限，还会欺骗；真正法则被认为藏在其后。</div></div><div class="meaning-zh">感官给出的表象遮住了真正的自然法则。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">that is 的改写</div><div><div class="meaning-en"><button class="expr-button" type="button">that is</button>, between two kinds of laws<div class="expr-tip"><b>that is</b> = “也就是说”，不是增加新论点，而是把“数学—自然契合”换一种更精确的方式再说一遍。</div></div><div class="meaning-zh">她接着把这项契合改写成两套法则的对应。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">两套法则</div><div><div class="meaning-en">discursive thinking　↔　whatever <button class="expr-button" type="button">lies behind mere semblance</button> in nature<div class="expr-tip"><b>discursive thinking</b> 是逐步推论的思考；<b>lie behind mere semblance</b> = “位于纯粹表象背后”。<i>mere</i> 暗示表象不是真实本身。</div></div><div class="meaning-zh">最高抽象层次的推论法则 ↔ 自然表象背后的实在法则。</div></div></div>
+      </div>
+      <div class="read-again">把长句听成历史替换：<b>Plato 的心灵视觉 → Descartes 的数学与自然相契合</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">If … it became … 是历史对照</span></summary><div class="translation-text">如果说对柏拉图而言，不可见的灵魂之眼是以知识的确定性凝视不可见真理的器官，这是不证自明的；那么对笛卡尔而言——在他著名的“启示”之夜——同样成为不证自明的是：自然法则［它们被表象和欺骗性的感官知觉遮蔽］与数学法则之间存在着“一种根本的一致”；也就是说，最高、最抽象层次上的推论式思考之法则，与自然中一切位于纯粹表象背后的东西之法则之间存在一致。</div></details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-dian">典故</span><b>Descartes’ night of “revelation”</b> — <span class="zh">指笛卡尔 1619 年 11 月 10 日的著名梦境经历；他后来把这视为发现一种统一科学方法的启示。这里的关键是：数学结构被当作穿透感官表象、把握自然法则的钥匙。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">42</span>And he actually believed that with this kind of thinking, with what Hobbes called “reckoning with consequences,” he could deliver certain knowledge about the existence of God, the nature of the soul, and similar matters.</span></p>
+  <div class="sentence-aid" data-sentence="42">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">笛卡尔把推理计算用于形而上学</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">笛卡尔真的相信，这种像计算一样按后果推进的思考，不仅能处理数学和自然，还能对上帝是否存在、灵魂是什么等形而上学问题提供确定知识。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">他的信念</div><div><div class="meaning-en">he <button class="expr-button" type="button">actually believed that</button> …<div class="expr-tip"><b>actually</b> 在这里加强语气：“他确实／真的相信”。阿伦特让读者注意这项雄心并非后人替他推导。</div></div><div class="meaning-zh">笛卡尔确实相信这种方法能做到下面的事。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">哪种思考</div><div><div class="meaning-en">what Hobbes called <button class="expr-button" type="button">“reckoning with consequences”</button><div class="expr-tip"><b>reckoning</b> 既是“计算”也是“推算”。霍布斯把推理理解为计算命题的后果；<i>with</i> 表示操作、处理这些后果。</div></div><div class="meaning-zh">一种把推理当作后果计算的思考。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">它能交付什么</div><div><div class="meaning-en"><button class="expr-button" type="button">deliver certain knowledge about</button> …<div class="expr-tip"><b>deliver</b> 在这里是“提供／交付”；<i>certain knowledge</i> 是具有确定性的知识，不是“某些知识”。</div></div><div class="meaning-zh">关于上帝、灵魂等问题的确定知识。</div></div></div>
+      </div>
+      <div class="read-again">听清楚这项扩张：<b>计算式思考 → 不只知自然，也要确定地知道上帝与灵魂</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">certain = 确定的，不是“某些”</span></summary><div class="translation-text">而且他确实相信，凭借这种思考，凭借霍布斯所谓“对后果的计算”，他能够提供关于上帝的存在、灵魂的本性以及类似事项的确定知识。</div></details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>Hobbes, “reckoning with consequences”</b> — <span class="zh">霍布斯把推理理解为计算：对名称与命题的后果作加减。“reckoning”既是算数，也是推算；阿伦特用它突出近代思考的操作性、求知性。</span></div>
+  </div>
+
+  <!-- ¶7 -->
+  <p class="sent para-start"><span class="stext"><span class="n">43</span>What interested me in the <i>Vita Activa</i> was that the contrary notion of complete quietness in the <i>Vita Contemplativa</i> was so <ruby>overwhelming<rt>压倒性的</rt></ruby> that compared with this stillness all other differences between the various activities in the <i>Vita Activa</i> disappeared.</span></p>
+  <div class="sentence-aid" data-sentence="43">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">沉思的绝对静止，怎样抹掉行动内部的差别？</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她研究“行动生活”时最感兴趣的是：传统把“沉思生活”想成完全的静止，这个对立过于强大，以至于从沉思的静止回看，行动生活内部原本不同的活动全都显得一样，只剩下“都不是静止”。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">她注意到什么</div><div><div class="meaning-en"><button class="expr-button" type="button">What interested me … was that</button> …<div class="expr-tip"><b>What interested me was that …</b> = “令我感兴趣的是这样一个事实：……”。<i>what</i> 引出的整块作主语，真正内容在 <i>that</i> 后。</div></div><div class="meaning-zh">她关注的是一种传统对立产生的后果。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">对立的另一端</div><div><div class="meaning-en">the <button class="expr-button" type="button">contrary notion</button> of complete quietness<div class="expr-tip"><b>contrary</b> = “相反的／对立的”。与行动生活相反，沉思生活被设想成完全静止。</div></div><div class="meaning-zh">沉思生活＝与行动相反的彻底安静。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">力量有多强</div><div><div class="meaning-en"><button class="expr-button" type="button">so overwhelming that</button> …<div class="expr-tip"><b>so + 形容词 + that</b> = “如此……以至于……”。<i>overwhelming</i> 指这种对立压倒其他分类，使它们失去可见性。</div></div><div class="meaning-zh">这组大对立压过了所有较细的区别。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">结果</div><div><div class="meaning-en"><button class="expr-button" type="button">compared with this stillness</button>, all other differences disappeared<div class="expr-tip"><b>compared with</b> = “与……相比”。这里的标准一换成绝对静止，劳作、制作、行动之间的差别就都被抹平。</div></div><div class="meaning-zh">行动生活内部各种活动的差异消失了。</div></div></div>
+      </div>
+      <div class="read-again">抓住“尺度压平差异”：<b>沉思＝绝对静止 → 其他活动相比之下全都一样</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">so … that … 是主干关系</span></summary><div class="translation-text">我在“行动生活”中感兴趣的是：“沉思生活”中那种与之相反的、完全安静的观念是如此压倒一切，以至于同这种静止相比，“行动生活”中各种活动之间的其他一切差异都消失了。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">44</span>Compared to this quiet, it was no longer important whether you labored and tilled the soil, or worked and produced use-objects, or acted together with others in certain enterprises.</span></p>
+  <div class="sentence-aid" data-sentence="44">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">三种活动被“沉思／非沉思”的尺度压成一类</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">一旦以沉思的绝对安静为标准，劳作、制作和政治行动之间的重要差别便不再受到重视：它们都被归入同一个“活动着、因此低于沉思”的大类。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">比较标准</div><div><div class="meaning-en"><button class="expr-button" type="button">Compared to this quiet</button><div class="expr-tip">“这种安静”指 <i>Vita Contemplativa</i> 的完全静止。句子不是说三种活动本身无差别，而是说在这个比较尺度下差别被忽略。</div></div><div class="meaning-zh">拿沉思的静止来衡量一切。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">总结果</div><div><div class="meaning-en"><button class="expr-button" type="button">it was no longer important whether</button> A, B, or C<div class="expr-tip"><b>it was no longer important whether …</b> = “究竟是……已不再重要”。<i>whether … or … or …</i> 列出三个被抹平的选项。</div></div><div class="meaning-zh">做的是哪一种活动，传统已不再区分。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">labor · 劳作</div><div><div class="meaning-en"><button class="expr-button" type="button">labored and tilled the soil</button><div class="expr-tip"><b>till the soil</b> = “耕种土地”。在阿伦特的三分法中，<i>labor</i> 维持生命和生存循环。</div></div><div class="meaning-zh">劳作、耕地：维持生命。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">work · 制作</div><div><div class="meaning-en"><button class="expr-button" type="button">worked and produced use-objects</button><div class="expr-tip"><b>use-objects</b> 是供使用、相对持久的人造物。<i>work</i> 在这里专指制作世界中的物，而非泛指“工作”。</div></div><div class="meaning-zh">制作使用物：建造人工世界。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">action · 行动</div><div><div class="meaning-en"><button class="expr-button" type="button">acted together with others</button> in enterprises<div class="expr-tip"><b>act together with others</b> 是在人与人的共同空间中行动；<i>enterprise</i> 在这里是共同事业／行动计划。</div></div><div class="meaning-zh">与他人共同行动：进入公共政治关系。</div></div></div>
+      </div>
+      <div class="read-again">这句话故意列三项：<b>labor / work / action</b>；传统的沉思尺度把三者全部压平。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">保留 whether … or … or … 三分</span></summary><div class="translation-text">与这种安静相比，你究竟是劳作并耕种土地，还是工作并生产使用物，还是与他人共同参与某些事业，都不再重要。</div></details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-zhu">注</span><b>labored / worked / acted</b> — <span class="zh">这是《人的境况》的三分法：labor（劳作）维持生命循环，work（工作／制作）造出较持久的人工世界，action（行动）发生在人与人的共同政治空间。传统从沉思生活俯视时，这三者的差别全被抹平。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">45</span>Even Marx, in whose work and thought the question of action played such a crucial role, “uses the expression ‘Praxis’ simply in the sense of ‘what man does’ as opposed to ‘what man thinks.’”⁶</span></p>
+  <div class="sentence-aid" data-sentence="45">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">连马克思也保留了“做／想”的大二分</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">即使马克思如此重视行动，他使用 <i>Praxis</i> 时仍把它宽泛地等同于“人所做的一切”，再整体地同“人所思”对立。这样一来，劳作、制作、行动内部的差别仍然没有被保存。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">为什么说 even</div><div><div class="meaning-en"><button class="expr-button" type="button">Even Marx</button> …<div class="expr-tip"><b>even</b> = “甚至／连……也”。马克思本应是最可能打破旧分类的人，所以他仍使用大二分更能说明传统力量。</div></div><div class="meaning-zh">连高度重视行动的马克思也没有完全摆脱这种框架。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">他的特殊之处</div><div><div class="meaning-en">the question of action <button class="expr-button" type="button">played such a crucial role</button><div class="expr-tip"><b>play a crucial role</b> = “起关键作用”。<i>in whose work and thought</i> 回指 Marx，说明行动问题贯穿其著作与思想。</div></div><div class="meaning-zh">行动问题在马克思思想中本来极其关键。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">但 Praxis 怎样用</div><div><div class="meaning-en"><button class="expr-button" type="button">simply in the sense of</button> “what man does”<div class="expr-tip"><b>in the sense of</b> = “以……的含义”；<i>simply</i> 表示这里采用的是宽泛、未细分的意义。</div></div><div class="meaning-zh"><i>Praxis</i> 被笼统理解为人所做的一切。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">形成什么对立</div><div><div class="meaning-en"><button class="expr-button" type="button">as opposed to</button> “what man thinks”<div class="expr-tip"><b>as opposed to</b> = “与……相对／相区别”。它把所有“做”放在一边，把“想”放在另一边。</div></div><div class="meaning-zh">“做”整体对立于“想”，行动生活内部仍被压平。</div></div></div>
+      </div>
+      <div class="read-again">保留这个反预期：<b>马克思极重视行动 → 却仍把 Praxis 笼统等同于一切“做”</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">Even 表示反预期</span></summary><div class="translation-text">甚至马克思——行动问题在其著作和思想中起着如此关键的作用——也“只是把‘Praxis’（实践）这个表达用于‘人所做的事情’这一意义，并把它同‘人所思考的事情’相对立”。</div></details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-ci">词</span><b><i>Praxis</i></b> — <span class="zh">希腊语 πρᾶξις，行动、实践。阿伦特指出，即使马克思重视实践，这里的宽泛用法仍把“人所做的一切”整体与“人所思”对置，没有保留 labor、work、action 的内部区别。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">46</span>I was, however, aware that one could look at this matter from an altogether different viewpoint, and to indicate my doubts I ended this study of active life with a curious sentence that Cicero <ruby>ascribed to<rt>归于、认为出自</rt></ruby> Cato, who used to say that “never is a man more active than when he does nothing, never is he less alone than when he is by himself” (<i>Numquam se plus agere quam nihil cum ageret, numquam minus solum esse quam cum solus esset</i>).⁷</span></p>
+  <div class="sentence-aid" data-sentence="46">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她用加图的悖论，从行动生活转向思考生活</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">不过，阿伦特知道还可以从相反方向看：表面上“什么也不做”的人也许正进行最强烈的内在活动，独自一人也不等于孤单。她用加图这句悖论结束《人的境况》，借此怀疑“没有外在行动就等于不活动、独处就等于孤独”这两个常识判断，并把问题引向思考。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">她保留的可能</div><div><div class="meaning-en">one could <button class="expr-button" type="button">look at this matter from</button> an altogether different viewpoint<div class="expr-tip"><b>look at A from B</b> = “从 B 的观点看 A”；<i>altogether</i> 加强“完全不同”。这里的 <i>matter</i> 是行动与沉思的关系。</div></div><div class="meaning-zh">传统的沉思视角并不是唯一可能的观看方式。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">她怎样表明怀疑</div><div><div class="meaning-en"><button class="expr-button" type="button">to indicate my doubts</button>, I ended this study … with a sentence<div class="expr-tip"><b>to indicate</b> 是目的：“为了表明／暗示”。她没有在书末解决疑问，而是用引文把疑问留下。</div></div><div class="meaning-zh">她以一句奇特的引文结束对行动生活的研究。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">引文来源</div><div><div class="meaning-en">a sentence Cicero <button class="expr-button" type="button">ascribed to Cato</button><div class="expr-tip"><b>ascribe A to B</b> = “把 A 归于 B／认为 A 出自 B”。西塞罗是转述者，加图是被认为说出这句话的人。</div></div><div class="meaning-zh">西塞罗把这句话归于加图。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">悖论之一 · 活动</div><div><div class="meaning-en">never more active than <button class="expr-button" type="button">when he does nothing</button><div class="expr-tip"><b>never more A than when B</b> 实际表达最高程度：“没有任何时候比 B 时更 A”。“什么也不做”指没有外在可见行动，并不排除思考。</div></div><div class="meaning-zh">人恰在外表无所事事时最为活跃。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">悖论之二 · 独处</div><div><div class="meaning-en">never less alone than <button class="expr-button" type="button">when he is by himself</button><div class="expr-tip"><b>by himself</b> = “独自一人”；但 <i>less alone</i> 表示“不那么孤单”。独处时，人可能在思考中与自己相伴。</div></div><div class="meaning-zh">人恰在独自一人时最不孤单。</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">两句共同打开</div><div><div class="meaning-en">doing nothing ≠ inactivity　·　being by oneself ≠ loneliness</div><div class="meaning-zh">看不见的思考可能是一种活动；与自己相处可能是一种陪伴。</div></div></div>
+      </div>
+      <div class="read-again">先听 <b>however</b>，再听两次倒转：<b>无所事事却最活跃；独自一人却最不孤单</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">保留两个 never … than … 悖论</span></summary><div class="translation-text">不过，我知道，人们也可以从一种完全不同的观点来看这件事；为了表明我的疑问，我用一句奇特的话结束了这项关于行动生活的研究。西塞罗把这句话归于加图；加图常说：“一个人在什么也不做时，从未比这更活跃；一个人在独自一人时，从未比这更不孤单。”（<i>Numquam se plus agere quam nihil cum ageret, numquam minus solum esse quam cum solus esset</i>。）</div></details>
+  </div>
+  <div class="remarks">
+    <div class="remark"><span class="tag t-yin">引用</span><b>Cicero’s Cato paradox</b> — <span class="zh">西塞罗《论共和国》1.17 把这句话归于老加图：“一个人在无所事事时最为活跃，在独自一人时最不孤独。”它倒转了行动／静止、独处／相伴的日常含义，直接把问题引向独处中的思考活动。</span></div>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">47</span>Assuming Cato was right, the questions are obvious: What are we “doing” when we do nothing but think?</span></p>
+  <div class="sentence-aid" data-sentence="47">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">加图的悖论直接变成本书的问题</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">如果加图说得对，那么思考不能再被简单当作“什么也没做”。阿伦特于是提出本书的核心问题：没有外在行动、只有思考时，我们究竟在进行什么活动？引号中的 “doing” 正是在质疑“做”只意味着可见行动。</div></div>
+      <div class="meaning-tree">
+        <div class="meaning-node main"><div class="meaning-label">前提</div><div><div class="meaning-en"><button class="expr-button" type="button">Assuming Cato was right</button><div class="expr-tip"><b>assuming + 从句</b> = “假定／如果……成立”。她暂时接受 S46 的悖论，由此推出问题，而不是在这里证明加图正确。</div></div><div class="meaning-zh">先把“无所事事时最活跃”当作真的。</div></div></div>
+        <div class="meaning-node main"><div class="meaning-label">于是必须追问</div><div><div class="meaning-en">What are we <button class="expr-button" type="button">“doing”</button> …?<div class="expr-tip">引号表示这个词正在被重新审问：如果思考没有外在动作，却仍是一种活动，那么 <i>doing</i> 的含义必须扩大。</div></div><div class="meaning-zh">思考者究竟在“做”什么？</div></div></div>
+        <div class="meaning-node d1"><div class="meaning-label">问题发生的情形</div><div><div class="meaning-en">when we <button class="expr-button" type="button">do nothing but think</button><div class="expr-tip"><b>do nothing but + 动词</b> = “除了……什么也不做／只是……”。这里并非说思考等于虚无，而是从外在行动的角度描述它。</div></div><div class="meaning-zh">当我们没有任何外在行动，只是在思考时。</div></div></div>
+      </div>
+      <div class="read-again">这不是修辞问题。重读时把重音放在：<b>What are we “doing” / when we only think?</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">保留 doing 的引号</span></summary><div class="translation-text">假定加图说得对，那么问题便显而易见：当我们除了思考什么也不做时，我们究竟在“做”什么？</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">48</span>Where are we when we, normally always surrounded by our <ruby>fellow-men<rt>人类同伴、他人</rt></ruby>, are together with no one but ourselves?</span></p>
 
 </main>
 
@@ -183,14 +877,47 @@
     <span><span class="tag t-zhu">注</span>note 说明</span>
     <span><span class="tag t-ci">词</span>word 词义</span>
   </div>
-  Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 3–4. Text transcribed verbatim from the page image. Sample build — Introduction continues on p. 5.
+  Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 3–8. Text transcribed verbatim from the page image. Introduction continues on p. 8.
 </footer>
 
 <script>
   const body=document.body;
-  const tRuby=document.getElementById('t-ruby'), tRem=document.getElementById('t-rem');
+  const tRuby=document.getElementById('t-ruby'),
+        tRem=document.getElementById('t-rem'),
+        tTrans=document.getElementById('t-trans');
   tRuby.onclick=()=>{body.classList.toggle('hide-ruby'); tRuby.classList.toggle('off');};
   tRem.onclick =()=>{body.classList.toggle('hide-remarks'); tRem.classList.toggle('off');};
+
+  const translations=[...document.querySelectorAll('.translation')];
+  tTrans.onclick=()=>{
+    const open=tTrans.getAttribute('aria-pressed')!=='true';
+    translations.forEach(item=>item.open=open);
+    tTrans.setAttribute('aria-pressed',String(open));
+    tTrans.textContent=open?'收起直译 20–47':'直译 20–47';
+  };
+
+  const rescues=[...document.querySelectorAll('.rescue')];
+  const clearFocus=()=>{
+    document.querySelectorAll('.active-sentence,.active-aid')
+      .forEach(item=>item.classList.remove('active-sentence','active-aid'));
+  };
+  rescues.forEach(rescue=>{
+    rescue.addEventListener('toggle',()=>{
+      if(rescue.open){
+        rescues.forEach(other=>{if(other!==rescue) other.open=false;});
+        clearFocus();
+        const aid=rescue.closest('.sentence-aid');
+        const sentence=aid.previousElementSibling;
+        aid.classList.add('active-aid');
+        if(sentence?.classList.contains('sent')) sentence.classList.add('active-sentence');
+        body.classList.add('rescue-mode');
+        rescue.scrollIntoView({behavior:'smooth',block:'center'});
+      }else if(!document.querySelector('.rescue[open]')){
+        clearFocus();
+        body.classList.remove('rescue-mode');
+      }
+    });
+  });
 </script>
 </body>
 </html>
