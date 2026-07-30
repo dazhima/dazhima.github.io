@@ -3,13 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>The Life of the Mind · Thinking · Introduction</title>
+<script>
+  (()=>{
+    try{
+      const linked=new URLSearchParams(location.search).get('theme');
+      const saved=localStorage.getItem('lotm-reading-theme');
+      const choice=/^(dark|light)$/.test(linked||'')?linked:saved;
+      const dark=choice ? choice==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme=dark?'dark':'light';
+    }catch(_){ document.documentElement.dataset.theme='light'; }
+  })();
+</script>
 <style>
   :root{
     --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
     --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
     --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
     --blue:#486a8b; --blue-soft:#e7eef5; --green:#4d7358; --green-soft:#e6efe8;
+  }
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#141311; --ink:#e8e0d4; --muted:#aaa092; --line:#3c3730;
+    --amber:#d5a45a; --amber-soft:#382b17; --purple:#c7a7e3; --purple-soft:#30263a;
+    --teal:#82c5b5; --teal-soft:#1d342f; --rose:#dc92a5; --rose-soft:#39242a;
+    --blue:#8fb6d5; --blue-soft:#20303d; --green:#91bd9b; --green-soft:#223529;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -202,6 +221,34 @@
   footer{max-width:720px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
     font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
   .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  a{color:var(--blue)}
+  html[data-theme="dark"] body{background:#141311}
+  html[data-theme="dark"] .bar{background:rgba(20,19,17,.94)}
+  html[data-theme="dark"] .btn{background:#211f1b}
+  html[data-theme="dark"] .sent:hover{background:#1c1a17}
+  html[data-theme="dark"] .remarks{background:#1c1a17}
+  html[data-theme="dark"] .practice-note{background:#19242c; border-color:#334858; color:#bed0df}
+  html[data-theme="dark"] .rescue{background:#171f25; border-color:#344754}
+  html[data-theme="dark"] .translation{background:#18211b; border-color:#35483a}
+  html[data-theme="dark"] .step + .step{border-color:#35424a}
+  html[data-theme="dark"] .core-en strong,
+  html[data-theme="dark"] .meaning-node.main .meaning-en{color:#bdd2e3}
+  html[data-theme="dark"] .cue,
+  html[data-theme="dark"] .meaning-zh,
+  html[data-theme="dark"] .chunk-zh{color:#b9afa2}
+  html[data-theme="dark"] .meaning-overview{background:#1c1a17; border-color:#3a4b58}
+  html[data-theme="dark"] .meaning-thesis{color:#c2d3df}
+  html[data-theme="dark"] .meaning-node{border-color:#3b4851}
+  html[data-theme="dark"] .meaning-node.main{background:#1b2932}
+  html[data-theme="dark"] .meaning-node:not(.main)::before{border-color:#49565f}
+  html[data-theme="dark"] .meaning-label{color:#9ba9b4}
+  html[data-theme="dark"] .pair-word{color:#e0b870}
+  html[data-theme="dark"] .expr-button{background:#3b2d17; border-color:#b9893e; color:#f0cb88}
+  html[data-theme="dark"] .expr-tip{background:#292217; border-color:#6e5930; color:#d8c7aa}
+  html[data-theme="dark"] .expr-tip b{color:#f0cb88}
+  html[data-theme="dark"] .read-again{background:#1b2932; color:#bed0df}
+  html[data-theme="dark"] .translation-text{border-color:#344539; color:#bcd5c1}
+  html[data-theme="dark"] body.rescue-mode main > .sent.active-sentence{background:#192229}
 </style>
 </head>
 <body>
@@ -209,7 +256,8 @@
   <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; Introduction &nbsp;·&nbsp; pp.&nbsp;3–8</div>
   <button class="btn" id="t-ruby">中文 注音</button>
   <button class="btn" id="t-rem">注释</button>
-  <button class="btn" id="t-trans" aria-pressed="false">直译 20–47</button>
+  <button class="btn" id="t-trans" aria-pressed="false">直译 1–47</button>
+  <button class="btn" id="t-theme" aria-pressed="false" title="Switch to Dark Theme">Dark Theme</button>
 </div>
 
 <main id="reader">
@@ -220,39 +268,127 @@
 
   <!-- ¶1 -->
   <p class="sent para-start"><span class="stext"><span class="n">1</span>The title I have given this lecture series, <i>The Life of the Mind</i>, sounds <ruby>pretentious<rt>自负的</rt></ruby>, and to talk about Thinking seems to me so <ruby>presumptuous<rt>僭越的</rt></ruby> that I feel I should start less with an <ruby>apology<rt>致歉</rt></ruby> than with a <ruby>justification<rt>辩护</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="1">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她不是为主题道歉，而是要说明自己为何有资格谈它</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">《心灵的生活》这个标题听来宏大，谈论“思考”更像一种僭越；因此她需要的不是道歉，而是说明自己为何有理由承担这个题目。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">标题的分量</div><div><div class="meaning-en">sounds <button class="expr-button" type="button">pretentious</button><div class="expr-tip"><b>pretentious</b> 指摆出超过自身资格或实际内容的宏大姿态。</div></div><div class="meaning-zh">标题听起来过分宏大、自负。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">谈题目的风险</div><div><div class="meaning-en">to talk about Thinking seems <button class="expr-button" type="button">presumptuous</button><div class="expr-tip"><b>presumptuous</b> = “冒昧的／僭越的”，强调未经许可便承担太大权威。</div></div><div class="meaning-zh">直接谈“思考”似乎僭越了自己的资格。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">她要做的事</div><div><div class="meaning-en">less with an apology <button class="expr-button" type="button">than with a justification</button><div class="expr-tip"><b>less A than B</b> = “与其说是 A，不如说是 B”。<i>justification</i> 说明为何这样做是正当的。</div></div><div class="meaning-zh">重点不是致歉，而是给出正当理由。</div></div></div></div>
+      <div class="read-again">抓住最后的选择：<b>不是 apology，而是 justification</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我给这一系列讲座所取的标题《心灵的生活》听起来颇为自负，而谈论“思考”在我看来又如此僭越，以至于我觉得开头与其致歉，不如作一番辩护。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-ci">词</span><b>apology vs. justification</b> — <span class="zh">apology = 致歉、为过失辩解；justification = 给出正当理由、主张权利。她特意选后者：不是道歉，而是说明自己有理由这样做。</span></div>
   </div>
 
   <p class="sent"><span class="stext"><span class="n">2</span>No justification, of course, is needed for the topic itself, especially not in the framework of <ruby>eminence<rt>崇高地位</rt></ruby> <ruby>inherent<rt>固有的</rt></ruby> in the Gifford Lectures.</span></p>
+  <div class="sentence-aid" data-sentence="2">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">主题本身不需要辩护；需要辩护的是她来讲</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">“思考”这个题目本身当然无需辩护，尤其在本就以崇高主题著称的吉福德讲座中。她真正不安的是下一句所说的：为什么由她来谈。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">先排除什么</div><div><div class="meaning-en"><button class="expr-button" type="button">No justification … is needed</button> for the topic itself<div class="expr-tip"><b>no justification is needed</b> = “不需要任何辩护／正当化”。</div></div><div class="meaning-zh">主题本身完全正当。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">为什么尤其如此</div><div><div class="meaning-en">the framework of eminence <button class="expr-button" type="button">inherent in</button> the Gifford Lectures<div class="expr-tip"><b>inherent in</b> = “内在于／固有于”。<i>eminence</i> 是崇高地位或声望。</div></div><div class="meaning-zh">吉福德讲座本身带有崇高声望。</div></div></div></div>
+      <div class="read-again">先听否定：<b>topic itself 不需要 justification</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">当然，题目本身不需要任何辩护，尤其是在吉福德讲座所固有的崇高地位这一框架中。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-yin">引用</span><b>the Gifford Lectures</b> — <span class="zh">英国著名系列讲座，1888 年设立，主题为自然神学（natural theology）。本书即源自阿伦特 1973 年在阿伯丁大学所做的吉福德讲座。她借其声望说明：主题本身无需辩护。</span></div>
   </div>
 
   <p class="sent"><span class="stext"><span class="n">3</span>What disturbs me is that I try my hand at it, for I have neither claim nor ambition to be a "philosopher" or be numbered among what Kant, not without irony, called <i>Denker von Gewerbe</i> (professional thinkers).¹</span></p>
+  <div class="sentence-aid" data-sentence="3">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她拒绝把自己放进“职业哲学家”的行列</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">真正令她不安的是自己竟尝试处理这个题目：她既不声称自己是哲学家，也无意加入康德带着反讽所说的“职业思想家”。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">令她不安的</div><div><div class="meaning-en">What disturbs me is that I <button class="expr-button" type="button">try my hand at it</button><div class="expr-tip"><b>try one’s hand at</b> = “尝试做自己并不熟悉或未必有资格做的事”。</div></div><div class="meaning-zh">问题是她亲自来尝试。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">她不提出的资格</div><div><div class="meaning-en">I have <button class="expr-button" type="button">neither claim nor ambition</button> to be a philosopher<div class="expr-tip"><b>neither A nor B</b> 同时否定两项；<i>claim</i> 是资格主张，<i>ambition</i> 是成为它的企图。</div></div><div class="meaning-zh">既不自称，也不企图成为哲学家。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">更不加入</div><div><div class="meaning-en">be <button class="expr-button" type="button">numbered among</button> professional thinkers<div class="expr-tip"><b>be numbered among</b> = “被列入……之中”。康德的德语带有把思考变成行业的讽刺。</div></div><div class="meaning-zh">不愿被列入职业思想家之中。</div></div></div></div>
+      <div class="read-again">主线是：<b>题目正当 → 但我不自认是职业哲学家</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">使我不安的是，我竟尝试处理这个题目；因为我既不声称、也无意成为一名“哲学家”，或被列入康德不无反讽地称作 <i>Denker von Gewerbe</i>（职业思想家）的那些人之中。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-yin">引用</span><b><i>Denker von Gewerbe</i></b> — <span class="zh">康德的反讽用语，字面"以思想为行当的人"，即"职业思想家"。阿伦特拒绝这一标签——这奠定全书立场：思考是人人皆可从事的活动，而非行会式的专业。</span></div>
     <div class="remark"><span class="tag t-zhu">注</span><span class="zh">脚注 1 为阿伦特原注，见原书 pp. 217–238。</span></div>
   </div>
 
   <p class="sent"><span class="stext"><span class="n">4</span>The question then is, should I not have left these problems in the hands of the experts, and the answer will have to show what prompted me to <ruby>venture<rt>涉险进入</rt></ruby> from the relatively safe fields of political science and theory into these rather <ruby>awesome<rt>令人敬畏的</rt></ruby> matters, instead of leaving well enough alone.</span></p>
+  <div class="sentence-aid" data-sentence="4">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她必须解释，是什么迫使她离开安全领域</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">于是问题变成：她是否本该把这些问题留给专家？本书接下来的回答必须说明，是什么促使她离开较安全的政治学与政治理论，冒险进入这些令人敬畏的问题。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">质疑</div><div><div class="meaning-en">should I not have <button class="expr-button" type="button">left these problems in the hands of</button> the experts?<div class="expr-tip"><b>leave A in the hands of B</b> = “把 A 交由 B 处理”。</div></div><div class="meaning-zh">是否应把问题交给专家。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">回答必须说明</div><div><div class="meaning-en">what <button class="expr-button" type="button">prompted me to venture</button> … into these matters<div class="expr-tip"><b>prompt someone to do</b> = “促使某人做”；<b>venture into</b> = “冒险进入陌生领域”。</div></div><div class="meaning-zh">什么促使她冒险进入。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">她没有选择</div><div><div class="meaning-en">instead of <button class="expr-button" type="button">leaving well enough alone</button><div class="expr-tip"><b>leave well enough alone</b> = “不要多事；维持现状，别去碰它”。</div></div><div class="meaning-zh">她没有维持原本尚可的安全状态。</div></div></div></div>
+      <div class="read-again">把整句听成一个任务：<b>回答必须说明我为何越出政治理论</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">那么问题就是：我难道不该把这些问题留在专家手中吗？而回答必须说明，是什么促使我离开政治科学与政治理论这些相对安全的领域，冒险进入这些相当令人敬畏的问题，而不是安于现状。</div></details>
+  </div>
 
   <!-- ¶2 -->
   <p class="sent para-start"><span class="stext"><span class="n">5</span>Factually, my <ruby>preoccupation<rt>萦怀、专注</rt></ruby> with mental activities has two rather different origins.</span></p>
+  <div class="sentence-aid" data-sentence="5">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她接下来会讲两个不同的起源</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">从事实经过来看，她对心灵活动的持续关注有两个很不相同的来源。下面先讲艾希曼审判，再讲《人的境况》留下的疑问。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">叙述层次</div><div><div class="meaning-en"><button class="expr-button" type="button">Factually</button><div class="expr-tip"><b>factually</b> = “就事实经过而言”，不是“正确地”。</div></div><div class="meaning-zh">她现在讲事实上的个人起因。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">持续关注</div><div><div class="meaning-en">my <button class="expr-button" type="button">preoccupation with</button> mental activities<div class="expr-tip"><b>preoccupation with</b> = “对……的持续关注／萦怀”。</div></div><div class="meaning-zh">心灵活动长期占据她的注意。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">结构预告</div><div><div class="meaning-en">has <button class="expr-button" type="button">two rather different origins</button><div class="expr-tip"><b>origin</b> 在这里是兴趣的起因或源头。</div></div><div class="meaning-zh">接下来分成两条来源。</div></div></div></div>
+      <div class="read-again">这是路标句：<b>two origins</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">从事实经过来看，我对心灵活动的持续关注有两个颇为不同的来源。</div></details>
+  </div>
 
   <p class="sent"><span class="stext"><span class="n">6</span>The immediate <ruby>impulse<rt>促因、冲动</rt></ruby> came from my attending the Eichmann trial in Jerusalem.</span></p>
+  <div class="sentence-aid" data-sentence="6">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">第一个直接诱因是艾希曼审判</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">最直接把她推向思考问题的事件，是她亲自参加耶路撒冷的艾希曼审判。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">直接起因</div><div><div class="meaning-en">The immediate <button class="expr-button" type="button">impulse came from</button> …<div class="expr-tip"><b>impulse came from</b> = “推动力／直接促因来自……”。</div></div><div class="meaning-zh">兴趣直接由一次经历触发。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">具体经历</div><div><div class="meaning-en">my <button class="expr-button" type="button">attending the Eichmann trial</button><div class="expr-tip"><b>attend a trial</b> = “出席／旁听审判”，不是“照料”。</div></div><div class="meaning-zh">她亲自到场旁听审判。</div></div></div></div>
+      <div class="read-again">只需抓住：<b>immediate impulse → Eichmann trial</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">直接的推动力来自我在耶路撒冷参加艾希曼审判的经历。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-dian">典故</span><b>the Eichmann trial</b> — <span class="zh">阿道夫·艾希曼（Adolf Eichmann）是纳粹"最终解决方案"中负责组织犹太人押运的官员；战后逃往阿根廷，1960 年被以色列特工抓获，1961 年在耶路撒冷受审并被处决。阿伦特为《纽约客》全程报道。</span></div>
   </div>
 
   <p class="sent"><span class="stext"><span class="n">7</span>In my report of it² I spoke of "the banality of evil."</span></p>
+  <div class="sentence-aid" data-sentence="7">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她当时给这个经验取名“恶之平庸”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她在审判报告中使用了后来著名的短语 “the banality of evil”。这里中心词是 banality：她发现恶竟呈现出平庸性。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">出处</div><div><div class="meaning-en">In my <button class="expr-button" type="button">report of it</button><div class="expr-tip"><b>report of</b> = “关于……的报道／报告”；<i>it</i> 指审判。</div></div><div class="meaning-zh">这个短语出现在她对审判的报道中。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">命名</div><div><div class="meaning-en">the <button class="expr-button" type="button">banality of evil</button><div class="expr-tip">语法中心是 <i>banality</i>，<i>of evil</i> 说明是谁的平庸；不是先有一种“平庸的恶”。</div></div><div class="meaning-zh">字面是“恶之平庸（性）”。</div></div></div></div>
+      <div class="read-again">重音放在 <b>banality</b>：她惊讶的是恶的平庸性。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在我关于这场审判的报告中，我谈到了“恶之平庸”。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-yin">引用</span><b>"the banality of evil"</b> — <span class="zh">阿伦特自己的著名短语，出自《艾希曼在耶路撒冷》（1963）的副标题"A Report on the Banality of Evil"。banal = 平庸、陈腐。<b>直译应为「恶之平庸（性）」</b>——中心词是 banality（平庸），of evil 是修饰，即"平庸"是用来述说"恶"的那个性质：恶竟然是平庸的。通行译名「平庸之恶」语序被倒置，读如"平庸的恶（banal evil）"，略偏移了阿伦特的本意。</span></div>
   </div>
 
   <p class="sent"><span class="stext"><span class="n">8</span>Behind that phrase, I held no thesis or doctrine, although I was <ruby>dimly<rt>隐约地</rt></ruby> aware of the fact that it went counter to our tradition of thought—literary, theological, or philosophic—about the phenomenon of evil.</span></p>
+  <div class="sentence-aid" data-sentence="8">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">这个短语起初不是理论，只是对传统冲突的模糊觉察</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她提出“恶之平庸”时并没有一套论文或学说；她只是隐约知道，这个事实与文学、神学和哲学关于恶的整个传统相抵触。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">先排除</div><div><div class="meaning-en">I <button class="expr-button" type="button">held no thesis or doctrine</button><div class="expr-tip"><b>hold a thesis</b> = “持有／主张一个论题”；<i>doctrine</i> 是成体系的学说。</div></div><div class="meaning-zh">短语背后没有预先完成的理论。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">她当时只知道</div><div><div class="meaning-en">I was <button class="expr-button" type="button">dimly aware</button> of the fact<div class="expr-tip"><b>dimly aware</b> = “隐约意识到”，表示尚未充分理解。</div></div><div class="meaning-zh">她只有模糊的觉察。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">冲突</div><div><div class="meaning-en">it <button class="expr-button" type="button">went counter to</button> our tradition of thought<div class="expr-tip"><b>go counter to</b> = “与……相抵触／背道而驰”。</div></div><div class="meaning-zh">这个发现违背既有传统。</div></div></div></div>
+      <div class="read-again">听清让步：<b>没有 doctrine；但隐约知道它冲撞传统</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在这个短语背后，我并没有任何论题或学说，尽管我隐约意识到一个事实：它同我们关于恶之现象的思想传统——无论文学的、神学的还是哲学的——相抵触。</div></details>
+  </div>
 
   <p class="sent"><span class="stext"><span class="n">9</span>Evil, we have learned, is something <ruby>demonic<rt>恶魔般的</rt></ruby>; its <ruby>incarnation<rt>化身</rt></ruby> is Satan, a "lightning fall from heaven" (Luke 10:18), or Lucifer, the fallen angel ("The devil is an angel too"—Unamuno) whose sin is pride ("proud as Lucifer"), namely, that <i>superbia</i> of which only the best are capable: they don't want to serve God but to be like Him.</span></p>
+  <div class="sentence-aid" data-sentence="9">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">传统把恶想成宏大、恶魔式、由骄傲驱动</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">传统告诉我们，恶应当具有恶魔般的深度：它化身为撒但或路西法，其根本罪是只有最优秀者才可能犯下的骄傲——不愿侍奉上帝，而要成为上帝。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">传统模型</div><div><div class="meaning-en">Evil … is something <button class="expr-button" type="button">demonic</button><div class="expr-tip"><b>demonic</b> 不只是“坏”，而是具有超人、魔鬼般的黑暗力量。</div></div><div class="meaning-zh">恶被想成具有恶魔性的深度。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">化身</div><div><div class="meaning-en">its <button class="expr-button" type="button">incarnation</button> is Satan or Lucifer<div class="expr-tip"><b>incarnation</b> = “化身／具象化”。</div></div><div class="meaning-zh">抽象的恶被赋予具体形象。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">根本罪</div><div><div class="meaning-en">that <button class="expr-button" type="button">superbia</button> of which only the best are capable<div class="expr-tip">拉丁语 <i>superbia</i> 是傲慢／骄傲；<b>be capable of</b> = “有能力做”。</div></div><div class="meaning-zh">骄傲被说成强者才有能力犯的罪。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">骄傲的内容</div><div><div class="meaning-en">do not want to serve God <button class="expr-button" type="button">but to be like Him</button><div class="expr-tip"><b>not A but B</b> 排除服从，确认僭越。</div></div><div class="meaning-zh">不是服侍上帝，而是企图与上帝相等。</div></div></div></div>
+      <div class="read-again">传统图像的路线：<b>demonic → Lucifer → pride → be like God</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我们学到的是：恶是某种恶魔般的东西；它的化身是撒但——“如闪电般从天坠落”（《路加福音》10:18）——或路西法，那个堕落的天使（“魔鬼也是天使”——乌纳穆诺）；他的罪是骄傲（“像路西法一样骄傲”），也就是那种只有最优秀者才有能力犯下的 <i>superbia</i>：他们不愿侍奉上帝，而想成为像祂一样的存在。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-yin">引用</span><b>"lightning fall from heaven" (Luke 10:18)</b> — <span class="zh">《路加福音》10:18，耶稣："我曾看见撒但从天上坠落，像闪电一样。"</span></div>
     <div class="remark"><span class="tag t-dian">典故</span><b>Lucifer, the fallen angel</b> — <span class="zh">Lucifer 拉丁文意为"光之使者"。传统将其视为因骄傲而背叛上帝、被逐出天堂的堕落天使，并与撒但等同。</span></div>
@@ -261,17 +397,46 @@
   </div>
 
   <p class="sent"><span class="stext"><span class="n">10</span>Evil men, we are told, act out of <ruby>envy<rt>嫉妒</rt></ruby>; this may be <ruby>resentment<rt>怨恨</rt></ruby> at not having turned out well through no fault of their own (Richard III) or the envy of Cain, who slew Abel because "the Lord had regard for Abel and his offering, but for Cain and his offering he had no regard."</span></p>
+  <div class="sentence-aid" data-sentence="10">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">传统还用嫉妒解释作恶，并给出两种文学—宗教模型</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">传统说恶人因嫉妒而行动：理查三世因自己并无过错却生得不好而怨恨；该隐则因上帝悦纳亚伯、不悦纳自己而杀弟。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">一般动机</div><div><div class="meaning-en">act <button class="expr-button" type="button">out of envy</button><div class="expr-tip"><b>act out of</b> = “出于某种动机而行动”。</div></div><div class="meaning-zh">作恶被解释为由嫉妒驱动。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">理查三世</div><div><div class="meaning-en">resentment at <button class="expr-button" type="button">not having turned out well</button><div class="expr-tip"><b>turn out well</b> 在此指“结果生得好／发展良好”；<i>through no fault of their own</i> 指并非本人过错。</div></div><div class="meaning-zh">因自身境遇／形貌不佳而怨恨。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">该隐</div><div><div class="meaning-en">Cain, who <button class="expr-button" type="button">slew Abel because</button> …<div class="expr-tip"><b>slay</b>（过去式 <i>slew</i>）是文学性的“杀死”。</div></div><div class="meaning-zh">因上帝偏爱弟弟的祭物而杀人。</div></div></div></div>
+      <div class="read-again">两种 envy：<b>怨恨自己的命运；嫉妒他人被悦纳</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我们被告知，恶人出于嫉妒而行动；这可能是因自己并无过错却未能生得周正而产生的怨恨（理查三世），也可能是该隐的嫉妒——他杀死亚伯，是因为“耶和华看中了亚伯和他的供物，却没有看中该隐和他的供物”。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-dian">典故</span><b>Richard III</b> — <span class="zh">莎士比亚同名剧的反派；因天生畸形、"未能生得周正"而怨恨世界，遂作恶。</span></div>
     <div class="remark"><span class="tag t-yin">引用</span><b>Cain and Abel</b> — <span class="zh">《创世记》4 章。该隐因上帝悦纳弟弟亚伯的祭物却不悦纳自己的，出于嫉妒杀死亚伯——人类第一桩谋杀。引文出自创世记 4:4–5。</span></div>
   </div>
 
   <p class="sent"><span class="stext"><span class="n">11</span>Or they may be prompted by weakness (Macbeth).</span></p>
+  <div class="sentence-aid" data-sentence="11">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">另一种传统解释是意志软弱</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">或者，恶人并非由强烈邪恶意志驱动，而是像麦克白一样因软弱、无法抵抗诱惑和怂恿而被推动。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">另一个选项</div><div><div class="meaning-en">may be <button class="expr-button" type="button">prompted by weakness</button><div class="expr-tip"><b>be prompted by</b> = “受……推动／促使”。<i>weakness</i> 在这里主要是意志软弱。</div></div><div class="meaning-zh">恶可能由软弱促成。</div></div></div></div>
+      <div class="read-again">这是动机清单中的第三项：<b>envy 之外，还有 weakness</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">或者，他们可能是受软弱所驱使（麦克白）。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-dian">典故</span><b>Macbeth</b> — <span class="zh">莎士比亚悲剧；麦克白之恶源于意志薄弱，受野心与他人怂恿驱使，而非天性凶残。</span></div>
   </div>
 
   <p class="sent"><span class="stext"><span class="n">12</span>Or, on the contrary, by the powerful hatred <ruby>wickedness<rt>邪恶</rt></ruby> feels for sheer goodness (Iago's "I hate the Moor: my cause is hearted"; Claggart's hatred for Billy Budd's "barbarian" innocence, a hatred considered by Melville a "depravity according to nature"), or by <ruby>covetousness<rt>贪欲</rt></ruby>, "the root of all evil" (<i>Radix omnium malorum cupiditas</i>).</span></p>
+  <div class="sentence-aid" data-sentence="12">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">传统还诉诸邪恶对纯善的恨，以及贪欲</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">相反，作恶也可能来自强大的恶意：邪恶憎恨纯粹善良，如伊阿古和克拉加特；或者来自被称为“万恶之根”的贪欲。传统总能为恶找到一种强烈、可辨认的动机。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">与软弱相反</div><div><div class="meaning-en"><button class="expr-button" type="button">on the contrary</button>, by powerful hatred<div class="expr-tip"><b>on the contrary</b> = “恰恰相反”。它把强大的仇恨与 S11 的软弱对照。</div></div><div class="meaning-zh">这里转向强烈而主动的恶意。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">仇恨对象</div><div><div class="meaning-en">hatred wickedness feels for <button class="expr-button" type="button">sheer goodness</button><div class="expr-tip"><b>sheer goodness</b> = “纯粹、全然的善良”。</div></div><div class="meaning-zh">邪恶憎恨纯然的善。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">梅尔维尔的命名</div><div><div class="meaning-en">a <button class="expr-button" type="button">depravity according to nature</button><div class="expr-tip"><b>depravity</b> = “道德败坏／堕落”；<i>according to nature</i> 表示顺乎本性。</div></div><div class="meaning-zh">一种仿佛天性如此的堕落。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">另一动机</div><div><div class="meaning-en"><button class="expr-button" type="button">covetousness</button>, the root of all evil<div class="expr-tip"><b>covetousness</b> 是强烈占有欲／贪欲。拉丁引文意为“贪欲是万恶之根”。</div></div><div class="meaning-zh">贪欲被当作万恶根源。</div></div></div></div>
+      <div class="read-again">这一句给两条：<b>恨纯善 / 贪欲</b>；它们都属于传统的“深层动机”。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">或者，恰恰相反，他们可能受邪恶对纯粹善良的强烈仇恨所驱使（伊阿古的“我恨那个摩尔人：我的理由已深植于心”；克拉加特对比利·巴德“野蛮的”纯真的仇恨——梅尔维尔认为这是一种“顺乎本性的堕落”），也可能受贪欲驱使——“万恶之根”（<i>Radix omnium malorum cupiditas</i>）。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-yin">引用</span><b>Iago, "I hate the Moor"</b> — <span class="zh">莎士比亚《奥赛罗》中的伊阿古，以近乎无动机的恶谋害摩尔人奥赛罗。"my cause is hearted" = 我的恨意已深植于心。</span></div>
     <div class="remark"><span class="tag t-dian">典故</span><b>Claggart / Billy Budd</b> — <span class="zh">梅尔维尔（Herman Melville）小说《比利·巴德》：军士长克拉加特憎恨水手比利天真无邪的善良，梅尔维尔称之为"顺乎本性的堕落"（depravity according to nature）。</span></div>
@@ -279,25 +444,99 @@
   </div>
 
   <p class="sent"><span class="stext"><span class="n">13</span>However, what I was confronted with was utterly different and still <ruby>undeniably<rt>无可否认地</rt></ruby> factual.</span></p>
+  <div class="sentence-aid" data-sentence="13">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">现实中的艾希曼与全部传统模型都不同</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">转折发生了：她在法庭上真正面对的事实，同上述恶魔、嫉妒、软弱、仇恨和贪欲模型完全不同；而这种不同本身又是无法否认的事实。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">转折</div><div><div class="meaning-en"><button class="expr-button" type="button">However</button>, what I was confronted with …<div class="expr-tip"><b>however</b> 标出整段的决定性转折。</div></div><div class="meaning-zh">她从传统叙述转回亲眼所见。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">经验的强度</div><div><div class="meaning-en">what I was <button class="expr-button" type="button">confronted with</button><div class="expr-tip"><b>be confronted with</b> = “直面／不得不面对”。</div></div><div class="meaning-zh">不是抽象想到，而是被现实迎面迫使面对。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">判断</div><div><div class="meaning-en">utterly different and <button class="expr-button" type="button">undeniably factual</button><div class="expr-tip"><b>undeniably</b> = “不可否认地”；<i>factual</i> 强调经验事实。</div></div><div class="meaning-zh">完全不同，却确实是事实。</div></div></div></div>
+      <div class="read-again">重音在：<b>utterly different / still factual</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">然而，我所面对的东西完全不同，却仍是无可否认的事实。</div></details>
+  </div>
 
   <p class="sent"><span class="stext"><span class="n">14</span>I was struck by a <ruby>manifest<rt>明显的</rt></ruby> <ruby>shallowness<rt>浅薄</rt></ruby> in the doer that made it impossible to trace the <ruby>uncontestable<rt>无可争辩的</rt></ruby> evil of his deeds to any deeper level of roots or motives.</span></p>
+  <div class="sentence-aid" data-sentence="14">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">作恶者的浅薄，使深层动机解释失效</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她震惊于作恶者明显的浅薄：行为之恶无可争议，但无法把它追溯到更深的性格根源或邪恶动机。恶很大，作恶者的内在深度却不存在。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">震惊来源</div><div><div class="meaning-en">I was <button class="expr-button" type="button">struck by</button> a manifest shallowness<div class="expr-tip"><b>be struck by</b> = “被……强烈触动／震惊”。</div></div><div class="meaning-zh">浅薄这一事实强烈击中了她。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">浅薄的后果</div><div><div class="meaning-en">made it <button class="expr-button" type="button">impossible to trace</button> the evil … to roots<div class="expr-tip"><b>trace A to B</b> = “把 A 追溯到 B 的来源”。</div></div><div class="meaning-zh">无法把恶追溯到深层根源。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">必须区分</div><div><div class="meaning-en">uncontestable evil of deeds / shallowness <button class="expr-button" type="button">in the doer</button><div class="expr-tip"><b>doer</b> 是行为实施者；句子刻意分开 deeds 与 doer。</div></div><div class="meaning-zh">行为确实邪恶，但人并无相应深度。</div></div></div></div>
+      <div class="read-again">保持不对称：<b>deeds 的恶很深重；doer 却很浅</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">使我震惊的是作恶者身上一种明显的浅薄；这种浅薄使人不可能把其行为无可争议的恶追溯到任何更深层的根源或动机。</div></details>
+  </div>
 
   <p class="sent"><span class="stext"><span class="n">15</span>The deeds were <ruby>monstrous<rt>骇人的</rt></ruby>, but the doer—at least the very effective one now on trial—was quite ordinary, <ruby>commonplace<rt>平庸的</rt></ruby>, and neither demonic nor monstrous.</span></p>
+  <div class="sentence-aid" data-sentence="15">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">骇人的行为由一个普通人有效执行</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">行为骇人，但受审者本人却相当普通和平庸，既不恶魔化也不怪物化。句子的冲击就在行为与行为者之间的巨大不相称。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">行为</div><div><div class="meaning-en">The deeds were <button class="expr-button" type="button">monstrous</button><div class="expr-tip"><b>monstrous</b> 可指骇人的、巨大到反常的。</div></div><div class="meaning-zh">行为本身骇人、怪物般巨大。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">行为者</div><div><div class="meaning-en">but the doer … was <button class="expr-button" type="button">quite ordinary</button><div class="expr-tip"><b>quite ordinary</b> = “相当普通”；破折号内强调这个普通人执行工作很有效。</div></div><div class="meaning-zh">转折后，人却十分普通。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">明确排除</div><div><div class="meaning-en"><button class="expr-button" type="button">neither demonic nor monstrous</button><div class="expr-tip"><b>neither A nor B</b> 同时排除传统的两个想象。</div></div><div class="meaning-zh">他既非恶魔，也非怪物。</div></div></div></div>
+      <div class="read-again">朗读时让 <b>monstrous deeds / ordinary doer</b> 正面碰撞。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">行为是骇人的，但行为者——至少是眼下受审的这个效率极高的行为者——却相当普通、平庸，既不恶魔般，也不怪物般。</div></details>
+  </div>
 
   <p class="sent"><span class="stext"><span class="n">16</span>There was no sign in him of firm <ruby>ideological<rt>意识形态的</rt></ruby> convictions or of specific evil motives, and the only notable characteristic one could detect in his past behavior as well as in his behavior during the trial and throughout the pre-trial police examination was something entirely negative: it was not stupidity but <ruby>thoughtlessness<rt>不思考、无思</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="16">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">唯一显著特征不是愚蠢或恶意，而是不思考</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她找不到坚定的意识形态信念或特殊邪恶动机。审判前后唯一可辨认的特征是一个否定性的缺失：艾希曼并不愚蠢，却不思考。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">没有什么</div><div><div class="meaning-en"><button class="expr-button" type="button">There was no sign</button> of convictions or motives<div class="expr-tip"><b>there was no sign of</b> = “没有任何……的迹象”。</div></div><div class="meaning-zh">看不到坚定意识形态或具体恶意。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">唯一可见的</div><div><div class="meaning-en">the only notable characteristic one could <button class="expr-button" type="button">detect</button><div class="expr-tip"><b>detect</b> = “察觉／辨认出”，常指不易直接看见的东西。</div></div><div class="meaning-zh">在过去、审判和审讯中都只能发现同一特征。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">性质</div><div><div class="meaning-en">something <button class="expr-button" type="button">entirely negative</button><div class="expr-tip"><b>negative</b> 在这里指否定性的缺失，不是单纯“坏”。</div></div><div class="meaning-zh">它不是一种积极存在的品质，而是一种缺失。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">核心区别</div><div><div class="meaning-en">not stupidity but <button class="expr-button" type="button">thoughtlessness</button><div class="expr-tip"><b>thoughtlessness</b> 在这里是“无思／不思考”，不是日常的“不体贴”。</div></div><div class="meaning-zh">不是智力不足，而是不进行思考。</div></div></div></div>
+      <div class="read-again">一路排除到最后：<b>no ideology / no evil motive / not stupidity / thoughtlessness</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在他身上看不到坚定的意识形态信念或特定邪恶动机；而无论在他过去的行为中，还是在审判期间及审判前的警察讯问中，人们所能察觉的唯一显著特征都是某种完全否定性的东西：那不是愚蠢，而是不思考。</div></details>
+  </div>
   <div class="remarks">
     <div class="remark"><span class="tag t-ci">词</span><b>thoughtlessness</b> — <span class="zh">本书的关键词。不是"愚蠢"（stupidity），而是"不思考"：缺乏内在的自我对话与反思。阿伦特由此提出全书的核心问题——思考的活动本身是否能阻止人作恶。</span></div>
   </div>
 
   <p class="sent"><span class="stext"><span class="n">17</span>In the setting of Israeli court and prison procedures he functioned as well as he had functioned under the Nazi regime but, when confronted with situations for which such routine procedures did not exist, he was helpless, and his <ruby>cliché-ridden<rt>满口陈词滥调的</rt></ruby> language produced on the stand, as it had evidently done in his official life, a kind of <ruby>macabre<rt>阴森可怖的</rt></ruby> comedy.</span></p>
+  <div class="sentence-aid" data-sentence="17">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">程序存在时他运作良好；程序消失时他便无能</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">艾希曼能在纳粹制度和以色列法院的既定程序中高效运作；一旦没有常规程序，他就无所适从。他在证人席上重复陈词滥调，制造出一种阴森的喜剧，正暴露了这种依赖。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">有程序时</div><div><div class="meaning-en">he <button class="expr-button" type="button">functioned as well as</button> he had functioned<div class="expr-tip"><b>function</b> 指像系统部件一样运作；<b>as well as</b> 在此表示同样良好。</div></div><div class="meaning-zh">在两套完全不同制度中都能照常运作。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">没有程序时</div><div><div class="meaning-en">situations for which routines <button class="expr-button" type="button">did not exist</button><div class="expr-tip"><b>routine procedures</b> 是惯常、标准化的办事程序。</div></div><div class="meaning-zh">没有现成规则时便失去能力。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">语言表现</div><div><div class="meaning-en">his <button class="expr-button" type="button">cliché-ridden language</button> produced … a comedy<div class="expr-tip"><b>cliché-ridden</b> = “充斥陈词滥调的”；<b>on the stand</b> = “在证人席上”。</div></div><div class="meaning-zh">满是套话的语言制造荒诞效果。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">效果</div><div><div class="meaning-en">a kind of <button class="expr-button" type="button">macabre comedy</button><div class="expr-tip"><b>macabre</b> 指与死亡、恐怖相关的阴森；因此这种“喜剧”令人不寒而栗。</div></div><div class="meaning-zh">可笑与死亡、恐怖同时存在。</div></div></div></div>
+      <div class="read-again">对比两种情形：<b>routine exists → functions；routine absent → helpless</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在以色列法庭和监狱程序的环境中，他运作得同在纳粹政权下一样良好；但是，当他面对不存在这类常规程序的情形时，他便无能为力，而他在证人席上那充斥陈词滥调的语言——显然在其公务生涯中也是如此——制造出一种阴森的喜剧。</div></details>
+  </div>
 
   <p class="sent"><span class="stext"><span class="n">18</span>Clichés, stock phrases, <ruby>adherence<rt>墨守、遵奉</rt></ruby> to <ruby>conventional<rt>因袭的</rt></ruby>, standardized codes of expression and conduct have the socially recognized function of protecting us against reality, that is, against the claim on our thinking attention that all events and facts make by virtue of their existence.</span></p>
+  <div class="sentence-aid" data-sentence="18">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">套话的社会功能，是替我们挡住现实对思考的要求</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">陈词滥调和标准化的言行准则并非偶然缺点；它们具有社会认可的保护功能，使我们不用回应每个事实仅凭其存在便向思考提出的要求。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">保护机制</div><div><div class="meaning-en">Clichés, stock phrases, <button class="expr-button" type="button">adherence to codes</button><div class="expr-tip"><b>adherence to</b> = “坚持遵守／依附于”；<i>codes</i> 是表达和行为准则。</div></div><div class="meaning-zh">套话与遵守标准准则共同形成防护。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">社会功能</div><div><div class="meaning-en">the socially recognized function of <button class="expr-button" type="button">protecting us against reality</button><div class="expr-tip"><b>protect A against B</b> = “保护 A 免受 B 的冲击”。这里 reality 不是危险物，而是要求回应的事实。</div></div><div class="meaning-zh">社会允许它们替人挡住现实。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">现实怎样要求</div><div><div class="meaning-en">the <button class="expr-button" type="button">claim on our thinking attention</button> that events make<div class="expr-tip"><b>a claim on</b> = “对……提出要求／拥有索取权”。</div></div><div class="meaning-zh">事件要求我们把思考注意力交给它。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">为什么有要求</div><div><div class="meaning-en"><button class="expr-button" type="button">by virtue of</button> their existence<div class="expr-tip"><b>by virtue of</b> = “凭借／由于”。</div></div><div class="meaning-zh">事实仅仅因为存在，就要求被思考。</div></div></div></div>
+      <div class="read-again">把定义听完整：<b>protect against reality = protect against reality’s claim on thought</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">陈词滥调、套话，以及对因袭的、标准化的表达和行为准则的遵奉，具有一种受到社会认可的功能：保护我们免受现实的冲击；也就是说，保护我们免受一切事件和事实凭其存在而对我们的思考注意力提出的要求。</div></details>
+  </div>
 
   <p class="sent"><span class="stext"><span class="n">19</span>If we were <ruby>responsive<rt>有所回应的</rt></ruby> to this claim all the time, we would soon be exhausted; Eichmann differed from the rest of us only in that he clearly knew of no such claim at all.</span></p>
+  <div class="sentence-aid" data-sentence="19">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">所有人都靠这种保护生活；艾希曼的不同在于他完全不知道现实有要求</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">如果我们时时回应现实对思考的要求，很快就会精疲力竭，所以普通人偶尔借助套话并不异常。艾希曼与我们的差别仅在于：他似乎从未意识到这种要求存在。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">反事实条件</div><div><div class="meaning-en">If we were <button class="expr-button" type="button">responsive to this claim all the time</button><div class="expr-tip"><b>be responsive to</b> = “对……作出回应”；<i>this claim</i> 承接 S18。</div></div><div class="meaning-zh">若一直回应每个事实的思考要求。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">必然后果</div><div><div class="meaning-en">we would soon be <button class="expr-button" type="button">exhausted</button><div class="expr-tip"><b>exhausted</b> = “精疲力竭的”。虚拟条件说明这种持续回应不现实。</div></div><div class="meaning-zh">持续思考会迅速耗尽我们。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">艾希曼的差异</div><div><div class="meaning-en">differed … <button class="expr-button" type="button">only in that</button> …<div class="expr-tip"><b>differ only in that</b> = “区别仅在于……”。</div></div><div class="meaning-zh">差别只在一个具体方面。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">那个方面</div><div><div class="meaning-en">knew of <button class="expr-button" type="button">no such claim at all</button><div class="expr-tip"><b>not … at all</b> 是彻底否定；<i>such claim</i> 仍指现实对思考注意力的要求。</div></div><div class="meaning-zh">他根本不知道现实会要求思考。</div></div></div></div>
+      <div class="read-again">先承认共同处，再听极端差异：<b>我们不能时时回应；他从不知有要求</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">如果我们始终回应这种要求，我们很快就会精疲力竭；艾希曼与我们其余人的不同仅仅在于，他显然根本不知道存在这样一种要求。</div></details>
+  </div>
 
   <!-- ¶3 -->
   <aside class="practice-note">
-    <b>精读 · sentences 20–47</b>
+    <b>精读 · sentences 1–47</b>
     先把英文朗读一至两次。如果声音过去以后意思仍是一片空白，不要继续机械重复：
     打开“卡住了？”，先看作者在说什么和整句关系；遇到带问号的表达，悬停或点按查看说明。
     只有在意思仍不落地时才展开直译。最后回到原句完整朗读一次。
@@ -877,14 +1116,30 @@
     <span><span class="tag t-zhu">注</span>note 说明</span>
     <span><span class="tag t-ci">词</span>word 词义</span>
   </div>
-  Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 3–8. Text transcribed verbatim from the page image. Introduction continues on p. 8.
+  Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 3–8. Text transcribed verbatim from the page image. Continue to <a href="lotm-thinking-intro-02.html">Introduction II · pp. 8–12 · S49–98</a>.
 </footer>
 
 <script>
   const body=document.body;
   const tRuby=document.getElementById('t-ruby'),
         tRem=document.getElementById('t-rem'),
-        tTrans=document.getElementById('t-trans');
+        tTrans=document.getElementById('t-trans'),
+        tTheme=document.getElementById('t-theme');
+  const setTheme=(theme,remember=false)=>{
+    const dark=theme==='dark';
+    document.documentElement.dataset.theme=dark?'dark':'light';
+    tTheme.setAttribute('aria-pressed',String(dark));
+    tTheme.textContent=dark?'Light Theme':'Dark Theme';
+    tTheme.title=dark?'Switch to Light Theme':'Switch to Dark Theme';
+    document.querySelectorAll('a[href^="thinking-intro"]').forEach(link=>{
+      const target=new URL(link.getAttribute('href'),location.href);
+      target.searchParams.set('theme',dark?'dark':'light');
+      link.href=target.href;
+    });
+    if(remember){try{localStorage.setItem('lotm-reading-theme',dark?'dark':'light');}catch(_){}}
+  };
+  setTheme(document.documentElement.dataset.theme);
+  tTheme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark',true);
   tRuby.onclick=()=>{body.classList.toggle('hide-ruby'); tRuby.classList.toggle('off');};
   tRem.onclick =()=>{body.classList.toggle('hide-remarks'); tRem.classList.toggle('off');};
 
@@ -893,7 +1148,7 @@
     const open=tTrans.getAttribute('aria-pressed')!=='true';
     translations.forEach(item=>item.open=open);
     tTrans.setAttribute('aria-pressed',String(open));
-    tTrans.textContent=open?'收起直译 20–47':'直译 20–47';
+    tTrans.textContent=open?'收起直译 1–47':'直译 1–47';
   };
 
   const rescues=[...document.querySelectorAll('.rescue')];

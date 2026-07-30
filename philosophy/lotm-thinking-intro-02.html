@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Life of the Mind · Thinking · Introduction II</title>
+<script>
+  (()=>{
+    try{
+      const linked=new URLSearchParams(location.search).get('theme');
+      const saved=localStorage.getItem('lotm-reading-theme');
+      const choice=/^(dark|light)$/.test(linked||'')?linked:saved;
+      const dark=choice ? choice==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme=dark?'dark':'light';
+    }catch(_){ document.documentElement.dataset.theme='light'; }
+  })();
+</script>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --blue:#486a8b; --blue-soft:#e7eef5; --green:#4d7358; --green-soft:#e6efe8;
+  }
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#141311; --ink:#e8e0d4; --muted:#aaa092; --line:#3c3730;
+    --amber:#d5a45a; --amber-soft:#382b17; --purple:#c7a7e3; --purple-soft:#30263a;
+    --teal:#82c5b5; --teal-soft:#1d342f; --rose:#dc92a5; --rose-soft:#39242a;
+    --blue:#8fb6d5; --blue-soft:#20303d; --green:#91bd9b; --green-soft:#223529;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+    line-height:1.85;
+  }
+  /* top bar */
+  .bar{
+    position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;
+  }
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem;
+    cursor:pointer; transition:.15s;
+  }
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  .btn[aria-pressed="true"]{background:var(--green-soft); border-color:var(--green); color:var(--green)}
+  /* page */
+  main{max-width:720px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2.2rem}
+  header.doc h1{font-size:1.7rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  /* sentence units */
+  .sent{margin:0; padding:.35rem 0 .35rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .sent:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.6rem}
+  .stext{font-size:1.16rem}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted);
+     vertical-align:.45em; margin-right:.15em; user-select:none}
+  /* inline chinese ruby */
+  ruby{ruby-position:over}
+  rt{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+     font-size:.58em; color:var(--amber); font-weight:500; letter-spacing:.02em;
+     opacity:.92; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  /* remarks */
+  .remarks{margin:.45rem 0 .2rem; padding:.55rem .8rem;
+    background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber);
+    border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.6}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem}
+  .remark b{color:var(--ink)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em;
+    padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-dian{background:var(--purple-soft); color:var(--purple)}   /* 典故 */
+  .t-yin{background:var(--teal-soft); color:var(--teal)}        /* 引用 */
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}      /* 注 */
+  .t-ci{background:var(--rose-soft); color:var(--rose)}         /* 词 */
+  /* guided rescue; S32–47 use the validated meaning-first tree */
+  .practice-note{
+    margin:1.7rem 0 1rem; padding:.8rem 1rem; border:1px solid #cfdde8;
+    border-radius:8px; background:#eef4f8; color:#38536d;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.84rem; line-height:1.65;
+  }
+  .practice-note b{display:block; margin-bottom:.15rem}
+  .sentence-aid{
+    margin:.18rem 0 .7rem .9rem;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    transition:opacity .2s, filter .2s;
+  }
+  .sentence-aid details{border-radius:7px; overflow:hidden}
+  .sentence-aid summary{
+    display:flex; align-items:center; gap:.45rem; cursor:pointer; list-style:none;
+    padding:.38rem .65rem; font-size:.77rem; line-height:1.35; user-select:none;
+  }
+  .sentence-aid summary::-webkit-details-marker{display:none}
+  .sentence-aid summary::before{
+    content:"+"; width:1rem; height:1rem; display:inline-grid; place-items:center;
+    border-radius:50%; font-size:.8rem; font-weight:700; flex:0 0 auto;
+  }
+  .sentence-aid details[open] > summary::before{content:"−"}
+  .summary-hint{color:var(--muted); font-size:.7rem}
+  .rescue{border:1px solid #cfdde8; background:#f6f9fb}
+  .rescue > summary{color:var(--blue)}
+  .rescue > summary::before{background:var(--blue-soft); color:var(--blue)}
+  .translation{margin-top:.28rem; border:1px solid #d5e1d7; background:#f7faf7}
+  .translation > summary{color:var(--green)}
+  .translation > summary::before{background:var(--green-soft); color:var(--green)}
+  .rescue-body{padding:.2rem .75rem .75rem}
+  .step{display:grid; grid-template-columns:4.6rem 1fr; gap:.6rem; padding:.58rem 0}
+  .step + .step{border-top:1px dashed #d9e2e8}
+  .step-label{
+    color:var(--blue); font-size:.67rem; font-weight:750; letter-spacing:.04em;
+    text-transform:uppercase; padding-top:.15rem;
+  }
+  .core-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:1rem; line-height:1.55; color:var(--ink)}
+  .core-en strong{font-weight:650; color:#294e70}
+  .cue{margin-top:.2rem; color:#5f5a52; font-size:.76rem; line-height:1.55}
+  .meaning-overview{
+    margin:.5rem 0 .72rem; padding:.72rem .78rem; border:1px solid #c8d8e4;
+    border-radius:8px; background:#fff;
+  }
+  .meaning-kicker{
+    margin-bottom:.28rem; color:var(--blue); font-size:.68rem; font-weight:750;
+    letter-spacing:.045em;
+  }
+  .meaning-thesis{color:#334b5e; font-size:.86rem; line-height:1.68}
+  .meaning-thesis .next-sentence{color:var(--muted); font-size:.74rem}
+  .meaning-tree{margin:.15rem 0 .7rem}
+  .meaning-node{
+    position:relative; display:grid; grid-template-columns:5.3rem minmax(0,1fr);
+    gap:.58rem; align-items:start; margin-top:.18rem; padding:.42rem .52rem;
+    border-left:2px solid #d1dce4; border-radius:0 5px 5px 0;
+  }
+  .meaning-node.main{margin-left:0; border-left:3px solid var(--blue); background:#edf4f8}
+  .meaning-node.d1{margin-left:1.25rem}
+  .meaning-node.d2{margin-left:2.65rem}
+  .meaning-node.d3{margin-left:4.05rem}
+  .meaning-node:not(.main)::before{
+    content:""; position:absolute; left:-.72rem; top:1.05rem; width:.62rem;
+    border-top:1px solid #c2ced7;
+  }
+  .meaning-label{
+    padding-top:.12rem; color:#687887; font-size:.63rem; font-weight:750;
+    letter-spacing:.035em; line-height:1.3;
+  }
+  .meaning-node.main .meaning-label{color:var(--blue)}
+  .meaning-en{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); font-size:.94rem; line-height:1.48;
+  }
+  .meaning-node.main .meaning-en{font-weight:650; color:#294e70}
+  .meaning-zh{margin-top:.12rem; color:#625d55; font-size:.74rem; line-height:1.52}
+  .pair-word{color:#77541e; font-weight:650}
+  .expr-button{
+    appearance:none; margin:0; padding:.02rem .18rem; border:0;
+    border-bottom:1px dotted #a06e20; border-radius:3px; background:#fff2cf;
+    color:#69480f; font:inherit; line-height:inherit; cursor:help;
+  }
+  .expr-button::after{
+    content:"?"; display:inline-grid; place-items:center; width:.78rem; height:.78rem;
+    margin-left:.22rem; border-radius:50%; background:#dba94f; color:#fff;
+    font-family:system-ui,sans-serif; font-size:.55rem; font-weight:800;
+    vertical-align:.12rem;
+  }
+  .expr-button:focus-visible{outline:2px solid #d4a04a; outline-offset:2px}
+  .expr-tip{
+    display:none; margin:.38rem 0 .06rem; padding:.48rem .58rem;
+    border:1px solid #e3c98e; border-radius:6px; background:#fff9e9;
+    color:#594b33; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.72rem; line-height:1.58;
+  }
+  .expr-button:hover ~ .expr-tip,
+  .expr-button:focus ~ .expr-tip{display:block}
+  .expr-tip b{color:#674916}
+  .chunk-list{display:grid; gap:.32rem}
+  .chunk{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    gap:.65rem; align-items:baseline}
+  .chunk-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); line-height:1.45}
+  .chunk-zh{color:#6d665c; font-size:.74rem; line-height:1.45}
+  .read-again{
+    margin-top:.35rem; padding:.55rem .65rem; border-left:3px solid var(--blue);
+    background:#edf3f7; color:#38536d; font-size:.76rem; line-height:1.55;
+  }
+  .translation-text{padding:.6rem .75rem .72rem; border-top:1px solid #dfe8e0;
+    color:#334d39; font-size:.87rem; line-height:1.7}
+  body.rescue-mode main > .sent,
+  body.rescue-mode main > .remarks,
+  body.rescue-mode main > .sentence-aid,
+  body.rescue-mode main > .practice-note{opacity:.14; filter:saturate(.35)}
+  body.rescue-mode main > .sent.active-sentence,
+  body.rescue-mode main > .sentence-aid.active-aid{opacity:1; filter:none}
+  body.rescue-mode main > .sent.active-sentence{
+    border-left-color:var(--blue); background:#fbfcfd;
+  }
+  @media (max-width:600px){
+    .step{grid-template-columns:1fr; gap:.1rem}
+    .chunk{grid-template-columns:1fr; gap:.05rem; padding:.22rem 0}
+    .sentence-aid{margin-left:.35rem}
+    .meaning-node{grid-template-columns:4.15rem minmax(0,1fr); gap:.38rem}
+    .meaning-node.d1{margin-left:.55rem}
+    .meaning-node.d2{margin-left:1.1rem}
+    .meaning-node.d3{margin-left:1.65rem}
+  }
+  footer{max-width:720px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
+    font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  a{color:var(--blue)}
+  html[data-theme="dark"] body{background:#141311}
+  html[data-theme="dark"] .bar{background:rgba(20,19,17,.94)}
+  html[data-theme="dark"] .btn{background:#211f1b}
+  html[data-theme="dark"] .sent:hover{background:#1c1a17}
+  html[data-theme="dark"] .remarks{background:#1c1a17}
+  html[data-theme="dark"] .practice-note{background:#19242c; border-color:#334858; color:#bed0df}
+  html[data-theme="dark"] .rescue{background:#171f25; border-color:#344754}
+  html[data-theme="dark"] .translation{background:#18211b; border-color:#35483a}
+  html[data-theme="dark"] .step + .step{border-color:#35424a}
+  html[data-theme="dark"] .core-en strong,
+  html[data-theme="dark"] .meaning-node.main .meaning-en{color:#bdd2e3}
+  html[data-theme="dark"] .cue,
+  html[data-theme="dark"] .meaning-zh,
+  html[data-theme="dark"] .chunk-zh{color:#b9afa2}
+  html[data-theme="dark"] .meaning-overview{background:#1c1a17; border-color:#3a4b58}
+  html[data-theme="dark"] .meaning-thesis{color:#c2d3df}
+  html[data-theme="dark"] .meaning-node{border-color:#3b4851}
+  html[data-theme="dark"] .meaning-node.main{background:#1b2932}
+  html[data-theme="dark"] .meaning-node:not(.main)::before{border-color:#49565f}
+  html[data-theme="dark"] .meaning-label{color:#9ba9b4}
+  html[data-theme="dark"] .pair-word{color:#e0b870}
+  html[data-theme="dark"] .expr-button{background:#3b2d17; border-color:#b9893e; color:#f0cb88}
+  html[data-theme="dark"] .expr-tip{background:#292217; border-color:#6e5930; color:#d8c7aa}
+  html[data-theme="dark"] .expr-tip b{color:#f0cb88}
+  html[data-theme="dark"] .read-again{background:#1b2932; color:#bed0df}
+  html[data-theme="dark"] .translation-text{border-color:#344539; color:#bcd5c1}
+  html[data-theme="dark"] body.rescue-mode main > .sent.active-sentence{background:#192229}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; <a href="lotm-thinking-intro.html">Introduction I</a> &nbsp;·&nbsp; pp.&nbsp;8–12</div>
+  <button class="btn" id="t-ruby">中文 注音</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-trans" aria-pressed="false">直译 49–98</button>
+  <button class="btn" id="t-theme" aria-pressed="false" title="Switch to Dark Theme">Dark Theme</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Introduction II</h1>
+    <div class="sub">Hannah Arendt, <i>The Life of the Mind</i> · Volume One: Thinking · printed pp. 8–12</div>
+  </header>
+  <aside class="practice-note"><b>精读 · sentences 49–98</b>先把英文朗读一至两次。卡住时先看作者在说什么和整句关系；遇到带问号的表达，悬停或点按查看说明。只有在意思仍不落地时才展开直译，最后回到原句完整朗读一次。</aside>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">49</span>Obviously, to raise such questions has its difficulties.</span></p>
+  <div class="sentence-aid" data-sentence="49">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她先承认：问题本身难以提出</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">在追问“思考时我们在做什么、身在何处”之前，她先承认：这些问题难以提出，因为它们立即把人带回已经失去信誉的哲学与形而上学。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">承认困难</div><div><div class="meaning-en">to <button class="expr-button" type="button">raise such questions</button> has its difficulties<div class="expr-tip"><b>raise a question</b> = “提出一个问题”；<i>has its difficulties</i> 表示有其特有难处。</div></div><div class="meaning-zh">提出这些问题本身就有困难。</div></div></div></div>
+      <div class="read-again">这是过渡句：<b>核心问题已经提出 → 现在说明为何难谈</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">显然，提出这样的问题有其困难。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">50</span>At first glance, they seem to belong to what used to be called “philosophy” or “metaphysics,” two terms and two fields of <ruby>inquiry<rt>探究领域</rt></ruby> that, as we all know, have fallen into <ruby>disrepute<rt>声名狼藉</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="50">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">困难来自这些问题所属领域的失信</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">乍看之下，这些问题属于过去叫作哲学或形而上学的领域；但到阿伦特写作时，这两个名称和领域都已失去信誉。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">初步归类</div><div><div class="meaning-en"><button class="expr-button" type="button">At first glance</button>, they seem to belong to …<div class="expr-tip"><b>at first glance</b> = “乍看之下”。</div></div><div class="meaning-zh">这只是第一眼的判断，后面会修正。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">旧名称</div><div><div class="meaning-en">what <button class="expr-button" type="button">used to be called</button> philosophy or metaphysics<div class="expr-tip"><b>used to be called</b> 表示过去如此称呼、如今名称已成问题。</div></div><div class="meaning-zh">这些问题过去会被归入哲学或形而上学。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">现实处境</div><div><div class="meaning-en">have <button class="expr-button" type="button">fallen into disrepute</button><div class="expr-tip"><b>fall into disrepute</b> = “声誉败坏／失去公信力”。</div></div><div class="meaning-zh">两个领域已经名誉扫地。</div></div></div></div>
+      <div class="read-again">主线：<b>问题像哲学问题 → 但哲学和形而上学已失信</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">乍看之下，它们似乎属于过去所谓的“哲学”或“形而上学”；这两个名称和两个探究领域，众所周知，都已声名狼藉。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">51</span>If this were merely a matter of modern positivist and neo-positivist <ruby>assaults<rt>攻击</rt></ruby>, we perhaps need not be concerned.</span></p>
+  <div class="sentence-aid" data-sentence="51">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">如果只有外部攻击，问题还不严重</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">如果形而上学的困境只来自现代实证主义和新实证主义的外部攻击，阿伦特认为也许不必太担心；真正严重的是后面所说的内部崩塌。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">反事实条件</div><div><div class="meaning-en">If this were <button class="expr-button" type="button">merely a matter of</button> … assaults<div class="expr-tip"><b>merely a matter of</b> = “仅仅是……的问题”。</div></div><div class="meaning-zh">假如问题只不过是外部攻击。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">可能结论</div><div><div class="meaning-en">we perhaps <button class="expr-button" type="button">need not be concerned</button><div class="expr-tip"><b>need not</b> = “不必”，不是“不能”。</div></div><div class="meaning-zh">那就未必值得担忧。</div></div></div></div>
+      <div class="read-again">听出 <b>merely</b>：外部批评并非真正难题。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">如果这仅仅是现代实证主义和新实证主义攻击的问题，我们也许不必担心。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">52</span>Carnap’s statement that metaphysics should be regarded as poetry certainly goes counter to the claims usually made by metaphysicians; but these, like Carnap’s own evaluation, may be based on an <ruby>underestimation<rt>低估</rt></ruby> of poetry.</span></p>
+  <div class="sentence-aid" data-sentence="52">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">双方也许都低估了诗</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">卡尔纳普把形而上学贬为诗，当然违背形而上学家的自我主张；但阿伦特反过来说，双方的评价都可能因为低估诗而站不住脚。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">卡尔纳普的判断</div><div><div class="meaning-en">metaphysics should be <button class="expr-button" type="button">regarded as poetry</button><div class="expr-tip"><b>regard A as B</b> = “把 A 看作 B”。</div></div><div class="meaning-zh">他把形而上学归为诗，而非知识。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">冲突</div><div><div class="meaning-en"><button class="expr-button" type="button">goes counter to</button> metaphysicians’ claims<div class="expr-tip"><b>go counter to</b> = “与……相抵触”。</div></div><div class="meaning-zh">这违背形而上学家的知识主张。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">阿伦特的反转</div><div><div class="meaning-en">may be based on an <button class="expr-button" type="button">underestimation of poetry</button><div class="expr-tip"><b>be based on</b> = “以……为基础”；<i>underestimation</i> 是低估。</div></div><div class="meaning-zh">也许问题在于双方都把诗看低了。</div></div></div></div>
+      <div class="read-again">别只听“形而上学像诗”；结尾反问的是：<b>为什么诗就低一等？</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">卡尔纳普所说“形而上学应被视为诗”，当然与形而上学家通常提出的主张相抵触；但是这些主张同卡尔纳普自己的评价一样，也许都建立在对诗的低估之上。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Carnap and metaphysics</b> — <span class="zh">鲁道夫·卡尔纳普是逻辑实证主义代表人物，主张许多形而上学命题没有认知意义；把它们比作诗，意在否定其知识主张。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">53</span>Heidegger, whom Carnap <ruby>singled out<rt>特别挑出</rt></ruby> for attack, <ruby>retorted<rt>反驳</rt></ruby> by stating that philosophy and poetry were indeed closely related; they were not identical but sprang from the same source—which is thinking.</span></p>
+  <div class="sentence-aid" data-sentence="53">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">海德格尔接受亲缘性，却拒绝贬低诗</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">卡尔纳普特别攻击海德格尔；海德格尔的回应不是否认哲学与诗相近，而是说两者虽不相同，却共同源于思考。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">攻击对象</div><div><div class="meaning-en">whom Carnap <button class="expr-button" type="button">singled out for attack</button><div class="expr-tip"><b>single out</b> = “从众多对象中特别挑出”。</div></div><div class="meaning-zh">卡尔纳普特别以海德格尔为靶子。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">回应方式</div><div><div class="meaning-en"><button class="expr-button" type="button">retorted by stating</button> that …<div class="expr-tip"><b>retort</b> = “反驳／回嘴”；<i>by stating</i> 说明反驳方式。</div></div><div class="meaning-zh">海德格尔用一个相反判断回击。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">核心回答</div><div><div class="meaning-en">not identical but <button class="expr-button" type="button">sprang from the same source</button><div class="expr-tip"><b>spring from</b> = “发源于／产生于”。这个共同源头就是思考。</div></div><div class="meaning-zh">哲学与诗不同，却同源。</div></div></div></div>
+      <div class="read-again">听出精确关系：<b>closely related ≠ identical；共同源头是 thinking</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">海德格尔——卡尔纳普特别挑出来攻击的人——反驳说，哲学与诗确实关系密切；它们并不相同，却发源于同一个源头——思考。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Carnap versus Heidegger</b> — <span class="zh">卡尔纳普曾以海德格尔的语言为无意义形而上学的典型；海德格尔则强调诗与哲学都扎根于思考。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">54</span>And Aristotle, whom so far no one has accused of writing “mere” poetry, was of the same opinion: poetry and philosophy somehow belong together.</span></p>
+  <div class="sentence-aid" data-sentence="54">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">亚里士多德使“诗—哲学亲缘”不再只是海德格尔的辩护</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特补上亚里士多德：没人会说他只是写诗，可他也认为诗与哲学彼此相属。因此两者的亲缘并非海德格尔为自己开脱。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">反讽限定</div><div><div class="meaning-en">no one has accused of writing <button class="expr-button" type="button">“mere” poetry</button><div class="expr-tip"><b>mere</b> = “不过是／仅仅是”，引号显示这种贬低性的说法。</div></div><div class="meaning-zh">亚里士多德绝不会被轻易贬成诗人。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">共同判断</div><div><div class="meaning-en">was <button class="expr-button" type="button">of the same opinion</button><div class="expr-tip"><b>be of the opinion</b> = “持有某种意见”。</div></div><div class="meaning-zh">亚里士多德与海德格尔持相同看法。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">结论</div><div><div class="meaning-en">poetry and philosophy <button class="expr-button" type="button">belong together</button><div class="expr-tip"><b>belong together</b> = “天然相关、应当放在一起理解”。</div></div><div class="meaning-zh">诗与哲学在某种意义上彼此相属。</div></div></div></div>
+      <div class="read-again">这是一条佐证：<b>不只是 Heidegger；Aristotle 也这样认为</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">而且亚里士多德——迄今还没有人指责他写“仅仅是”诗的东西——也持相同意见：诗与哲学以某种方式彼此相属。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Aristotle on poetry and philosophy</b> — <span class="zh">亚里士多德在《诗学》等著作中把诗视为比单纯历史叙述更接近普遍性的活动，因此诗与哲学并非简单对立。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">55</span>Wittgenstein’s famous <ruby>aphorism<rt>格言</rt></ruby> “What we cannot speak of we must be silent about,” which argues on the other side, would, if taken seriously, apply not only to what lies beyond sense experience but even more to objects of sensation.</span></p>
+  <div class="sentence-aid" data-sentence="55">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">维特根斯坦的禁令如果认真执行，也会伤及感官世界</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">维特根斯坦从另一边主张：不能说的就保持沉默。阿伦特指出，若严格执行，这条禁令不只排除超感性事物，反而更会排除我们直接看、听、触到的感官对象，因为感受也无法被语言等量复制。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">另一方</div><div><div class="meaning-en">which <button class="expr-button" type="button">argues on the other side</button><div class="expr-tip"><b>argue on the other side</b> = “为争论的另一方立论”。</div></div><div class="meaning-zh">这句格言站在限制语言的一方。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">认真执行</div><div><div class="meaning-en">would, <button class="expr-button" type="button">if taken seriously</button>, apply …<div class="expr-tip"><b>take something seriously</b> = “认真对待并接受其后果”。</div></div><div class="meaning-zh">如果按字面和全部后果来贯彻。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">意外范围</div><div><div class="meaning-en">not only beyond experience <button class="expr-button" type="button">but even more to objects of sensation</button><div class="expr-tip"><b>not only A but even more B</b> 把重点推进到更意外的 B。</div></div><div class="meaning-zh">它更会适用于感官对象。</div></div></div></div>
+      <div class="read-again">反转在结尾：<b>不可说的不只超感性；感官所给也更不可说尽</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">维特根斯坦的著名格言“凡不能说的，就必须保持沉默”站在另一边；但如果认真对待，它不仅适用于超出感官经验的东西，甚至更适用于感觉对象。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Wittgenstein’s aphorism</b> — <span class="zh">出自《逻辑哲学论》7：“对于不可说的东西，我们必须保持沉默。”阿伦特把这条语言界限反过来施用于感官经验。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">56</span>Nothing we see or hear or touch can be expressed in words that equal what is given to the senses.</span></p>
+  <div class="sentence-aid" data-sentence="56">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">语言无法与感觉所给完全等量</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">我们看见、听见、触到的具体经验，无法用与感觉内容完全等量的词语表达。语言与感官世界之间本就存在差距。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">彻底否定</div><div><div class="meaning-en"><button class="expr-button" type="button">Nothing</button> we see or hear or touch<div class="expr-tip"><b>nothing</b> 把后面的三种感觉全部纳入否定。</div></div><div class="meaning-zh">任何感官对象都不例外。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">语言的限度</div><div><div class="meaning-en">words that <button class="expr-button" type="button">equal what is given</button> to the senses<div class="expr-tip"><b>equal</b> 在这里是“与……完全相等／等量”；<i>what is given</i> 是直接呈现给感官的内容。</div></div><div class="meaning-zh">词语无法完全等同于感觉内容。</div></div></div></div>
+      <div class="read-again">核心不是“语言完全不能说”，而是：<b>words cannot equal sensory givenness</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我们所看见、听见或触到的任何东西，都无法用与感官所给之物完全相等的词语表达。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">57</span>Hegel was right when he pointed out that “the This of sense . . . cannot be reached by language.”⁸</span></p>
+  <div class="sentence-aid" data-sentence="57">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">黑格尔把同一差距称作语言无法抵达感觉的“这个”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特赞同黑格尔：语言使用普遍词语，而感觉给出的是不可重复的“这个”；因此语言无法抵达感觉对象的纯粹个别性。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">她的判断</div><div><div class="meaning-en">Hegel <button class="expr-button" type="button">was right when</button> he pointed out …<div class="expr-tip"><b>be right when</b> = “在……这一点上是正确的”。</div></div><div class="meaning-zh">她明确赞同黑格尔这一点。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">无法抵达</div><div><div class="meaning-en">the This of sense <button class="expr-button" type="button">cannot be reached by language</button><div class="expr-tip"><b>the This of sense</b> 是眼前不可替代的个别对象；语言一说“这个”，词本身仍是普遍的。</div></div><div class="meaning-zh">语言够不到感觉的纯粹个别“这个”。</div></div></div></div>
+      <div class="read-again">抓住对立：<b>感觉给个别 This；语言只能用可重复的词</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">黑格尔指出“感觉的‘这个’……是语言无法抵达的”，这一点是对的。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Hegel, “the This of sense”</b> — <span class="zh">出自《精神现象学》“感性确定性”。黑格尔指出，语言无法说出纯粹个别的“这个”，因为说出的词总具有普遍性。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">58</span>Was it not precisely the discovery of a <ruby>discrepancy<rt>不一致、裂隙</rt></ruby> between words, the medium in which we think, and the world of appearances, the medium in which we live, that led to philosophy and metaphysics in the first place?</span></p>
+  <div class="sentence-aid" data-sentence="58">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">也许哲学正是由语言与显现世界的裂隙产生</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她用反问提出：哲学和形而上学最初也许正源自一个发现——我们在词语中思考，却生活在显现世界中，而这两种媒介并不重合。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">反问强调</div><div><div class="meaning-en">Was it not <button class="expr-button" type="button">precisely the discovery</button> … that led …?<div class="expr-tip">这是疑问形式的强调句：<b>正是……导致了……，不是吗？</b></div></div><div class="meaning-zh">她把“裂隙的发现”放在强调位置。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">裂隙两端</div><div><div class="meaning-en">words, <button class="expr-button" type="button">the medium in which we think</button><div class="expr-tip"><b>medium</b> = “媒介／所在环境”。第二端是我们生活的显现世界。</div></div><div class="meaning-zh">词语是思考的媒介。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">历史结果</div><div><div class="meaning-en"><button class="expr-button" type="button">led to</button> philosophy and metaphysics<div class="expr-tip"><b>lead to</b> = “导致／引向”。<i>in the first place</i> = “最初”。</div></div><div class="meaning-zh">这个裂隙促成哲学与形而上学。</div></div></div></div>
+      <div class="read-again">反问的答案是“是”：<b>words/world discrepancy → philosophy</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">最初导致哲学和形而上学的，不正是这样一种裂隙的发现吗：词语是我们思考的媒介，而显现世界是我们生活的媒介？</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">59</span>Except that in the beginning, it was thinking, in the form either of <i>logos</i> or of <i>noēsis</i>, that was held to reach truth or true Being, while by the end the emphasis had shifted to what is given to perception and to the <ruby>implements<rt>工具</rt></ruby> by which we can extend and sharpen our bodily senses.</span></p>
+  <div class="sentence-aid" data-sentence="59">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">历史两端把信任投给相反的媒介</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">但哲学史开端相信思考（logos 或 noēsis）能抵达真理与真实存在；到近代末端，信任转向知觉及增强感官的仪器。权威从思考移到了感官。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">开端的信任</div><div><div class="meaning-en">thinking … <button class="expr-button" type="button">was held to reach</button> truth<div class="expr-tip"><b>be held to do</b> = “被认为能够做”。<i>logos/noēsis</i> 是理性言说／心智把握的形式。</div></div><div class="meaning-zh">思考被认为能抵达真理。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">历史转移</div><div><div class="meaning-en">the emphasis <button class="expr-button" type="button">had shifted to</button> perception<div class="expr-tip"><b>shift to</b> = “转移到”。<i>by the end</i> 与 <i>in the beginning</i> 对照。</div></div><div class="meaning-zh">重点后来转向知觉。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">知觉的工具</div><div><div class="meaning-en">implements by which we <button class="expr-button" type="button">extend and sharpen</button> our senses<div class="expr-tip"><b>extend and sharpen</b> = “扩展范围并提高敏锐度”。</div></div><div class="meaning-zh">仪器扩大并提高身体感官。</div></div></div></div>
+      <div class="read-again">听成历史对照：<b>beginning—thinking reaches truth / end—perception gains authority</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">只不过，在开端，被认为能够抵达真理或真实存在的是思考——其形式或为 <i>logos</i>，或为 <i>noēsis</i>；而到最后，重点已经转向知觉所给予的东西，以及那些能扩展并磨利我们身体感官的工具。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b><i>logos</i> / <i>noēsis</i></b> — <span class="zh"><i>logos</i> 可指言说、理性与论证；<i>noēsis</i> 指心智的理解或直观活动。两者在古代都被赋予通达真理的能力。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">60</span>It seems only natural that the former will <ruby>discriminate against<rt>歧视、贬低</rt></ruby> appearances and the latter against thought.</span></p>
+  <div class="sentence-aid" data-sentence="60">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">两种立场会各自贬低对方</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">如果把真理权威交给思考，便会贬低显现；如果交给感官与知觉，便会贬低思考。两种偏见都由各自的起点自然产生。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">两端指什么</div><div><div class="meaning-en"><button class="expr-button" type="button">the former</button> / the latter<div class="expr-tip"><b>the former</b> 指先提到的一项；<b>the latter</b> 指后提到的一项。</div></div><div class="meaning-zh">前者是思考优先，后者是知觉优先。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">对称结果</div><div><div class="meaning-en"><button class="expr-button" type="button">discriminate against</button> appearances / thought<div class="expr-tip"><b>discriminate against</b> = “歧视／不公平地贬低”。</div></div><div class="meaning-zh">双方各自贬低另一边。</div></div></div></div>
+      <div class="read-again">对称地听：<b>thinking against appearances / perception against thought</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">前者歧视显现、后者歧视思考，似乎是再自然不过的事。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">61</span>Our difficulties with metaphysical questions are caused not so much by those to whom they are “meaningless” anyhow as by the party under attack.</span></p>
+  <div class="sentence-aid" data-sentence="61">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">真正的危机来自形而上学内部</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">形而上学问题的困难，主要不是外部实证主义者宣布它们“无意义”，而是被攻击的哲学家和形而上学家自己也不再相信自己的事业。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">比较结构</div><div><div class="meaning-en"><button class="expr-button" type="button">not so much by</button> outsiders as by the attacked party<div class="expr-tip"><b>not so much A as B</b> = “与其说是 A，不如说是 B”，重点在 B。</div></div><div class="meaning-zh">与其说由外部敌人造成，不如说由被攻击方造成。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">外部者</div><div><div class="meaning-en">those to whom they are <button class="expr-button" type="button">“meaningless” anyhow</button><div class="expr-tip"><b>anyhow</b> = “反正／无论如何”，表示其立场早已确定。</div></div><div class="meaning-zh">实证主义者本来就认为这些问题无意义。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">真正来源</div><div><div class="meaning-en"><button class="expr-button" type="button">the party under attack</button><div class="expr-tip"><b>party</b> 在这里是争论中的一方；<i>under attack</i> 是正受攻击。</div></div><div class="meaning-zh">形而上学阵营自身。</div></div></div></div>
+      <div class="read-again">重音放在后半：<b>not outsiders / but philosophers themselves</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我们面对形而上学问题的困难，与其说是由那些反正认为它们“无意义”的人造成的，不如说是由受到攻击的那一方造成的。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">62</span>For just as the crisis in theology reached its <ruby>climax<rt>顶点</rt></ruby> when theologians, as distinguished from the old crowd of non-believers, began to talk about the “God is dead” proposition, so the crisis in philosophy and metaphysics came into the open when the philosophers themselves began to declare the end of philosophy and metaphysics.</span></p>
+  <div class="sentence-aid" data-sentence="62">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">危机在内部人宣布自身终结时公开爆发</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">神学危机的顶点不是无神论者否认上帝，而是神学家自己谈“上帝已死”；同样，哲学危机真正公开，是哲学家自己宣布哲学和形而上学终结。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">平行框架</div><div><div class="meaning-en"><button class="expr-button" type="button">just as</button> theology …, so philosophy …<div class="expr-tip"><b>just as A, so B</b> = “正如 A，同样 B”。</div></div><div class="meaning-zh">两场危机按同一结构比较。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">神学的顶点</div><div><div class="meaning-en">theologians … began to talk about <button class="expr-button" type="button">“God is dead”</button><div class="expr-tip"><b>as distinguished from</b> = “区别于”。关键不是旧有不信者，而是神学家。</div></div><div class="meaning-zh">内部神学家接受死亡命题。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">哲学公开危机</div><div><div class="meaning-en">philosophers themselves <button class="expr-button" type="button">declare the end</button> of philosophy<div class="expr-tip"><b>come into the open</b> = “公开显现”；<i>themselves</i> 加强内部来源。</div></div><div class="meaning-zh">哲学家亲自宣布自身终结。</div></div></div></div>
+      <div class="read-again">两个内部转折：<b>theologians say God is dead / philosophers say philosophy ends</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因为，正如当神学家——不同于过去那群不信者——开始谈论“上帝已死”这一命题时，神学危机达到顶点；同样，当哲学家自己开始宣布哲学和形而上学的终结时，哲学与形而上学的危机才公开显现。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">63</span>By now this is an old story.</span></p>
+  <div class="sentence-aid" data-sentence="63">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">这些“终结宣言”已经不是新闻</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">到她写作时，哲学家宣布哲学和形而上学终结，早已成为反复讲述的旧事。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">时间判断</div><div><div class="meaning-en"><button class="expr-button" type="button">By now</button> this is an old story<div class="expr-tip"><b>by now</b> = “到现在为止”；<i>an old story</i> = “老生常谈／旧闻”。</div></div><div class="meaning-zh">截至现在，这件事已众所周知。</div></div></div></div>
+      <div class="read-again">这是压缩句：<b>内部危机早已公开且反复发生</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">到如今，这已经是一个老故事了。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">64</span>(The attraction of Husserl’s phenomenology sprang from the anti-historical and anti-metaphysical <ruby>implications<rt>含义、后果</rt></ruby> of the slogan “<i>Zu den Sachen selbst</i>”; and Heidegger, who “seemingly remained on the metaphysical track,” actually also aimed at “overcoming metaphysics,” as he has repeatedly proclaimed since 1930.⁹)</span></p>
+  <div class="sentence-aid" data-sentence="64">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">现象学和海德格尔也参与“超越形而上学”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">胡塞尔“回到事情本身”的号召吸引人，正在于它的反历史、反形而上学意味；而看似仍走形而上学道路的海德格尔，也明确以“克服形而上学”为目标。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">胡塞尔的吸引力</div><div><div class="meaning-en"><button class="expr-button" type="button">sprang from</button> the implications of the slogan<div class="expr-tip"><b>spring from</b> = “源自／产生于”。</div></div><div class="meaning-zh">吸引力源自口号的思想后果。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">口号方向</div><div><div class="meaning-en">anti-historical and <button class="expr-button" type="button">anti-metaphysical implications</button><div class="expr-tip"><b>implication</b> 是未明说但包含的意义或后果。</div></div><div class="meaning-zh">口号暗含摆脱历史体系与形而上学。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">海德格尔的表面与实际</div><div><div class="meaning-en">seemingly remained … / <button class="expr-button" type="button">actually aimed at overcoming</button><div class="expr-tip"><b>aim at doing</b> = “以做某事为目标”；<i>seemingly/actually</i> 构成反差。</div></div><div class="meaning-zh">表面仍在轨道上，实际要克服它。</div></div></div></div>
+      <div class="read-again">括号给两个例子：<b>Husserl 反形而上学；Heidegger 也要 overcoming metaphysics</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">（胡塞尔现象学的吸引力，来自“回到事情本身”这一口号所含的反历史、反形而上学意味；而海德格尔虽然“看似仍留在形而上学轨道上”，实际上也以“克服形而上学”为目标——自 1930 年以来他已反复这样宣称。）</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b><i>Zu den Sachen selbst</i> / overcoming metaphysics</b> — <span class="zh">胡塞尔的口号意为“回到事情本身”；海德格尔则把自己的计划描述为克服西方形而上学传统，而非再建立一个传统体系。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">65</span>It was not Nietzsche but Hegel who first declared that the “sentiment underlying religion in the modern age [is] the sentiment: God is dead.”¹⁰</span></p>
+  <div class="sentence-aid" data-sentence="65">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">“上帝已死”作为现代宗教感受，先由黑格尔提出</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特纠正常见归属：最早把“上帝已死”说成现代宗教底层情感的不是尼采，而是黑格尔。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">纠正归属</div><div><div class="meaning-en"><button class="expr-button" type="button">not Nietzsche but Hegel</button><div class="expr-tip"><b>not A but B</b> 排除 A、确认 B。</div></div><div class="meaning-zh">否定通常想到的尼采，强调黑格尔。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">宣告内容</div><div><div class="meaning-en">the <button class="expr-button" type="button">sentiment underlying religion</button> in the modern age<div class="expr-tip"><b>underlie</b> = “构成……的基础／潜伏在……之下”。</div></div><div class="meaning-zh">现代宗教底层的情感是上帝已死。</div></div></div></div>
+      <div class="read-again">把重音放在名字：<b>not Nietzsche / Hegel first</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">最早宣称“现代宗教背后的情感［是］这种情感：上帝已死”的，不是尼采，而是黑格尔。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Hegel, “God is dead”</b> — <span class="zh">阿伦特强调，“上帝已死”在尼采之前已出现在黑格尔对现代宗教意识的描述中。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">66</span>Sixty years ago, the <i>Encyclopaedia Britannica</i> felt quite safe in treating “metaphysics” as philosophy “under its most discredited name,”¹¹ and if we wish to trace this disrepute further back, we encounter Kant most prominently among the <ruby>detractors<rt>贬斥者</rt></ruby>, not the Kant of the <i>Critique of Pure Reason</i>, whom Moses Mendelssohn called the “all-destroyer,” the <i>alles Zermalmer</i>, but Kant in his pre-critical writings, where he quite freely admits that “it was [his] fate to fall in love with metaphysics” but also speaks of its “bottomless abyss,” its “slippery ground,” its utopian “land of milk and honey” (<i>Schlaraffenland</i>) where the “Dreamers of reason” dwell as though in an “airship,” so that “there exists no folly which could not be brought to agree with a groundless wisdom.”¹²</span></p>
+  <div class="sentence-aid" data-sentence="66">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">连热爱形而上学的康德，也早已猛烈贬斥它</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">形而上学的坏名声由来已久：百科全书公开把它称作哲学最失信的名字；再往前，康德一面承认自己爱上形而上学，一面把它描写成无底深渊、滑地和让无根据智慧容纳一切愚行的乌托邦。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">公开坏名声</div><div><div class="meaning-en">philosophy <button class="expr-button" type="button">under its most discredited name</button><div class="expr-tip"><b>discredited</b> = “已丧失信誉的”。</div></div><div class="meaning-zh">“形而上学”被当作哲学最失信的名称。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">追溯更早</div><div><div class="meaning-en"><button class="expr-button" type="button">trace this disrepute further back</button><div class="expr-tip"><b>trace A back</b> = “追溯 A 的历史源头”。</div></div><div class="meaning-zh">继续向历史早期寻找坏名声来源。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">康德的双重态度</div><div><div class="meaning-en">fate to fall in love / <button class="expr-button" type="button">bottomless abyss</button><div class="expr-tip"><b>bottomless abyss</b> = “无底深渊”；<i>slippery ground</i> 是无法站稳的滑地。</div></div><div class="meaning-zh">他既爱形而上学，又把它视作危险深渊。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">最终讽刺</div><div><div class="meaning-en">no folly … agree with <button class="expr-button" type="button">a groundless wisdom</button><div class="expr-tip"><b>bring A to agree with B</b> = “使 A 与 B 相符合”；<i>groundless</i> 是无根据。</div></div><div class="meaning-zh">无根基的智慧可以替任何愚行辩护。</div></div></div></div>
+      <div class="read-again">不要迷失在引文清单：<b>Kant 爱 metaphysics，却最知道它危险而无根基</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">六十年前，《大英百科全书》还很有把握地把“形而上学”视为哲学“最声名狼藉的名称”；如果我们还想把这种坏名声追溯得更早，在贬斥者中最显眼地遇到的是康德——不是《纯粹理性批判》的康德（摩西·门德尔松称他为“全摧毁者”，<i>alles Zermalmer</i>），而是其前批判时期著作中的康德：他坦率承认“爱上形而上学是［他的］命运”，却又谈到它的“无底深渊”“湿滑地面”以及乌托邦式的“奶与蜜之乡”（<i>Schlaraffenland</i>）；“理性的梦想家”仿佛住在那里的“飞艇”中，以至于“没有任何愚行不能被弄得同一种无根据的智慧相符合”。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Kant’s images of metaphysics</b> — <span class="zh">康德一生既被形而上学吸引，又不断批判其无根据的推测。<i>Schlaraffenland</i> 是德语传说中的安逸丰饶幻想乡。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">67</span>All that needs to be said today on this subject has been admirably said by Richard McKeon: In the long and complicated history of thought, this “awesome science” has never produced “general conviction concerning [its] function . . . nor indeed much <ruby>consensus<rt>共识</rt></ruby> of opinion concerning its subject matter.”¹³</span></p>
+  <div class="sentence-aid" data-sentence="67">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">形而上学从未就自身功能和对象形成共识</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特借麦基翁概括：形而上学虽自称令人敬畏的科学，在漫长历史中却从未使人普遍信服它有什么功能，甚至连它研究什么都缺乏共识。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">高度赞同</div><div><div class="meaning-en">has been <button class="expr-button" type="button">admirably said by</button> Richard McKeon<div class="expr-tip"><b>admirably</b> = “令人钦佩地／极出色地”。</div></div><div class="meaning-zh">她认为麦基翁已极好地概括问题。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">第一种失败</div><div><div class="meaning-en">never produced <button class="expr-button" type="button">general conviction</button> concerning its function<div class="expr-tip"><b>general conviction</b> = “普遍确信”。</div></div><div class="meaning-zh">人们从未普遍相信它的功能。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">第二种失败</div><div><div class="meaning-en">nor … much <button class="expr-button" type="button">consensus of opinion</button><div class="expr-tip"><b>consensus</b> = “共同意见／共识”；<i>nor indeed</i> 加强第二项否定。</div></div><div class="meaning-zh">对研究对象也没有多少共识。</div></div></div></div>
+      <div class="read-again">两个 never：<b>无功能确信 / 无对象共识</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">今天关于这个题目需要说的一切，理查德·麦基翁已经说得极好：在漫长而复杂的思想史中，这门“令人敬畏的科学”从未产生“关于［其］功能的普遍确信……甚至也未就其研究对象产生多少意见共识”。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Richard McKeon</b> — <span class="zh">麦基翁是二十世纪美国哲学家与思想史家；阿伦特借其判断强调形而上学长期缺乏统一的对象和方法。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">68</span>In view of this history of <ruby>detraction<rt>贬斥</rt></ruby>, it is rather surprising that the very word “metaphysics” has been able to survive at all.</span></p>
+  <div class="sentence-aid" data-sentence="68">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">坏名声如此持久，名称竟还能存活</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">鉴于形而上学长期遭到内部和外部贬斥，真正令人惊讶的反而是“形而上学”这个词竟一直没有消失。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">考虑背景</div><div><div class="meaning-en"><button class="expr-button" type="button">In view of</button> this history<div class="expr-tip"><b>in view of</b> = “考虑到／鉴于”。</div></div><div class="meaning-zh">鉴于前述整个历史。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">惊讶对象</div><div><div class="meaning-en">the very word … <button class="expr-button" type="button">has been able to survive at all</button><div class="expr-tip"><b>at all</b> 加强惊讶：竟然还能有任何形式的存续。</div></div><div class="meaning-zh">连这个名称本身都还能存活。</div></div></div></div>
+      <div class="read-again">不是惊讶它衰落，而是：<b>被贬这么久，词还活着</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">鉴于这段贬斥的历史，“形而上学”这个词本身竟然还能存活，颇为令人惊讶。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">69</span>One almost suspects that Kant was right when as a very old man, after having dealt a <ruby>deathblow<rt>致命打击</rt></ruby> to the “awesome science,” he <ruby>prophesied<rt>预言</rt></ruby> that men will surely return to metaphysics “as one returns to one’s mistress after a quarrel” (<i>wie zu einer entzweiten Geliebten</i>).¹⁴</span></p>
+  <div class="sentence-aid" data-sentence="69">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">形而上学也许会像争吵后的情人一样被重新找回</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">形而上学屡遭致命批判却仍存活，让人几乎相信老年康德的预言：人终会回到形而上学，就像争吵后又回到情人身边。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">保留语气</div><div><div class="meaning-en">One <button class="expr-button" type="button">almost suspects</button> that Kant was right<div class="expr-tip"><b>almost suspects</b> 带半认真、半反讽的保留。</div></div><div class="meaning-zh">她几乎要怀疑康德说对了，但尚未认同。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">康德的矛盾位置</div><div><div class="meaning-en">after having <button class="expr-button" type="button">dealt a deathblow to</button> the science<div class="expr-tip"><b>deal a deathblow to</b> = “给……以致命打击”。</div></div><div class="meaning-zh">他自己曾给形而上学致命打击。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">预言比喻</div><div><div class="meaning-en">return … <button class="expr-button" type="button">as one returns to one’s mistress after a quarrel</button><div class="expr-tip"><b>return to</b> 的两个对象形成比喻：回到形而上学如同回到闹翻的情人。</div></div><div class="meaning-zh">争吵并未终结吸引，人会再回来。</div></div></div></div>
+      <div class="read-again">悖论是：<b>Kant 击倒 metaphysics，却预言人会重返它</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">人几乎会怀疑康德是对的：他年事已高时，在给这门“令人敬畏的科学”以致命打击之后，预言人们必定会回到形而上学，“就像一个人在争吵后回到自己的情人身边”（<i>wie zu einer entzweiten Geliebten</i>）。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Kant’s mistress simile</b> — <span class="zh">康德把人类对形而上学的持续吸引比作与情人争吵后仍会回头；批判不能消除理性提出终极问题的冲动。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">70</span>I do not think this very likely or even desirable.</span></p>
+  <div class="sentence-aid" data-sentence="70">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她拒绝康德式的“重返形而上学”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特随即收回上一句的半认真猜测：她不认为人真会回到旧形而上学，也不认为这种回归值得期待。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">双重否定</div><div><div class="meaning-en">not very likely <button class="expr-button" type="button">or even desirable</button><div class="expr-tip"><b>not A or even B</b> 同时否定可能性和价值；<i>even</i> 把否定推进到“值得希望”。</div></div><div class="meaning-zh">既不大可能，甚至也不可取。</div></div></div></div>
+      <div class="read-again">这句直接否定上一句：<b>return is neither likely nor desirable</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我认为这既不大可能，甚至也并不可取。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">71</span>Yet before we begin to <ruby>speculate<rt>推测</rt></ruby> about the possible advantages of our present situation, it may be wise to reflect upon what we really mean when we observe that theology, philosophy, metaphysics have reached an end—certainly not that God has died, something about which we can know as little as about God’s existence (so little, in fact, that even the word “existence” is misplaced), but that the way God had been thought of for thousands of years is no longer convincing; if anything is dead, it can only be the traditional <i>thought</i> of God.</span></p>
+  <div class="sentence-aid" data-sentence="71">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">“上帝之死”是传统思想失效，不是关于上帝本身的知识</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">在讨论旧传统崩塌可能带来的好处前，必须澄清“神学、哲学、形而上学终结”的含义：我们无从知道上帝是否死亡或存在；真正失去说服力并“死去”的，只是数千年来思考上帝的传统方式。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">先暂停乐观推测</div><div><div class="meaning-en">before we <button class="expr-button" type="button">speculate about</button> possible advantages<div class="expr-tip"><b>speculate about</b> = “推测／思索尚未确定之事”。</div></div><div class="meaning-zh">先别急着讨论危机的好处。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">终结不意味着</div><div><div class="meaning-en"><button class="expr-button" type="button">certainly not that God has died</button><div class="expr-tip">破折号后用 <b>not … but …</b> 澄清“终结”的准确对象。</div></div><div class="meaning-zh">这不是关于上帝本体的事实判断。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">为何不能这样说</div><div><div class="meaning-en">we can know <button class="expr-button" type="button">as little as</button> about God’s existence<div class="expr-tip"><b>know as little about A as B</b> = “对 A 与 B 同样知之甚少”。</div></div><div class="meaning-zh">死亡与存在同样不可知。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">真正死去的</div><div><div class="meaning-en">the traditional <button class="expr-button" type="button">thought of God</button><div class="expr-tip">这里 <i>thought</i> 被强调：不是 God，而是关于 God 的传统思想失去说服力。</div></div><div class="meaning-zh">死的是传统思考方式。</div></div></div></div>
+      <div class="read-again">把否定和确认分开：<b>not God / but the traditional thought of God</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">然而，在我们开始推测当前处境可能具有的好处之前，或许最好先反思：当我们说神学、哲学和形而上学已经终结时，我们真正是什么意思——当然不是说上帝已经死了；对此我们所知，同对上帝存在所知一样少（事实上少到连“存在”这个词都用错了）；而是说，数千年来人们思考上帝的方式已不再令人信服。如果有什么死了，那只能是关于上帝的传统思想。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">72</span>And something similar is true of the end of philosophy and metaphysics: not that the old questions which are <ruby>coeval<rt>同时出现的</rt></ruby> with the appearance of men on earth have become “meaningless,” but that the way they were framed and answered has lost <ruby>plausibility<rt>可信性</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="72">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">旧问题未死，失效的是传统问法和答案</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">哲学和形而上学的“终结”也不意味着古老问题变得无意义；问题与人类同样古老，失去可信度的是传统构造问题和回答问题的方式。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">明确排除</div><div><div class="meaning-en"><button class="expr-button" type="button">not that</button> the old questions … became meaningless<div class="expr-tip"><b>not that A, but that B</b> = “并非 A，而是 B”。</div></div><div class="meaning-zh">不是问题本身失去意义。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">问题的年龄</div><div><div class="meaning-en"><button class="expr-button" type="button">coeval with</button> the appearance of men<div class="expr-tip"><b>coeval with</b> = “与……同龄／同时出现”。</div></div><div class="meaning-zh">这些问题与人类出现同时。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">真正失效</div><div><div class="meaning-en">the way they were <button class="expr-button" type="button">framed and answered</button><div class="expr-tip"><b>frame a question</b> = “构造／表述问题”；<i>lose plausibility</i> = “失去可信性”。</div></div><div class="meaning-zh">传统问法与答法不再可信。</div></div></div></div>
+      <div class="read-again">再一次区分：<b>questions remain / traditional framing loses plausibility</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">哲学和形而上学的终结也有类似情形：并不是那些与人类在地球上的出现同样古老的问题已经变得“无意义”，而是人们构造并回答这些问题的方式已经失去可信性。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">73</span>What has come to an end is the basic distinction between the sensory and the <ruby>suprasensory<rt>超感性的</rt></ruby>, together with the notion, at least as old as Parmenides, that whatever is not given to the senses—God or Being or the First Principles and Causes (<i>archai</i>) or the Ideas—is more real, more truthful, more meaningful than what appears, that it is not just beyond sense perception but <i>above</i> the world of the senses.</span></p>
+  <div class="sentence-aid" data-sentence="73">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">终结的是“两世界”区分及其等级</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">真正终结的是感性与超感性之间的基本划分，以及从巴门尼德以来的等级观：上帝、存在、第一原理或理念等不可感知之物，被视为比显现之物更真实、更真、更有意义，不只在感觉之外，而且高于感觉世界。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">终结对象</div><div><div class="meaning-en">the basic distinction between <button class="expr-button" type="button">the sensory and the suprasensory</button><div class="expr-tip"><b>sensory</b> 是感官可及的；<b>suprasensory</b> 是超出感官的。</div></div><div class="meaning-zh">感性世界与超感性世界的二分。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">与二分同时终结</div><div><div class="meaning-en"><button class="expr-button" type="button">together with the notion</button> that …<div class="expr-tip"><b>together with</b> = “连同……一起”。</div></div><div class="meaning-zh">二分还携带一个价值等级。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">等级内容</div><div><div class="meaning-en">more real, more truthful, <button class="expr-button" type="button">more meaningful</button> than appearances<div class="expr-tip">三个比较级共同建立超感性世界的优越性。</div></div><div class="meaning-zh">不可感者被置于显现之上。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不只是位置</div><div><div class="meaning-en">not just beyond … <button class="expr-button" type="button">but above</button> the senses<div class="expr-tip"><b>not just A but B</b> 从中性距离推进到价值上的上下等级。</div></div><div class="meaning-zh">不仅超出，而且高于。</div></div></div></div>
+      <div class="read-again">核心不是只有“两边”，而是：<b>suprasensory 被放在 sensory 之上</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">已经终结的是感性与超感性之间的基本区分，以及一个至少同巴门尼德一样古老的观念：凡未给予感官的东西——上帝、存在、第一原理与原因（<i>archai</i>）或理念——都比显现之物更真实、更真、更有意义；它们不仅在感知之外，而且高于感官世界。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Parmenides and the two-world hierarchy</b> — <span class="zh">巴门尼德区分真理之路与意见之路，成为西方传统中“真实存在高于感官显现”这一等级的重要开端。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">74</span>What is “dead” is not only the <ruby>localization<rt>定位、安置</rt></ruby> of such “eternal truths” but also the distinction itself.</span></p>
+  <div class="sentence-aid" data-sentence="74">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">死去的不只是“真理在哪里”，而是二分本身</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">被宣告死亡的，不只是把永恒真理安置在某个超感性领域的做法；连“感性／超感性”这条区分本身也失效了。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">第一层死亡</div><div><div class="meaning-en">the <button class="expr-button" type="button">localization</button> of eternal truths<div class="expr-tip"><b>localization</b> = “给……确定位置／所在领域”。</div></div><div class="meaning-zh">把真理放置在超感性世界。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">更深一层</div><div><div class="meaning-en">not only … <button class="expr-button" type="button">but also the distinction itself</button><div class="expr-tip"><b>the distinction itself</b> 强调不是搬动边界，而是边界本身消失。</div></div><div class="meaning-zh">连支撑定位的二分也死去。</div></div></div></div>
+      <div class="read-again">推进关系：<b>not only location / the distinction itself</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">“死去”的不仅是把这些“永恒真理”安置在某处的做法，还有这一区分本身。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">75</span>Meanwhile, in increasingly <ruby>strident<rt>尖厉的</rt></ruby> voices the few defenders of metaphysics have warned us of the danger of nihilism inherent in this development; and although they themselves seldom <ruby>invoke<rt>援引</rt></ruby> it, they have an important argument in their favor: it is indeed true that once the suprasensory realm is discarded, its opposite, the world of appearances as understood for so many centuries, is also <ruby>annihilated<rt>消灭</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="75">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">取消超感性世界，也会取消它定义出来的显现世界</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">形而上学的少数辩护者警告这会导致虚无主义。他们有一个重要理由：感性世界长期被定义为超感性世界的低等对立面；一旦丢弃超感性领域，这个意义上的“显现世界”也随之消失。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">警告</div><div><div class="meaning-en">warned of the danger of nihilism <button class="expr-button" type="button">inherent in</button> this development<div class="expr-tip"><b>inherent in</b> = “内在于／固有于”。</div></div><div class="meaning-zh">他们认为虚无主义内含于这一进程。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">她承认的论据</div><div><div class="meaning-en">they have an argument <button class="expr-button" type="button">in their favor</button><div class="expr-tip"><b>in one’s favor</b> = “对某人立场有利”。</div></div><div class="meaning-zh">阿伦特承认辩护者有一项有力理由。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">关键条件</div><div><div class="meaning-en">once the suprasensory realm <button class="expr-button" type="button">is discarded</button><div class="expr-tip"><b>discard</b> = “丢弃／取消”。<i>once</i> 在这里是“一旦”。</div></div><div class="meaning-zh">只要超感性领域被抛弃。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">连带结果</div><div><div class="meaning-en">its opposite … <button class="expr-button" type="button">is also annihilated</button><div class="expr-tip"><b>annihilate</b> = “彻底消灭”。重点是两个对立项彼此定义。</div></div><div class="meaning-zh">由它定义的显现世界也被消灭。</div></div></div></div>
+      <div class="read-again">逻辑不是怀念天堂，而是：<b>一边作为对立项消失 → 另一边的旧意义也消失</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">与此同时，少数形而上学辩护者以越来越尖厉的声音警告我们：这一发展内含着虚无主义的危险；而且，尽管他们自己很少援引这一点，他们确实有一个有利于自己的重要论据：一旦超感性领域被抛弃，它的对立面——数世纪以来人们所理解的显现世界——也确实会被一并消灭。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">76</span>The sensory, as still understood by the positivists, cannot survive the death of the suprasensory.</span></p>
+  <div class="sentence-aid" data-sentence="76">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">实证主义保留的“感性”仍依赖其超感性对立面</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">实证主义者以为可以丢掉超感性、只保留感性事实；但他们所理解的“感性”正是旧二分的一半，无法在另一半死亡后原样存活。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">限定</div><div><div class="meaning-en">The sensory, <button class="expr-button" type="button">as still understood by</button> the positivists<div class="expr-tip"><b>as understood by</b> = “按照……的理解方式”。</div></div><div class="meaning-zh">这里批评的是实证主义仍沿用的旧概念。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">依赖关系</div><div><div class="meaning-en">cannot <button class="expr-button" type="button">survive the death of</button> the suprasensory<div class="expr-tip"><b>survive the death of</b> = “在……死亡后继续存在”。</div></div><div class="meaning-zh">一端不能在另一端死亡后独存。</div></div></div></div>
+      <div class="read-again">一句话的依赖：<b>sensory 的旧意义靠 suprasensory 定义</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">按照实证主义者仍在使用的理解，感性领域无法在超感性领域死亡之后继续存活。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">77</span>No one knew this better than Nietzsche, who, with his poetic and <ruby>metaphoric<rt>隐喻性的</rt></ruby> description of the assassination of God,¹⁵ has caused so much confusion in these matters.</span></p>
+  <div class="sentence-aid" data-sentence="77">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">尼采最懂连带崩塌，却被“杀死上帝”的比喻遮蔽</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">尼采比任何人都清楚两世界会一起崩塌；但他以诗性隐喻描写“谋杀上帝”，反而让人误以为只需杀掉超感性一边，从而造成混乱。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">最高程度</div><div><div class="meaning-en"><button class="expr-button" type="button">No one knew this better than</button> Nietzsche<div class="expr-tip"><b>no one … better than</b> 表达最高程度：“没有人比他更……”。</div></div><div class="meaning-zh">尼采最清楚这一点。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">表达方式</div><div><div class="meaning-en">poetic and metaphoric description of <button class="expr-button" type="button">the assassination of God</button><div class="expr-tip"><b>assassination</b> 是蓄意刺杀；这里是诗性隐喻。</div></div><div class="meaning-zh">他把传统崩塌写成谋杀上帝。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">意外效果</div><div><div class="meaning-en">has <button class="expr-button" type="button">caused so much confusion</button><div class="expr-tip"><b>cause confusion</b> = “造成混乱／误解”。</div></div><div class="meaning-zh">强烈比喻反而造成许多误解。</div></div></div></div>
+      <div class="read-again">保持两面：<b>Nietzsche 最懂 / 他的比喻却最容易让人误解</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">没有人比尼采更清楚这一点；然而，他用诗性和隐喻性的方式描述对上帝的谋杀，却在这些问题上造成了如此多的混乱。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Nietzsche’s “death of God”</b> — <span class="zh">《快乐的科学》中的“疯子”说“我们杀死了上帝”。阿伦特强调这不是关于神的生死，而是形而上学超感性领域的崩塌。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">78</span>In a significant passage in <i>The Twilight of Idols</i>, he clarifies what the word “God” meant in the earlier story.</span></p>
+  <div class="sentence-aid" data-sentence="78">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">尼采用“真实世界”澄清“上帝”的哲学含义</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">在《偶像的黄昏》的一段关键文字里，尼采解释了先前“上帝已死”故事中的“上帝”：它代表形而上学的超感性真实世界。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">文本位置</div><div><div class="meaning-en">a <button class="expr-button" type="button">significant passage</button> in <i>The Twilight of Idols</i><div class="expr-tip"><b>significant</b> = “意义重大／关键的”。</div></div><div class="meaning-zh">这段文字对理解比喻具有关键意义。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">澄清对象</div><div><div class="meaning-en"><button class="expr-button" type="button">clarifies what</button> the word God meant<div class="expr-tip"><b>clarify</b> = “澄清”；<i>what … meant</i> 是被澄清的内容。</div></div><div class="meaning-zh">解释“上帝”在故事中指什么。</div></div></div></div>
+      <div class="read-again">这句是引文导语：<b>God = metaphysical true world</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在《偶像的黄昏》的一段重要文字中，他澄清了早先故事里的“上帝”一词是什么意思。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b><i>The Twilight of the Idols</i></b> — <span class="zh">尼采在“‘真实世界’如何最终变成寓言”一节追踪并取消形而上学的真实／表象二分。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">79</span>It was merely a symbol for the suprasensory realm as understood by metaphysics; he now uses, instead of “God,” the expression “true world” and says: “We have abolished the true world. What has remained? The apparent one perhaps? Oh no! With the true world we have also abolished the apparent one.”¹⁶</span></p>
+  <div class="sentence-aid" data-sentence="79">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">取消“真实世界”也取消“表象世界”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">“上帝”只是形而上学超感性领域的象征。尼采用“真实世界”替换这个词，并明确说：废除真实世界时，表象世界也不会剩下，因为“表象”原本就是相对于“真实”才成立。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">符号含义</div><div><div class="meaning-en">a symbol for <button class="expr-button" type="button">the suprasensory realm</button><div class="expr-tip"><b>a symbol for</b> = “……的象征”。</div></div><div class="meaning-zh">上帝在此代表形而上学的超感性世界。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">改用术语</div><div><div class="meaning-en">uses, <button class="expr-button" type="button">instead of God</button>, “true world”<div class="expr-tip"><b>instead of</b> = “代替／而不是”。</div></div><div class="meaning-zh">用哲学概念替换宗教意象。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">关键结论</div><div><div class="meaning-en">With the true world <button class="expr-button" type="button">we have also abolished the apparent one</button><div class="expr-tip"><b>abolish</b> = “废除”。表象世界只作为真实世界的对立面而存在。</div></div><div class="meaning-zh">取消一端，同时取消另一端。</div></div></div></div>
+      <div class="read-again">引文的逻辑：<b>no true world → no merely apparent world</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">“上帝”不过是形而上学所理解的超感性领域的一个象征；尼采现在不用“上帝”，而改用“真实世界”这个说法，并说道：“我们已经废除了真实世界。还剩下什么？也许是表象世界？哦，不！随着真实世界，我们也废除了表象世界。”</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Nietzsche’s two-world abolition</b> — <span class="zh">引文说明尼采并非用“表象世界”取代“真实世界”，而是取消两者及其差别。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">80</span>This insight of Nietzsche’s, namely, that “the elimination of the suprasensory also eliminates the merely sensory and thereby the difference between them” (Heidegger),¹⁷ is actually so obvious that it defies every attempt to date it historically; all thinking in terms of two worlds implies that these two are inseparably connected with each other.</span></p>
+  <div class="sentence-aid" data-sentence="80">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">两世界只作为一对关系存在</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">尼采的洞见并非某个可精确断代的新发现：只要用“两个世界”来思考，就已经假定两者相互连接。取消超感性一边，便同时取消“仅仅感性”及二者差别。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">洞见内容</div><div><div class="meaning-en">elimination of one <button class="expr-button" type="button">also eliminates</button> the other<div class="expr-tip"><b>eliminate</b> = “消除”；<i>thereby</i> = “从而”。</div></div><div class="meaning-zh">消除超感性也消除感性及其差别。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">明显到无法断代</div><div><div class="meaning-en">so obvious that it <button class="expr-button" type="button">defies every attempt to date it</button><div class="expr-tip"><b>defy an attempt</b> = “使某种尝试无法成功”；<i>date</i> 作动词是确定年代。</div></div><div class="meaning-zh">这种关系不是某时才出现的理论。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">根本理由</div><div><div class="meaning-en">two worlds are <button class="expr-button" type="button">inseparably connected</button><div class="expr-tip"><b>inseparably</b> = “不可分离地”。</div></div><div class="meaning-zh">二者在概念上彼此依存。</div></div></div></div>
+      <div class="read-again">关键不是先后，而是关系：<b>two worlds define each other</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">尼采的这一洞见——即“消除超感性也会消除仅仅感性的东西，并由此消除二者的差别”（海德格尔）——实际上如此明显，以至于无法在历史上给它确定日期；凡是以两个世界来思考，都意味着这两个世界不可分割地彼此连接。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">81</span>Thus, all the <ruby>elaborate<rt>精心构造的</rt></ruby> modern arguments against positivism are anticipated by the unsurpassed simplicity of Democritus’ little dialogue between the mind, the organ for the suprasensory, and the senses.</span></p>
+  <div class="sentence-aid" data-sentence="81">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">德谟克利特的短对话已预演现代反实证主义</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">现代反实证主义的复杂论证，其核心早已包含在德谟克利特的简单对话中：心灵依赖感官证据，却又试图推翻感官。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">后来已被先行表达</div><div><div class="meaning-en">arguments <button class="expr-button" type="button">are anticipated by</button> the dialogue<div class="expr-tip"><b>anticipate</b> 在这里不是“期待”，而是“先于后来者表达”。</div></div><div class="meaning-zh">古代对话预先包含现代论证。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">强烈对比</div><div><div class="meaning-en">elaborate arguments / <button class="expr-button" type="button">unsurpassed simplicity</button><div class="expr-tip"><b>unsurpassed</b> = “无可超越的”。</div></div><div class="meaning-zh">复杂现代论证不及古代对话简洁有力。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">对话双方</div><div><div class="meaning-en">mind … and <button class="expr-button" type="button">the senses</button><div class="expr-tip"><i>organ for the suprasensory</i> 说明心灵在二世界结构中的位置。</div></div><div class="meaning-zh">超感性心灵与感官互相争论。</div></div></div></div>
+      <div class="read-again">听成一个历史压缩：<b>modern complexity already inside Democritus’ simple dialogue</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因此，现代一切反对实证主义的复杂论证，都已被德谟克利特那段极其简洁、无可超越的小对话预先表达出来；对话发生在心灵——超感性事物的器官——与感官之间。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Democritus’ mind-senses dialogue</b> — <span class="zh">这段残篇让心灵贬低感官为幻象，感官则反击：心灵的一切证据都来自感官，推翻感官也会使心灵自身垮台。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">82</span>Sense perceptions are illusions, says the mind; they change according to the conditions of our body; sweet, bitter, color, and so on exist only <i>nomō</i>, by convention among men, and not <i>physei</i>, according to true nature behind the appearances.</span></p>
+  <div class="sentence-aid" data-sentence="82">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">心灵先指控感官只给出随身体变化的约定</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">心灵说感觉是幻象：甜、苦、颜色会随身体条件而变，只在人类约定中存在，并不属于表象背后的真实自然。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">心灵的指控</div><div><div class="meaning-en">Sense perceptions are <button class="expr-button" type="button">illusions</button><div class="expr-tip"><b>illusion</b> = “幻象／误导性的显现”。</div></div><div class="meaning-zh">感官不提供真实本性。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">为何不可靠</div><div><div class="meaning-en">change <button class="expr-button" type="button">according to the conditions</button> of our body<div class="expr-tip"><b>according to</b> = “依照／随着”。</div></div><div class="meaning-zh">感受随身体状态变化。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">两种存在方式</div><div><div class="meaning-en">only <button class="expr-button" type="button">nomō … not physei</button><div class="expr-tip">希腊语 <i>nomō</i> = 依习俗／约定；<i>physei</i> = 依自然。</div></div><div class="meaning-zh">只依约定存在，不按自然本性存在。</div></div></div></div>
+      <div class="read-again">心灵的论证：<b>感觉会变 → 只是 nomō，不是 physei</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">心灵说，感觉知觉是幻象；它们会随我们身体的条件而改变；甜、苦、颜色等等只在 <i>nomō</i>——人类约定——中存在，而不在 <i>physei</i>——表象背后的真实自然——中存在。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">83</span>Whereupon the senses answer: “Wretched mind! Do you overthrow us while you take from us your evidence [<i>pisteis</i>, everything you can trust]? Our overthrow will be your downfall.”¹⁸</span></p>
+  <div class="sentence-aid" data-sentence="83">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">感官反击：心灵推翻自己的证据来源，也会一起垮台</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">感官回应心灵：你的一切可信证据都取自我们；如果你推翻感官，就同时毁掉自己赖以论证的基础。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">回应发生</div><div><div class="meaning-en"><button class="expr-button" type="button">Whereupon</button> the senses answer<div class="expr-tip"><b>whereupon</b> = “于是／紧接着”。</div></div><div class="meaning-zh">心灵说完后，感官立即反击。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">自我矛盾</div><div><div class="meaning-en">you <button class="expr-button" type="button">take from us your evidence</button><div class="expr-tip"><b>take A from B</b> = “从 B 获取 A”。<i>pisteis</i> 指可相信的证据。</div></div><div class="meaning-zh">心灵的证据来自感官。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">连带垮台</div><div><div class="meaning-en">Our overthrow will be <button class="expr-button" type="button">your downfall</button><div class="expr-tip"><b>overthrow</b> 是推翻；<b>downfall</b> 是垮台。</div></div><div class="meaning-zh">推翻感官就是毁掉心灵自身。</div></div></div></div>
+      <div class="read-again">感官的反击只有一条：<b>your evidence comes from us</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">于是感官回答：“可怜的心灵！你一面从我们这里取得你的证据［<i>pisteis</i>，即一切你能信赖的东西］，一面又要推翻我们吗？我们的覆灭将是你的垮台。”</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">84</span>In other words, once the always <ruby>precarious<rt>不稳固的</rt></ruby> balance between the two worlds is lost, no matter whether the “true world” abolishes the “apparent one” or <i>vice versa</i>, the whole framework of reference in which our thinking was accustomed to orient itself breaks down.</span></p>
+  <div class="sentence-aid" data-sentence="84">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">无论哪一边消灭另一边，整个坐标系都会崩塌</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">两个世界之间的平衡一直不稳定，却为传统思考提供坐标。无论真实世界消灭表象世界，还是反过来，失去其中一边都会使整个参照框架崩溃。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">条件</div><div><div class="meaning-en">once the balance <button class="expr-button" type="button">is lost</button><div class="expr-tip"><b>once</b> = “一旦”；<i>precarious</i> 表示本来就不稳固。</div></div><div class="meaning-zh">二世界平衡一旦失去。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">方向不重要</div><div><div class="meaning-en">no matter whether A … <button class="expr-button" type="button">or vice versa</button><div class="expr-tip"><b>vice versa</b> = “反过来也一样”。</div></div><div class="meaning-zh">无论哪一边取消哪一边。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">最终结果</div><div><div class="meaning-en">framework … <button class="expr-button" type="button">breaks down</button><div class="expr-tip"><b>orient oneself</b> = “确定方向／定位”；<b>break down</b> = “失效、崩溃”。</div></div><div class="meaning-zh">思考赖以定位的坐标系崩溃。</div></div></div></div>
+      <div class="read-again">不要选边：<b>either abolition → framework breaks down</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">换句话说，一旦两个世界之间始终不稳固的平衡丧失，无论是“真实世界”消灭“表象世界”，还是反过来，我们的思考一向用来确定方向的整个参照框架都会崩溃。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">85</span>In these terms, nothing seems to make much sense any more.</span></p>
+  <div class="sentence-aid" data-sentence="85">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">旧坐标失效后，旧概念中的一切都难再成立</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">在“真实／表象”这套旧术语中，一旦二分框架崩塌，任何东西都不再显得很有意义。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">限定框架</div><div><div class="meaning-en"><button class="expr-button" type="button">In these terms</button><div class="expr-tip"><b>in these terms</b> = “用这些概念／按照这套说法”。</div></div><div class="meaning-zh">在上述两世界概念中。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">结果</div><div><div class="meaning-en">nothing seems to <button class="expr-button" type="button">make much sense any more</button><div class="expr-tip"><b>make sense</b> = “有意义／讲得通”；<i>any more</i> = “不再”。</div></div><div class="meaning-zh">旧语言中的意义全面失灵。</div></div></div></div>
+      <div class="read-again">短句总结：<b>framework gone → its terms stop making sense</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">按照这些概念，似乎一切都不再有多少意义。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">86</span>These modern “deaths”—of God, metaphysics, philosophy, and, by implication, positivism—have become events of considerable historical consequence, since, with the beginning of our century, they have ceased to be the exclusive concern of an intellectual elite and instead are not so much the concern as the common <ruby>unexamined<rt>未经检验的</rt></ruby> assumption of nearly everybody.</span></p>
+  <div class="sentence-aid" data-sentence="86">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">“死亡”已从精英论题变成大众未经检验的常识</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">上帝、形而上学、哲学乃至实证主义的“死亡”，在二十世纪成为重要历史事件：它们不再只是知识精英讨论的问题，而变成几乎人人默认、却未加检验的共同前提。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">涉及哪些死亡</div><div><div class="meaning-en">God, metaphysics, philosophy, <button class="expr-button" type="button">and by implication positivism</button><div class="expr-tip"><b>by implication</b> = “按逻辑含义也包括”。</div></div><div class="meaning-zh">实证主义也随其对立面一起被牵连。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">为何有历史后果</div><div><div class="meaning-en">ceased to be the <button class="expr-button" type="button">exclusive concern</button> of an elite<div class="expr-tip"><b>exclusive concern</b> = “专属关注事项”。</div></div><div class="meaning-zh">不再只属于知识精英。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">更准确的社会状态</div><div><div class="meaning-en">not so much a concern as <button class="expr-button" type="button">a common unexamined assumption</button><div class="expr-tip"><b>not so much A as B</b> = “与其说 A，不如说 B”。</div></div><div class="meaning-zh">人们不是主动关心，而是无意识默认。</div></div></div></div>
+      <div class="read-again">社会转变：<b>elite debate → everybody’s unexamined assumption</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这些现代的“死亡”——上帝、形而上学、哲学，以及按逻辑也包括实证主义的死亡——已经成为具有重大历史后果的事件，因为自本世纪开始，它们不再是知识精英专属的关切，而与其说是关切，不如说是几乎每个人共同而未经检验的假定。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">87</span>With this political aspect of the matter we are not concerned here.</span></p>
+  <div class="sentence-aid" data-sentence="87">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她暂时把政治权威问题放在书外</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">这些共同假定如何成为社会和政治权威的问题，并不是此处的研究对象；她要把注意力收回到思考能力本身。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">排除范围</div><div><div class="meaning-en">we are <button class="expr-button" type="button">not concerned here</button> with the political aspect<div class="expr-tip"><b>be concerned with</b> = “研究／处理”，不是“担心”。</div></div><div class="meaning-zh">此处不处理政治层面。</div></div></div></div>
+      <div class="read-again">这是范围声明：<b>political aspect outside this inquiry</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我们在这里不讨论这件事的政治层面。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">88</span>In our context, it may even be better to leave the issue, which actually is one of political authority, outside our considerations, and to insist, rather, on the simple fact that, however seriously our ways of thinking may be involved in this crisis, our ability to think is not at stake; we are what men always have been—thinking beings.</span></p>
+  <div class="sentence-aid" data-sentence="88">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">传统思维危机并未毁掉人的思考能力</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">“死亡”危机涉及的是政治权威和既有思维方式，不应与人的思考能力混同。传统框架可以崩塌，但人仍是历来如此的思考存在者，思考能力并未受到威胁。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">研究选择</div><div><div class="meaning-en"><button class="expr-button" type="button">leave the issue outside</button> our considerations<div class="expr-tip"><b>leave A outside B</b> = “把 A 排除在 B 之外”。</div></div><div class="meaning-zh">把政治权威问题暂时排除。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">让步</div><div><div class="meaning-en"><button class="expr-button" type="button">however seriously</button> our ways of thinking are involved<div class="expr-tip"><b>however + 副词</b> = “无论多么……”。</div></div><div class="meaning-zh">既有思维方式无论陷入危机多深。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">必须坚持</div><div><div class="meaning-en">our ability to think <button class="expr-button" type="button">is not at stake</button><div class="expr-tip"><b>be at stake</b> = “处于成败／存亡关头”。</div></div><div class="meaning-zh">人的思考能力并未处于危险中。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">根本事实</div><div><div class="meaning-en">we are … <button class="expr-button" type="button">thinking beings</button><div class="expr-tip">破折号后的短语重新命名人类，而非赞美某种专业能力。</div></div><div class="meaning-zh">人始终是会思考的存在者。</div></div></div></div>
+      <div class="read-again">区分两件事：<b>ways of thinking can collapse / ability to think remains</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在我们的语境中，最好甚至把这个实际上属于政治权威的问题排除在考察之外，而坚持一个简单事实：无论我们的思维方式多么深地卷入这场危机，我们的思考能力并未受到威胁；我们仍是人类历来所是的那种存在——思考的存在者。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">89</span>By this I mean no more than that men have an <ruby>inclination<rt>倾向</rt></ruby>, perhaps a need, to think beyond the limitations of knowledge, to do more with this ability than use it as an instrument for knowing and doing.</span></p>
+  <div class="sentence-aid" data-sentence="89">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">“思考存在者”只表示人有超出知识用途的思考需要</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她并未声称人总能正确或深刻地思考；“思考存在者”只意味着人有一种倾向、也许是一种需要，要越过知识边界使用思考，而不只把它当作求知和行动的工具。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">限制主张</div><div><div class="meaning-en">I mean <button class="expr-button" type="button">no more than that</button> …<div class="expr-tip"><b>no more than</b> = “仅仅／不超过”。</div></div><div class="meaning-zh">她只提出一个最低限度判断。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">人的驱力</div><div><div class="meaning-en">an inclination, <button class="expr-button" type="button">perhaps a need</button>, to think<div class="expr-tip"><b>inclination</b> = “倾向”；<i>perhaps</i> 保留判断。</div></div><div class="meaning-zh">思考不只可能是倾向，也可能是需要。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">超越什么</div><div><div class="meaning-en">think <button class="expr-button" type="button">beyond the limitations of knowledge</button><div class="expr-tip"><b>beyond the limitations of</b> = “越出……的限制”。</div></div><div class="meaning-zh">思考超出可知的界限。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不只作为工具</div><div><div class="meaning-en">do more … than <button class="expr-button" type="button">use it as an instrument</button><div class="expr-tip"><b>do more with A than B</b> = “对 A 的运用不只 B”。</div></div><div class="meaning-zh">思考的用途不止知识和行动。</div></div></div></div>
+      <div class="read-again">最低定义：<b>humans need to think beyond knowing and doing</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我这样说无非是指：人具有一种倾向，也许是一种需要，要思考超出知识限制的东西，并且对这种能力的运用不止于把它当作求知和行动的工具。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">90</span>To talk about nihilism in this context is perhaps just unwillingness to part company with concepts and thought-trains that actually died quite some time ago, though their demise has been publicly acknowledged only recently.</span></p>
+  <div class="sentence-aid" data-sentence="90">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">所谓虚无主义，也许只是舍不得已经死去的思想框架</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">在这种处境中谈“虚无主义”，也许不表示世界真的毫无意义，而只是人们不愿告别早已失效的概念和思路；它们只是最近才被公开承认已经死亡。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">重新解释虚无主义</div><div><div class="meaning-en">To talk about nihilism … is perhaps <button class="expr-button" type="button">just unwillingness</button><div class="expr-tip"><b>unwillingness to</b> = “不愿意做……”。</div></div><div class="meaning-zh">“虚无主义”也许首先是一种不肯放手。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不愿告别</div><div><div class="meaning-en"><button class="expr-button" type="button">part company with</button> concepts and thought-trains<div class="expr-tip"><b>part company with</b> = “与……分开／告别”；<i>thought-train</i> 是连续的思路。</div></div><div class="meaning-zh">与旧概念和思想脉络分道扬镳。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">死亡与承认的时差</div><div><div class="meaning-en">died long ago / <button class="expr-button" type="button">acknowledged only recently</button><div class="expr-tip"><b>demise</b> = “死亡／终结”；<i>publicly acknowledged</i> = “被公开承认”。</div></div><div class="meaning-zh">实际失效很早，公开承认很晚。</div></div></div></div>
+      <div class="read-again">她在削弱“虚无主义”的戏剧性：<b>旧思想早已死去，只是我们现在才承认并且仍不肯放手</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在这种语境中谈论虚无主义，也许只是不愿同那些事实上早已死去、只是最近才被公开承认已经终结的概念和思想脉络分道扬镳。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">91</span>If only, one would like to imagine, we could do in this situation what the modern age did in its early stage, that is, treat each and every subject “as though no one had touched the matter before me” (as Descartes proposes in his introductory remarks to “Les Passions de l’âme”)!</span></p>
+  <div class="sentence-aid" data-sentence="91">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">我们会希望像近代早期那样从零开始</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">面对传统崩塌，人自然会希望重演近代早期的姿态：像笛卡尔那样，把每个问题都当作从未有人处理过，完全重新开始。这个愿望下一句就会被判定为不可能。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">愿望语气</div><div><div class="meaning-en"><button class="expr-button" type="button">If only</button> … we could do …<div class="expr-tip"><b>if only</b> 表示强烈但难以实现的愿望。</div></div><div class="meaning-zh">要是我们能够这样做就好了。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">从零开始</div><div><div class="meaning-en">treat every subject <button class="expr-button" type="button">as though no one had touched</button> it<div class="expr-tip"><b>as though</b> = “仿佛”；这里表达有意搁置传统。</div></div><div class="meaning-zh">仿佛前人从未碰过问题。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">历史范本</div><div><div class="meaning-en">what the modern age did <button class="expr-button" type="button">in its early stage</button><div class="expr-tip"><b>in its early stage</b> = “在其早期阶段”。</div></div><div class="meaning-zh">近代早期曾以重新奠基为姿态。</div></div></div></div>
+      <div class="read-again">先听成愿望：<b>tradition collapsed → can we begin entirely afresh?</b> 下一句回答“不行”。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">人会愿意设想：要是我们在这种处境中也能做近代早期所做的事就好了，也就是说，把每一个题目都“当作在我之前无人触及过这个问题”来处理（正如笛卡尔在《论灵魂的激情》的引言中所提议的那样）！</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Descartes: begin anew</b> — <span class="zh">笛卡尔式的开端要求暂时搁置既有意见，从主体自身重新奠定可靠知识。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">92</span>This has become impossible, partly because of our enormously enlarged historical consciousness, but primarily because the only record we possess of what thinking as an activity meant to those who had chosen it as a way of life is what we would call today the “metaphysical fallacies.”</span></p>
+  <div class="sentence-aid" data-sentence="92">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">不能从零开始，因为过去的“谬误”正是思考经验仅存的记录</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">如今无法假装前人从未思考：一方面，我们的历史意识已经极大扩展；更重要的是，那些以思考为生活方式的人如何体验思考，只保存在今天被叫作“形而上学谬误”的文本里。丢弃谬误，也会丢掉记录。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">两重原因</div><div><div class="meaning-en"><button class="expr-button" type="button">partly because</button> … but primarily because …<div class="expr-tip"><b>partly … but primarily …</b> = “部分因为……但主要因为……”。</div></div><div class="meaning-zh">第一项是部分原因，第二项才是主要原因。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">我们拥有的唯一记录</div><div><div class="meaning-en">the <button class="expr-button" type="button">only record we possess</button><div class="expr-tip"><b>record</b> 在此是保留下来的记录／见证。</div></div><div class="meaning-zh">没有另一套直接档案可替代。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">记录的对象</div><div><div class="meaning-en">what thinking as an activity <button class="expr-button" type="button">meant to those</button> …<div class="expr-tip"><b>choose A as a way of life</b> = “选择 A 作为一种生活方式”。</div></div><div class="meaning-zh">以思考为生者怎样体验这种活动。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">现代名称</div><div><div class="meaning-en">what we call <button class="expr-button" type="button">the metaphysical fallacies</button><div class="expr-tip"><b>fallacy</b> = “谬误”；引号提示她不会把它们简单当废物。</div></div><div class="meaning-zh">这些记录恰恰藏在现代所弃绝的谬误中。</div></div></div></div>
+      <div class="read-again">全句主干：<b>重新从零开始已不可能 → 因为所谓形而上学谬误是思考经验唯一的历史记录</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这已经变得不可能，部分是由于我们极度扩大的历史意识，但主要是因为：对于那些选择思考作为一种生活方式的人而言，思考这种活动意味着什么——我们所拥有的唯一记录，正是今天会被我们称作“形而上学谬误”的东西。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">93</span>None of the systems, none of the doctrines transmitted to us by the great thinkers may be convincing or even plausible to modern readers; but none of them, I shall try to argue here, is arbitrary and none can be simply dismissed as sheer nonsense.</span></p>
+  <div class="sentence-aid" data-sentence="93">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">旧学说未必可信，却都不是任意胡说</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">伟大思想家留下的体系和学说，对现代读者可能既无说服力、甚至也不显得可信；但阿伦特要论证，它们没有一个是随意捏造的，也不能被当作纯粹胡话扔掉。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">先让步</div><div><div class="meaning-en">may be <button class="expr-button" type="button">convincing or even plausible</button> to modern readers<div class="expr-tip"><b>convincing</b> = “有说服力的”；<b>plausible</b> = “表面可信／说得通的”。否定词 <i>none</i> 管辖二者。</div></div><div class="meaning-zh">旧体系可能连“看起来说得通”都做不到。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">再坚持</div><div><div class="meaning-en"><button class="expr-button" type="button">but none of them</button> is arbitrary<div class="expr-tip"><b>arbitrary</b> = “无根据、随意武断的”。</div></div><div class="meaning-zh">然而没有一个是任意的。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不能一笔勾销</div><div><div class="meaning-en">none can be <button class="expr-button" type="button">simply dismissed as sheer nonsense</button><div class="expr-tip"><b>dismiss A as B</b> = “把 A 当作 B 而不予理会”；<i>sheer</i> = “纯粹的”。</div></div><div class="meaning-zh">不能直接判成纯粹胡言。</div></div></div></div>
+      <div class="read-again">保持两边：<b>not convincing today ≠ arbitrary nonsense</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">伟大思想家传给我们的所有体系、所有学说，对现代读者来说也许都没有说服力，甚至都未必显得可信；但是，我将努力在这里论证，它们没有一个是任意的，也没有一个可以被简单地当作纯粹胡说而弃置。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">94</span>On the contrary, the metaphysical fallacies contain the only clues we have to what thinking means to those who engage in it—something of great importance today and about which, oddly enough, there exist few direct utterances.</span></p>
+  <div class="sentence-aid" data-sentence="94">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">形而上学谬误是理解思考者经验的唯一线索</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">非但不能丢弃，所谓形而上学谬误还是我们理解“从事思考的人如何体验思考”的唯一线索。这在今天非常重要，奇怪的是，思想家对此很少直接陈述。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">反向推进</div><div><div class="meaning-en"><button class="expr-button" type="button">On the contrary</button>, the fallacies contain …<div class="expr-tip"><b>on the contrary</b> = “恰恰相反”。</div></div><div class="meaning-zh">结论不是“仍可参考”，而是“正是唯一线索”。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">线索通向哪里</div><div><div class="meaning-en">clues to what thinking means <button class="expr-button" type="button">to those who engage in it</button><div class="expr-tip"><b>engage in</b> = “从事／投入”。</div></div><div class="meaning-zh">通向思考者亲历的思考意义。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">罕见之处</div><div><div class="meaning-en"><button class="expr-button" type="button">oddly enough</button>, few direct utterances<div class="expr-tip"><b>oddly enough</b> = “说来奇怪”；<i>utterance</i> = “说出的陈述”。</div></div><div class="meaning-zh">如此重要，却少有直接说法。</div></div></div></div>
+      <div class="read-again">全局关系：<b>fallacies are not answers for us; they are clues to the experience of thinking</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">恰恰相反，形而上学的谬误包含着我们所拥有的唯一线索，使我们得以了解思考对于从事思考的人意味着什么——这在今天极其重要，而奇怪的是，关于它却很少有直接的陈述。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">95</span>Hence, the possible advantage of our situation following the demise of metaphysics and philosophy would be twofold.</span></p>
+  <div class="sentence-aid" data-sentence="95">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">传统终结也可能带来两重优势</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">因此，形而上学和哲学终结后的处境不只是一场损失，也可能提供两方面的优势。下一句展开第一项，S98 再说明它受到的限制。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">推出结果</div><div><div class="meaning-en"><button class="expr-button" type="button">Hence</button>, the possible advantage …<div class="expr-tip"><b>hence</b> = “因此／由此”。</div></div><div class="meaning-zh">由前面对传统终结的分析推出一种可能收益。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">所处时刻</div><div><div class="meaning-en"><button class="expr-button" type="button">following the demise</button> of metaphysics and philosophy<div class="expr-tip"><b>following</b> = “在……之后”；<i>demise</i> = “终结／死亡”。</div></div><div class="meaning-zh">在形而上学与哲学终结之后。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">结构预告</div><div><div class="meaning-en">would be <button class="expr-button" type="button">twofold</button><div class="expr-tip"><b>twofold</b> = “双重的／两方面的”。</div></div><div class="meaning-zh">优势分为两个方面。</div></div></div></div>
+      <div class="read-again">这是路标句：<b>demise may also free us in two ways</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因此，在形而上学和哲学终结之后，我们这种处境可能具有双重优势。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">96</span>It would permit us to look on the past with new eyes, unburdened and unguided by any traditions, and thus to dispose of a tremendous wealth of raw experiences without being bound by any prescriptions as to how to deal with these treasures.</span></p>
+  <div class="sentence-aid" data-sentence="96">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">第一重优势：不受传统指令束缚，重新使用过去的经验财富</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">传统失去权威后，我们可以用新的眼光看过去：既不背负传统，也不由传统带路；于是能够自由支配过去留下的大量原始经验，而不必服从既定的解释和使用说明。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">新的观看方式</div><div><div class="meaning-en">look on the past <button class="expr-button" type="button">with new eyes</button><div class="expr-tip"><b>look on A with new eyes</b> = “以新的眼光看 A”。</div></div><div class="meaning-zh">不再只通过既定传统看过去。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">两种脱离</div><div><div class="meaning-en"><button class="expr-button" type="button">unburdened and unguided</button> by traditions<div class="expr-tip">两个过去分词既表示自由，也暗含失去引导的风险。</div></div><div class="meaning-zh">既卸下传统负担，也失去传统导航。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">可支配的财富</div><div><div class="meaning-en"><button class="expr-button" type="button">dispose of</button> a wealth of raw experiences<div class="expr-tip">此处 <b>dispose of</b> 是“支配、使用／拥有可供处置”，<b>不是</b>“丢弃”。</div></div><div class="meaning-zh">拥有并可以运用大量未经体系化的经验。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不再受说明书约束</div><div><div class="meaning-en">without being <button class="expr-button" type="button">bound by prescriptions</button><div class="expr-tip"><b>be bound by</b> = “受……约束”；<i>prescription</i> = “规定、指示”。</div></div><div class="meaning-zh">不必遵守如何处理遗产的既定规程。</div></div></div></div>
+      <div class="read-again">第一重优势的路线：<b>tradition no longer commands → past becomes raw experience available for fresh judgment</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">它会使我们能够用新的眼光看待过去，不受任何传统的负担，也不由任何传统引导；从而可以支配一笔巨大的原始经验财富，而不受任何有关如何处理这些宝藏的规定约束。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">97</span>“Notre héritage n’est précédé d’aucun testament” (“Our inheritance comes to us by no will-and-testament”).¹⁹</span></p>
+  <div class="sentence-aid" data-sentence="97">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">我们继承了遗产，却没有遗嘱告诉我们如何继承</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">过去仍作为遗产来到我们手里，但传统的连续性已经断裂，没有“遗嘱”指定哪些东西属于我们、它们意味着什么、该怎样使用。自由与迷失同时出现。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">遗产仍在</div><div><div class="meaning-en"><button class="expr-button" type="button">Our inheritance comes to us</button><div class="expr-tip"><b>inheritance</b> = “遗产／传承下来的东西”。</div></div><div class="meaning-zh">过去并未消失，我们仍收到它的遗留。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">缺少遗嘱</div><div><div class="meaning-en">by <button class="expr-button" type="button">no will-and-testament</button><div class="expr-tip"><b>will and testament</b> 是法律上的“遗嘱”；这里比喻传统的传递与解释权威。</div></div><div class="meaning-zh">没有权威说明如何接收和处置遗产。</div></div></div></div>
+      <div class="read-again">把比喻还原：<b>past remains / authoritative transmission is gone</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">“我们的遗产来到我们手中，却没有任何遗嘱先行。”</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>“Notre héritage …”</b> — <span class="zh">法语原句意为“我们的遗产之前没有遗嘱”。这里的“遗嘱”比喻能够指定、传递并解释遗产的传统。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">98</span>The advantage would be even greater had it not been accompanied, almost inevitably, by a growing inability to move, on no matter what level, in the realm of the invisible; or, to put it another way, had it not been accompanied by the disrepute into which everything that is not visible, tangible, palpable has fallen, so that we are in danger of losing the past itself together with our traditions.</span></p>
+  <div class="sentence-aid" data-sentence="98">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">摆脱传统的自由伴随着失去进入不可见领域的能力</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">这种优势本来会更大，但它几乎不可避免地伴随一种损失：现代人越来越不会在不可见的领域中活动。换句话说，一切不可见、不可触摸的东西都声誉扫地；结果我们可能不只失去传统的权威，连传统承载的过去本身也一并失去。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">倒装的反事实</div><div><div class="meaning-en">The advantage would be greater <button class="expr-button" type="button">had it not been accompanied</button> …<div class="expr-tip"><b>had it not been …</b> = <i>if it had not been …</i>，是省略 if 的倒装条件句。</div></div><div class="meaning-zh">若没有伴随这个问题，优势本会更大；但事实上有。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">第一种说法</div><div><div class="meaning-en">a growing inability to <button class="expr-button" type="button">move … in the realm of the invisible</button><div class="expr-tip"><b>no matter what level</b> = “无论在哪个层次”。</div></div><div class="meaning-zh">越来越无法在不可见的思想领域中自如活动。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">换一种说法</div><div><div class="meaning-en"><button class="expr-button" type="button">or, to put it another way</button>, …<div class="expr-tip"><b>to put it another way</b> = “换句话说”。</div></div><div class="meaning-zh">后面不是新增原因，而是重述前一问题。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不可见者失信</div><div><div class="meaning-en">the <button class="expr-button" type="button">disrepute into which</button> everything … has fallen<div class="expr-tip">这是介词前置的关系结构：everything has fallen into disrepute。</div></div><div class="meaning-zh">凡不可见、不可触者都失去信誉。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">最终危险</div><div><div class="meaning-en">losing <button class="expr-button" type="button">the past itself together with our traditions</button><div class="expr-tip"><b>A together with B</b> = “A 连同 B 一起”。</div></div><div class="meaning-zh">不只丢掉传统，也可能丢掉过去本身。</div></div></div></div>
+      <div class="read-again">整句是一条代价链：<b>传统失效带来自由 → 不可见者同时失信 → 我们可能连过去本身也失去</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">如果这种优势没有几乎不可避免地伴随着一种日益增长的无能——即无论在哪个层次上都无法在不可见的领域中活动——它本来还会更大；或者换句话说，如果它没有伴随着一切不可见、不可触、不可摸之物所陷入的声名狼藉，情况本会更好；这种声名狼藉使我们面临一种危险：在失去传统的同时，也失去过去本身。</div></details>
+  </div>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-dian">典故</span>allusion 典故</span>
+    <span><span class="tag t-yin">引用</span>quotation 引文</span>
+    <span><span class="tag t-zhu">注</span>note 说明</span>
+    <span><span class="tag t-ci">词</span>word 词义</span>
+  </div>
+  <a href="lotm-thinking-intro.html">← Introduction I · pp. 3–8</a><br>Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 8–12. Text transcribed verbatim from the page images. Next: S99 begins at the foot of p. 12 and continues on p. 13.
+</footer>
+
+<script>
+  const body=document.body;
+  const tRuby=document.getElementById('t-ruby'),
+        tRem=document.getElementById('t-rem'),
+        tTrans=document.getElementById('t-trans'),
+        tTheme=document.getElementById('t-theme');
+  const setTheme=(theme,remember=false)=>{
+    const dark=theme==='dark';
+    document.documentElement.dataset.theme=dark?'dark':'light';
+    tTheme.setAttribute('aria-pressed',String(dark));
+    tTheme.textContent=dark?'Light Theme':'Dark Theme';
+    tTheme.title=dark?'Switch to Light Theme':'Switch to Dark Theme';
+    document.querySelectorAll('a[href^="thinking-intro"]').forEach(link=>{
+      const target=new URL(link.getAttribute('href'),location.href);
+      target.searchParams.set('theme',dark?'dark':'light');
+      link.href=target.href;
+    });
+    if(remember){try{localStorage.setItem('lotm-reading-theme',dark?'dark':'light');}catch(_){}}
+  };
+  setTheme(document.documentElement.dataset.theme);
+  tTheme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark',true);
+  tRuby.onclick=()=>{body.classList.toggle('hide-ruby'); tRuby.classList.toggle('off');};
+  tRem.onclick =()=>{body.classList.toggle('hide-remarks'); tRem.classList.toggle('off');};
+
+  const translations=[...document.querySelectorAll('.translation')];
+  tTrans.onclick=()=>{
+    const open=tTrans.getAttribute('aria-pressed')!=='true';
+    translations.forEach(item=>item.open=open);
+    tTrans.setAttribute('aria-pressed',String(open));
+    tTrans.textContent=open?'收起直译 49–98':'直译 49–98';
+  };
+
+  const rescues=[...document.querySelectorAll('.rescue')];
+  const clearFocus=()=>{
+    document.querySelectorAll('.active-sentence,.active-aid')
+      .forEach(item=>item.classList.remove('active-sentence','active-aid'));
+  };
+  rescues.forEach(rescue=>{
+    rescue.addEventListener('toggle',()=>{
+      if(rescue.open){
+        rescues.forEach(other=>{if(other!==rescue) other.open=false;});
+        clearFocus();
+        const aid=rescue.closest('.sentence-aid');
+        const sentence=aid.previousElementSibling;
+        aid.classList.add('active-aid');
+        if(sentence?.classList.contains('sent')) sentence.classList.add('active-sentence');
+        body.classList.add('rescue-mode');
+        rescue.scrollIntoView({behavior:'smooth',block:'center'});
+      }else if(!document.querySelector('.rescue[open]')){
+        clearFocus();
+        body.classList.remove('rescue-mode');
+      }
+    });
+  });
+</script>
+</body>
+</html>
