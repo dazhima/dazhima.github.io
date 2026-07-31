@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ICM 2026 — a field report · Yan He</title>
+<meta name="description" content="A sourced field report on the International Congress of Mathematicians 2026 (Philadelphia): the prize citations verbatim, what changed since 2022, 45 open problems as the speakers stated them, and the methods that crossed fields." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --bg-soft: #f3f1ea;
+    --ink: #1c1b19;
+    --ink-soft: #565248;
+    --line: #e2ded3;
+    --accent: #7a2e1d;
+    --accent-soft: #a85c44;
+    --max: 780px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14130f;
+      --bg-soft: #1d1b16;
+      --ink: #eceae3;
+      --ink-soft: #a8a195;
+      --line: #2c2922;
+      --accent: #d98b6f;
+      --accent-soft: #c5755a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-soft); text-decoration: underline; text-underline-offset: 3px; }
+  h1, h2, h3, h4 { font-family: "Newsreader", Georgia, serif; font-weight: 500; line-height: 1.25; letter-spacing: -0.01em; }
+
+  .crumb { padding: 26px 0 0; font-size: 14px; }
+  .crumb a { color: var(--ink-soft); }
+  .crumb a:hover { color: var(--accent); }
+
+  header { padding: 44px 0 40px; }
+  .eyebrow { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 16px; }
+  h1 { font-size: clamp(2.2rem, 6vw, 3.2rem); margin: 0 0 10px; }
+  .role { font-size: 1.1rem; color: var(--ink-soft); margin: 0 0 24px; font-family: "Newsreader", serif; font-style: italic; }
+  .lede { font-size: 1.14rem; max-width: 64ch; }
+  nav.top { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 32px; font-size: 14px; letter-spacing: 0.02em; }
+  nav.top a { color: var(--ink-soft); font-weight: 500; }
+  nav.top a:hover { color: var(--accent); text-decoration: none; }
+
+  section { padding: 42px 0; border-top: 1px solid var(--line); }
+  .sec-head { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; margin: 0 0 24px; }
+  h2 { font-size: 1.8rem; margin: 0 0 16px; }
+  h3 { font-size: 1.25rem; margin: 26px 0 8px; }
+  p { margin: 0 0 15px; }
+  .muted { color: var(--ink-soft); }
+  .small { font-size: 0.92em; }
+
+  blockquote {
+    margin: 18px 0; padding: 14px 20px; border-left: 3px solid var(--accent);
+    background: var(--bg-soft); border-radius: 0 10px 10px 0;
+    font-family: "Newsreader", serif; font-size: 1.05rem;
+  }
+  blockquote .who { display: block; margin-top: 8px; font-family: "Inter", sans-serif; font-size: 0.82em; color: var(--ink-soft); font-style: normal; }
+
+  .prize { padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .prize:last-child { border-bottom: none; }
+  .prize .name { font-family: "Newsreader", serif; font-size: 1.3rem; font-weight: 500; }
+  .prize .medal { font-family: "JetBrains Mono", monospace; font-size: 0.78em; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-left: 10px; }
+  .prize .aff { color: var(--ink-soft); font-size: 0.95em; margin: 2px 0 10px; }
+  .prize .cite { font-family: "Newsreader", serif; font-style: italic; font-size: 1.02rem; }
+  .prize .links { margin-top: 8px; font-size: 0.85em; }
+
+  ul.plain { padding-left: 22px; margin: 0 0 16px; }
+  ul.plain li { margin-bottom: 9px; }
+
+  details { border: 1px solid var(--line); border-radius: 10px; margin: 14px 0; background: var(--bg); overflow: hidden; }
+  details summary {
+    cursor: pointer; padding: 14px 18px; font-family: "Newsreader", serif; font-size: 1.12rem; font-weight: 500;
+    list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary .n { font-family: "JetBrains Mono", monospace; font-size: 0.75em; color: var(--ink-soft); flex: none; }
+  details summary:hover { background: var(--bg-soft); }
+  details[open] summary { border-bottom: 1px solid var(--line); }
+  details .inner { padding: 6px 18px 14px; }
+
+  .prob { padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .prob:last-child { border-bottom: none; }
+  .prob .pt { font-family: "Newsreader", serif; font-size: 1.1rem; font-weight: 500; margin-bottom: 4px; }
+  .prob .pt .pid { font-family: "JetBrains Mono", monospace; font-size: 0.72em; color: var(--accent); margin-right: 8px; }
+  .prob .fld { font-size: 0.85em; color: var(--ink-soft); margin-bottom: 8px; }
+  .prob .row { margin: 5px 0; font-size: 0.96em; }
+  .prob .k { font-size: 0.78em; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; margin-right: 6px; }
+  .prob q { font-family: "Newsreader", serif; font-style: italic; quotes: "“" "”"; }
+
+  .move { padding: 15px 0; border-bottom: 1px solid var(--line); }
+  .move:last-child { border-bottom: none; }
+  .move b { font-family: "Newsreader", serif; font-weight: 500; font-size: 1.08rem; }
+  .move p { margin: 5px 0 0; font-size: 0.97em; }
+
+  .feature {
+    background: var(--bg-soft); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 10px; padding: 20px 24px; margin: 22px 0;
+  }
+  .feature .kicker { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+  .feature p { margin: 0 0 10px; }
+  .feature p:last-child { margin: 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.94em; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 0.8em; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; }
+  td .mono { font-family: "JetBrains Mono", monospace; font-size: 0.85em; }
+
+  .mathmark { font-family: "JetBrains Mono", monospace; font-size: 0.8em; color: var(--ink-soft); background: var(--bg-soft); padding: 0 4px; border-radius: 4px; }
+
+  footer { padding: 40px 0 70px; color: var(--ink-soft); font-size: 13px; border-top: 1px solid var(--line); }
+  footer a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; }
+
+  @media (max-width: 540px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="crumb"><a href="../index.html">← 主页 · Home</a></div>
+
+  <header>
+    <div class="eyebrow">Field Report · July 2026</div>
+    <h1>ICM 2026, Philadelphia</h1>
+    <p class="role">What the congress said was open, what fell since 2022, and which methods crossed fields — from primary sources only.</p>
+    <p class="lede">The International Congress of Mathematicians met in Philadelphia, 23–30 July 2026. This page is a working report built from the congress's own record: the IMU citation documents, the official speaker database, the published SIAM proceedings, and the speakers' lecture texts on arXiv. Press coverage was used only as a pointer, never as a source. Every quotation below was checked verbatim against the document it cites.</p>
+    <nav class="top">
+      <a href="#prizes">Prizes</a>
+      <a href="#delta">What changed</a>
+      <a href="#problems">Open problems</a>
+      <a href="#map">Field map</a>
+      <a href="#techniques">Techniques that travel</a>
+      <a href="#ai">AI &amp; mathematics</a>
+      <a href="#context">Context</a>
+      <a href="#method">Sources &amp; method</a>
+    </nav>
+  </header>
+
+  <!-- ============ OVERVIEW ============ -->
+  <section id="overview">
+    <div class="sec-head">The congress in five sentences</div>
+    <p>The 2026 medal-level story: kinetic theory rigorized (Yu Deng), symplectic geometry's foundations rebuilt and applied (John Pardon), o-minimality established as <em>the</em> transfer method into arithmetic and Hodge theory (Jacob Tsimerman), and the multiscale/decoupling toolkit breaking the hardest problems of geometric measure theory (Hong Wang) — with the algorithms medal (Shayan Oveis Gharan) awarded for importing the geometry of polynomials into the analysis of Markov chains.</p>
+    <p>The proceedings show a congress organized around travelling methods more than subfield walls: the same machinery appears in the lectures of two or three different sections. The AI presence is real but reflective — theory <em>of</em> machine learning in three sections plus one special plenary about mathematical practice, and no section lecture claiming machine-assisted results. A political dimension stayed at the level of institutional statements, reported below without comment. The proceedings themselves were published by SIAM in the same month the congress ended — so this report is built from the lectures as their authors wrote them.</p>
+  </section>
+
+  <!-- ============ PRIZES ============ -->
+  <section id="prizes">
+    <div class="sec-head">Prizes — the citations, verbatim</div>
+    <h2>The 2026 slate</h2>
+    <p class="muted small">Short citations quoted in full from the IMU's citation documents (linked per prize) — the canonical texts. A citation is the best compressed statement of what the field decided mattered this cycle; each clause names a specific theorem cluster.</p>
+
+    <div class="prize">
+      <div class="name">Yu Deng <span class="medal">Fields Medal</span></div>
+      <div class="aff">University of Chicago</div>
+      <p class="cite">“For his work in partial differential equations, including the rigorous derivation of the Boltzmann equation from hard-sphere dynamics for rarefied gases, the derivation of wave kinetic equations from nonlinear dispersive systems, and probabilistic approaches to nonlinear Schrödinger dynamics.”</p>
+      <p class="small">The long citation names the collaborations: the Boltzmann derivation with Zaher Hani and Xiao Ma — valid for as long as the Boltzmann solution exists; wave kinetic equations with Hani; random averaging operators and random tensor theory with Andrea Nahmod and Haitian Yue. His invited lecture: <em>Hilbert's Sixth Problem: Particles and Waves</em>.</p>
+      <div class="links"><a href="https://www.mathunion.org/fileadmin/documents/2026-07/Yu_Deng_Citations.pdf">IMU citation (PDF)</a></div>
+    </div>
+
+    <div class="prize">
+      <div class="name">John Pardon <span class="medal">Fields Medal</span></div>
+      <div class="aff">Stony Brook University</div>
+      <p class="cite">“For his achievements in symplectic geometry including new approaches to virtual fundamental cycles, Fukaya categories of certain manifolds and counting holomorphic curves, and for his contributions to other areas of geometry and topology, including group actions on 3-manifolds and knot theory.”</p>
+      <p class="small">Specifics from the long citation: Gromov's question on distortion of torus knots; the Hilbert–Smith conjecture for <span class="mathmark">n = 3</span>; virtual fundamental cycles via algebraic topology; wrapped Fukaya categories with Ganatra–Shende; and the Gromov-Witten / Donaldson-Thomas correspondence of Maulik–Nekrasov–Okounkov–Pandharipande “when the anti-canonical bundle is nef.”</p>
+      <div class="links"><a href="https://www.mathunion.org/fileadmin/documents/2026-07/John_Pardon_Citations.pdf">IMU citation (PDF)</a></div>
+    </div>
+
+    <div class="prize">
+      <div class="name">Jacob Tsimerman <span class="medal">Fields Medal</span></div>
+      <div class="aff">University of Toronto</div>
+      <p class="cite">“For his contribution in the recasting of o-minimality as a fundamental method of arithmetic and complex algebraic geometry, and his role in the proof of many central conjectures including Griffiths' conjecture on the algebraicity of images of the period maps, and the André-Oort conjecture for Siegel modular varieties.”</p>
+      <p class="small">The long citation traces the line: o-minimal GAGA with Bakker–Brunebarbe; Griffiths' conjecture via Bakker–Klingler–Tsimerman; André-Oort through Galois lower bounds (average Colmez) plus Ax-Lindemann with Pila; Ax-Schanuel for Shimura varieties with Mok and Pila; a functional André-Grothendieck conjecture with Bakker. His plenary text: <em>Baily–Borel Compactifications for Period Images</em>.</p>
+      <div class="links"><a href="https://www.mathunion.org/fileadmin/documents/2026-07/Jacob_Tsimerman_Citations.pdf">IMU citation (PDF)</a></div>
+    </div>
+
+    <div class="prize">
+      <div class="name">Hong Wang <span class="medal">Fields Medal</span></div>
+      <div class="aff">Courant Institute, NYU &amp; IHES</div>
+      <p class="cite">“For her work in harmonic analysis and geometric measure theory, including applications of multiscale and decoupling techniques to the local smoothing conjecture for the planar wave equation, and major advances in Fourier restriction, Falconer distance sets, Furstenberg sets in the plane, and the Kakeya problem in three dimensions.”</p>
+      <p class="small">Named collaborations: local smoothing with Larry Guth and Ruixiang Zhang; Falconer with Guth, Iosevich, Ou; Furstenberg sets with Kevin Ren; Kakeya in ℝ³ with Joshua Zahl — “new bounds and structural techniques for collections of thin tubes,” which the citation says are “reshaping current approaches.” Her invited lecture was on a different front: <em>Restricted Families of Orthogonal Projections in ℝⁿ</em>; Zahl's companion survey covers the Kakeya side.</p>
+      <div class="links"><a href="https://www.mathunion.org/fileadmin/documents/2026-07/Hong_Wang_Citations.pdf">IMU citation (PDF)</a></div>
+    </div>
+
+    <div class="prize">
+      <div class="name">Shayan Oveis Gharan <span class="medal">IMU Abacus Medal</span></div>
+      <div class="aff">University of Washington</div>
+      <p class="cite">“…for his landmark contributions to the theory of algorithms, taking the analysis of algorithms beyond combinatorics and probabilistic analysis into the theory of the geometry of polynomials… Oveis Gharan's work improved the approximation of the metric travelling salesperson problem, breaking the limit on the approximation factor in Christofides' 3/2-algorithm from 50 years ago, and led to a revolution in the understanding of Markov Chain Monte Carlo sampling algorithms… through spectral independence.”</p>
+      <div class="links"><a href="https://www.mathunion.org/fileadmin/documents/2026-07/Abacus_Oveis_Gharan_2026_Citation.pdf">IMU citation (PDF)</a></div>
+    </div>
+
+    <div class="prize">
+      <div class="name">Graeme Segal <span class="medal">Chern Medal</span></div>
+      <div class="aff">All Souls College, Oxford</div>
+      <p class="cite">“…for his visionary mathematical insights, that have had an enduring influence in a wide range of fields, including topology, mathematical physics, representation theory and category theory.”</p>
+      <p class="small">The long citation: classifying spaces, the McDuff–Segal scanning method, the Atiyah–Segal completion theorem and the Segal conjecture, delooping machines (“Segal space,” “Segal category”), the axiomatic formulation of 2d conformal field theory — the seed of Atiyah's TQFT axioms — and loop groups with Pressley and Wilson.</p>
+      <div class="links"><a href="https://www.mathunion.org/fileadmin/documents/2026-07/Chern_Grame_Segal_2026_Citation.pdf">IMU citation (PDF)</a></div>
+    </div>
+
+    <div class="prize">
+      <div class="name">Yurii Nesterov <span class="medal">Gauss Prize</span></div>
+      <div class="aff">UCLouvain</div>
+      <p class="cite">“…for his groundbreaking work on mathematical optimization that provided the theoretical foundation and algorithmic backbone for many numerical and data-driven fields, enabling practical computations that were previously too time-consuming to be feasible.”</p>
+      <p class="small">Self-concordant barriers and polynomial-time interior-point methods (with Nemirovski); the 1983 accelerated gradient method with its optimal first-order rate — “Nesterov momentum” — which the citation explicitly ties to the training of modern AI models.</p>
+      <div class="links"><a href="https://www.mathunion.org/fileadmin/documents/2026-07/Gauss_Yurii_Nesterov_2026_Citation.pdf">IMU citation (PDF)</a></div>
+    </div>
+
+    <div class="prize">
+      <div class="name">Hannah Fry <span class="medal">Leelavati Prize</span></div>
+      <div class="aff">University of Cambridge</div>
+      <p class="cite">“Hannah Fry is one of the foremost global ambassadors for mathematical thinking… Through a wide range of media — including books, videos, and television programs — she has used outstanding creativity and originality to translate mathematics into a language of wonder and relevance for the public without diminishing its scope and importance.”</p>
+      <div class="links"><a href="https://www.mathunion.org/fileadmin/documents/2026-07/Leelavati_Hannah_Fry_2026_Citation.pdf">IMU citation (PDF)</a></div>
+    </div>
+
+    <p class="small muted" style="margin-top:18px">Named lectures: Abel Lecture — László Lovász; Emmy Noether Lecture — Karen Vogtmann. A curiosity for the record: the congress website's own display texts of two Fields citations differ from the IMU PDFs (Pardon's “certain manifolds” became “Liouville manifolds”; Tsimerman's André-Oort clause was dropped). The PDFs above are the canonical versions.</p>
+  </section>
+
+  <!-- ============ DELTA ============ -->
+  <section id="delta">
+    <div class="sec-head">What changed, 2022 → 2026</div>
+    <h2>Conjectures that fell, methods that spread</h2>
+    <p class="muted small">In the speakers' own words, from their lecture texts (each linked). The marker <span class="mathmark">[math]</span> stands for a formula lost in text extraction — consult the linked paper for the exact statement. This lists what the congress itself chose to emphasize, not a survey of 2022–26 mathematics.</p>
+
+    <h3>Combinatorics: the design-theory program closed out</h3>
+    <blockquote>“In 2024, Delcourt and Postle [18] developed the methodology of refined absorption, giving a one-step, combinatorial proof of the Existence Conjecture. Later in 2024, Keevash [47] provided a more concise proof…” — and the high-girth version: “in 2024 Delcourt and Postle [17] settled the High Girth Existence Conjecture in full.”
+      <span class="who">Luke Postle, <a href="https://arxiv.org/abs/2510.19978">arXiv:2510.19978</a></span>
+    </blockquote>
+
+    <h3>Geometry</h3>
+    <ul class="plain">
+      <li><b>Gromov's aspherical-manifold conjecture in dimensions 4 and 5.</b> “With Li, we were recently able to use minimal surface methods to resolve Conjecture 8 for four- and five-dimensional manifolds. Gromov simultaneously generalized our four-dimensional result to five dimensions.” — Otis Chodosh, <a href="https://arxiv.org/abs/2510.04481">arXiv:2510.04481</a></li>
+      <li><b>Gaussian multi-bubble conjecture fully resolved.</b> “In collaboration with Joe Neeman, we fully resolved the multi-bubble conjecture… in the Gaussian setting.” — Emanuel Milman, <a href="https://arxiv.org/abs/2510.07078">arXiv:2510.07078</a></li>
+    </ul>
+
+    <h3>Dynamics and symplectic topology</h3>
+    <ul class="plain">
+      <li><b>The Simplicity Conjecture, settled by symplectic tools</b> — the group of area-preserving homeomorphisms of the disc is not simple — and beyond: “Edtmair-Seyfaddini recently answered Arnold's question for all flows without rest points in a remarkable work.” — Dan Cristofaro-Gardiner, <a href="https://arxiv.org/abs/2512.05454">arXiv:2512.05454</a></li>
+      <li><b>Wild dynamics realized analytically.</b> “There exist transitive, analytic symplectomorphisms on the sphere, the disk, and the cylinder.” — Pierre Berger, <a href="https://arxiv.org/abs/2510.12929">arXiv:2510.12929</a></li>
+      <li><b>Measure rigidity extended beyond homogeneous dynamics</b>, including to strata of translation surfaces. — Simion Filip, <a href="https://arxiv.org/abs/2512.13865">arXiv:2512.13865</a></li>
+    </ul>
+
+    <h3>Analysis, probability, operator algebras</h3>
+    <ul class="plain">
+      <li><b>Quantitative Besicovitch projection theorem.</b> “The problem of obtaining a quantitative version of the Besicovitch projection theorem was solved by Dąbrowski in 2024.” — Xavier Tolsa (plenary), <a href="https://arxiv.org/abs/2607.16457">arXiv:2607.16457</a></li>
+      <li><b>Strong convergence of random matrices became a subfield.</b> The new polynomial method works “assuming only that the weak asymptotic expansion (5.1) holds with a modest estimate on the error term” — and feeds directly into spectral gaps of hyperbolic surfaces. — Ramon van Handel, <a href="https://arxiv.org/abs/2510.12520">arXiv:2510.12520</a></li>
+      <li><b>Noncommutative Hörmander-Mikhlin</b>: de la Salle's 2019 conjecture established. — Javier Parcet, <a href="https://arxiv.org/abs/2510.17732">arXiv:2510.17732</a></li>
+      <li><b>The critical 2D Stochastic Heat Flow constructed</b> (Caravenna–Sun–Zygouras), with the weak-disorder phase extension following. — <a href="https://arxiv.org/abs/2511.08479">arXiv:2511.08479</a></li>
+      <li><b>The LQG metric completed</b>: “Gwynne and Miller proved uniqueness of subsequential limits.” — Holden–Sun, <a href="https://arxiv.org/abs/2510.16431">arXiv:2510.16431</a></li>
+      <li><b>Liouville CFT completed as mathematics</b>: “…the path integral, Segal's axioms, operator formalism and conformal bootstrap are realized consistently within a complete mathematical framework” — a neat echo of this year's Chern Medal. — Rhodes–Vargas, <a href="https://arxiv.org/abs/2509.21053">arXiv:2509.21053</a></li>
+    </ul>
+
+    <h3>Number theory and algebraic geometry</h3>
+    <ul class="plain">
+      <li><b>Modularity of abelian surfaces</b> — Toby Gee's lecture <em>Modularity Theorems for Abelian Surfaces</em>: the Boxer–Calegari–Gee–Pilloni program landing.</li>
+      <li><b>Arithmetic holonomy bounds</b> as an effective-Diophantine toolkit — Calegari–Dimitrov–Tang joint lecture.</li>
+      <li><b>Quantitative Mordell</b>: “Yu–Yuan–Zhou [YYZ26] has managed to prove all these desired inequalities at archimedean places and carry the proof to number fields.” — Xinyi Yuan, <a href="https://arxiv.org/abs/2606.27129">arXiv:2606.27129</a></li>
+      <li><b>The linear Shafarevich conjecture</b> via non-abelian Hodge theory for non-proper varieties. — Benjamin Bakker, <a href="https://arxiv.org/abs/2603.23467">arXiv:2603.23467</a></li>
+      <li><b>Kähler pluripotential theory</b>: “The general Kähler case of Theorem B was recently proved by Mesquita-Piccione and myself,” plus uniqueness of cscK metrics under uniform K-stability for models. — David Witt Nyström, <a href="https://arxiv.org/abs/2510.03044">arXiv:2510.03044</a></li>
+    </ul>
+
+    <h3>Group theory and logic</h3>
+    <ul class="plain">
+      <li><b>Sharply 2-transitive groups</b>: “Until recently it was widely believed (and conjectured) that all sharply 2-transitive groups split” — the non-split constructions redirected a classical program. — Katrin Tent, <a href="https://arxiv.org/abs/2606.18207">arXiv:2606.18207</a></li>
+      <li><b>Non-approximability in higher rank</b> “very recently solved by Bachner-Dogon-Lubotzky in [BDLub], in a way bypassing the cohomological vanishing question.” — Uri Bader, <a href="https://arxiv.org/abs/2511.20192">arXiv:2511.20192</a></li>
+    </ul>
+
+    <div class="feature">
+      <div class="kicker">A quieter observation</div>
+      <p>Nevanlinna theory has no lecture and no proceedings chapter at this congress — checked against the full tables of contents. And the MLC conjecture (local connectivity of the Mandelbrot set) appears not as reported progress but reframed as a structured renormalization program with named conjectures — see the roster below.</p>
+    </div>
+  </section>
+
+  <!-- ============ OPEN PROBLEMS ============ -->
+  <section id="problems">
+    <div class="sec-head">Open problems — the roster</div>
+    <h2>45 problems, as the speakers stated them</h2>
+    <p class="muted small">Entry criterion: a primary source states the problem — no famous-problem padding from general knowledge. The value is what <em>this congress</em> said was open, and how it framed it in 2026. “Why hard” appears only where the source states an obstruction; quotations are verbatim from the linked texts; <span class="mathmark">[math]</span> marks a formula lost in extraction.</p>
+
+    <details open>
+      <summary>Analysis &amp; geometric measure theory <span class="n">P-1 – P-7</span></summary>
+      <div class="inner">
+        <div class="prob">
+          <div class="pt"><span class="pid">P-1</span>The Kakeya maximal conjecture in higher dimensions</div>
+          <div class="fld">Harmonic analysis · <a href="https://arxiv.org/abs/2512.09397">Zahl, arXiv:2512.09397</a></div>
+          <div class="row"><span class="k">Why hard</span><q>In higher dimensions the situation becomes even worse, as the number and complexity of infinitely ruled surfaces increases.</q></div>
+          <div class="row"><span class="k">Progress would be</span>improvements to the broad and narrow estimates, and whether they “will play a role in the resolution of the Kakeya set conjecture in higher dimensions.”</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-2</span>Efficiency of the Wang–Zahl machinery; restriction in ℝ³</div>
+          <div class="fld">Harmonic analysis · <a href="https://arxiv.org/abs/2512.09397">Zahl, arXiv:2512.09397</a></div>
+          <div class="row"><span class="k">Their words</span><q>An interesting open problem is whether the arguments in [52, 50, 51] can be performed in a more efficient manner… to prevent the losses described above</q> — and <q>to what extent the ideas from [51] can be used to understand the Fourier restriction problem in [math].</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-3</span>Pointwise convergence of polynomial and multilinear ergodic averages</div>
+          <div class="fld">Analysis × ergodic theory · <a href="https://arxiv.org/abs/2602.11344">Mirek, arXiv:2602.11344</a></div>
+          <div class="row"><span class="k">Their words</span><q>Identifying the limit for general polynomial ergodic averages is a well-known open problem in ergodic theory, even in the linear case.</q> The multilinear state of knowledge is <q>dramatically worse.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-4</span>Singular continuous spectrum for random graph operators</div>
+          <div class="fld">Random operators · <a href="https://arxiv.org/abs/2510.10299">Bordenave, arXiv:2510.10299</a></div>
+          <div class="row"><span class="k">Their words</span><q>The presence or not of singular continuous part… is a very interesting open problem.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-5</span>Which groups admit strongly convergent representations?</div>
+          <div class="fld">Random matrices × group theory · <a href="https://arxiv.org/abs/2510.12520">van Handel, arXiv:2510.12520</a></div>
+          <div class="row"><span class="k">Why hard</span>the polynomial method needs an asymptotic expansion, and <q>it remains an open question whether or not such an expansion holds in many interesting cases.</q></div>
+          <div class="row"><span class="k">Also open</span>whether fundamental groups of higher-dimensional hyperbolic manifolds admit strongly convergent permutation representations.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-6</span>Multi-bubble isoperimetry: the remaining cases</div>
+          <div class="fld">Geometric analysis · <a href="https://arxiv.org/abs/2510.07078">Milman, arXiv:2510.07078</a></div>
+          <div class="row"><span class="k">Why hard</span><q>ruling out local minimizers as being global ones using a case-by-case analysis of the cell-incidence graphs… becomes intractable</q> as the number of bubbles grows.</div>
+          <div class="row"><span class="k">Progress would be</span>the quadruple-bubble case in the remaining regime; the hyperbolic double bubble, <q>wide open</q>.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-7</span>Noncommutative singular integrals at the critical index</div>
+          <div class="fld">Operator algebras × harmonic analysis · <a href="https://arxiv.org/abs/2510.17732">Parcet, arXiv:2510.17732</a></div>
+          <div class="row"><span class="k">Their words</span><q>Is the Fourier critical index [math] greater than [math] for every [math]? This would solve Connes' rigidity… at least for infinitely many pairs.</q></div>
+          <div class="row"><span class="k">Why hard</span><q>a very subtle problem which puts together highly singular operators from Euclidean harmonic analysis with Connes' rigidity.</q></div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Complex &amp; algebraic geometry, complex dynamics <span class="n">P-8 – P-16</span></summary>
+      <div class="inner">
+        <div class="prob">
+          <div class="pt"><span class="pid">P-8</span>Degenerate limits of Ricci-flat metrics</div>
+          <div class="fld">Kähler geometry · <a href="https://arxiv.org/abs/2509.25607">Tosatti, arXiv:2509.25607</a></div>
+          <div class="row"><span class="k">Their words</span><q>When [math] is not big, even the following weaker statement is open: [math] contains a closed positive current… with vanishing Lelong numbers</q>; <q>Conjecture 3.7 is open even on [math] surfaces</q>; <q>Can the Gromov-Hausdorff limit be identified explicitly?</q></div>
+          <div class="row"><span class="k">Progress would be</span>his asymptotic-expansion program for degenerating Ricci-flat metrics.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-9</span>Transcendental Morse inequality; pseudoeffective/movable cone duality</div>
+          <div class="fld">Kähler geometry · <a href="https://arxiv.org/abs/2510.03044">Witt Nyström, arXiv:2510.03044</a></div>
+          <div class="row"><span class="k">Their words</span><q>For general compact Kähler manifolds though, the transcendental Morse inequality is still a conjecture</q>; the cone duality remains conjectural.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-10</span>Oka theory's basic gaps</div>
+          <div class="fld">Several complex variables · <a href="https://arxiv.org/abs/2509.21197">Forstnerič, arXiv:2509.21197</a></div>
+          <div class="row"><span class="k">Their words</span><q>It remains an open question whether there exist compact nonprojective Oka manifolds which fail to be elliptic</q>; <q>The problem whether every open Riemann surface embeds as a closed nonsingular complex curve in [math] is still wide open</q>; <q>we do not know which groups arise as fundamental groups of Oka manifolds.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-11</span>Stable rationality of cubic fourfolds; rationality of cubic fivefolds</div>
+          <div class="fld">Algebraic geometry · <a href="https://arxiv.org/abs/2510.13679">Schreieder, arXiv:2510.13679</a></div>
+          <div class="row"><span class="k">Their words</span><q>The next open cases concern stable rationality of cubic fourfolds and rationality of cubic fivefolds.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-12</span>Algebraicity of Weil classes beyond the known cases</div>
+          <div class="fld">Hodge theory · <a href="https://arxiv.org/abs/2509.23403">Markman, arXiv:2509.23403</a></div>
+          <div class="row"><span class="k">Their words</span><q>Does [math] consist of algebraic classes?</q> — following his theorem for abelian fourfolds of Weil type and sixfolds of split Weil type with CM.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-13</span>The Shafarevich program past the linear case</div>
+          <div class="fld">Complex algebraic geometry · <a href="https://arxiv.org/abs/2603.23467">Bakker, arXiv:2603.23467</a></div>
+          <div class="row"><span class="k">Status</span>holomorphic convexity of universal covers beyond the linear case remains open; extending nonextendability criteria for sets of local systems is the stated next step.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-14</span>MLC as a renormalization program</div>
+          <div class="fld">Complex dynamics · <a href="https://arxiv.org/abs/2512.24171">Dudko, arXiv:2512.24171</a></div>
+          <div class="row"><span class="k">Their words</span>“The Mandelbrot set is locally connected” — stated, and attacked through named conjectures: bounded geometry of hyperbolic components, hyperbolicity of neutral and molecule renormalization.</div>
+          <div class="row"><span class="k">Progress would be</span><q>Establish pseudo-Siegel a priori bounds in the remaining unbounded satellite ql cases</q> — the most explicit roadmap in the corpus.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-15</span>Exact values of dynamical degrees</div>
+          <div class="fld">Arithmetic dynamics · <a href="https://arxiv.org/abs/2511.12111">Xie, arXiv:2511.12111</a></div>
+          <div class="row"><span class="k">Their words</span><q>What is the exact value of [math]? It is also interesting to know its lower/upper bounds.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-16</span>Matings of rational maps and Kleinian groups: the general program</div>
+          <div class="fld">Complex dynamics · <a href="https://arxiv.org/abs/2511.08408">Lomonaco–Mukherjee, arXiv:2511.08408</a></div>
+          <div class="row"><span class="k">Their agenda</span><q>Classify correspondence realizing matings of rational maps and Kleinian groups</q>; <q>Construct matings of arbitrary Fuchsian groups with polynomials</q>; mate polynomials with Bers boundary groups, <q>possibly with Peano curve limit sets.</q></div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Riemannian, symplectic &amp; contact geometry <span class="n">P-17 – P-24</span></summary>
+      <div class="inner">
+        <div class="prob">
+          <div class="pt"><span class="pid">P-17</span>Mean curvature flow: uniqueness of tangent flows; multiplicity one</div>
+          <div class="fld">Geometric analysis · <a href="https://arxiv.org/abs/2510.01355">Haslhofer, arXiv:2510.01355</a></div>
+          <div class="row"><span class="k">Their words</span><q>Tangent-flows are independent of the choice of sequence of rescaling factors</q> (Conjecture 5.2); the multiplicity-one conjecture; and: give a mean curvature flow proof of the Smale conjecture.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-18</span>Stable minimal immersions: volume growth and rigidity</div>
+          <div class="fld">Geometric analysis · <a href="https://arxiv.org/abs/2510.04481">Chodosh, arXiv:2510.04481</a></div>
+          <div class="row"><span class="k">Why hard</span><q>De Giorgi's splitting result does not hold without graphicality</q>; in higher dimensions <q>very little is known.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-19</span>The Hoffman–Meeks conjecture; minimal laminations</div>
+          <div class="fld">Minimal surfaces · <a href="https://arxiv.org/abs/2510.12319">Pérez, arXiv:2510.12319</a></div>
+          <div class="row"><span class="k">Their words</span>prove an affine upper bound on the number of ends; <q>Even in the simplest case… the conjecture remains open</q>; infinite-genus surfaces are <q>an almost unexplored research topic.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-20</span>Prescribed data at infinity for hyperbolic 3-manifolds</div>
+          <div class="fld">Hyperbolic geometry · <a href="https://arxiv.org/abs/2510.05627">Schlenker, arXiv:2510.05627</a></div>
+          <div class="row"><span class="k">Their words</span>uniqueness for prescribed induced metrics <q>remains elusive</q>; <q>all uniqueness statements remain conjectural.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-21</span>Strong closing lemmas in higher dimensions</div>
+          <div class="fld">Symplectic dynamics · <a href="https://arxiv.org/abs/2512.05523">Irie, arXiv:2512.05523</a></div>
+          <div class="row"><span class="k">Their words</span><q>It is a wide open question whether the strong closing lemmas hold for high-dimensional Hamiltonian dynamics.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-22</span>Perfectness of area-preserving diffeomorphism groups</div>
+          <div class="fld">Symplectic topology · <a href="https://arxiv.org/abs/2512.05454">Cristofaro-Gardiner, arXiv:2512.05454</a></div>
+          <div class="row"><span class="k">Their words</span><q>Is the group of area-preserving diffeomorphisms of [math] perfect?</q> — a longstanding question; and <q>Is there anything like the above story in higher dimensions?</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-23</span>Do Fukaya categories see geometry? (Arnold's question)</div>
+          <div class="fld">Symplectic geometry · <a href="https://arxiv.org/abs/2510.22476">Auroux, arXiv:2510.22476</a></div>
+          <div class="row"><span class="k">Why hard</span><q>even though Hamiltonian isotopic exact Lagrangian submanifolds are Fukaya isomorphic, it is not clear</q> the converse holds — and whether Fukaya objects <q>even behave in the geometric manner suggested by the algebra… is harder than one might think, already for surfaces.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-24</span>Does the contact push-off determine the Legendrian?</div>
+          <div class="fld">Contact topology · <a href="https://arxiv.org/abs/2510.05804">Etnyre, arXiv:2510.05804</a></div>
+          <div class="row"><span class="k">Their words</span><q>An interesting open question is whether or not the contact push-off of a Legendrian submanifold determines the Legendrian submanifold.</q></div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Topology, dynamics &amp; mathematical physics <span class="n">P-25 – P-33</span></summary>
+      <div class="inner">
+        <div class="prob">
+          <div class="pt"><span class="pid">P-25</span>Exotic four-spheres and detection tools</div>
+          <div class="fld">Topology (plenary) · <a href="https://arxiv.org/abs/2601.05425">Manolescu, arXiv:2601.05425</a></div>
+          <div class="row"><span class="k">Their words</span><q>Does there exist an exotic smooth structure on [math] for some [math]?</q>; <q>Can skein lasagna modules detect exotic smooth structures on some closed four-manifolds?</q>; the slice-ribbon conjecture, stated as open.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-26</span>Orbit closures in Apollonian packings; rigidity beyond local mixing</div>
+          <div class="fld">Homogeneous dynamics (plenary) · <a href="https://arxiv.org/abs/2510.10771">Oh, arXiv:2510.10771</a></div>
+          <div class="row"><span class="k">Why hard</span>self-joinings rigidity <q>remains open, with the main obstacle being the absence of a local mixing theorem in this broader setting.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-27</span>Finiteness of attractors</div>
+          <div class="fld">Dynamics · <a href="https://arxiv.org/abs/2510.12929">Berger, arXiv:2510.12929</a></div>
+          <div class="row"><span class="k">Their words</span><q>Is there a dense subset of [math] formed by dynamics with finitely many attractors, whose basin union covers [math] a.e.?</q> — asked after his own wandering-domain constructions show what fails.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-28</span>Birkhoff-type rigidity for outer, Minkowski and wire billiards</div>
+          <div class="fld">Dynamics · <a href="https://arxiv.org/abs/2510.03790">Bialy–Mironov, arXiv:2510.03790</a></div>
+          <div class="row"><span class="k">Their words</span><q>Are there integrable outer billiards in the plane other than ellipses?</q>; the Minkowski-billiard total-integrability question, communicated by Ostrover.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-29</span>Long-range percolation: the crossover and Sak's prediction</div>
+          <div class="fld">Mathematical physics · <a href="https://arxiv.org/abs/2510.03951">Hutchcroft, arXiv:2510.03951</a></div>
+          <div class="row"><span class="k">Why hard</span><q>held back by the same issues preventing a rigorous RG analysis of logarithmic corrections in six-dimensional percolation.</q></div>
+          <div class="row"><span class="k">Reachability</span><q>perhaps the most difficult problem will be to prove the effectively short-range part of Sak's prediction.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-30</span>Imaginary Liouville theory</div>
+          <div class="fld">Mathematical physics · <a href="https://arxiv.org/abs/2509.21053">Rhodes–Vargas, arXiv:2509.21053</a></div>
+          <div class="row"><span class="k">Their words</span><q>The grand challenge is to understand the probabilistic approach of the (non compact) imaginary Liouville theory.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-31</span>LQG: the dimension, and life beyond mating-of-trees</div>
+          <div class="fld">Probability · <a href="https://arxiv.org/abs/2510.16431">Holden–Sun, arXiv:2510.16431</a></div>
+          <div class="row"><span class="k">Their words</span><q>The Hausdorff dimension [math] of a [math]-LQG surface is not known for general [math]</q>; scaling limits <q>without using the mating-of-trees framework</q> would be of significant interest.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-32</span>The Stochastic Heat Flow: uniqueness, and its distance from GMC</div>
+          <div class="fld">Probability · <a href="https://arxiv.org/abs/2511.08479">Caravenna–Sun–Zygouras, arXiv:2511.08479</a></div>
+          <div class="row"><span class="k">Their words</span><q>The uniqueness of the martingale problem remains open, which probably requires a more explicit characterisation of the quadratic variation</q>; <q>it is an open question how different is the SHF from a GMC.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-33</span>The un-inverted Parisi formula</div>
+          <div class="fld">Probability · <a href="https://arxiv.org/abs/2510.01054">Mourrat, arXiv:2510.01054</a></div>
+          <div class="row"><span class="k">Their words</span><q>this “un-inverted” formula deserves further study and could potentially help us to better understand spin glasses, including those models for which the Parisi formula is already proved rigorously.</q></div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Combinatorics, computer science, statistics <span class="n">P-34 – P-36</span></summary>
+      <div class="inner">
+        <div class="prob">
+          <div class="pt"><span class="pid">P-34</span>Minimum-degree and probabilistic thresholds for designs</div>
+          <div class="fld">Combinatorics · <a href="https://arxiv.org/abs/2510.19978">Postle, arXiv:2510.19978</a></div>
+          <div class="row"><span class="k">Their words</span>the two remaining <q>central problems in what may be called extremal design theory</q>: minimum-degree thresholds for decompositions, and probabilistic thresholds for Steiner systems.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-35</span>Structure of correlated functions under abelian embeddings</div>
+          <div class="fld">Mathematics of CS · <a href="https://arxiv.org/abs/2602.22183">Minzer, arXiv:2602.22183</a></div>
+          <div class="row"><span class="k">Their words</span><q>At present time, [Problem] 2.6 is open for all [math], and we believe it is a very challenging and interesting problem</q>; plus: an ergodic-theoretic approach to higher correlations, an analytic proof of the CSP dichotomy theorem, quantitative density Hales-Jewett.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-36</span>Graph alignment: computational thresholds</div>
+          <div class="fld">Statistics-ML × CS · <a href="https://arxiv.org/abs/2510.24914">Massoulié, arXiv:2510.24914</a></div>
+          <div class="row"><span class="k">Their words</span><q>The study of the spectrum of such random matrices is largely open</q>; the stated objectives are hardness of local search and of low-degree polynomial algorithms below the conjectured threshold.</div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Algebra, number theory, logic &amp; computation <span class="n">P-37 – P-45</span></summary>
+      <div class="inner">
+        <div class="prob">
+          <div class="pt"><span class="pid">P-37</span>The Humphreys conjectures in positive characteristic</div>
+          <div class="fld">Representation theory · <a href="https://arxiv.org/abs/2511.05063">Achar–Riche, arXiv:2511.05063</a></div>
+          <div class="row"><span class="k">Why hard</span><q>the formula so obtained involves some geometric data that are currently not well understood, namely Euler characteristics of stalks of Iwahori-equivariant intersection cohomology complexes on the affine flag variety.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-38</span>Combinatorial invariance; Kazhdan–Lusztig positivity for matroids</div>
+          <div class="fld">Algebraic combinatorics · <a href="https://arxiv.org/abs/2510.09488">Braden–Proudfoot, arXiv:2510.09488</a></div>
+          <div class="row"><span class="k">Their words</span><q>The original conjecture remains open, but there has been renewed interest and activity around it recently</q>; the matroid inequality <q>has been conjectured, but any proof will require new ideas</q>; <q>It would be very interesting to have a unified approach, but at present we do not.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-39</span>The missing Kazhdan–Lusztig theory for quantum affine categories</div>
+          <div class="fld">Lie theory · <a href="https://arxiv.org/abs/2510.06437">Hernandez, arXiv:2510.06437</a></div>
+          <div class="row"><span class="k">Their words</span>the analog of the Kazhdan-Lusztig conjecture <q>is still open in general</q>; the q-character of a general simple module <q>is not known.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-40</span>Better-than-squareroot cancellation: sharpness and non-vanishing</div>
+          <div class="fld">Analytic number theory · <a href="https://arxiv.org/abs/2512.23681">Harper, arXiv:2512.23681</a></div>
+          <div class="row"><span class="k">Their words</span><q>No such positive proportion non-vanishing result is currently known by any method</q>; the conditional results need <q>the Generalised Riemann Hypothesis and the Ratios Conjecture.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-41</span>Optimal spectral gaps of random hyperbolic surfaces, beyond the known models</div>
+          <div class="fld">Spectral geometry · <a href="https://arxiv.org/abs/2601.13988">Monk–Naud, arXiv:2601.13988</a></div>
+          <div class="row"><span class="k">Their words</span><q>the optimal spectral gap result is not known for the Brooks-Makeover model</q>; the conjecture: the optimal gap should always hold.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-42</span>Simple sharply 2-transitive groups</div>
+          <div class="fld">Model theory × group theory · <a href="https://arxiv.org/abs/2606.18207">Tent, arXiv:2606.18207</a></div>
+          <div class="row"><span class="k">Their words</span><q>Is there a simple sharply 2-transitive group of positive characteristic in which every element is a product of a bounded number of translations?</q> — among her <q>urgent questions that remain.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-43</span>Moduli stacks: local structure, and Totaro's resolution property</div>
+          <div class="fld">Algebraic geometry · <a href="https://arxiv.org/abs/2603.21412">Alper–Halpern-Leistner, arXiv:2603.21412</a></div>
+          <div class="row"><span class="k">Their words</span><q>Is there a separated Deligne–Mumford stack that is not a global quotient stack?</q> — with their local-structure conjecture for stacks with reductive stabilizers, and Θ-stratification questions for K-stability moduli.</div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-44</span>Computable spectra; are the GWW polygons Steklov-isospectral?</div>
+          <div class="fld">Numerical analysis × spectral geometry · <a href="https://arxiv.org/abs/2512.25012">Nigam, arXiv:2512.25012</a></div>
+          <div class="row"><span class="k">Their words</span>numerics <q>provide evidence but not a proof that the GWW polygons are not Steklov-isospectral</q>; computability of continuous/essential spectra is <q>even more challenging.</q></div>
+        </div>
+        <div class="prob">
+          <div class="pt"><span class="pid">P-45</span>Thirteen spheres, and the limits of conic optimization</div>
+          <div class="fld">Discrete geometry × optimization · <a href="https://arxiv.org/abs/2510.06960">Vallentin, arXiv:2510.06960</a></div>
+          <div class="row"><span class="k">Their words</span><q>Applying any of these methods to the thirteen-sphere problem is still far beyond reach for current computers.</q></div>
+        </div>
+      </div>
+    </details>
+
+    <p class="small muted" style="margin-top:16px">Honest coverage notes: the PDE sections yielded few verifiable open-problem quotations in this pass and deserve a targeted second reading; the education, history and modelling sections state agendas rather than problems; fourteen plenary texts exist only in the SIAM volumes and are not yet incorporated. The roster grows on the second pass — it does not shrink.</p>
+  </section>
+
+  <!-- ============ FIELD MAP ============ -->
+  <section id="map">
+    <div class="sec-head">Field map</div>
+    <h2>Sections, people, clusters</h2>
+    <p>Twenty sections, 21 plenary lecturers, roughly 205 scientific lecture slots. The full speaker list is on the <a href="https://www.icm2026.org/event/ac193975-5d24-4628-8c30-ddb23de19a8b/speakers">official congress site</a>; the proceedings tables of contents are registered with <a href="https://doi.org/10.1137/1.9781611978636">SIAM</a>. What is worth extracting here is the cluster structure — the same methods surfacing in different sections' lectures:</p>
+    <ul class="plain">
+      <li><b>O-minimality / tame Hodge theory:</b> Tsimerman (plenary) — Bakker (Sec 4) — Xie's dynamical André-Oort (Sec 4). One method, three lectures.</li>
+      <li><b>Kakeya / restriction / projections:</b> Wang (Sec 8) — Zahl (Sec 5, special) — R. Zhang (Sec 8) — Mirek's ergodic imports (Sec 8), with Tolsa's plenary as the geometric-measure-theory anchor. The programme effectively contains a school track without naming it.</li>
+      <li><b>Log-concave polynomials / spectral independence:</b> Oveis Gharan (Abacus) — Vinzant (Sec 13) — Anari (Sec 14). A prize and two sections, same machinery.</li>
+      <li><b>Strong convergence of random matrices:</b> van Handel (Sec 8, special) — Monk–Naud (Sec 3/5, special joint) — Bordenave (Sec 8). A 2022→26 method-spread visible in the slot structure itself.</li>
+      <li><b>K-stability &amp; moduli of Fanos:</b> Fujita (Sec 4) — Zhuang (Sec 4) — Alper–Halpern-Leistner (Sec 4, joint), complemented on the Kähler side by Witt Nyström and Tosatti (Sec 5).</li>
+      <li><b>KPZ / disordered systems / LQG:</b> Quastel (plenary) — Caravenna–Sun–Zygouras (Sec 12, joint) — Holden–Sun (Sec 12, joint) — Rhodes–Vargas (Sec 11, joint). Probability's two big programs each got a joint-lecture pair.</li>
+    </ul>
+    <p class="small muted">Slot arithmetic, for a sense of weight: the analysis-adjacent sections (8, 10, 11) total 41 scientific slots — the congress's largest thematic block; the algebraic block (2, 3, 4, 7) totals 50. Affiliations worth updating one's mental map by (all from the official database): Joshua Zahl is now at the Chern Institute of Mathematics, Nankai; Dennis Gaitsgory at MPIM Bonn; Yu Deng at Chicago; Tim Austin at Warwick; Moritz Hardt at MPI Tübingen.</p>
+  </section>
+
+  <!-- ============ TECHNIQUES ============ -->
+  <section id="techniques">
+    <div class="sec-head">Techniques that travel</div>
+    <h2>Methods that crossed fields this cycle</h2>
+    <p class="muted small">Written as moves — <em>when stuck on X, try Y, because Z</em> — with the entry rule that two different fields must actually be using the technique, per a primary source.</p>
+
+    <div class="move"><b>Geometry of polynomials → algorithms and MCMC.</b>
+      <p>When stuck bounding the mixing of a Markov chain on combinatorial objects, encode the distribution in a generating polynomial and prove log-concavity / spectral independence: local spectral control implies global mixing. The Abacus citation records the import chain — the log-concave polynomials papers “initially leveraged a breakthrough in Combinatorial Hodge Theory by Adiprasito, Huh, and Katz.”</p></div>
+
+    <div class="move"><b>O-minimality → arithmetic and Hodge theory.</b>
+      <p>When stuck proving a transcendental object algebraic, place it in an o-minimal structure and apply Pila–Wilkie or definable GAGA: tame topology turns transcendence into point-counting with controlled geometry. The Tsimerman citation calls this “the recasting of o-minimality as a fundamental method.”</p></div>
+
+    <div class="move"><b>Strong convergence of random matrices → spectral geometry.</b>
+      <p>When stuck on optimal spectral gaps for random covers or hyperbolic surfaces, prove strong convergence of random permutation representations: operator-norm convergence transfers directly to Laplacian spectra (<a href="https://arxiv.org/abs/2510.12520">van Handel</a>, <a href="https://arxiv.org/abs/2601.13988">Monk–Naud</a>).</p></div>
+
+    <div class="move"><b>Decoupling and multiscale induction → GMT and PDE.</b>
+      <p>When stuck on an oscillatory-integral or dimension bound, decompose into wave packets and induct on scales: orthogonality is only accessible scale-by-scale. The Wang citation is the compressed record — local smoothing, Falconer, Furstenberg, Kakeya.</p></div>
+
+    <div class="move"><b>Non-Archimedean pluripotential theory → Kähler geometry.</b>
+      <p>When stuck on a degenerating family of Kähler metrics, formulate the limit on the Berkovich / test-configuration side, where Monge–Ampère theory extends, then pull back. Witt Nyström: a Calabi–Yau theorem “formulated in the language of non-Archimedean Kähler geometry” (<a href="https://arxiv.org/abs/2510.03044">arXiv:2510.03044</a>).</p></div>
+
+    <div class="move"><b>Floer-theoretic spectral invariants → smooth dynamics.</b>
+      <p>When stuck on a closing lemma or structure theorem for area-preserving maps, use ECH/Floer spectral invariants and their Weyl laws — “quantities defined by Floer theory tend to have good continuity” (<a href="https://arxiv.org/abs/2512.05454">Cristofaro-Gardiner</a>); the proofs of the strong closing lemmas “use the notion of spectral invariants from symplectic geometry” (<a href="https://arxiv.org/abs/2512.05523">Irie</a>). The Simplicity Conjecture fell to the same transfer.</p></div>
+
+    <div class="move"><b>The circle method → pointwise ergodic theorems.</b>
+      <p>When stuck on almost-everywhere convergence along arithmetic sequences, run the number-theoretic circle method through modern multi-frequency harmonic analysis (Ionescu–Wainger). Bourgain's toolkit ranged “from harmonic analysis and number theory to probability and the theory of Banach spaces” (<a href="https://arxiv.org/abs/2602.11344">Mirek</a>).</p></div>
+
+    <div class="move"><b>Minimal-surface methods → scalar-curvature topology.</b>
+      <p>When stuck on a positive-scalar-curvature obstruction, probe with stable minimal hypersurfaces and μ-bubbles: stability converts curvature positivity into descent on dimension — the method that resolved Gromov's aspherical conjecture in dimensions 4 and 5 (<a href="https://arxiv.org/abs/2510.04481">Chodosh</a>).</p></div>
+
+    <div class="move"><b>Quasiconformal surgery across the map/group divide.</b>
+      <p>When stuck relating holomorphic dynamics to Kleinian groups, mate them through correspondences and Schwarz reflections, transferring bounds by surgery — “the Douady-Ghys qc surgery… transfers real a priori bounds from Blaschke maps to complex Siegel polynomials” (<a href="https://arxiv.org/abs/2512.24171">Dudko</a>; <a href="https://arxiv.org/abs/2511.08408">Lomonaco–Mukherjee</a>).</p></div>
+
+    <div class="move"><b>Conic optimization + symmetry reduction → discrete geometry.</b>
+      <p>When stuck on an extremal packing configuration, use SDP hierarchies reduced by representation theory, then round to exact certificates: “conic optimization…, symmetry reduction via harmonic analysis, and techniques for rounding numerical approximations to exact and easily verifiable solutions” (<a href="https://arxiv.org/abs/2510.06960">Vallentin</a>).</p></div>
+
+    <div class="move"><b>Hodge packages without spaces → combinatorics.</b>
+      <p>When stuck on positivity or unimodality for combinatorial data, build the intersection-cohomology package purely combinatorially: hard Lefschetz and Hodge–Riemann survive without any variety (<a href="https://arxiv.org/abs/2510.09488">Braden–Proudfoot</a>; “Huh and Wang showed that the same argument applies to arrangement Schubert varieties”).</p></div>
+
+    <div class="move"><b>Optimal transport and mean-field PDE → the theory of machine learning.</b>
+      <p>Recorded at the level of the programme rather than verified texts: Peyré, <em>Optimal and Diffusion Transports in Machine Learning</em>; Rigollet, <em>The Mean-Field Dynamics of Transformers</em>; Zuazua, <em>Machine Learning and Control</em> — three sections institutionalizing the same direction.</p></div>
+  </section>
+
+  <!-- ============ AI ============ -->
+  <section id="ai">
+    <div class="sec-head">AI &amp; mathematics</div>
+    <h2>What was actually claimed</h2>
+    <p>Separating three things that press coverage tends to blur: claims made <em>in lectures by mathematicians</em>; claims made by companies or press around the event; and inference. Only the first is evidence of where the field stands. The load-bearing text is Alex Kontorovich's special plenary, <em>The Shape of Math To Come</em> (<a href="https://arxiv.org/abs/2510.15924">arXiv:2510.15924</a>), whose author dates his snapshot September 2025. His structural claims, in his own words:</p>
+
+    <blockquote>“For mathematics, a non-zero error rate creates an unusable tool. If we cannot distinguish the correct results from the flawed ones without verification, then that defeats the whole purpose of automation.”
+      <span class="who">— on the 100-AI-papers-a-day thought experiment; scaling accuracy does not fix it</span></blockquote>
+
+    <blockquote>“Compare this to a different scenario: an AI that produces only 10 papers per year, but each comes with a formally verified proof… That is a tool I would use enthusiastically.”</blockquote>
+
+    <blockquote>“As things currently stand, I cannot even state formally most theorems of interest to me, much less prove them. The existing formal libraries would need to grow by orders of magnitude…” — unless “formalization can be ‘supercharged’ by automation.”
+      <span class="who">— the library gap, and the motivation for his proposed “quasi-autoformalization” architecture</span></blockquote>
+
+    <p>He entertains the opposite outcome explicitly — “perhaps natural language AI will, after all, be sufficient for all of mathematics?” — as an open question, and discloses his position on the Lean FRO advisory board.</p>
+
+    <p>Around this one reflective plenary, the congress treated machine learning as ordinary mathematical subject matter: Bartlett's plenary on implicit bias and benign overfitting, Rigollet on transformer dynamics, Peyré on transport, Zuazua on control, Hardt on prediction — and the Gauss citation tying Nesterov's acceleration to modern AI training. There was a roundtable on mathematics education in the AI era, and public lectures by Terence Tao and Geordie Williamson (no public texts yet).</p>
+
+    <div class="feature">
+      <div class="kicker">The honest one-line summary (inference, marked as such)</div>
+      <p>On the evidence of the 192 published lecture texts: in July 2026, machine assistance had not yet entered the congress's mathematical <em>results</em> — it entered its <em>reflection about itself</em>.</p>
+    </div>
+  </section>
+
+  <!-- ============ CONTEXT ============ -->
+  <section id="context">
+    <div class="sec-head">Context</div>
+    <h2>The congress around the mathematics</h2>
+    <p class="small">There was a political dimension — concerns about holding the congress in the United States — which this report records factually and briefly, with every statement attributed and no position taken.</p>
+    <ul class="plain small">
+      <li>The IMU Executive Committee (<a href="https://www.mathunion.org/fileadmin/documents/2026-03/IMU_AO_CL_4_2026_Statement.pdf">statement, 30 March 2026</a>): “Concerns have been raised within the mathematical community about holding the International Congress of Mathematicians (ICM) in the United States this July.” The EC's position: “we strongly believe that holding the ICM in person in Philadelphia is especially important,” acknowledging “the concerns about entering the United States, as well as about feeling safe and welcome.” The same statement promises that “recordings of all sessions will be made available online, after a short editing process.”</li>
+      <li>The US National Committee for Mathematics (letter, 11 February 2026): “We acknowledge the genuine concerns expressed by some participants about gathering at this time and in this location,” and argues “the value of international scientific exchange itself.”</li>
+      <li>Further statements were published by the AMS president (twice), the EMS, the DMV, and the Fields Institute, all linked from the congress site.</li>
+    </ul>
+    <p class="small muted">Still to come from the congress itself: Proceedings Volume 1 (the prize laudationes), the remaining plenary texts, and the promised session recordings. This page will be revised when they appear.</p>
+  </section>
+
+  <!-- ============ METHOD ============ -->
+  <section id="method">
+    <div class="sec-head">Sources &amp; method</div>
+    <h2>How this was made</h2>
+    <p class="small">Primary sources only, in tiers: the <a href="https://www.mathunion.org/imu-awards/fields-medal/fields-medals-2026">IMU award pages</a> and citation PDFs (canonical for all prize texts); the <a href="https://www.icm2026.org/event/ac193975-5d24-4628-8c30-ddb23de19a8b/speakers">official 305-entry speaker database</a>; the SIAM <em>Proceedings of the ICM 2026</em>, Volumes <a href="https://doi.org/10.1137/1.9781611978636">2</a>, <a href="https://doi.org/10.1137/1.9781611978650">3</a>, <a href="https://doi.org/10.1137/1.9781611978674">4</a>, <a href="https://doi.org/10.1137/1.9781611978698">5</a>, <a href="https://doi.org/10.1137/1.9781611978711">6</a>, <a href="https://doi.org/10.1137/1.9781611978735">7</a> (192 chapters, tables of contents via Crossref); and the 56 lecture texts their authors posted on <a href="https://arxiv.org/search/?query=%22ICM+2026%22&searchtype=all">arXiv</a>. Journalism was used only to decide where to look.</p>
+    <p class="small">Method: the lecture texts were read with AI assistance under a hard rule — every quotation used here was mechanically re-verified, character for character, against the source text; anything paraphrased was discarded. Where extraction lost a formula, the marker <span class="mathmark">[math]</span> is shown rather than a reconstruction, and the linked paper is the authority. Where the primary source does not exist yet (laudationes, recordings, fourteen plenary texts), the gap is stated instead of filled.</p>
+    <p class="small muted">Compiled July 2026 by Yan He. Corrections welcome — <a href="../index.html#contact">contact</a>.</p>
+  </section>
+
+  <footer>
+    <a href="../index.html">← 主页 · yanhe-math.com</a> · ICM 2026 field report · last revised 31 July 2026
+  </footer>
+
+</div>
+</body>
+</html>

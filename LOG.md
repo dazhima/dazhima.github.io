@@ -2,9 +2,19 @@
 
 parent: [CLAUDE.md](CLAUDE.md)
 
-## Status (2026-07-16)
+## Status (2026-07-31)
 
 **Live and working.** Custom domain active, HTTPS enforced, content published across three sections.
+
+- **icm2026/** (added 2026-07-31, NOT YET PUSHED) — "ICM 2026 — a field report": single
+  self-contained page in the homepage's design language (same palette/fonts/dark mode, no
+  build). Content rendered from the vault project `claude/obsidian-ai/math/icm2026/`
+  (source of truth): prize citations verbatim w/ links to the IMU citation PDFs, delta
+  2022→2026, all 45 roster problems in collapsible groups, 12 techniques, AI strand,
+  bounded politics section, sources & method. Public adaptation: internal tags
+  ("Adjacent to Yan", gap-checkboxes, wiki-links) removed; 94 external links
+  (mathunion/arXiv/doi only, spot-checked). Card added to Others (top). Working tree has
+  `M index.html` + `?? icm2026/` awaiting Yan's go-ahead to commit/push.
 
 - Homepage: hero (identity, satirical title), Research, Publications, Path, AI & Building (flagship: math-ai-framework), Others, Contact.
 - Others → Selected papers (arxiv-daily, external tracker), Phaedrus palinode (philosophy/socrate/), Arendt Life of the Mind + Marxism tracker + reading framework (philosophy/), World Cup Beijing-time tracker (worldcup/), Some small math (math-notes/), **Undergraduate reading seminar (reading-seminar/)**.
