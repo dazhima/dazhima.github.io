@@ -6,15 +6,26 @@ parent: [CLAUDE.md](CLAUDE.md)
 
 **Live and working.** Custom domain active, HTTPS enforced, content published across three sections.
 
-- **icm2026/** (added 2026-07-31, NOT YET PUSHED) — "ICM 2026 — a field report": single
+- **kakeya/** (added 2026-07-31) — "Union of tubes and Kakeya sets": Hong Wang's IHES
+  lecture 1 of 3, published from `claude/obsidian-ai/math/hongwang_work/kakeya-lecture1.html`
+  (built in a Cowork session; **that file is the website**, not the modular notes — the
+  `.md` modules are its backing support, reachable via its fold-out panels). Site copy adds
+  a 主页 breadcrumb in the sidebar and de-references two private vault paths in the Sources
+  paragraph. Blackboards: the 11 referenced keyframes copied to `kakeya/boards/ihes-1/`
+  (1.9 MB), image `src`s rewritten `captures/ihes-1/boards/` → `boards/ihes-1/`.
+  **When lectures 2–3 land**, rebuild in the vault, re-copy, drop new keyframes into
+  `kakeya/boards/ihes-2/` etc. and re-run the same sed rewrite.
+  ⚠ First attempt published the wrong file (`kakeya-wz25.html`, the modular-notes page,
+  commit 3d3f693) — replaced in e8cd126.
+- **icm2026/** (added 2026-07-31, live) — "ICM 2026 — a field report": single
   self-contained page in the homepage's design language (same palette/fonts/dark mode, no
   build). Content rendered from the vault project `claude/obsidian-ai/math/icm2026/`
   (source of truth): prize citations verbatim w/ links to the IMU citation PDFs, delta
   2022→2026, all 45 roster problems in collapsible groups, 12 techniques, AI strand,
   bounded politics section, sources & method. Public adaptation: internal tags
   ("Adjacent to Yan", gap-checkboxes, wiki-links) removed; 94 external links
-  (mathunion/arXiv/doi only, spot-checked). Card added to Others (top). Working tree has
-  `M index.html` + `?? icm2026/` awaiting Yan's go-ahead to commit/push.
+  (mathunion/arXiv/doi only, spot-checked). Card added to Others (top).
+  Live: https://yanhe-math.com/icm2026/
 
 - Homepage: hero (identity, satirical title), Research, Publications, Path, AI & Building (flagship: math-ai-framework), Others, Contact.
 - Others → Selected papers (arxiv-daily, external tracker), Phaedrus palinode (philosophy/socrate/), Arendt Life of the Mind + Marxism tracker + reading framework (philosophy/), World Cup Beijing-time tracker (worldcup/), Some small math (math-notes/), **Undergraduate reading seminar (reading-seminar/)**.
