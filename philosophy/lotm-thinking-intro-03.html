@@ -805,6 +805,11 @@
       display:block; position:fixed;
       left:max(16px,calc(50vw - 640px)); top:4.3rem; width:212px;
       z-index:8; padding:.75rem .8rem .8rem;
+      /* Whole extent should always be visible (no scrolling map). The cap is a
+         safety net for unusually short windows only — with the trimmed chrome
+         the longest page fits ~700px of viewport height. */
+      max-height:calc(100vh - 5.2rem); overflow:auto; overscroll-behavior:contain;
+      scrollbar-width:thin;
       border:1px solid var(--line); border-radius:10px;
       background:color-mix(in srgb,var(--paper) 94%,transparent);
       box-shadow:0 10px 32px rgba(55,42,24,.07);
@@ -818,11 +823,12 @@
   .map-hide{margin-left:auto;border:0;background:none;color:var(--muted);padding:.1rem;
             font:inherit;font-size:.62rem;cursor:pointer}
   .map-hide:hover{color:var(--amber)}
-  .map-kicker{margin:.55rem 0 .25rem;font-size:.55rem;font-weight:760;letter-spacing:.13em;
+  .map-kicker{margin:.4rem 0 .18rem;font-size:.55rem;font-weight:760;letter-spacing:.13em;
               text-transform:uppercase;color:var(--muted)}
 
-  .bk-work{font-size:.66rem;font-weight:700;color:var(--ink);margin:.1rem 0 .15rem}
-  .bk-unit{display:flex;align-items:baseline;gap:.3rem;padding:.14rem .3rem;border-radius:5px;
+  .bk-work{font-size:.66rem;font-weight:700;color:var(--ink);margin:.05rem 0 .12rem}
+  .bk-work small{font-weight:400;color:var(--muted);font-size:.55rem;margin-left:.3rem}
+  .bk-unit{display:flex;align-items:baseline;gap:.3rem;padding:.09rem .3rem;border-radius:5px;
            font-size:.63rem;color:var(--muted)}
   .bk-unit.built{color:var(--ink)}
   .bk-unit.current{background:var(--amber-soft);font-weight:700}
@@ -832,15 +838,15 @@
           font-variant-numeric:tabular-nums;padding:.02rem .18rem;border-radius:3px}
   .bk-seg:hover{background:var(--amber-soft);color:var(--ink)}
   .bk-seg.here{background:var(--amber);color:var(--paper);font-weight:700}
-  .bk-later{font-size:.55rem;color:var(--muted);opacity:.75;margin:.2rem 0 0 .3rem}
+
 
   .pg-map{display:grid;grid-template-columns:14px 1fr;gap:.5rem;margin-top:.15rem}
   .pg-strip{position:relative;width:14px;border:1px solid var(--line);border-radius:4px;
             background:
               repeating-linear-gradient(to bottom,
-                transparent 0, transparent calc(10px - 1px),
-                color-mix(in srgb,var(--line) 55%,transparent) calc(10px - 1px),
-                color-mix(in srgb,var(--line) 55%,transparent) 10px)
+                transparent 0, transparent calc(8px - 1px),
+                color-mix(in srgb,var(--line) 55%,transparent) calc(8px - 1px),
+                color-mix(in srgb,var(--line) 55%,transparent) 8px)
               var(--paper);
             cursor:pointer}
   .pg-para{position:absolute;left:0;right:0;height:2px;background:var(--line);
@@ -869,7 +875,7 @@
 <script>
 (()=>{
   const CFG={"first": 99, "last": 127, "paras": [99, 107, 115, 123], "regions": [{"s": 99, "e": 102, "zh": "两个世界", "en": "two-world premise"}, {"s": 103, "e": 106, "zh": "人人能思", "en": "thinking for everybody"}, {"s": 107, "e": 110, "zh": "理性与知性", "en": "reason vs intellect"}, {"s": 111, "e": 114, "zh": "不自觉的解放", "en": "Kant unawares"}, {"s": 115, "e": 117, "zh": "标准越界", "en": "criteria trespass"}, {"s": 118, "e": 122, "zh": "意义非真理", "en": "meaning, not truth", "thesis": true}, {"s": 123, "e": 127, "zh": "观念论回落", "en": "Idealism relapses"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}};
-  const PX=10;
+  const PX=8;
   const sents=[...document.querySelectorAll("p.sent")];
   if(!sents.length) return;
   const markKey="reading-marks:"+location.pathname;
@@ -916,8 +922,7 @@
     `<div class="map-head"><div class="map-title">Reading map</div>`+
     `<button class="map-hide" type="button">Hide</button></div>`+
     `<div class="map-kicker">The book</div>`+
-    `<div class="bk-work">${CFG.book.work}</div>${bookRows}`+
-    `<div class="bk-later">之后：${CFG.book.later}</div>`+
+    `<div class="bk-work">${CFG.book.work}<small>之后 ${CFG.book.later}</small></div>${bookRows}`+
     `<div class="map-kicker">This page</div>`+
     `<nav class="pg-map" aria-label="Argument map">`+
     `<div class="pg-strip" style="height:${H}px"></div>`+
@@ -936,15 +941,29 @@
   });
   const view=document.createElement("div"); view.className="pg-view"; strip.appendChild(view);
 
+  // The STRIP carries the honest proportional geometry (ticks, marks, band).
+  // The LABEL column only has to stay adjacent, ordered and readable, so a
+  // short region gets a legible minimum height and later labels are pushed
+  // down rather than overlapping. Decoupling the two keeps proportion exact
+  // where it matters without making 3-sentence regions unreadable.
+  const MINLAB=26;
   const labBtns=CFG.regions.map(r=>{
     const b=document.createElement("button");
     b.type="button"; b.className="pg-lab"+(r.thesis?" thesis":"");
-    b.style.top=y(r.s)+"px"; b.style.height=((r.e-r.s+1)*PX)+"px";
     b.innerHTML=`<span class="pg-range">${r.s}–${r.e}</span>`+
                 `<span class="pg-zh">${r.zh}</span><span class="pg-en">${r.en}</span>`;
     b.addEventListener("click",()=>jump(r.s));
     labels.appendChild(b); return b;
   });
+  let bottom=-1e9;
+  labBtns.forEach((b,i)=>{
+    const r=CFG.regions[i];
+    const h=Math.max((r.e-r.s+1)*PX,MINLAB);
+    const top=Math.max(y(r.s),bottom+2);
+    b.style.top=top+"px"; b.style.height=h+"px";
+    bottom=top+h;
+  });
+  labels.style.height=Math.max(H,bottom)+"px";
 
   function jump(n){
     const p=byNumber(n); if(!p) return;
