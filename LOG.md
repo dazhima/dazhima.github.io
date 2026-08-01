@@ -31,13 +31,12 @@ parent: [CLAUDE.md](CLAUDE.md)
 - **philosophy/Life of the Mind** (extended 2026-08-01) — the Thinking Introduction
   is complete across three linked pages (S1–127 / pp. 3–16), and
   `lotm-thinking-appearance-01.html` continues with the complete first chapter of
-  Appearance I (S128–174 / pp. 19–23). The new page preserves the Auden epigraph and
-  keeps the validated meaning-first rescue plus folded literal translation, with no
-  Cain reader. Theme propagation now matches the whole `lotm-thinking-` series.
-  Page II is also the sole spatial-layout prototype: number-only sentence coordinates
-  plus a hideable desktop left map for book position, nine S49–98 argument regions,
-  progress, and personal marks. The previous automatic words under every number and
-  right-side minimap were removed; mobile has no map.
+  Appearance I (S128–174 / pp. 19–23). `lotm-thinking-appearance-02.html` adds all of
+  §2 (S175–202 / pp. 23–26), with 28 meaning-first rescue cards and no Cain reader.
+  All five pages now carry the research-based v2 reading map: book-TOC position,
+  proportional hand-authored argument regions, viewport band, and marks placed in the
+  page extent. The previous automatic words and right-side minimap remain rejected;
+  mobile has no map and restores inline sentence numbers.
 - Others → Selected papers (arxiv-daily, external tracker), Phaedrus palinode (philosophy/socrate/), Arendt Life of the Mind + Marxism tracker + reading framework (philosophy/), World Cup Beijing-time tracker (worldcup/), Some small math (math-notes/), **Undergraduate reading seminar (reading-seminar/)**.
 - **reading-seminar/** (added 2026-07-16) — landing page "Undergraduate reading seminar" for algebraic geometry notes from working with undergraduates. First entry: "Blow-up — the scheme-theoretic point of view", copied in from `claude/obsidian-ai/math/Relearn algebraic geometry/student-surfaces-thesis/Blow-up — scheme-theoretic point of view.html` (self-contained, KaTeX via CDN), with a `← Undergraduate reading seminar` link added to its header. Same add-a-note pattern as math-notes/.
 - **bible/ is hidden** (since 2026-07-16, Yan's call): removed from the Others list and from `sitemap.xml`, and `robots.txt` now has `Disallow: /bible/`. Files are untouched and still live at `https://yanhe-math.com/bible/` — reachable by anyone with the direct link, just not advertised or crawled. To fully unpublish instead of just unlist, would need to actually delete the files from the repo.

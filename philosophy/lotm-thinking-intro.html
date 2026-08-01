@@ -1273,7 +1273,7 @@
 
 <script>
 (()=>{
-  const CFG={"first": 1, "last": 48, "paras": [1, 5, 20, 27, 31, 34, 43], "regions": [{"s": 1, "e": 4, "zh": "为何追问", "en": "why this inquiry"}, {"s": 5, "e": 19, "zh": "恶之平庸", "en": "first origin: Eichmann"}, {"s": 20, "e": 26, "zh": "思考能防恶", "en": "can thinking restrain evil?", "thesis": true}, {"s": 27, "e": 30, "zh": "非少数人", "en": "thinking belongs to everyone"}, {"s": 31, "e": 33, "zh": "第二起源", "en": "retrospect on Vita Activa"}, {"s": 34, "e": 42, "zh": "行动与沉思", "en": "action under contemplation"}, {"s": 43, "e": 48, "zh": "加图悖论", "en": "Cato's paradoxes"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}};
+  const CFG={"first": 1, "last": 48, "paras": [1, 5, 20, 27, 31, 34, 43], "regions": [{"s": 1, "e": 4, "zh": "为何追问", "en": "why this inquiry"}, {"s": 5, "e": 19, "zh": "恶之平庸", "en": "first origin: Eichmann"}, {"s": 20, "e": 26, "zh": "思考能防恶", "en": "can thinking restrain evil?", "thesis": true}, {"s": 27, "e": 30, "zh": "非少数人", "en": "thinking belongs to everyone"}, {"s": 31, "e": 33, "zh": "第二起源", "en": "retrospect on Vita Activa"}, {"s": 34, "e": 42, "zh": "行动与沉思", "en": "action under contemplation"}, {"s": 43, "e": 48, "zh": "加图悖论", "en": "Cato's paradoxes"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}, {"href": "lotm-thinking-appearance-02.html", "label": "S175–202"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}, "self": "lotm-thinking-intro.html"};
   const PX=8;
   const sents=[...document.querySelectorAll("p.sent")];
   if(!sents.length) return;
@@ -1329,6 +1329,15 @@
     `<div class="map-hint"></div>`;
   document.body.appendChild(map);
 
+  // The map is created after the page's initial theme pass, so propagate the
+  // active theme now as well (needed especially for direct file:// reading).
+  const theme=document.documentElement.dataset.theme;
+  map.querySelectorAll('a[href*="thinking-"]').forEach(link=>{
+    const target=new URL(link.getAttribute("href"),location.href);
+    target.searchParams.set("theme",theme);
+    link.href=target.href;
+  });
+
   const strip=map.querySelector(".pg-strip");
   const labels=map.querySelector(".pg-labels");
   const hint=map.querySelector(".map-hint");
@@ -1345,7 +1354,7 @@
   // short region gets a legible minimum height and later labels are pushed
   // down rather than overlapping. Decoupling the two keeps proportion exact
   // where it matters without making 3-sentence regions unreadable.
-  const MINLAB=26;
+  const MINLAB=34;
   const labBtns=CFG.regions.map(r=>{
     const b=document.createElement("button");
     b.type="button"; b.className="pg-lab"+(r.thesis?" thesis":"");

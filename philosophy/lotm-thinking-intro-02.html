@@ -1123,7 +1123,7 @@
 
 <script>
 (()=>{
-  const CFG={"first": 49, "last": 98, "paras": [49, 61, 65, 70, 73, 80, 86, 90, 95], "regions": [{"s": 49, "e": 60, "zh": "问题难提", "en": "questions become difficult"}, {"s": 61, "e": 64, "zh": "危机来自内部", "en": "crisis from within"}, {"s": 65, "e": 69, "zh": "上帝已死", "en": "death notices"}, {"s": 70, "e": 72, "zh": "无法复原", "en": "no restoration"}, {"s": 73, "e": 79, "zh": "等级终结", "en": "the hierarchy ends"}, {"s": 80, "e": 85, "zh": "两世界同崩", "en": "both worlds collapse"}, {"s": 86, "e": 89, "zh": "死亡成常识", "en": "deaths become common sense"}, {"s": 90, "e": 94, "zh": "不是虚无主义", "en": "dismantling, not nihilism", "thesis": true}, {"s": 95, "e": 98, "zh": "两重优势", "en": "two possible advantages"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}};
+  const CFG={"first": 49, "last": 98, "paras": [49, 61, 65, 70, 73, 80, 86, 90, 95], "regions": [{"s": 49, "e": 60, "zh": "问题难提", "en": "questions become difficult"}, {"s": 61, "e": 64, "zh": "危机来自内部", "en": "crisis from within"}, {"s": 65, "e": 69, "zh": "上帝已死", "en": "death notices"}, {"s": 70, "e": 72, "zh": "无法复原", "en": "no restoration"}, {"s": 73, "e": 79, "zh": "等级终结", "en": "the hierarchy ends"}, {"s": 80, "e": 85, "zh": "两世界同崩", "en": "both worlds collapse"}, {"s": 86, "e": 89, "zh": "死亡成常识", "en": "deaths become common sense"}, {"s": 90, "e": 94, "zh": "不是虚无主义", "en": "dismantling, not nihilism", "thesis": true}, {"s": 95, "e": 98, "zh": "两重优势", "en": "two possible advantages"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}, {"href": "lotm-thinking-appearance-02.html", "label": "S175–202"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}, "self": "lotm-thinking-intro-02.html"};
   const PX=8;
   const sents=[...document.querySelectorAll("p.sent")];
   if(!sents.length) return;
@@ -1179,6 +1179,15 @@
     `<div class="map-hint"></div>`;
   document.body.appendChild(map);
 
+  // The map is created after the page's initial theme pass, so propagate the
+  // active theme now as well (needed especially for direct file:// reading).
+  const theme=document.documentElement.dataset.theme;
+  map.querySelectorAll('a[href*="thinking-"]').forEach(link=>{
+    const target=new URL(link.getAttribute("href"),location.href);
+    target.searchParams.set("theme",theme);
+    link.href=target.href;
+  });
+
   const strip=map.querySelector(".pg-strip");
   const labels=map.querySelector(".pg-labels");
   const hint=map.querySelector(".map-hint");
@@ -1195,7 +1204,7 @@
   // short region gets a legible minimum height and later labels are pushed
   // down rather than overlapping. Decoupling the two keeps proportion exact
   // where it matters without making 3-sentence regions unreadable.
-  const MINLAB=26;
+  const MINLAB=34;
   const labBtns=CFG.regions.map(r=>{
     const b=document.createElement("button");
     b.type="button"; b.className="pg-lab"+(r.thesis?" thesis":"");

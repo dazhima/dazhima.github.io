@@ -90,3 +90,19 @@ target sentence was centered below the probe. Moved the probe from 30% to the vi
 midpoint. Browser checks passed at 1280px in Light/Dark, including hide/reload, marks,
 section jumps and no overflow. A 375px iframe check confirmed the map and Map button
 are absent and the original inline sentence numbers return.
+
+## 2026-08-01 — Arendt Appearance I §2 and the v2 map rollout
+
+Added `philosophy/lotm-thinking-appearance-02.html`, S175–202 / printed pp. 23–26,
+following the prepared Claude design exactly: five paragraph joints, six argument-map
+regions, and the complete two-world-theory section. All 28 sentences have concise
+meaning-first rescue, expression notes, reread cues, and folded literal translations.
+
+Browser QA caught two copy-template leaks. The copied page silently inherited Cain code
+pointing at page 4's audio directory, contrary to the standing pause, so it was removed.
+The one-sentence S197 map region also made the old 26px minimum label height collide
+with S198–202; raised the shared v2 minimum to 34px and re-injected all five pages.
+Validator checks pass for every page. At 1280×720 the desktop map and dark rescue mode
+have no overflow; at 375px the map and Map control disappear and inline numbers return.
+Also propagated the active theme when the map is created: its dynamic links otherwise
+missed the page's earlier theme pass, a bug masked by same-origin localStorage.

@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Life of the Mind · Thinking · Appearance I · Section 2</title>
+<script>
+  (()=>{
+    try{
+      const linked=new URLSearchParams(location.search).get('theme');
+      const saved=localStorage.getItem('lotm-reading-theme');
+      const choice=/^(dark|light)$/.test(linked||'')?linked:saved;
+      const dark=choice ? choice==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme=dark?'dark':'light';
+    }catch(_){ document.documentElement.dataset.theme='light'; }
+  })();
+</script>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --blue:#486a8b; --blue-soft:#e7eef5; --green:#4d7358; --green-soft:#e6efe8;
+  }
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#141311; --ink:#e8e0d4; --muted:#aaa092; --line:#3c3730;
+    --amber:#d5a45a; --amber-soft:#382b17; --purple:#c7a7e3; --purple-soft:#30263a;
+    --teal:#82c5b5; --teal-soft:#1d342f; --rose:#dc92a5; --rose-soft:#39242a;
+    --blue:#8fb6d5; --blue-soft:#20303d; --green:#91bd9b; --green-soft:#223529;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+    line-height:1.85;
+  }
+  /* top bar */
+  .bar{
+    position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;
+  }
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem;
+    cursor:pointer; transition:.15s;
+  }
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  .btn[aria-pressed="true"]{background:var(--green-soft); border-color:var(--green); color:var(--green)}
+  /* page */
+  main{max-width:720px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2.2rem}
+  header.doc h1{font-size:1.7rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  /* sentence units */
+  .sent{margin:0; padding:.35rem 0 .35rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .sent:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.6rem}
+  .stext{font-size:1.16rem}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted);
+     vertical-align:.45em; margin-right:.15em; user-select:none}
+  /* inline chinese ruby */
+  ruby{ruby-position:over}
+  rt{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+     font-size:.58em; color:var(--amber); font-weight:500; letter-spacing:.02em;
+     opacity:.92; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  /* remarks */
+  .remarks{margin:.45rem 0 .2rem; padding:.55rem .8rem;
+    background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber);
+    border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.6}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem}
+  .remark b{color:var(--ink)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em;
+    padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-dian{background:var(--purple-soft); color:var(--purple)}   /* 典故 */
+  .t-yin{background:var(--teal-soft); color:var(--teal)}        /* 引用 */
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}      /* 注 */
+  .t-ci{background:var(--rose-soft); color:var(--rose)}         /* 词 */
+  /* guided rescue; S32–47 use the validated meaning-first tree */
+  .practice-note{
+    margin:1.7rem 0 1rem; padding:.8rem 1rem; border:1px solid #cfdde8;
+    border-radius:8px; background:#eef4f8; color:#38536d;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.84rem; line-height:1.65;
+  }
+  .practice-note b{display:block; margin-bottom:.15rem}
+  .sentence-aid{
+    margin:.18rem 0 .7rem .9rem;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    transition:opacity .2s, filter .2s;
+  }
+  .sentence-aid details{border-radius:7px; overflow:hidden}
+  .sentence-aid summary{
+    display:flex; align-items:center; gap:.45rem; cursor:pointer; list-style:none;
+    padding:.38rem .65rem; font-size:.77rem; line-height:1.35; user-select:none;
+  }
+  .sentence-aid summary::-webkit-details-marker{display:none}
+  .sentence-aid summary::before{
+    content:"+"; width:1rem; height:1rem; display:inline-grid; place-items:center;
+    border-radius:50%; font-size:.8rem; font-weight:700; flex:0 0 auto;
+  }
+  .sentence-aid details[open] > summary::before{content:"−"}
+  .summary-hint{color:var(--muted); font-size:.7rem}
+  .rescue{border:1px solid #cfdde8; background:#f6f9fb}
+  .rescue > summary{color:var(--blue)}
+  .rescue > summary::before{background:var(--blue-soft); color:var(--blue)}
+  .translation{margin-top:.28rem; border:1px solid #d5e1d7; background:#f7faf7}
+  .translation > summary{color:var(--green)}
+  .translation > summary::before{background:var(--green-soft); color:var(--green)}
+  .rescue-body{padding:.2rem .75rem .75rem}
+  .step{display:grid; grid-template-columns:4.6rem 1fr; gap:.6rem; padding:.58rem 0}
+  .step + .step{border-top:1px dashed #d9e2e8}
+  .step-label{
+    color:var(--blue); font-size:.67rem; font-weight:750; letter-spacing:.04em;
+    text-transform:uppercase; padding-top:.15rem;
+  }
+  .core-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:1rem; line-height:1.55; color:var(--ink)}
+  .core-en strong{font-weight:650; color:#294e70}
+  .cue{margin-top:.2rem; color:#5f5a52; font-size:.76rem; line-height:1.55}
+  .meaning-overview{
+    margin:.5rem 0 .72rem; padding:.72rem .78rem; border:1px solid #c8d8e4;
+    border-radius:8px; background:#fff;
+  }
+  .meaning-kicker{
+    margin-bottom:.28rem; color:var(--blue); font-size:.68rem; font-weight:750;
+    letter-spacing:.045em;
+  }
+  .meaning-thesis{color:#334b5e; font-size:.86rem; line-height:1.68}
+  .meaning-thesis .next-sentence{color:var(--muted); font-size:.74rem}
+  .meaning-tree{margin:.15rem 0 .7rem}
+  .meaning-node{
+    position:relative; display:grid; grid-template-columns:5.3rem minmax(0,1fr);
+    gap:.58rem; align-items:start; margin-top:.18rem; padding:.42rem .52rem;
+    border-left:2px solid #d1dce4; border-radius:0 5px 5px 0;
+  }
+  .meaning-node.main{margin-left:0; border-left:3px solid var(--blue); background:#edf4f8}
+  .meaning-node.d1{margin-left:1.25rem}
+  .meaning-node.d2{margin-left:2.65rem}
+  .meaning-node.d3{margin-left:4.05rem}
+  .meaning-node:not(.main)::before{
+    content:""; position:absolute; left:-.72rem; top:1.05rem; width:.62rem;
+    border-top:1px solid #c2ced7;
+  }
+  .meaning-label{
+    padding-top:.12rem; color:#687887; font-size:.63rem; font-weight:750;
+    letter-spacing:.035em; line-height:1.3;
+  }
+  .meaning-node.main .meaning-label{color:var(--blue)}
+  .meaning-en{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); font-size:.94rem; line-height:1.48;
+  }
+  .meaning-node.main .meaning-en{font-weight:650; color:#294e70}
+  .meaning-zh{margin-top:.12rem; color:#625d55; font-size:.74rem; line-height:1.52}
+  .pair-word{color:#77541e; font-weight:650}
+  .expr-button{
+    appearance:none; margin:0; padding:.02rem .18rem; border:0;
+    border-bottom:1px dotted #a06e20; border-radius:3px; background:#fff2cf;
+    color:#69480f; font:inherit; line-height:inherit; cursor:help;
+  }
+  .expr-button::after{
+    content:"?"; display:inline-grid; place-items:center; width:.78rem; height:.78rem;
+    margin-left:.22rem; border-radius:50%; background:#dba94f; color:#fff;
+    font-family:system-ui,sans-serif; font-size:.55rem; font-weight:800;
+    vertical-align:.12rem;
+  }
+  .expr-button:focus-visible{outline:2px solid #d4a04a; outline-offset:2px}
+  .expr-tip{
+    display:none; margin:.38rem 0 .06rem; padding:.48rem .58rem;
+    border:1px solid #e3c98e; border-radius:6px; background:#fff9e9;
+    color:#594b33; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.72rem; line-height:1.58;
+  }
+  .expr-button:hover ~ .expr-tip,
+  .expr-button:focus ~ .expr-tip{display:block}
+  .expr-tip b{color:#674916}
+  .chunk-list{display:grid; gap:.32rem}
+  .chunk{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    gap:.65rem; align-items:baseline}
+  .chunk-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); line-height:1.45}
+  .chunk-zh{color:#6d665c; font-size:.74rem; line-height:1.45}
+  .read-again{
+    margin-top:.35rem; padding:.55rem .65rem; border-left:3px solid var(--blue);
+    background:#edf3f7; color:#38536d; font-size:.76rem; line-height:1.55;
+  }
+  .translation-text{padding:.6rem .75rem .72rem; border-top:1px solid #dfe8e0;
+    color:#334d39; font-size:.87rem; line-height:1.7}
+  body.rescue-mode main > .sent,
+  body.rescue-mode main > .remarks,
+  body.rescue-mode main > .sentence-aid,
+  body.rescue-mode main > .practice-note{opacity:.14; filter:saturate(.35)}
+  body.rescue-mode main > .sent.active-sentence,
+  body.rescue-mode main > .sentence-aid.active-aid{opacity:1; filter:none}
+  body.rescue-mode main > .sent.active-sentence{
+    border-left-color:var(--blue); background:#fbfcfd;
+  }
+  @media (max-width:600px){
+    .step{grid-template-columns:1fr; gap:.1rem}
+    .chunk{grid-template-columns:1fr; gap:.05rem; padding:.22rem 0}
+    .sentence-aid{margin-left:.35rem}
+    .meaning-node{grid-template-columns:4.15rem minmax(0,1fr); gap:.38rem}
+    .meaning-node.d1{margin-left:.55rem}
+    .meaning-node.d2{margin-left:1.1rem}
+    .meaning-node.d3{margin-left:1.65rem}
+  }
+  footer{max-width:720px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
+    font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  a{color:var(--blue)}
+  html[data-theme="dark"] body{background:#141311}
+  html[data-theme="dark"] .bar{background:rgba(20,19,17,.94)}
+  html[data-theme="dark"] .btn{background:#211f1b}
+  html[data-theme="dark"] .sent:hover{background:#1c1a17}
+  html[data-theme="dark"] .remarks{background:#1c1a17}
+  html[data-theme="dark"] .practice-note{background:#19242c; border-color:#334858; color:#bed0df}
+  html[data-theme="dark"] .rescue{background:#171f25; border-color:#344754}
+  html[data-theme="dark"] .translation{background:#18211b; border-color:#35483a}
+  html[data-theme="dark"] .step + .step{border-color:#35424a}
+  html[data-theme="dark"] .core-en strong,
+  html[data-theme="dark"] .meaning-node.main .meaning-en{color:#bdd2e3}
+  html[data-theme="dark"] .cue,
+  html[data-theme="dark"] .meaning-zh,
+  html[data-theme="dark"] .chunk-zh{color:#b9afa2}
+  html[data-theme="dark"] .meaning-overview{background:#1c1a17; border-color:#3a4b58}
+  html[data-theme="dark"] .meaning-thesis{color:#c2d3df}
+  html[data-theme="dark"] .meaning-node{border-color:#3b4851}
+  html[data-theme="dark"] .meaning-node.main{background:#1b2932}
+  html[data-theme="dark"] .meaning-node:not(.main)::before{border-color:#49565f}
+  html[data-theme="dark"] .meaning-label{color:#9ba9b4}
+  html[data-theme="dark"] .pair-word{color:#e0b870}
+  html[data-theme="dark"] .expr-button{background:#3b2d17; border-color:#b9893e; color:#f0cb88}
+  html[data-theme="dark"] .expr-tip{background:#292217; border-color:#6e5930; color:#d8c7aa}
+  html[data-theme="dark"] .expr-tip b{color:#f0cb88}
+  html[data-theme="dark"] .read-again{background:#1b2932; color:#bed0df}
+  html[data-theme="dark"] .translation-text{border-color:#344539; color:#bcd5c1}
+  html[data-theme="dark"] body.rescue-mode main > .sent.active-sentence{background:#192229}
+
+  .part-marker{font-family:system-ui,sans-serif;font-size:.72rem;font-weight:750;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:.45rem}
+  .epigraph{margin:1.25rem 0 0;padding:.85rem 1rem;border-left:3px solid var(--amber);background:#fcf9f2;color:var(--muted);font-style:italic}
+  .epigraph cite{display:block;margin-top:.35rem;font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.08em;color:var(--muted)}
+  html[data-theme="dark"] .epigraph{background:#1c1a17}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; Appearance I &nbsp;·&nbsp; §2 &nbsp;·&nbsp; pp.&nbsp;23–26</div>
+  <button class="btn" id="t-ruby">中文 注音</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-trans" aria-pressed="false">直译 175–202</button>
+  <button class="btn" id="t-theme" aria-pressed="false" title="Switch to Dark Theme">Dark Theme</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <div class="part-marker">Appearance I</div>
+    <h1>2 · (True) being and (mere) appearance: the two-world theory</h1>
+    <div class="sub">Hannah Arendt, <i>The Life of the Mind</i> · Volume One: Thinking · printed pp. 23–26</div>
+  </header>
+  <aside class="practice-note"><b>精读 · sentences 175–202</b>先朗读英文。卡住时先看简短主旨和句子关系；表达提示按需展开，直译最后再看。</aside>
+
+  <p class="sent para-start"><span class="stext"><span class="n">175</span>We may find a first consoling hint regarding this subject if we turn to the old metaphysical <ruby>dichotomy<rt>二分</rt></ruby> of (true) Being and (mere) Appearance, because it, too, actually relies on the <ruby>primacy<rt>首要地位</rt></ruby>, or at least on the priority, of appearance.</span></p>
+
+  <div class="sentence-aid" data-sentence="175">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">两世界理论反而预设显现在先</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">形而上学贬低“表象”，却必须先从显现世界出发；这给阿伦特一个突破口。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">旧二分</div><div><div class="meaning-en">true Being / mere Appearance</div><div class="meaning-zh">传统把真实存在置于单纯显现之上。</div></div></div><div class="meaning-node main"><div class="meaning-label">反转</div><div><div class="meaning-en">it, too, <button class="expr-button" type="button">relies on the primacy</button><div class="expr-tip">rely on = 依赖；primacy 比 priority 更强。</div> of appearance</div><div class="meaning-zh">这套等级本身仍依赖显现在先。</div></div></div></div>
+      <div class="read-again">主干：<b>The dichotomy itself relies on appearance.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">如果我们转向真实存在与单纯显现之间古老的形而上学二分，或许能找到第一个令人宽慰的提示，因为它实际上也依赖显现的首要地位，或至少依赖显现的优先性。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">176</span>In order to find out what truly <i>is</i>, the philosopher must leave the world of appearances among which he is naturally and originally at home—as Parmenides did when he was carried upward, beyond the gates of night and day, to the divine way that lay “far from the beaten path of men,”³ and as Plato did, too, in the Cave parable.⁴</span></p>
+
+  <div class="sentence-aid" data-sentence="176">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">哲学家寻找真实存在，必须先离开自己的显现家园</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">巴门尼德和柏拉图都把求真描述为离开人原本生活其中的显现世界。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">目的</div><div><div class="meaning-en">find out what truly <i>is</i></div><div class="meaning-zh">寻找真正的存在。</div></div></div><div class="meaning-node main"><div class="meaning-label">必要动作</div><div><div class="meaning-en"><button class="expr-button" type="button">leave the world of appearances</button><div class="expr-tip">among which 修饰 appearances：人原本就在这些显现之中安居。</div> </div><div class="meaning-zh">先离开原本的世界。</div></div></div></div>
+      <div class="read-again">只抓：<b>to find true Being, leave the world of appearances.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">为了查明真正存在的是什么，哲学家必须离开他自然地、原初地安居其中的显现世界——正如巴门尼德被带往上方，越过昼夜之门，走向那条“远离人们踏惯之路”的神圣道路；柏拉图在洞穴寓言中也是如此。</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Parmenides 与 Plato’s Cave</b> — <span class="zh">巴门尼德诗中的上升旅程与柏拉图洞穴寓言，都把哲学描写成离开日常显现世界、转向更高真理。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">177</span>The world of appearances is <i>prior</i> to whatever region the philosopher may choose as his “true” home but into which he was not born.</span></p>
+
+  <div class="sentence-aid" data-sentence="177">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">被离开的显现世界仍然更早</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">哲学家的“真实家园”是后来选择的；他出生并生活的显现世界在经验上先于它。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">先在</div><div><div class="meaning-en">The world of appearances is <button class="expr-button" type="button">prior to</button><div class="expr-tip">prior to = 在……之前；这里是经验和出发点上的先在。</div> …</div><div class="meaning-zh">显现世界先在。</div></div></div><div class="meaning-node d1"><div class="meaning-label">后选</div><div><div class="meaning-en">the region he may choose as his “true” home</div><div class="meaning-zh">所谓真实家园是后来选择的。</div></div></div></div>
+      <div class="read-again">对照：<b>born in appearances / chooses a “true” home later.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">显现世界先于哲学家可能选择作为其“真实”家园、但他并非出生于其中的任何领域。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">178</span>It has always been the very <ruby>appearingness<rt>显现性</rt></ruby> of this world that suggested to the philosopher, that is, to the human mind, the notion that something must exist that is not appearance: <i>“Nehmen wir die Welt als Erscheinung so beweiset sie gerade zu das Dasein von Etwas das nicht Erscheinung ist”</i> (“If we look upon the world as appearance, it demonstrates the existence of something that is not appearance”), in the words of Kant.⁵</span></p>
+
+  <div class="sentence-aid" data-sentence="178">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">正是“显现”这个概念诱发了非显现者</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">一旦把世界称作显现，人便自然追问：它是不是某个隐藏存在的显现？</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">起点</div><div><div class="meaning-en">the very appearingness of this world</div><div class="meaning-zh">起点仍是世界的显现性。</div></div></div><div class="meaning-node main"><div class="meaning-label">诱发观念</div><div><div class="meaning-en"><button class="expr-button" type="button">something must exist that is not appearance</button><div class="expr-tip">that is to the human mind 是插入同位语：哲学家在此代表人的心灵。</div> </div><div class="meaning-zh">显现似乎指向某种非显现者。</div></div></div></div>
+      <div class="read-again">逻辑：<b>calling it appearance suggests something behind appearance.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">一直以来，恰恰是这个世界的显现性向哲学家，也就是向人的心灵，提示了某种非显现的东西必定存在这一观念。用康德的话说：“如果我们把世界看作显现，它恰好证明了某种非显现者的存在。”</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Kant</b> — <span class="zh">阿伦特保留德文：一旦把世界称为“显现”，这个说法本身便暗示某种非显现者。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">179</span>In other words, when the philosopher takes leave of the world given to our senses and does a turnabout (Plato’s <i>periagōgē</i>) to the life of the mind, he takes his clue from the former, looking for something to be revealed to him that would explain its underlying truth.</span></p>
+
+  <div class="sentence-aid" data-sentence="179">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">哲学家转离感官世界，线索却仍来自它</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">即使转向心灵生活，哲学家寻找的隐藏真理仍要解释原来的显现世界。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">转离</div><div><div class="meaning-en">takes leave of the world given to our senses</div><div class="meaning-zh">离开感官所给的世界。</div></div></div><div class="meaning-node main"><div class="meaning-label">仍取线索</div><div><div class="meaning-en">he <button class="expr-button" type="button">takes his clue from the former</button><div class="expr-tip">the former 指感官世界；take one’s clue from = 从……取得线索。</div> </div><div class="meaning-zh">转身之后仍从显现出发。</div></div></div></div>
+      <div class="read-again">听见反差：<b>leaves appearances, yet takes his clue from them.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">换言之，当哲学家离开给予我们感官的世界，并转身进入心灵生活时，他仍从前者取得线索，寻找某种向他揭示、能够解释其底层真理的东西。</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b><i>periagōgē</i></b> — <span class="zh">柏拉图的“转身”：灵魂从可见事物转向可思者。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">180</span>This truth—<i>a-lētheia</i>, that which is disclosed (Heidegger)—can be conceived only as another “appearance,” another phenomenon originally hidden but of a supposedly higher order, thus signifying the lasting <ruby>predominance<rt>支配地位</rt></ruby> of appearance.</span></p>
+
+  <div class="sentence-aid" data-sentence="180">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">隐藏真理一旦被揭示，也成为另一种显现</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">所谓更高真理只有在“显露出来”时才可被心灵把握，因此显现仍占支配地位。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">真理模型</div><div><div class="meaning-en">a-lētheia — that which is disclosed</div><div class="meaning-zh">真理被理解为去遮蔽。</div></div></div><div class="meaning-node main"><div class="meaning-label">结果</div><div><div class="meaning-en">only as <button class="expr-button" type="button">another appearance</button><div class="expr-tip">supposedly higher order 表示它被设想为等级更高，但仍是 phenomenon。</div> </div><div class="meaning-zh">真理仍以另一种显现出现。</div></div></div></div>
+      <div class="read-again">结论：<b>disclosed truth is still an appearance.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这种真理——即 a-lētheia，被揭示者（海德格尔）——只能被设想为另一种“显现”：一种原先隐藏、但据说属于更高等级的现象；这表明显现持续占据支配地位。</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b><i>a-lētheia</i></b> — <span class="zh">海德格尔按词源解释为“去遮蔽／显露”；阿伦特借此指出，真理仍以某种显现被把握。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">181</span>Our mental apparatus, though it can withdraw from <i>present</i> appearances, remains <ruby>geared to<rt>适应于、朝向</rt></ruby> Appearance.</span></p>
+
+  <div class="sentence-aid" data-sentence="181">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">心灵可退出当前显现，却不能摆脱显现结构</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">思维能把眼前事物暂时搁开，但仍期待某种东西向它呈现。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">能力</div><div><div class="meaning-en">withdraw from <i>present</i> appearances</div><div class="meaning-zh">可以退出眼前显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">限制</div><div><div class="meaning-en">remains <button class="expr-button" type="button">geared to Appearance</button><div class="expr-tip">be geared to = 结构上适应并朝向。</div> </div><div class="meaning-zh">心灵仍朝向显现。</div></div></div></div>
+      <div class="read-again">让步：<b>withdraws from present appearances / remains geared to Appearance.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我们的心智装置虽然能够退出当前的显现，却仍然适应于显现。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">182</span>The mind, no less than the senses, in its search—Hegel’s <i>Anstrengung des Begriffs</i>—expects that something will appear to it.</span></p>
+
+  <div class="sentence-aid" data-sentence="182">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">心灵和感官一样，都期待对象出现</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">概念思考并未逃出显现关系：它也在等待某物向自己呈现。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">比较</div><div><div class="meaning-en">The mind, no less than the senses</div><div class="meaning-zh">心灵不亚于感官。</div></div></div><div class="meaning-node main"><div class="meaning-label">共同期待</div><div><div class="meaning-en"><button class="expr-button" type="button">expects that something will appear to it</button><div class="expr-tip">to it 明确保留“向某个接受者显现”的结构。</div> </div><div class="meaning-zh">两者都期待某物显现。</div></div></div></div>
+      <div class="read-again">主干：<b>The mind expects something to appear.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">心灵不亚于感官，在其探索——黑格尔所谓“概念的劳作”——中期待某种东西向它显现。</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b><i>Anstrengung des Begriffs</i></b> — <span class="zh">黑格尔所谓“概念的劳作”：思想努力使对象在概念中呈现。</span></div></div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">183</span>Something quite similar seems to be true for science, and especially for modern science, which—according to an early remark of Marx’s—relies on Being and Appearance having <ruby>parted company<rt>分道扬镳</rt></ruby>, so that the philosopher’s special and individual effort is no longer needed to arrive at some “truth” behind the appearances.</span></p>
+
+  <div class="sentence-aid" data-sentence="183">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">现代科学也预设存在与显现分离</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">科学把寻找表象背后真理变成公共方法，不再依靠哲学家的个人转身。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">科学前提</div><div><div class="meaning-en">Being and Appearance have <button class="expr-button" type="button">parted company</button><div class="expr-tip">part company = 分道扬镳；指真实结构不同于感官表面。</div> </div><div class="meaning-zh">存在与显现被认为已经分开。</div></div></div><div class="meaning-node d1"><div class="meaning-label">后果</div><div><div class="meaning-en">the philosopher’s individual effort is no longer needed</div><div class="meaning-zh">科学方法取代个人哲学旅程。</div></div></div></div>
+      <div class="read-again">读成：<b>science institutionalizes the search behind appearances.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">对科学，尤其现代科学，似乎也有十分相似的情况。按照马克思早年的一句话，现代科学依赖存在与显现已经分道扬镳，因此不再需要哲学家的特殊个人努力，便可抵达显现背后的某种“真理”。</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Marx</b> — <span class="zh">“存在与显现分道扬镳”意指科学不再满足于表面，而制度化地寻找其背后结构。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">184</span>The scientist, too, depends on appearances, whether, in order to find out what lies beneath the surface, he cuts open the visible body to look at its interior or catches hidden objects by means of all sorts of <ruby>sophisticated<rt>精密的</rt></ruby> equipment that <ruby>deprives<rt>剥除</rt></ruby> them of the exterior properties through which they show themselves to our natural senses.</span></p>
+
+  <div class="sentence-aid" data-sentence="184">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">科学越过表面也必须从表面操作</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">无论解剖还是仪器观测，科学家都依赖可见对象和设备制造的新显现。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">两种方法</div><div><div class="meaning-en">cuts open the visible body / catches hidden objects</div><div class="meaning-zh">解剖可见物，或用仪器捕捉隐藏对象。</div></div></div><div class="meaning-node main"><div class="meaning-label">共同条件</div><div><div class="meaning-en">The scientist, too, <button class="expr-button" type="button">depends on appearances</button><div class="expr-tip">whether ... or ... 展开依赖显现的两种方式。</div> </div><div class="meaning-zh">科学仍通过显现取得对象。</div></div></div></div>
+      <div class="read-again">主干：<b>The scientist, too, depends on appearances.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">科学家也依赖显现：为了查明表面之下的东西，他或者剖开可见的身体察看内部，或者借助各种精密设备捕捉隐藏对象；这些设备会剥除对象向我们的自然感官显现时所具有的外部性质。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">185</span>The guiding notion of these philosophical and scientific efforts is always the same: Appearances, as Kant said, “must themselves have grounds which are not appearances.”⁶</span></p>
+
+  <div class="sentence-aid" data-sentence="185">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">哲学与科学共享同一个幕后模型</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">两者都认为：显现背后必有不显现的根据。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">共同观念</div><div><div class="meaning-en">the guiding notion is always the same</div><div class="meaning-zh">哲学与科学由同一观念引导。</div></div></div><div class="meaning-node main"><div class="meaning-label">康德公式</div><div><div class="meaning-en">Appearances must have <button class="expr-button" type="button">grounds which are not appearances</button><div class="expr-tip">ground 是根据或根基，不要先译成产生结果的 cause。</div> </div><div class="meaning-zh">显现具有非显现的根据。</div></div></div></div>
+      <div class="read-again">公式：<b>appearances → non-appearing grounds.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这些哲学和科学努力的指导观念始终相同：用康德的话说，显现“自身必定具有并非显现的根据”。</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Kant</b> — <span class="zh">“显现自身必有非显现的根据”概括哲学与科学共同采用的幕后模型。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">186</span>This, in fact, is an obvious generalization of the way natural things grow and “appear” into the light of day out of a ground of darkness, except that it was now assumed that this ground possessed a higher rank of reality than what merely appeared and after a while disappeared again.</span></p>
+
+  <div class="sentence-aid" data-sentence="186">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">从黑暗中生长，被推广成存在等级</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">自然物从隐藏根基长出是经验事实；形而上学额外假定根基比短暂显现更真实。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">经验原型</div><div><div class="meaning-en">things grow out of a ground of darkness</div><div class="meaning-zh">自然物从暗处生长到光中。</div></div></div><div class="meaning-node main"><div class="meaning-label">附加假定</div><div><div class="meaning-en">the ground <button class="expr-button" type="button">possessed a higher rank of reality</button><div class="expr-tip">except that 引出真正的问题：从来源差异跳到存在等级差异。</div> </div><div class="meaning-zh">隐藏根据被提升为更真实。</div></div></div></div>
+      <div class="read-again">区分：<b>grows from a ground ≠ ground is more real.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这其实是对自然物从黑暗的根基中生长并“显现”到日光下这一方式的明显推广；不同之处是，现在人们假定这个根基拥有比那仅仅显现、过一阵又消失之物更高的实在等级。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">187</span>And just as the philosophers’ “conceptual efforts” to find something beyond appearances have always ended with rather violent <ruby>invectives<rt>猛烈抨击</rt></ruby> against “mere appearances,” the <ruby>eminently<rt>极其</rt></ruby> practical achievements of the scientists in <ruby>laying bare<rt>揭露</rt></ruby> what appearances themselves never show without being interfered with have been made at their expense.</span></p>
+
+  <div class="sentence-aid" data-sentence="187">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">哲学贬低显现，科学则实际破坏显现</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">哲学以语言攻击“单纯显现”；科学为暴露内部而干预对象，其成就也以显现为代价。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">哲学</div><div><div class="meaning-en">invectives against “mere appearances”</div><div class="meaning-zh">概念努力终于对显现的抨击。</div></div></div><div class="meaning-node main"><div class="meaning-label">科学</div><div><div class="meaning-en">laying bare what appearances never show <button class="expr-button" type="button">without being interfered with</button><div class="expr-tip">without... 表示不受干预时绝不会自行展示；at their expense 的 their 指 appearances。</div> </div><div class="meaning-zh">科学通过干预揭露内部。</div></div></div></div>
+      <div class="read-again">平行：<b>philosophy attacks appearances; science interferes with them.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">正如哲学家寻找显现之外某物的“概念努力”总以对“单纯显现”的猛烈抨击告终，科学家揭露显现本身若不受干预就绝不会展示之物的极其实践性的成就，也是以显现为代价取得的。</div></details>
+  </div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">188</span>The primacy of appearance is a fact of everyday life which neither the scientist nor the philosopher can ever escape, to which they must always return from their laboratories and studies, and which shows its strength by never being in the least changed or <ruby>deflected<rt>偏转</rt></ruby> by whatever they may have discovered when they withdrew from it.</span></p>
+
+  <div class="sentence-aid" data-sentence="188">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">科学家和哲学家最终都回到日常显现</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">他们可以暂时退出日常世界研究，但发现并不会取消回到这个世界生活的必要。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">无法逃离</div><div><div class="meaning-en">neither scientist nor philosopher can ever escape</div><div class="meaning-zh">任何研究者都不能永久离开显现。</div></div></div><div class="meaning-node d1"><div class="meaning-label">证据</div><div><div class="meaning-en">they must always <button class="expr-button" type="button">return from their laboratories and studies</button><div class="expr-tip">studies 此处是书房、研究室；whatever 指退出日常后所得的发现。</div> </div><div class="meaning-zh">研究之后仍返回日常生活。</div></div></div></div>
+      <div class="read-again">主干：<b>appearance remains primary because everyone must return to it.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">显现的首要地位是日常生活的事实，科学家和哲学家都永远无法逃避它；他们必须始终从实验室和书房回到其中，而他们退出之后无论发现了什么，它都丝毫不会被改变或带偏，这显示了它的力量。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">189</span>“Thus the ‘strange’ notions of the new physics . . . [surprise] common sense . . . without changing anything of its categories.”⁷</span></p>
+
+  <div class="sentence-aid" data-sentence="189">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">新物理震惊常识，却不改写常识范畴</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">理论发现可以反直觉，但人仍用原有的日常范畴生活。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">效果</div><div><div class="meaning-en">surprise common sense</div><div class="meaning-zh">新物理让常识惊讶。</div></div></div><div class="meaning-node main"><div class="meaning-label">界限</div><div><div class="meaning-en"><button class="expr-button" type="button">without changing anything of its categories</button><div class="expr-tip">its 指 common sense；范畴是日常判断所依赖的基本框架。</div> </div><div class="meaning-zh">却不改变常识的基本框架。</div></div></div></div>
+      <div class="read-again">对照：<b>surprise common sense / do not change its categories.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">“因此，新物理的‘奇异’观念……使常识感到惊讶……却不改变其任何范畴。”</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>New physics and common sense</b> — <span class="zh">新物理可以令常识惊讶，却没有改变人日常生活所依赖的基本范畴。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">190</span>Against this <ruby>unshakable<rt>不可动摇的</rt></ruby> common-sense conviction stands the age-old theoretical <ruby>supremacy<rt>至高地位</rt></ruby> of Being and Truth over mere appearance, that is, the supremacy of the ground that does not appear over the surface that does.</span></p>
+
+  <div class="sentence-aid" data-sentence="190">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">日常显现在先，与理论上的存在在上相冲突</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">常识依靠显现生活；传统理论却把不显现的根据置于显现表面之上。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">一边</div><div><div class="meaning-en">unshakable common-sense conviction</div><div class="meaning-zh">常识坚持显现世界。</div></div></div><div class="meaning-node main"><div class="meaning-label">另一边</div><div><div class="meaning-en">the <button class="expr-button" type="button">supremacy of the ground</button><div class="expr-tip">Against A stands B 是倒装：与 A 对立的是 B。</div> over the surface</div><div class="meaning-zh">理论把隐藏根据置于表面之上。</div></div></div></div>
+      <div class="read-again">骨架：<b>Against common sense stands the supremacy of hidden ground.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">与这种不可动摇的常识确信相对立的，是存在与真理高于单纯显现这一古老的理论至高地位，也就是不显现的根据高于显现的表面。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">191</span>This ground supposedly answers the oldest question of philosophy as well as of science: How does it happen that something or somebody, including myself, appears at all and what makes it appear in this form and shape rather than in any other?</span></p>
+
+  <div class="sentence-aid" data-sentence="191">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">隐藏根据被用来回答：显现为何如此出现</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">哲学和科学都想解释某物为何会出现，以及为何采取这一形态。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">解释者</div><div><div class="meaning-en">This ground supposedly answers</div><div class="meaning-zh">隐藏根据据说提供答案。</div></div></div><div class="meaning-node main"><div class="meaning-label">问题</div><div><div class="meaning-en"><button class="expr-button" type="button">what makes it appear</button><div class="expr-tip">make 在此有致使义：什么使它以这种形态出现。</div> in this form rather than another</div><div class="meaning-zh">为什么存在显现为这个样子。</div></div></div></div>
+      <div class="read-again">两问：<b>why appear at all / why in this form?</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这个根据据说回答了哲学和科学最古老的问题：某个东西或某个人，包括我自己，究竟如何会显现？又是什么使它以这种形式和形状，而非任何其他形式和形状显现？</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">192</span>The question itself asks for a <i>cause</i> rather than a base or <i>ground</i>, but the point of the matter is that our tradition of philosophy has transformed the base from which something rises into the cause that produces it and has then assigned to this <ruby>producing agent<rt>生产性动因</rt></ruby> a higher rank of reality than is given to what merely meets the eye.</span></p>
+
+  <div class="sentence-aid" data-sentence="192">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">传统把“由何而出”偷换成“由何造成”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">根基只是事物从中长出；原因则被说成制造事物，并因此获得更高实在等级。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">原本</div><div><div class="meaning-en">the base from which something rises</div><div class="meaning-zh">某物由之升起的根据。</div></div></div><div class="meaning-node main"><div class="meaning-label">偷换</div><div><div class="meaning-en"><button class="expr-button" type="button">transformed the base into the cause</button><div class="expr-tip">ground/base 是根据；cause 是造成结果的原因。这里必须分开。</div> </div><div class="meaning-zh">根据被变成生产性原因。</div></div></div><div class="meaning-node d1"><div class="meaning-label">再升级</div><div><div class="meaning-en">assigned the producing agent a higher rank of reality</div><div class="meaning-zh">原因被宣布比可见结果更真实。</div></div></div></div>
+      <div class="read-again">转换链：<b>base → producing cause → higher reality.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">问题本身要求的是原因，而不是基底或根据；但关键在于，我们的哲学传统把某物由之升起的基底转化成生产它的原因，随后又赋予这个生产性动因比仅仅呈现在眼前之物更高的实在等级。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">193</span>The belief that a cause should be of higher rank than the effect (so that an effect can easily be <ruby>disparaged<rt>贬低</rt></ruby> by being <ruby>retraced<rt>追溯</rt></ruby> to its cause) may belong to the oldest and most stubborn metaphysical <ruby>fallacies<rt>谬误</rt></ruby>.</span></p>
+
+  <div class="sentence-aid" data-sentence="193">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">原因更高、结果更低，是古老的形而上学谬误</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">追溯来源可以解释结果，却不能因此降低结果的实在地位。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">信念</div><div><div class="meaning-en">cause should be of higher rank than effect</div><div class="meaning-zh">原因被置于结果之上。</div></div></div><div class="meaning-node d1"><div class="meaning-label">贬低手法</div><div><div class="meaning-en">effect is <button class="expr-button" type="button">disparaged by being retraced</button><div class="expr-tip">retrace A to B = 把 A 追溯到 B；解释来源被误当成取消价值。</div> to its cause</div><div class="meaning-zh">把结果还原为原因。</div></div></div></div>
+      <div class="read-again">不要接受跳步：<b>explained by a cause ≠ less real than the cause.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">认为原因应当比结果等级更高的信念——从而只要把结果追溯到原因，就能轻易贬低结果——或许属于最古老、最顽固的形而上学谬误。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">194</span>Yet here again we are not dealing with a sheer <ruby>arbitrary<rt>任意的</rt></ruby> error; the truth is, not only do appearances never reveal what lies beneath them <ruby>of their own accord<rt>自行、自发地</rt></ruby> but also, generally speaking, they never just reveal; they also conceal—“No thing, no side of a thing, shows itself except by actively hiding the others.”⁸</span></p>
+
+  <div class="sentence-aid" data-sentence="194">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">谬误并非凭空产生：显现确实也隐藏</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">传统错在建立等级，不错在看见表面会遮住内部和其他侧面。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">不是任意错误</div><div><div class="meaning-en">we are not dealing with a sheer arbitrary error</div><div class="meaning-zh">两世界理论有经验根据。</div></div></div><div class="meaning-node main"><div class="meaning-label">真实根据</div><div><div class="meaning-en">appearances not only reveal; <button class="expr-button" type="button">they also conceal</button><div class="expr-tip">not only ... but also ...：显现同时揭示与隐藏。</div> </div><div class="meaning-zh">每次显现也遮蔽其他内容。</div></div></div></div>
+      <div class="read-again">转折：<b>the hierarchy is false, but concealment is real.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">然而，这里我们再次面对的并非纯粹任意的错误。事实是，显现不仅从不自行揭示其下方的东西，而且一般说来，它们绝不只是揭示，也会隐藏——“没有任何事物、事物的任何一面，会显现自身而不同时主动隐藏其他各面。”</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Merleau-Ponty</b> — <span class="zh">任何一面显现，都以遮住其他面为条件；显现与隐藏不是简单对立。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">195</span>They expose, and they also protect from exposure, and, as far as what lies beneath is concerned, this protection may even be their most important function.</span></p>
+
+  <div class="sentence-aid" data-sentence="195">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">表面既展示，也保护内部不被暴露</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">显现的隐藏作用不只是缺陷；对内部而言，它可能是必要保护。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">双重作用</div><div><div class="meaning-en">They expose, and they also protect from exposure</div><div class="meaning-zh">表面同时展示和遮护。</div></div></div><div class="meaning-node d1"><div class="meaning-label">对内部</div><div><div class="meaning-en">this protection may be <button class="expr-button" type="button">their most important function</button><div class="expr-tip">their 指 appearances；as far as...is concerned = 就……而言。</div> </div><div class="meaning-zh">保护可能是显现最重要的功能。</div></div></div></div>
+      <div class="read-again">听见双重性：<b>expose / protect from exposure.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">它们暴露，同时也保护事物免于暴露；就位于表面之下的东西而言，这种保护甚至可能是它们最重要的功能。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">196</span>At any rate, this is true for living things, whose surface hides and protects the inner organs that are their source of life.</span></p>
+
+  <div class="sentence-aid" data-sentence="196">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">生命体的表面确实保护生命器官</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">皮肤等表面并非较低的假象；它隐藏内部，正是在维持生命。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">例证</div><div><div class="meaning-en">living things</div><div class="meaning-zh">生命体提供最直接例子。</div></div></div><div class="meaning-node main"><div class="meaning-label">功能</div><div><div class="meaning-en">surface <button class="expr-button" type="button">hides and protects</button><div class="expr-tip">that are their source of life 修饰 inner organs。</div> the inner organs</div><div class="meaning-zh">表面隐藏并保护生命来源。</div></div></div></div>
+      <div class="read-again">主干：<b>surface protects the organs that sustain life.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">至少对生命体来说确实如此：它们的表面隐藏并保护作为其生命来源的内部器官。</div></details>
+  </div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">197</span>The elementary logical fallacy of all theories that rely on the dichotomy of Being and Appearance is obvious and was early discovered and summed up by the sophist Gorgias in a fragment from his lost treatise <i>On Non-Being or On Nature</i>—supposedly a refutation of Eleatic philosophy: “Being is not manifest since it does not appear [to men: <i>dokein</i>]; appearing [to men] is weak since it does not succeed in being.”⁹</span></p>
+
+  <div class="sentence-aid" data-sentence="197">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">高尔吉亚揭出两世界论的两难</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">存在若完全不显现，人无法接触它；显现若不算存在，又失去真实性。二分使两边都站不住。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">第一边</div><div><div class="meaning-en">Being is not manifest since it does not appear</div><div class="meaning-zh">不显现的存在无法得到证实。</div></div></div><div class="meaning-node main"><div class="meaning-label">第二边</div><div><div class="meaning-en">appearing is weak since it <button class="expr-button" type="button">does not succeed in being</button><div class="expr-tip">句意不是显现努力失败，而是按该二分，显现达不到“真实存在”的资格。</div> </div><div class="meaning-zh">显现又被判为不是真实存在。</div></div></div></div>
+      <div class="read-again">两难：<b>Being cannot appear; appearance cannot be Being.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">所有依赖存在与显现二分的理论都具有一个明显的初级逻辑谬误。智者高尔吉亚很早就在其散佚著作《论非存在或论自然》的一个片段中发现并概括了它；该书据说是对爱利亚哲学的反驳：“存在并不显明，因为它不向人显现；向人显现者是软弱的，因为它不能成功成为存在。”</div></details>
+  </div>
+
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Gorgias, <i>On Non-Being or On Nature</i></b> — <span class="zh">高尔吉亚以悖论攻击爱利亚学派：存在若不显现便无法证实；显现若不等于存在又不可靠。</span></div></div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">198</span>Modern science’s <ruby>relentless<rt>不懈的</rt></ruby> search for the base underneath mere appearances has given new force to the old argument.</span></p>
+
+  <div class="sentence-aid" data-sentence="198">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">现代科学强化了寻找表面之下根据的旧论证</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">科学持续揭露不可见结构，使两世界模型显得更有力量。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">科学行动</div><div><div class="meaning-en">relentless search for the base underneath</div><div class="meaning-zh">不断寻找显现之下的根据。</div></div></div><div class="meaning-node main"><div class="meaning-label">效果</div><div><div class="meaning-en">has <button class="expr-button" type="button">given new force</button><div class="expr-tip">give force to = 加强、使更有说服力。</div> to the old argument</div><div class="meaning-zh">旧论证得到新力量。</div></div></div></div>
+      <div class="read-again">主干：<b>modern science strengthens the old argument.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">现代科学对单纯显现之下基底的不懈寻找，给了这个古老论证新的力量。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">199</span>It has indeed forced the ground of appearances into the open so that man, a creature fitted for and dependent on appearances, can catch hold of it.</span></p>
+
+  <div class="sentence-aid" data-sentence="199">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">科学迫使隐藏根据显露给人</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">科学把不可见结构转化成数据、模型或效果，使依赖显现的人能够把握它。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">成就</div><div><div class="meaning-en">forced the ground <button class="expr-button" type="button">into the open</button><div class="expr-tip">force into the open = 迫使暴露、显露出来。</div> </div><div class="meaning-zh">隐藏根据被带入显现。</div></div></div><div class="meaning-node d1"><div class="meaning-label">目的</div><div><div class="meaning-en">so that man can catch hold of it</div><div class="meaning-zh">让人能够抓住、理解它。</div></div></div></div>
+      <div class="read-again">动作：<b>hidden ground → forced into the open → grasped by man.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">它确实迫使显现的根据进入公开显露之中，使人这种适应并依赖显现的生物能够把握它。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">200</span>But the results have been rather <ruby>perplexing<rt>令人困惑的</rt></ruby>.</span></p>
+
+  <div class="sentence-aid" data-sentence="200">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">但结果令人困惑</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">科学让存在的根据显露出来，却没有因此形成一个人能够居住的世界。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">转折</div><div><div class="meaning-en">But the results have been <button class="expr-button" type="button">rather perplexing</button><div class="expr-tip">rather 在此加强语气：颇为、相当。</div> </div><div class="meaning-zh">结果并未解决问题。</div></div></div></div>
+      <div class="read-again">短句只负责转向：<b>But the results are perplexing.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">但结果颇为令人困惑。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">201</span>No man, it has turned out, can live among “causes” or give full account in normal human language of a Being whose truth can be scientifically demonstrated in the laboratory and tested practically in the real world through technology.</span></p>
+
+  <div class="sentence-aid" data-sentence="201">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">人不能生活在“原因”中，也难用日常语言说尽科学存在</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">科学可证明隐藏结构并以技术验证它，但这种结构并不是人直接生活其中的显现世界。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">生活限制</div><div><div class="meaning-en">No man can <button class="expr-button" type="button">live among ‘causes’</button><div class="expr-tip">引号提醒：科学原因不是能供人日常居住和交往的对象。</div> </div><div class="meaning-zh">人不能把原因当作生活世界。</div></div></div><div class="meaning-node d1"><div class="meaning-label">语言限制</div><div><div class="meaning-en">cannot give full account in normal human language</div><div class="meaning-zh">日常语言也无法完整容纳科学存在。</div></div></div></div>
+      <div class="read-again">两项不能：<b>cannot live among causes / cannot fully say this Being.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">事实证明，没有人能够生活在“原因”之中，也没有人能够用正常的人类语言完整说明一种存在：它的真理可以在实验室中被科学证明，并通过技术在现实世界中得到实践检验。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">202</span>It does look as though Being, once made manifest, overruled appearances—except that nobody so far has succeeded in <i>living</i> in a world that does not manifest itself <ruby>of its own accord<rt>自行地</rt></ruby>.</span></p>
+
+  <div class="sentence-aid" data-sentence="202">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">科学存在似乎胜过显现，但人仍只能生活在自行显现的世界</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">实验室揭示的存在可以推翻表面解释，却不能取代人的生活世界。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">表面胜利</div><div><div class="meaning-en">Being, once made manifest, overruled appearances</div><div class="meaning-zh">显露的存在似乎压倒了普通显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">决定性保留</div><div><div class="meaning-en"><button class="expr-button" type="button">except that nobody ... has succeeded in living</button><div class="expr-tip">except that 不是小例外，而是推翻“胜利”的现实限制。</div> in a non-manifest world</div><div class="meaning-zh">但无人能住进一个不自行显现的世界。</div></div></div></div>
+      <div class="read-again">最后保留：<b>Being may overrule appearances—but cannot replace their world.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">看起来确实仿佛存在一旦被显明，就压倒了显现——只不过迄今没有任何人成功生活在一个不会自行显现的世界中。</div></details>
+  </div>
+</main>
+
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-dian">典故</span>allusion 典故</span>
+    <span><span class="tag t-yin">引用</span>quotation 引文</span>
+    <span><span class="tag t-zhu">注</span>note 说明</span>
+    <span><span class="tag t-ci">词</span>word 词义</span>
+  </div>
+  <a href="lotm-thinking-appearance-01.html">← Chapter 1 §1 · pp. 19–23 · S128–174</a><br>Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 23–26. Text transcribed verbatim from the page images. Section 2 is complete; §3, “The reversal of the metaphysical hierarchy: the value of the surface,” begins on printed p. 26.
+</footer>
+
+<script>
+  const body=document.body;
+  const tRuby=document.getElementById('t-ruby'),
+        tRem=document.getElementById('t-rem'),
+        tTrans=document.getElementById('t-trans'),
+        tTheme=document.getElementById('t-theme');
+  const setTheme=(theme,remember=false)=>{
+    const dark=theme==='dark';
+    document.documentElement.dataset.theme=dark?'dark':'light';
+    tTheme.setAttribute('aria-pressed',String(dark));
+    tTheme.textContent=dark?'Light Theme':'Dark Theme';
+    tTheme.title=dark?'Switch to Light Theme':'Switch to Dark Theme';
+    document.querySelectorAll('a[href*="lotm-thinking-"]').forEach(link=>{
+      const target=new URL(link.getAttribute('href'),location.href);
+      target.searchParams.set('theme',dark?'dark':'light');
+      link.href=target.href;
+    });
+    if(remember){try{localStorage.setItem('lotm-reading-theme',dark?'dark':'light');}catch(_){}}
+  };
+  setTheme(document.documentElement.dataset.theme);
+  tTheme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark',true);
+  tRuby.onclick=()=>{body.classList.toggle('hide-ruby'); tRuby.classList.toggle('off');};
+  tRem.onclick =()=>{body.classList.toggle('hide-remarks'); tRem.classList.toggle('off');};
+
+  const translations=[...document.querySelectorAll('.translation')];
+  tTrans.onclick=()=>{
+    const open=tTrans.getAttribute('aria-pressed')!=='true';
+    translations.forEach(item=>item.open=open);
+    tTrans.setAttribute('aria-pressed',String(open));
+    tTrans.textContent=open?'收起直译 175–202':'直译 175–202';
+  };
+
+  const rescues=[...document.querySelectorAll('.rescue')];
+  const clearFocus=()=>{
+    document.querySelectorAll('.active-sentence,.active-aid')
+      .forEach(item=>item.classList.remove('active-sentence','active-aid'));
+  };
+  rescues.forEach(rescue=>{
+    rescue.addEventListener('toggle',()=>{
+      if(rescue.open){
+        rescues.forEach(other=>{if(other!==rescue) other.open=false;});
+        clearFocus();
+        const aid=rescue.closest('.sentence-aid');
+        const sentence=aid.previousElementSibling;
+        aid.classList.add('active-aid');
+        if(sentence?.classList.contains('sent')) sentence.classList.add('active-sentence');
+        body.classList.add('rescue-mode');
+        rescue.scrollIntoView({behavior:'smooth',block:'center'});
+      }else if(!document.querySelector('.rescue[open]')){
+        clearFocus();
+        body.classList.remove('rescue-mode');
+      }
+    });
+  });
+</script>
+
+
+<!-- reading-anchors:start -->
+<style>
+  @media (min-width:900px){
+    main{max-width:790px}
+    p.sent{position:relative; padding-left:46px}
+    main > .remarks, main > .sentence-aid, main > .practice-note{margin-left:46px}
+    .mgn{position:absolute; left:0; top:.42rem; width:32px; text-align:right;
+         font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+         line-height:1; user-select:none}
+    .sent > .stext > .n{display:none}
+  }
+  @media (max-width:899px){
+    .mgn{display:none !important}
+    .sent > .stext > .n{display:inline}
+  }
+  .mgn-n{appearance:none; border:0; background:none; padding:.12rem 0; cursor:pointer;
+         font:inherit; font-size:.68rem; color:var(--muted); opacity:.72}
+  .mgn-n:hover,.mgn-n:focus-visible{color:var(--amber); opacity:1}
+  .mgn-n:focus-visible{outline:1px solid var(--amber); outline-offset:3px; border-radius:2px}
+  p.sent.marked .mgn-n{color:var(--amber); opacity:1; font-weight:750}
+  p.sent.marked{background:linear-gradient(90deg,var(--amber-soft),transparent 72%);
+                border-left-color:var(--amber)}
+
+  .reading-map,#t-map{display:none}
+  @media (min-width:1280px){
+    #t-map{display:inline-block}
+    .reading-map{
+      display:block; position:fixed;
+      left:max(16px,calc(50vw - 640px)); top:4.3rem; width:212px;
+      z-index:8; padding:.75rem .8rem .8rem;
+      /* Whole extent should always be visible (no scrolling map). The cap is a
+         safety net for unusually short windows only — with the trimmed chrome
+         the longest page fits ~700px of viewport height. */
+      max-height:calc(100vh - 5.2rem); overflow:auto; overscroll-behavior:contain;
+      scrollbar-width:thin;
+      border:1px solid var(--line); border-radius:10px;
+      background:color-mix(in srgb,var(--paper) 94%,transparent);
+      box-shadow:0 10px 32px rgba(55,42,24,.07);
+      backdrop-filter:blur(8px);
+      font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    }
+    body.map-hidden .reading-map{display:none}
+  }
+  .map-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+  .map-title{font-size:.72rem;font-weight:760;letter-spacing:.04em;color:var(--ink)}
+  .map-hide{margin-left:auto;border:0;background:none;color:var(--muted);padding:.1rem;
+            font:inherit;font-size:.62rem;cursor:pointer}
+  .map-hide:hover{color:var(--amber)}
+  .map-kicker{margin:.4rem 0 .18rem;font-size:.55rem;font-weight:760;letter-spacing:.13em;
+              text-transform:uppercase;color:var(--muted)}
+
+  .bk-work{font-size:.66rem;font-weight:700;color:var(--ink);margin:.05rem 0 .12rem}
+  .bk-work small{font-weight:400;color:var(--muted);font-size:.55rem;margin-left:.3rem}
+  .bk-unit{display:flex;align-items:baseline;gap:.3rem;padding:.09rem .3rem;border-radius:5px;
+           font-size:.63rem;color:var(--muted)}
+  .bk-unit.built{color:var(--ink)}
+  .bk-unit.current{background:var(--amber-soft);font-weight:700}
+  .bk-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bk-segs{margin-left:auto;flex:none;display:flex;gap:.22rem}
+  .bk-seg{color:var(--muted);text-decoration:none;font-size:.55rem;
+          font-variant-numeric:tabular-nums;padding:.02rem .18rem;border-radius:3px}
+  .bk-seg:hover{background:var(--amber-soft);color:var(--ink)}
+  .bk-seg.here{background:var(--amber);color:var(--paper);font-weight:700}
+
+
+  .pg-map{display:grid;grid-template-columns:14px 1fr;gap:.5rem;margin-top:.15rem}
+  .pg-strip{position:relative;width:14px;border:1px solid var(--line);border-radius:4px;
+            background:
+              repeating-linear-gradient(to bottom,
+                transparent 0, transparent calc(8px - 1px),
+                color-mix(in srgb,var(--line) 55%,transparent) calc(8px - 1px),
+                color-mix(in srgb,var(--line) 55%,transparent) 8px)
+              var(--paper);
+            cursor:pointer}
+  .pg-para{position:absolute;left:0;right:0;height:2px;background:var(--line);
+           filter:brightness(.82);pointer-events:none}
+  .pg-view{position:absolute;left:-3px;right:-3px;border:1px solid var(--amber);
+           background:color-mix(in srgb,var(--amber) 16%,transparent);
+           border-radius:3px;pointer-events:none;transition:top .1s,height .1s}
+  .pg-dot{position:absolute;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;
+          border-radius:50%;background:var(--amber);border:1px solid var(--paper);cursor:pointer}
+  .pg-labels{position:relative}
+  .pg-lab{position:absolute;left:0;right:0;display:block;border:0;background:none;
+          text-align:left;padding:0 .25rem;font:inherit;cursor:pointer;color:var(--muted);
+          border-radius:5px;display:flex;flex-direction:column;justify-content:center}
+  .pg-lab:hover{background:var(--amber-soft);color:var(--ink)}
+  .pg-lab.active{color:var(--ink)}
+  .pg-lab.active .pg-zh{color:var(--amber)}
+  .pg-range{font-size:.52rem;font-variant-numeric:tabular-nums;color:var(--muted);line-height:1.1}
+  .pg-zh{font-size:.66rem;font-weight:650;line-height:1.2}
+  .pg-en{font-size:.55rem;color:var(--muted);line-height:1.15}
+  .pg-lab.thesis .pg-zh::after{content:" ◆";font-size:.5rem;color:var(--amber)}
+  .map-hint{margin-top:.5rem;font-size:.55rem;line-height:1.45;color:var(--muted)}
+  html[data-theme="dark"] .reading-map{box-shadow:0 12px 34px rgba(0,0,0,.28)}
+  html[data-theme="dark"] p.sent.marked{background:linear-gradient(90deg,var(--amber-soft),transparent 72%)}
+</style>
+
+<script>
+(()=>{
+  const CFG={"first": 175, "last": 202, "paras": [175, 183, 188, 197, 198], "regions": [{"s": 175, "e": 182, "zh": "显现在先", "en": "appearance is prior", "thesis": true}, {"s": 183, "e": 187, "zh": "科学亦然", "en": "science depends on appearance too"}, {"s": 188, "e": 191, "zh": "常识不动", "en": "common sense unshaken"}, {"s": 192, "e": 196, "zh": "根据成因", "en": "ground transformed into cause"}, {"s": 197, "e": 197, "zh": "高尔吉亚", "en": "Gorgias' fragment"}, {"s": 198, "e": 202, "zh": "科学的困惑", "en": "science's perplexing results"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}, {"href": "lotm-thinking-appearance-02.html", "label": "S175–202"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}, "self": "lotm-thinking-appearance-02.html"};
+  const PX=8;
+  const sents=[...document.querySelectorAll("p.sent")];
+  if(!sents.length) return;
+  const markKey="reading-marks:"+location.pathname;
+  const mapKey="lotm-reading-map-visible";
+  let marks=new Set();
+  try{ marks=new Set(JSON.parse(localStorage.getItem(markKey)||"[]")); }catch(_){}
+  const saveMarks=()=>{try{localStorage.setItem(markKey,JSON.stringify([...marks]));}catch(_){}};
+  const byNumber=n=>sents.find(p=>p.dataset.n===String(n));
+  const y=n=>(n-CFG.first)*PX;
+
+  // --- sentence number margin (stable coordinates; click = mark) ---
+  sents.forEach(p=>{
+    const n=p.querySelector(".n")?.textContent.trim();
+    if(!n) return;
+    p.dataset.n=n;
+    const box=document.createElement("div"); box.className="mgn";
+    const btn=document.createElement("button");
+    btn.className="mgn-n"; btn.type="button"; btn.textContent=n;
+    btn.title="Mark sentence "+n;
+    btn.addEventListener("click",()=>{
+      if(marks.has(n)){marks.delete(n); p.classList.remove("marked");}
+      else{marks.add(n); p.classList.add("marked");}
+      saveMarks(); drawMarks();
+    });
+    box.appendChild(btn); p.insertBefore(box,p.firstChild);
+    if(marks.has(n)) p.classList.add("marked");
+  });
+
+  // --- map shell ---
+  const H=(CFG.last-CFG.first+1)*PX;
+  const map=document.createElement("aside");
+  map.className="reading-map"; map.setAttribute("aria-label","Reading map");
+  const bookRows=CFG.book.units.map(u=>{
+    const segs=u.segments.map(s=>{
+      const here=location.pathname.endsWith("/"+s.href)||location.pathname.endsWith(s.href);
+      return `<a class="bk-seg${here?" here":""}" href="${s.href}"${here?' aria-current="page"':''}>${s.label}</a>`;
+    }).join("");
+    const built=u.segments.length>0;
+    const cur=u.segments.some(s=>location.pathname.endsWith("/"+s.href)||location.pathname.endsWith(s.href));
+    return `<div class="bk-unit${built?" built":""}${cur?" current":""}">`+
+           `<span class="bk-title">${u.title}</span><span class="bk-segs">${segs}</span></div>`;
+  }).join("");
+  map.innerHTML=
+    `<div class="map-head"><div class="map-title">Reading map</div>`+
+    `<button class="map-hide" type="button">Hide</button></div>`+
+    `<div class="map-kicker">The book</div>`+
+    `<div class="bk-work">${CFG.book.work}<small>之后 ${CFG.book.later}</small></div>${bookRows}`+
+    `<div class="map-kicker">This page</div>`+
+    `<nav class="pg-map" aria-label="Argument map">`+
+    `<div class="pg-strip" style="height:${H}px"></div>`+
+    `<div class="pg-labels" style="height:${H}px"></div></nav>`+
+    `<div class="map-hint"></div>`;
+  document.body.appendChild(map);
+
+  // The map is created after the page's initial theme pass, so propagate the
+  // active theme now as well (needed especially for direct file:// reading).
+  const theme=document.documentElement.dataset.theme;
+  map.querySelectorAll('a[href*="thinking-"]').forEach(link=>{
+    const target=new URL(link.getAttribute("href"),location.href);
+    target.searchParams.set("theme",theme);
+    link.href=target.href;
+  });
+
+  const strip=map.querySelector(".pg-strip");
+  const labels=map.querySelector(".pg-labels");
+  const hint=map.querySelector(".map-hint");
+
+  CFG.paras.forEach(n=>{
+    if(n===CFG.first) return;
+    const t=document.createElement("div");
+    t.className="pg-para"; t.style.top=(y(n)-1)+"px"; strip.appendChild(t);
+  });
+  const view=document.createElement("div"); view.className="pg-view"; strip.appendChild(view);
+
+  // The STRIP carries the honest proportional geometry (ticks, marks, band).
+  // The LABEL column only has to stay adjacent, ordered and readable, so a
+  // short region gets a legible minimum height and later labels are pushed
+  // down rather than overlapping. Decoupling the two keeps proportion exact
+  // where it matters without making 3-sentence regions unreadable.
+  const MINLAB=34;
+  const labBtns=CFG.regions.map(r=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="pg-lab"+(r.thesis?" thesis":"");
+    b.innerHTML=`<span class="pg-range">${r.s}–${r.e}</span>`+
+                `<span class="pg-zh">${r.zh}</span><span class="pg-en">${r.en}</span>`;
+    b.addEventListener("click",()=>jump(r.s));
+    labels.appendChild(b); return b;
+  });
+  let bottom=-1e9;
+  labBtns.forEach((b,i)=>{
+    const r=CFG.regions[i];
+    const h=Math.max((r.e-r.s+1)*PX,MINLAB);
+    const top=Math.max(y(r.s),bottom+2);
+    b.style.top=top+"px"; b.style.height=h+"px";
+    bottom=top+h;
+  });
+  labels.style.height=Math.max(H,bottom)+"px";
+
+  function jump(n){
+    const p=byNumber(n); if(!p) return;
+    p.scrollIntoView({behavior:"smooth",block:"center"});
+    history.replaceState(null,"","#s"+n);
+  }
+  strip.addEventListener("click",e=>{
+    const f=(e.clientY-strip.getBoundingClientRect().top)/strip.clientHeight;
+    jump(CFG.first+Math.min(CFG.last-CFG.first,Math.max(0,Math.round(f*(CFG.last-CFG.first)))));
+  });
+
+  function drawMarks(){
+    strip.querySelectorAll(".pg-dot").forEach(d=>d.remove());
+    [...marks].map(Number).filter(Number.isFinite).sort((a,b)=>a-b).forEach(n=>{
+      const d=document.createElement("button");
+      d.className="pg-dot"; d.type="button"; d.title="S"+n;
+      d.style.top=(y(n)+PX/2)+"px";
+      d.addEventListener("click",ev=>{ev.stopPropagation(); jump(n);});
+      strip.appendChild(d);
+    });
+    hint.textContent=marks.size?"":"点句号数字可在地图上留下标记。";
+  }
+  drawMarks();
+
+  // viewport band + active region, in sentence coordinates (stable, meaningful)
+  function visibleRange(){
+    let a=null,b=null;
+    for(const p of sents){
+      const r=p.getBoundingClientRect();
+      if(r.bottom<0||r.top>innerHeight) continue;
+      const n=Number(p.dataset.n);
+      if(a===null||n<a) a=n;
+      if(b===null||n>b) b=n;
+    }
+    return a===null?null:[a,b];
+  }
+  function onScroll(){
+    const vr=visibleRange(); if(!vr) return;
+    view.style.top=y(vr[0])+"px";
+    view.style.height=Math.max(6,(vr[1]-vr[0]+1)*PX)+"px";
+    const mid=(vr[0]+vr[1])/2;
+    CFG.regions.forEach((r,i)=>labBtns[i].classList.toggle("active",mid>=r.s&&mid<=r.e));
+  }
+  addEventListener("scroll",onScroll,{passive:true});
+  addEventListener("resize",onScroll);
+  onScroll();
+
+  // top-bar toggle (persisted)
+  const bar=document.querySelector(".bar");
+  const mapToggle=document.createElement("button");
+  mapToggle.className="btn"; mapToggle.id="t-map"; mapToggle.type="button";
+  bar.insertBefore(mapToggle,document.getElementById("t-theme"));
+  function setMapVisible(v,remember=false){
+    document.body.classList.toggle("map-hidden",!v);
+    mapToggle.setAttribute("aria-pressed",String(v));
+    mapToggle.textContent=v?"Hide Map":"Show Map";
+    if(remember){try{localStorage.setItem(mapKey,v?"1":"0");}catch(_){}}
+  }
+  let vis=true; try{vis=localStorage.getItem(mapKey)!=="0";}catch(_){}
+  setMapVisible(vis);
+  mapToggle.addEventListener("click",()=>setMapVisible(document.body.classList.contains("map-hidden"),true));
+  map.querySelector(".map-hide").addEventListener("click",()=>setMapVisible(false,true));
+})();
+</script>
+<!-- reading-anchors:end -->
+</body>
+</html>

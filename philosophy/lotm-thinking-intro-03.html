@@ -874,7 +874,7 @@
 
 <script>
 (()=>{
-  const CFG={"first": 99, "last": 127, "paras": [99, 107, 115, 123], "regions": [{"s": 99, "e": 102, "zh": "两个世界", "en": "two-world premise"}, {"s": 103, "e": 106, "zh": "人人能思", "en": "thinking for everybody"}, {"s": 107, "e": 110, "zh": "理性与知性", "en": "reason vs intellect"}, {"s": 111, "e": 114, "zh": "不自觉的解放", "en": "Kant unawares"}, {"s": 115, "e": 117, "zh": "标准越界", "en": "criteria trespass"}, {"s": 118, "e": 122, "zh": "意义非真理", "en": "meaning, not truth", "thesis": true}, {"s": 123, "e": 127, "zh": "观念论回落", "en": "Idealism relapses"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}};
+  const CFG={"first": 99, "last": 127, "paras": [99, 107, 115, 123], "regions": [{"s": 99, "e": 102, "zh": "两个世界", "en": "two-world premise"}, {"s": 103, "e": 106, "zh": "人人能思", "en": "thinking for everybody"}, {"s": 107, "e": 110, "zh": "理性与知性", "en": "reason vs intellect"}, {"s": 111, "e": 114, "zh": "不自觉的解放", "en": "Kant unawares"}, {"s": 115, "e": 117, "zh": "标准越界", "en": "criteria trespass"}, {"s": 118, "e": 122, "zh": "意义非真理", "en": "meaning, not truth", "thesis": true}, {"s": 123, "e": 127, "zh": "观念论回落", "en": "Idealism relapses"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}, {"href": "lotm-thinking-appearance-02.html", "label": "S175–202"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}, "self": "lotm-thinking-intro-03.html"};
   const PX=8;
   const sents=[...document.querySelectorAll("p.sent")];
   if(!sents.length) return;
@@ -930,6 +930,15 @@
     `<div class="map-hint"></div>`;
   document.body.appendChild(map);
 
+  // The map is created after the page's initial theme pass, so propagate the
+  // active theme now as well (needed especially for direct file:// reading).
+  const theme=document.documentElement.dataset.theme;
+  map.querySelectorAll('a[href*="thinking-"]').forEach(link=>{
+    const target=new URL(link.getAttribute("href"),location.href);
+    target.searchParams.set("theme",theme);
+    link.href=target.href;
+  });
+
   const strip=map.querySelector(".pg-strip");
   const labels=map.querySelector(".pg-labels");
   const hint=map.querySelector(".map-hint");
@@ -946,7 +955,7 @@
   // short region gets a legible minimum height and later labels are pushed
   // down rather than overlapping. Decoupling the two keeps proportion exact
   // where it matters without making 3-sentence regions unreadable.
-  const MINLAB=26;
+  const MINLAB=34;
   const labBtns=CFG.regions.map(r=>{
     const b=document.createElement("button");
     b.type="button"; b.className="pg-lab"+(r.thesis?" thesis":"");
