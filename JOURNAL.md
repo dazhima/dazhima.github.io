@@ -74,3 +74,19 @@ reading-page theme selectors from `lotm-thinking-intro` to `lotm-thinking-`. Loc
 browser testing passed the epigraph, S164's dense life-curve structure, S174's ending,
 expression focus, all-translation toggle, rescue focus, footer, both themes, and
 Introduction III → Chapter 1 theme carryover.
+
+## 2026-08-01 — Page II reading map, second prototype
+
+Yan rejected the first anchor prototype's automatic phrase under every sentence number
+as unhelpful, but wanted a hideable page/book map in the unused desktop margin and no
+map on mobile. Replaced the right-edge spine and per-sentence labels on
+`lotm-thinking-intro-02.html` with a fixed left panel: four-page book position, nine
+hand-authored S49–98 argument ranges, live section/progress state, and marked-sentence
+chips. Sentence numbers remain clickable coordinates; the map does not change the text
+column width and remembers hidden/visible state.
+
+The first scroll probe highlighted the previous section after a map jump because the
+target sentence was centered below the probe. Moved the probe from 30% to the viewport
+midpoint. Browser checks passed at 1280px in Light/Dark, including hide/reload, marks,
+section jumps and no overflow. A 375px iframe check confirmed the map and Map button
+are absent and the original inline sentence numbers return.

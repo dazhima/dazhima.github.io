@@ -1026,121 +1026,194 @@
 <!-- cain-reader:end -->
 <!-- reading-anchors:start -->
 <style>
+  /* Sentence coordinates: number only; semantic labels belong in the map. */
   @media (min-width:900px){
-    main{max-width:880px}
-    p.sent{position:relative; padding-left:126px}
-    main > .remarks, main > .sentence-aid, main > .practice-note,
-    .unit > .remarks, .unit > .sentence-aid, .unit > .idea,
-    .unit > .orig, .unit > .ref{margin-left:126px}
-    .mgn{position:absolute; left:0; top:.35rem; width:112px; text-align:right;
-         font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
-         line-height:1.3; user-select:none}
+    main{max-width:790px}
+    p.sent{position:relative; padding-left:46px}
+    main > .remarks, main > .sentence-aid, main > .practice-note{margin-left:46px}
+    .mgn{position:absolute; left:0; top:.42rem; width:32px; text-align:right;
+          font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+          line-height:1; user-select:none}
+    .sent > .stext > .n{display:none}
   }
   @media (max-width:899px){
-    .mgn{margin:0 0 .15rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
-         display:flex; align-items:baseline; gap:.4rem}
-    .spine{display:none !important}
+    .mgn{display:none !important}
+    .sent > .stext > .n{display:inline}
   }
-  .mgn-n{appearance:none; border:0; background:none; padding:0; cursor:pointer;
-         font:inherit; font-size:.68rem; color:var(--muted); opacity:.75}
-  .mgn-n:hover{color:var(--amber); opacity:1}
-  p.sent.marked .mgn-n{color:var(--amber); opacity:1}
-  .mgn-l{font-size:.7rem; color:var(--amber); opacity:.82; letter-spacing:.01em}
-  p.sent.marked{background:var(--amber-soft); border-left-color:var(--amber)}
-  .sent .n{display:none}
-  .spine{position:fixed; right:.55rem; top:4.2rem; bottom:1.2rem; width:22px;
-         z-index:9; display:flex; flex-direction:column; align-items:center}
-  .spine-track{position:relative; width:9px; flex:1; border-radius:6px;
-               background:var(--paper); border:1px solid var(--line); cursor:pointer}
-  .spine-view{position:absolute; left:-2px; right:-2px; background:var(--amber-soft);
-              border:1px solid var(--amber); border-radius:4px; opacity:.75; pointer-events:none}
-  .spine-tick{position:absolute; left:0; right:0; height:1px; background:var(--line);
-              filter:brightness(.8); pointer-events:none}
-  .spine-mark{position:absolute; left:-3px; width:5px; height:5px; border-radius:50%;
-              background:var(--amber); pointer-events:none}
-  .spine-cap{font-family:system-ui,sans-serif; font-size:.55rem; color:var(--muted); opacity:.7}
+  .mgn-n{appearance:none; border:0; background:none; padding:.12rem 0; cursor:pointer;
+          font:inherit; font-size:.68rem; color:var(--muted); opacity:.72}
+  .mgn-n:hover,.mgn-n:focus-visible{color:var(--amber); opacity:1}
+  .mgn-n:focus-visible{outline:1px solid var(--amber); outline-offset:3px; border-radius:2px}
+  p.sent.marked .mgn-n{color:var(--amber); opacity:1; font-weight:750}
+  p.sent.marked{background:linear-gradient(90deg,var(--amber-soft),transparent 72%);
+                 border-left-color:var(--amber)}
+
+  /* The map uses the real desktop margin; it never takes width from the text. */
+  .reading-map,#t-map{display:none}
+  @media (min-width:1280px){
+    #t-map{display:inline-block}
+    .reading-map{
+      --page-progress:0%; display:block; position:fixed;
+      left:max(16px,calc(50vw - 640px)); top:4.3rem; width:210px;
+      max-height:calc(100vh - 5.6rem); overflow:auto; overscroll-behavior:contain;
+      z-index:8; padding:.8rem .8rem .9rem;
+      border:1px solid var(--line); border-radius:10px;
+      background:color-mix(in srgb,var(--paper) 94%,transparent);
+      box-shadow:0 10px 32px rgba(55,42,24,.07);
+      backdrop-filter:blur(8px);
+      font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+      scrollbar-width:thin;
+    }
+    body.map-hidden .reading-map{display:none}
+  }
+  .map-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem}
+  .map-title{font-size:.74rem;font-weight:760;letter-spacing:.04em;color:var(--ink)}
+  .map-hide{margin-left:auto;border:0;background:none;color:var(--muted);padding:.1rem;
+             font:inherit;font-size:.64rem;cursor:pointer}
+  .map-hide:hover{color:var(--amber)}
+  .map-kicker{margin:.65rem 0 .3rem;font-size:.56rem;font-weight:760;letter-spacing:.13em;
+               text-transform:uppercase;color:var(--muted)}
+  .book-map{display:grid;gap:.12rem}
+  .book-stop{display:flex;align-items:baseline;gap:.35rem;padding:.28rem .38rem;
+              border-radius:5px;color:var(--muted);text-decoration:none;font-size:.67rem}
+  .book-stop span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .book-stop small{margin-left:auto;flex:none;font-size:.56rem;color:var(--muted)}
+  .book-stop:hover{background:var(--amber-soft);color:var(--ink)}
+  .book-stop.current{background:var(--amber-soft);color:var(--ink);font-weight:700}
+  .page-map{position:relative;display:grid;gap:.08rem;padding-left:.12rem}
+  .page-rail{position:absolute;left:1.24rem;top:.44rem;bottom:.44rem;width:2px;
+              border-radius:2px;background:var(--line);overflow:hidden}
+  .page-fill{width:100%;height:var(--page-progress);background:var(--amber);transition:height .12s}
+  .map-stop{position:relative;display:grid;grid-template-columns:2rem 1fr;gap:.38rem;
+             width:100%;border:0;background:none;text-align:left;padding:.28rem .3rem;
+             border-radius:6px;color:var(--muted);font:inherit;cursor:pointer}
+  .map-stop:hover{background:var(--amber-soft);color:var(--ink)}
+  .map-stop.active{background:var(--amber-soft);color:var(--ink)}
+  .map-range{position:relative;z-index:1;font-size:.56rem;font-variant-numeric:tabular-nums;
+              color:var(--muted);background:var(--paper);padding:.1rem 0;text-align:center}
+  .map-stop.active .map-range{color:var(--amber);font-weight:800}
+  .map-name{font-size:.64rem;line-height:1.25}
+  .map-name small{display:block;margin-top:.08rem;color:var(--muted);font-size:.58rem}
+  .marks-list{display:flex;gap:.28rem;flex-wrap:wrap;min-height:1.25rem}
+  .mark-chip{border:1px solid var(--line);background:none;color:var(--amber);border-radius:999px;
+              padding:.12rem .38rem;font:inherit;font-size:.58rem;cursor:pointer}
+  .mark-chip:hover{background:var(--amber-soft)}
+  .marks-empty{font-size:.58rem;line-height:1.45;color:var(--muted)}
+  html[data-theme="dark"] .reading-map{box-shadow:0 12px 34px rgba(0,0,0,.28)}
+  html[data-theme="dark"] p.sent.marked{background:linear-gradient(90deg,var(--amber-soft),transparent 72%)}
 </style>
+
+<aside class="reading-map" id="reading-map" aria-label="Reading map">
+  <div class="map-head"><div class="map-title">Reading map</div><button class="map-hide" type="button">Hide</button></div>
+  <div class="map-kicker">Book position</div>
+  <nav class="book-map" aria-label="Current reading sequence"><a class="book-stop" href="lotm-thinking-intro.html"><span>Introduction I</span><small>S1–48</small></a><a class="book-stop current" href="lotm-thinking-intro-02.html" aria-current="page"><span>Introduction II</span><small>S49–98</small></a><a class="book-stop" href="lotm-thinking-intro-03.html"><span>Introduction III</span><small>S99–127</small></a><a class="book-stop" href="lotm-thinking-appearance-01.html"><span>Appearance I · Ch. 1</span><small>S128–174</small></a></nav>
+  <div class="map-kicker">This page</div>
+  <nav class="page-map" aria-label="Argument map">
+    <div class="page-rail" aria-hidden="true"><div class="page-fill"></div></div>
+    <button class="map-stop" type="button" data-target="49" data-end="60"><span class="map-range">49–60</span><span class="map-name">Questions become difficult<small>问题为何难提</small></span></button><button class="map-stop" type="button" data-target="61" data-end="64"><span class="map-range">61–64</span><span class="map-name">Crisis from within<small>危机来自内部</small></span></button><button class="map-stop" type="button" data-target="65" data-end="69"><span class="map-range">65–69</span><span class="map-name">God is dead<small>“上帝已死”</small></span></button><button class="map-stop" type="button" data-target="70" data-end="72"><span class="map-range">70–72</span><span class="map-name">No restoration<small>不回旧形而上学</small></span></button><button class="map-stop" type="button" data-target="73" data-end="79"><span class="map-range">73–79</span><span class="map-name">The hierarchy ends<small>两世界等级终结</small></span></button><button class="map-stop" type="button" data-target="80" data-end="85"><span class="map-range">80–85</span><span class="map-name">Both worlds collapse<small>两世界一同坍塌</small></span></button><button class="map-stop" type="button" data-target="86" data-end="89"><span class="map-range">86–89</span><span class="map-name">Deaths become common sense<small>死亡成为常识</small></span></button><button class="map-stop" type="button" data-target="90" data-end="94"><span class="map-range">90–94</span><span class="map-name">Beyond nihilism<small>告别虚无主义</small></span></button><button class="map-stop" type="button" data-target="95" data-end="98"><span class="map-range">95–98</span><span class="map-name">Two possible advantages<small>传统终结的两重优势</small></span></button>
+  </nav>
+  <div class="map-kicker">Your marks</div>
+  <div class="marks-list"></div>
+</aside>
+
 <script>
 (()=>{
   const sents=[...document.querySelectorAll("p.sent")];
   if(!sents.length) return;
-  const KEY="reading-marks:"+location.pathname;
+  const markKey="reading-marks:"+location.pathname;
+  const mapKey="lotm-reading-map-visible";
   let marks=new Set();
-  try{ marks=new Set(JSON.parse(localStorage.getItem(KEY)||"[]")); }catch(_){}
-  const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify([...marks])); }catch(_){} };
+  try{ marks=new Set(JSON.parse(localStorage.getItem(markKey)||"[]")); }catch(_){}
+  const saveMarks=()=>{try{localStorage.setItem(markKey,JSON.stringify([...marks]));}catch(_){}};
+  const byNumber=n=>sents.find(p=>p.dataset.n===String(n));
+
+  const map=document.getElementById("reading-map");
+  const marksList=map.querySelector(".marks-list");
+  const stops=[...map.querySelectorAll(".map-stop")];
+  const fill=map.querySelector(".page-fill");
+  const bar=document.querySelector(".bar");
+  const mapToggle=document.createElement("button");
+  mapToggle.className="btn"; mapToggle.id="t-map"; mapToggle.type="button";
+  bar.insertBefore(mapToggle,document.getElementById("t-theme"));
+
+  function setMapVisible(visible,remember=false){
+    document.body.classList.toggle("map-hidden",!visible);
+    mapToggle.setAttribute("aria-pressed",String(visible));
+    mapToggle.textContent=visible?"Hide Map":"Show Map";
+    mapToggle.title=visible?"Hide reading map":"Show reading map";
+    if(remember){try{localStorage.setItem(mapKey,visible?"1":"0");}catch(_){}}
+  }
+  let initiallyVisible=true;
+  try{initiallyVisible=localStorage.getItem(mapKey)!=="0";}catch(_){}
+  setMapVisible(initiallyVisible);
+  mapToggle.addEventListener("click",()=>setMapVisible(document.body.classList.contains("map-hidden"),true));
+  map.querySelector(".map-hide").addEventListener("click",()=>setMapVisible(false,true));
+
+  function scrollToSentence(n){
+    const p=byNumber(n); if(!p) return;
+    p.scrollIntoView({behavior:"smooth",block:"center"});
+    history.replaceState(null,"","#s"+n);
+  }
+
+  function renderMarks(){
+    marksList.replaceChildren();
+    const ordered=[...marks].map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
+    if(!ordered.length){
+      const empty=document.createElement("div"); empty.className="marks-empty";
+      empty.textContent="Click a sentence number to keep a place."; marksList.appendChild(empty); return;
+    }
+    ordered.forEach(n=>{
+      const b=document.createElement("button"); b.className="mark-chip"; b.type="button";
+      b.textContent="S"+n; b.addEventListener("click",()=>scrollToSentence(n)); marksList.appendChild(b);
+    });
+  }
 
   sents.forEach(p=>{
-    const n=p.querySelector(".n")?.textContent.trim();
-    if(!n) return;
-    p.dataset.n=n;
-    const aid=document.querySelector('.sentence-aid[data-sentence="'+n+'"]');
-    const lab=aid?.querySelector(".meaning-label")?.textContent.trim()||"";
-    const box=document.createElement("div");
-    box.className="mgn";
-    const btn=document.createElement("button");
-    btn.className="mgn-n"; btn.type="button"; btn.textContent=n;
-    btn.title="Mark this sentence";
-    btn.setAttribute("aria-label","Mark sentence "+n);
+    const n=p.querySelector(".n")?.textContent.trim(); if(!n) return;
+    p.dataset.n=n; p.id="s"+n;
+    const box=document.createElement("div"); box.className="mgn";
+    const btn=document.createElement("button"); btn.className="mgn-n"; btn.type="button"; btn.textContent=n;
+    btn.title="Mark sentence "+n; btn.setAttribute("aria-label","Mark sentence "+n);
     btn.addEventListener("click",()=>{
-      if(marks.has(n)){ marks.delete(n); p.classList.remove("marked"); }
-      else{ marks.add(n); p.classList.add("marked"); }
-      save(); draw();
+      if(marks.has(n)){marks.delete(n);p.classList.remove("marked");}
+      else{marks.add(n);p.classList.add("marked");}
+      saveMarks(); renderMarks();
     });
-    box.appendChild(btn);
-    if(lab){ const l=document.createElement("div"); l.className="mgn-l"; l.textContent=lab; box.appendChild(l); }
-    p.insertBefore(box,p.firstChild);
+    box.appendChild(btn); p.insertBefore(box,p.firstChild);
     if(marks.has(n)) p.classList.add("marked");
   });
+  renderMarks();
 
-  const spine=document.createElement("div");
-  spine.className="spine";
-  const first=sents[0], last=sents[sents.length-1];
-  spine.innerHTML='<div class="spine-cap">'+(first.dataset.n||"")+'</div>'+
-                  '<div class="spine-track"></div>'+
-                  '<div class="spine-cap">'+(last.dataset.n||"")+'</div>';
-  document.body.appendChild(spine);
-  const track=spine.querySelector(".spine-track");
-  const view=document.createElement("div");
-  view.className="spine-view"; track.appendChild(view);
-
-  const absTop=el=>el.getBoundingClientRect().top+window.scrollY;
-  let top0=0, span=1;
-  const frac=el=>Math.min(1,Math.max(0,(absTop(el)-top0)/span));
-
-  function draw(){
-    top0=absTop(first);
-    span=Math.max(1,(absTop(last)+last.offsetHeight)-top0);
-    track.querySelectorAll(".spine-tick,.spine-mark").forEach(e=>e.remove());
-    sents.forEach(p=>{
-      if(p.classList.contains("para-start")){
-        const t=document.createElement("div");
-        t.className="spine-tick"; t.style.top=(frac(p)*100).toFixed(2)+"%";
-        track.appendChild(t);
-      }
-      if(marks.has(p.dataset.n)){
-        const m=document.createElement("div");
-        m.className="spine-mark"; m.style.top=(frac(p)*100).toFixed(2)+"%";
-        track.appendChild(m);
-      }
-    });
-    onScroll();
-  }
-  function onScroll(){
-    const h=track.clientHeight||1;
-    const a=Math.min(1,Math.max(0,(window.scrollY-top0)/span));
-    const b=Math.min(1,Math.max(0,(window.scrollY+window.innerHeight-top0)/span));
-    view.style.top=(a*h).toFixed(1)+"px";
-    view.style.height=Math.max(6,(b-a)*h).toFixed(1)+"px";
-  }
-  track.addEventListener("click",e=>{
-    const r=track.getBoundingClientRect();
-    const f=(e.clientY-r.top)/r.height;
-    window.scrollTo({top:top0+f*span-window.innerHeight*0.35,behavior:"smooth"});
+  // Newly created book links inherit the active reading theme.
+  const theme=document.documentElement.dataset.theme;
+  map.querySelectorAll('a[href*="thinking-"]').forEach(link=>{
+    const target=new URL(link.getAttribute("href"),location.href);
+    target.searchParams.set("theme",theme); link.href=target.href;
   });
-  addEventListener("scroll",onScroll,{passive:true});
-  addEventListener("resize",draw);
-  draw();
-  setTimeout(draw,300);
+
+  stops.forEach(stop=>stop.addEventListener("click",()=>scrollToSentence(stop.dataset.target)));
+  const absTop=el=>el.getBoundingClientRect().top+scrollY;
+  function updateMap(){
+    const probe=scrollY+innerHeight*.50;
+    let active=stops[0];
+    stops.forEach(stop=>{
+      const p=byNumber(stop.dataset.target);
+      if(p && absTop(p)<=probe) active=stop;
+    });
+    stops.forEach(stop=>stop.classList.toggle("active",stop===active));
+    const first=sents[0],last=sents[sents.length-1];
+    const start=absTop(first),end=absTop(last)+last.offsetHeight;
+    const progress=Math.max(0,Math.min(1,(probe-start)/Math.max(1,end-start)));
+    map.style.setProperty("--page-progress",(progress*100).toFixed(1)+"%");
+  }
+  addEventListener("scroll",updateMap,{passive:true});
+  addEventListener("resize",updateMap);
+  document.addEventListener("toggle",()=>setTimeout(updateMap,220),true);
+  updateMap(); setTimeout(updateMap,300);
+
+  if(location.hash.match(/^#s\d+$/)){
+    const p=document.querySelector(location.hash); if(p) setTimeout(()=>p.scrollIntoView({block:"center"}),60);
+  }
 })();
 </script>
 <!-- reading-anchors:end -->
