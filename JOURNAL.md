@@ -46,3 +46,16 @@ User searched "yanhe guangzhou university" on Google and got nothing — expecte
 - `gh api` booleans need `-F`, not `-f`.
 - Local `dig`/`curl` on this Mac can show fake-IP (Clash) results — verify DNS via a DoH resolver instead.
 - A domain in Namecheap's `autoRenewPeriod` grace window can still fail to reactivate through the normal UI/API flow for no clear reason — don't assume "still owned in WHOIS" means "reactivation will work."
+
+## 2026-07-31 — Arendt Introduction III and the self-invalidating theme selector
+
+Published the final Introduction reading page as `philosophy/lotm-thinking-intro-03.html`,
+S99–127 / printed pp. 12–16, without extending the experimental Cain reader. Updated the
+homepage description and sitemap, and linked Introduction II forward to III.
+
+Browser testing exposed an inherited link-state bug: the theme function selected links
+by a relative `href` prefix and then assigned `link.href`, converting the stored
+attribute to an absolute URL. A later theme switch could no longer select the same link,
+so it kept the previous `?theme=` value. The website's `lotm-` filename prefix made the
+source selector miss even sooner. Changed all three pages to a stable filename-substring
+selector and verified dark → light → dark propagation.

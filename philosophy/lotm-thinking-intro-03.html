@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Life of the Mind · Thinking · Introduction III</title>
+<script>
+  (()=>{
+    try{
+      const linked=new URLSearchParams(location.search).get('theme');
+      const saved=localStorage.getItem('lotm-reading-theme');
+      const choice=/^(dark|light)$/.test(linked||'')?linked:saved;
+      const dark=choice ? choice==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme=dark?'dark':'light';
+    }catch(_){ document.documentElement.dataset.theme='light'; }
+  })();
+</script>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --blue:#486a8b; --blue-soft:#e7eef5; --green:#4d7358; --green-soft:#e6efe8;
+  }
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#141311; --ink:#e8e0d4; --muted:#aaa092; --line:#3c3730;
+    --amber:#d5a45a; --amber-soft:#382b17; --purple:#c7a7e3; --purple-soft:#30263a;
+    --teal:#82c5b5; --teal-soft:#1d342f; --rose:#dc92a5; --rose-soft:#39242a;
+    --blue:#8fb6d5; --blue-soft:#20303d; --green:#91bd9b; --green-soft:#223529;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+    line-height:1.85;
+  }
+  /* top bar */
+  .bar{
+    position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;
+  }
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem;
+    cursor:pointer; transition:.15s;
+  }
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  .btn[aria-pressed="true"]{background:var(--green-soft); border-color:var(--green); color:var(--green)}
+  /* page */
+  main{max-width:720px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2.2rem}
+  header.doc h1{font-size:1.7rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  /* sentence units */
+  .sent{margin:0; padding:.35rem 0 .35rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .sent:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.6rem}
+  .stext{font-size:1.16rem}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted);
+     vertical-align:.45em; margin-right:.15em; user-select:none}
+  /* inline chinese ruby */
+  ruby{ruby-position:over}
+  rt{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+     font-size:.58em; color:var(--amber); font-weight:500; letter-spacing:.02em;
+     opacity:.92; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  /* remarks */
+  .remarks{margin:.45rem 0 .2rem; padding:.55rem .8rem;
+    background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber);
+    border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.6}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem}
+  .remark b{color:var(--ink)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em;
+    padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-dian{background:var(--purple-soft); color:var(--purple)}   /* 典故 */
+  .t-yin{background:var(--teal-soft); color:var(--teal)}        /* 引用 */
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}      /* 注 */
+  .t-ci{background:var(--rose-soft); color:var(--rose)}         /* 词 */
+  /* guided rescue; S32–47 use the validated meaning-first tree */
+  .practice-note{
+    margin:1.7rem 0 1rem; padding:.8rem 1rem; border:1px solid #cfdde8;
+    border-radius:8px; background:#eef4f8; color:#38536d;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.84rem; line-height:1.65;
+  }
+  .practice-note b{display:block; margin-bottom:.15rem}
+  .sentence-aid{
+    margin:.18rem 0 .7rem .9rem;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    transition:opacity .2s, filter .2s;
+  }
+  .sentence-aid details{border-radius:7px; overflow:hidden}
+  .sentence-aid summary{
+    display:flex; align-items:center; gap:.45rem; cursor:pointer; list-style:none;
+    padding:.38rem .65rem; font-size:.77rem; line-height:1.35; user-select:none;
+  }
+  .sentence-aid summary::-webkit-details-marker{display:none}
+  .sentence-aid summary::before{
+    content:"+"; width:1rem; height:1rem; display:inline-grid; place-items:center;
+    border-radius:50%; font-size:.8rem; font-weight:700; flex:0 0 auto;
+  }
+  .sentence-aid details[open] > summary::before{content:"−"}
+  .summary-hint{color:var(--muted); font-size:.7rem}
+  .rescue{border:1px solid #cfdde8; background:#f6f9fb}
+  .rescue > summary{color:var(--blue)}
+  .rescue > summary::before{background:var(--blue-soft); color:var(--blue)}
+  .translation{margin-top:.28rem; border:1px solid #d5e1d7; background:#f7faf7}
+  .translation > summary{color:var(--green)}
+  .translation > summary::before{background:var(--green-soft); color:var(--green)}
+  .rescue-body{padding:.2rem .75rem .75rem}
+  .step{display:grid; grid-template-columns:4.6rem 1fr; gap:.6rem; padding:.58rem 0}
+  .step + .step{border-top:1px dashed #d9e2e8}
+  .step-label{
+    color:var(--blue); font-size:.67rem; font-weight:750; letter-spacing:.04em;
+    text-transform:uppercase; padding-top:.15rem;
+  }
+  .core-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:1rem; line-height:1.55; color:var(--ink)}
+  .core-en strong{font-weight:650; color:#294e70}
+  .cue{margin-top:.2rem; color:#5f5a52; font-size:.76rem; line-height:1.55}
+  .meaning-overview{
+    margin:.5rem 0 .72rem; padding:.72rem .78rem; border:1px solid #c8d8e4;
+    border-radius:8px; background:#fff;
+  }
+  .meaning-kicker{
+    margin-bottom:.28rem; color:var(--blue); font-size:.68rem; font-weight:750;
+    letter-spacing:.045em;
+  }
+  .meaning-thesis{color:#334b5e; font-size:.86rem; line-height:1.68}
+  .meaning-thesis .next-sentence{color:var(--muted); font-size:.74rem}
+  .meaning-tree{margin:.15rem 0 .7rem}
+  .meaning-node{
+    position:relative; display:grid; grid-template-columns:5.3rem minmax(0,1fr);
+    gap:.58rem; align-items:start; margin-top:.18rem; padding:.42rem .52rem;
+    border-left:2px solid #d1dce4; border-radius:0 5px 5px 0;
+  }
+  .meaning-node.main{margin-left:0; border-left:3px solid var(--blue); background:#edf4f8}
+  .meaning-node.d1{margin-left:1.25rem}
+  .meaning-node.d2{margin-left:2.65rem}
+  .meaning-node.d3{margin-left:4.05rem}
+  .meaning-node:not(.main)::before{
+    content:""; position:absolute; left:-.72rem; top:1.05rem; width:.62rem;
+    border-top:1px solid #c2ced7;
+  }
+  .meaning-label{
+    padding-top:.12rem; color:#687887; font-size:.63rem; font-weight:750;
+    letter-spacing:.035em; line-height:1.3;
+  }
+  .meaning-node.main .meaning-label{color:var(--blue)}
+  .meaning-en{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); font-size:.94rem; line-height:1.48;
+  }
+  .meaning-node.main .meaning-en{font-weight:650; color:#294e70}
+  .meaning-zh{margin-top:.12rem; color:#625d55; font-size:.74rem; line-height:1.52}
+  .pair-word{color:#77541e; font-weight:650}
+  .expr-button{
+    appearance:none; margin:0; padding:.02rem .18rem; border:0;
+    border-bottom:1px dotted #a06e20; border-radius:3px; background:#fff2cf;
+    color:#69480f; font:inherit; line-height:inherit; cursor:help;
+  }
+  .expr-button::after{
+    content:"?"; display:inline-grid; place-items:center; width:.78rem; height:.78rem;
+    margin-left:.22rem; border-radius:50%; background:#dba94f; color:#fff;
+    font-family:system-ui,sans-serif; font-size:.55rem; font-weight:800;
+    vertical-align:.12rem;
+  }
+  .expr-button:focus-visible{outline:2px solid #d4a04a; outline-offset:2px}
+  .expr-tip{
+    display:none; margin:.38rem 0 .06rem; padding:.48rem .58rem;
+    border:1px solid #e3c98e; border-radius:6px; background:#fff9e9;
+    color:#594b33; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.72rem; line-height:1.58;
+  }
+  .expr-button:hover ~ .expr-tip,
+  .expr-button:focus ~ .expr-tip{display:block}
+  .expr-tip b{color:#674916}
+  .chunk-list{display:grid; gap:.32rem}
+  .chunk{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    gap:.65rem; align-items:baseline}
+  .chunk-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); line-height:1.45}
+  .chunk-zh{color:#6d665c; font-size:.74rem; line-height:1.45}
+  .read-again{
+    margin-top:.35rem; padding:.55rem .65rem; border-left:3px solid var(--blue);
+    background:#edf3f7; color:#38536d; font-size:.76rem; line-height:1.55;
+  }
+  .translation-text{padding:.6rem .75rem .72rem; border-top:1px solid #dfe8e0;
+    color:#334d39; font-size:.87rem; line-height:1.7}
+  body.rescue-mode main > .sent,
+  body.rescue-mode main > .remarks,
+  body.rescue-mode main > .sentence-aid,
+  body.rescue-mode main > .practice-note{opacity:.14; filter:saturate(.35)}
+  body.rescue-mode main > .sent.active-sentence,
+  body.rescue-mode main > .sentence-aid.active-aid{opacity:1; filter:none}
+  body.rescue-mode main > .sent.active-sentence{
+    border-left-color:var(--blue); background:#fbfcfd;
+  }
+  @media (max-width:600px){
+    .step{grid-template-columns:1fr; gap:.1rem}
+    .chunk{grid-template-columns:1fr; gap:.05rem; padding:.22rem 0}
+    .sentence-aid{margin-left:.35rem}
+    .meaning-node{grid-template-columns:4.15rem minmax(0,1fr); gap:.38rem}
+    .meaning-node.d1{margin-left:.55rem}
+    .meaning-node.d2{margin-left:1.1rem}
+    .meaning-node.d3{margin-left:1.65rem}
+  }
+  footer{max-width:720px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
+    font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  a{color:var(--blue)}
+  html[data-theme="dark"] body{background:#141311}
+  html[data-theme="dark"] .bar{background:rgba(20,19,17,.94)}
+  html[data-theme="dark"] .btn{background:#211f1b}
+  html[data-theme="dark"] .sent:hover{background:#1c1a17}
+  html[data-theme="dark"] .remarks{background:#1c1a17}
+  html[data-theme="dark"] .practice-note{background:#19242c; border-color:#334858; color:#bed0df}
+  html[data-theme="dark"] .rescue{background:#171f25; border-color:#344754}
+  html[data-theme="dark"] .translation{background:#18211b; border-color:#35483a}
+  html[data-theme="dark"] .step + .step{border-color:#35424a}
+  html[data-theme="dark"] .core-en strong,
+  html[data-theme="dark"] .meaning-node.main .meaning-en{color:#bdd2e3}
+  html[data-theme="dark"] .cue,
+  html[data-theme="dark"] .meaning-zh,
+  html[data-theme="dark"] .chunk-zh{color:#b9afa2}
+  html[data-theme="dark"] .meaning-overview{background:#1c1a17; border-color:#3a4b58}
+  html[data-theme="dark"] .meaning-thesis{color:#c2d3df}
+  html[data-theme="dark"] .meaning-node{border-color:#3b4851}
+  html[data-theme="dark"] .meaning-node.main{background:#1b2932}
+  html[data-theme="dark"] .meaning-node:not(.main)::before{border-color:#49565f}
+  html[data-theme="dark"] .meaning-label{color:#9ba9b4}
+  html[data-theme="dark"] .pair-word{color:#e0b870}
+  html[data-theme="dark"] .expr-button{background:#3b2d17; border-color:#b9893e; color:#f0cb88}
+  html[data-theme="dark"] .expr-tip{background:#292217; border-color:#6e5930; color:#d8c7aa}
+  html[data-theme="dark"] .expr-tip b{color:#f0cb88}
+  html[data-theme="dark"] .read-again{background:#1b2932; color:#bed0df}
+  html[data-theme="dark"] .translation-text{border-color:#344539; color:#bcd5c1}
+  html[data-theme="dark"] body.rescue-mode main > .sent.active-sentence{background:#192229}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; <a href="lotm-thinking-intro.html">Introduction I</a> &nbsp;·&nbsp; <a href="lotm-thinking-intro-02.html">Introduction II</a> &nbsp;·&nbsp; pp.&nbsp;12–16</div>
+  <button class="btn" id="t-ruby">中文 注音</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-trans" aria-pressed="false">直译 99–127</button>
+  <button class="btn" id="t-theme" aria-pressed="false" title="Switch to Dark Theme">Dark Theme</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>Introduction III</h1>
+    <div class="sub">Hannah Arendt, <i>The Life of the Mind</i> · Volume One: Thinking · printed pp. 12–16</div>
+  </header>
+  <aside class="practice-note"><b>精读 · sentences 99–127</b>先把英文朗读一至两次。卡住时先看作者在说什么和整句关系；遇到带问号的表达，悬停或点按查看说明。只有在意思仍不落地时才展开直译，最后回到原句完整朗读一次。</aside>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">99</span>For even though there has never been much <ruby>consensus<rt>共识</rt></ruby> about the subject matter of metaphysics, at least one point has been <ruby>taken for granted<rt>视为理所当然</rt></ruby>: that these disciplines—whether you called them metaphysics or philosophy—dealt with matters that were not given to sense-perception and that their understanding <ruby>transcended<rt>超越</rt></ruby> common-sense reasoning, which springs from sense experience and can be validated by <ruby>empirical<rt>经验性的、实证的</rt></ruby> tests and means.</span></p>
+  <div class="sentence-aid" data-sentence="99">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">形而上学虽无统一对象，却共享一个关于“不可见者”的前提</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">形而上学家从未真正同意自己研究什么，但他们至少默认一点：哲学或形而上学处理的不是感官直接给出的事物，它所要求的理解也超出能够由经验检验的常识推理。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">先让步</div><div><div class="meaning-en"><button class="expr-button" type="button">even though</button> there has never been much consensus …<div class="expr-tip"><b>even though</b> 引出让步：虽无共识，仍有一个共同前提。</div></div><div class="meaning-zh">研究对象长期没有共识。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">共同前提</div><div><div class="meaning-en">at least one point has been <button class="expr-button" type="button">taken for granted</button><div class="expr-tip"><b>take something for granted</b> = “不加论证地把某事当作当然”。</div></div><div class="meaning-zh">至少有一点一直被默认为真。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">研究对象</div><div><div class="meaning-en">matters <button class="expr-button" type="button">not given to sense-perception</button><div class="expr-tip"><b>be given to</b> 在这里是“呈现给”；这些对象不直接呈现于感官。</div></div><div class="meaning-zh">哲学面对不可由感官直接得到的事物。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">理解方式</div><div><div class="meaning-en">understanding <button class="expr-button" type="button">transcended common-sense reasoning</button><div class="expr-tip"><b>transcend</b> = “越出……的范围”；后面的 <i>which</i> 修饰 common-sense reasoning。</div></div><div class="meaning-zh">它也超出源自并受检验于经验的常识推理。</div></div></div></div>
+      <div class="read-again">抓住让步后的主干：<b>no consensus — yet one assumption was shared</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因为，尽管对于形而上学的研究对象从来没有多少共识，至少有一点一直被视为理所当然：这些学科——无论你称它们为形而上学还是哲学——所处理的是未被给予感官知觉的事物，而对这些事物的理解超越了常识推理；常识推理产生于感官经验，并能由经验性的检验和手段加以验证。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">100</span>From Parmenides till philosophy’s end, all thinkers were agreed that, in order to deal with such matters, man had to <ruby>detach<rt>使脱离</rt></ruby> his mind from the senses by detaching it both from the world as given by them and from the sensations—or passions—<ruby>aroused<rt>唤起</rt></ruby> by sense-objects.</span></p>
+  <div class="sentence-aid" data-sentence="100">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">传统哲学要求心灵同时退出感官世界与感官激情</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">从巴门尼德直到哲学传统终结，思想家都认为：要处理不可感知的事物，心灵必须离开感官；这既意味着离开感官呈现的世界，也意味着离开感官对象激起的感觉与激情。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">传统共识</div><div><div class="meaning-en">all thinkers <button class="expr-button" type="button">were agreed that</button> …<div class="expr-tip"><b>be agreed that</b> = “一致认为……”。</div></div><div class="meaning-zh">整个传统共享同一个方法要求。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">方法要求</div><div><div class="meaning-en">man had to <button class="expr-button" type="button">detach his mind from the senses</button><div class="expr-tip"><b>detach A from B</b> = “使 A 脱离 B”。</div></div><div class="meaning-zh">心灵必须与感官分离。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">双重脱离</div><div><div class="meaning-en"><span class="pair-word">both</span> from the world … <span class="pair-word">and</span> from the sensations or passions …<div class="meaning-zh">既退出感官所给的世界，也退出它所引发的感觉与激情。</div></div></div></div></div>
+      <div class="read-again">听出一个动作、两个对象：<b>detach the mind — from the world / from the passions</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">从巴门尼德直到哲学的终结，所有思想家都同意：为了处理这类事物，人必须使自己的心灵脱离感官；办法是使心灵既脱离感官所给出的世界，也脱离感官对象所唤起的感觉——或激情。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Parmenides</b> — <span class="zh">巴门尼德把真理之路与凡人的意见、显现世界区别开来。阿伦特以他标记西方哲学中“离开感官以求真”的古老起点。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">101</span>The philosopher, to the extent that he is a philosopher and not (what of course he also is) “a man like you and me,” <ruby>withdraws<rt>退离</rt></ruby> from the world of appearances, and the region he then moves in has always, since philosophy’s beginning, been described as the world of the few.</span></p>
+  <div class="sentence-aid" data-sentence="101">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">哲学家的专业身份被定义为从共同显现世界中退隐</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">哲学家作为普通人当然与大家同住在显现世界中；但就其哲学家身份而言，他退出这个共同世界，进入一个传统上只属于少数人的思想领域。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">限定身份</div><div><div class="meaning-en"><button class="expr-button" type="button">to the extent that</button> he is a philosopher<div class="expr-tip"><b>to the extent that</b> = “就……而言／在……范围内”。这里只谈他的哲学家身份。</div></div><div class="meaning-zh">不是说他的整个人都不再是普通人。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">哲学动作</div><div><div class="meaning-en"><button class="expr-button" type="button">withdraws from</button> the world of appearances<div class="expr-tip"><b>withdraw from</b> = “从……退出、退隐”。</div></div><div class="meaning-zh">作为哲学家，他离开共同的显现世界。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">传统结果</div><div><div class="meaning-en">the region … has been described as <button class="expr-button" type="button">the world of the few</button><div class="expr-tip"><b>the few</b> 与后文 <i>the many</i> 对立，指少数专业思想者。</div></div><div class="meaning-zh">哲学领域因此成了“少数人的世界”。</div></div></div></div>
+      <div class="read-again">重读时保留身份限定：<b>as philosopher he withdraws; as ordinary man he remains one of us</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">哲学家，就他是哲学家而不是（当然他同时也是）“一个像你我一样的人”而言，从显现世界中退离；而他随后活动于其中的领域，自哲学开始以来一直被描述为少数人的世界。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">102</span>This age-old distinction between the many and the “professional thinkers” specializing in what was supposedly the highest activity human beings could <ruby>attain to<rt>达到</rt></ruby>—Plato’s philosopher “shall be called the friend of the god, and if it ever is given to man to put on immortality, it shall be given to him”²⁰—has lost its <ruby>plausibility<rt>可信性</rt></ruby>, and this is the second advantage in our present situation.</span></p>
+  <div class="sentence-aid" data-sentence="102">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">“少数思想者高于多数人”的等级已经失去可信性</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">传统把专业思想者与普通多数人分开，并把哲学家的活动提升为人能达到的最高、近乎神性的活动。这个古老等级如今不再可信；阿伦特把它的崩塌视为当前处境的第二个优势。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">古老等级</div><div><div class="meaning-en">the distinction between <button class="expr-button" type="button">the many and the “professional thinkers”</button><div class="expr-tip"><b>the many / the few</b> 是多数普通人和少数哲学家的传统对立。</div></div><div class="meaning-zh">思想被设为少数人的最高专业。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">柏拉图式顶点</div><div><div class="meaning-en">the philosopher … <button class="expr-button" type="button">put on immortality</button><div class="expr-tip"><b>put on</b> 在此是“披上、获得”；引文把哲学家置于接近神与不朽的位置。</div></div><div class="meaning-zh">哲学家被想象为神的朋友，甚至可能获得不朽。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">现代变化</div><div><div class="meaning-en">has <button class="expr-button" type="button">lost its plausibility</button><div class="expr-tip"><b>lose plausibility</b> = “不再显得可信或说得通”。</div></div><div class="meaning-zh">这种等级秩序已经无法令人信服。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">第二优势</div><div><div class="meaning-en">this is the <button class="expr-button" type="button">second advantage</button><div class="expr-tip">第一优势是可以不受传统指令地重新看过去；第二优势是打破思想的少数人垄断。</div></div><div class="meaning-zh">思考重新成为所有人的问题。</div></div></div></div>
+      <div class="read-again">长插语可先拿掉：<b>This distinction has lost its plausibility — and that is the second advantage.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">多数人与“专业思想者”之间这个古老的区分——后者专门从事那种被认为是人类能够达到的最高活动；柏拉图的哲学家“应当被称为神的朋友，而且如果人有可能披上不朽，不朽便会被给予他”——已经失去可信性；而这正是我们当前处境的第二个优势。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Plato, <i>Symposium</i> 212a</b> — <span class="zh">引文来自《会饮篇》结尾，狄奥提玛把真正认识美本身的人描述为神所爱并最可能获得不朽者。阿伦特用它呈现哲学家高于普通人的传统极限。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">103</span>If, as I suggested before, the ability to tell right from wrong should turn out to have anything to do with the ability to think, then we must be able to “demand” its exercise from every sane person, no matter how <ruby>erudite<rt>博学的</rt></ruby> or ignorant, intelligent or stupid, he may happen to be.</span></p>
+  <div class="sentence-aid" data-sentence="103">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">若思考关系到善恶判断，它就不能是少数人的奢侈品</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">如果辨别善恶真的与思考能力有关，那么思考就带有普遍的道德要求：我们必须能要求每个心智正常的人运用它，而不能按学问或智力把人排除在外。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">条件</div><div><div class="meaning-en">If … telling right from wrong <button class="expr-button" type="button">has anything to do with</button> thinking<div class="expr-tip"><b>have something/anything to do with</b> = “与……有关”。</div></div><div class="meaning-zh">先假设道德判断与思考存在关联。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">必然结论</div><div><div class="meaning-en">we must be able to <button class="expr-button" type="button">“demand” its exercise</button> from every sane person<div class="expr-tip"><i>its</i> 指思考能力；引号提醒这不是强迫别人接受某个结论，而是要求其亲自行使思考。</div></div><div class="meaning-zh">每个心智正常的人都负有思考的责任。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不设门槛</div><div><div class="meaning-en"><button class="expr-button" type="button">no matter how</button> erudite or ignorant, intelligent or stupid<div class="expr-tip"><b>no matter how + 形容词</b> = “不论多么／无论是……”。两组反义词穷尽教育与智力差异。</div></div><div class="meaning-zh">学问和智力高低都不能取消这项要求。</div></div></div></div>
+      <div class="read-again">听出条件推论：<b>If moral judgment depends on thinking, thinking must be demanded from everyone.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">如果像我先前所暗示的那样，分辨是非的能力最终证明与思考能力有任何关系，那么我们就必须能够要求每一个心智正常的人运用这种能力，无论他碰巧多么博学或无知、聪明或愚笨。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">104</span>Kant—in this respect almost alone among the philosophers—was much bothered by the common opinion that philosophy is only for the few, precisely because of its moral <ruby>implications<rt>含义、后果</rt></ruby>, and he once observed that “stupidity is caused by a wicked heart.”²¹</span></p>
+  <div class="sentence-aid" data-sentence="104">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">康德少有地看见：若哲学只属少数人，会产生道德问题</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德几乎独自反感“哲学只属于少数人”的通行看法，因为他意识到它牵涉每个人的道德能力。他甚至曾把愚蠢归因于邪恶的心；阿伦特下一句会修正这个因果判断。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">罕见立场</div><div><div class="meaning-en"><button class="expr-button" type="button">almost alone among</button> the philosophers<div class="expr-tip"><b>almost alone among</b> = “在……之中几乎是唯一的”。</div></div><div class="meaning-zh">多数哲学家接受少数人特权，康德对此不安。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">不安的原因</div><div><div class="meaning-en"><button class="expr-button" type="button">precisely because of</button> its moral implications<div class="expr-tip"><b>precisely because of</b> 加强因果：“恰恰因为……”。<i>its</i> 指“哲学只为少数人”这个观点。</div></div><div class="meaning-zh">把思考限于少数人会危及普遍道德责任。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">康德判断</div><div><div class="meaning-en">“stupidity is <button class="expr-button" type="button">caused by a wicked heart</button>”<div class="expr-tip">康德把认知缺陷的根源放到道德意志上；阿伦特马上说“这不是真的”。</div></div><div class="meaning-zh">他认为邪恶之心会造成愚蠢。</div></div></div></div>
+      <div class="read-again">注意结尾只是被引述的康德判断，<b>不是阿伦特自己的结论</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">康德——在这方面，他在哲学家中几乎是孤身一人——对“哲学只属于少数人”这一通行看法深感困扰，恰恰因为它的道德含义；他曾经说过：“愚蠢是由一颗邪恶的心造成的。”</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Kant’s handwritten notes</b> — <span class="zh">“愚蠢由邪恶之心造成”来自康德遗稿。阿伦特赞同他看见了思考的普遍道德意义，却不同意这里的具体因果方向。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">105</span>This is not true: absence of thought is not stupidity; it can be found in highly intelligent people, and a wicked heart is not its cause; it is probably the other way round, that wickedness may be caused by absence of thought.</span></p>
+  <div class="sentence-aid" data-sentence="105">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">阿伦特把康德的因果倒转：无思可能导致邪恶</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特明确反驳康德：缺乏思考并不等于智力低下，聪明人同样可能不思考；邪恶之心也未必造成无思。更可能的方向恰好相反——无思可能造成邪恶。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">先拆开概念</div><div><div class="meaning-en">absence of thought <button class="expr-button" type="button">is not stupidity</button><div class="expr-tip"><b>absence of thought</b> 是“不运用思考”，不是智力能力不足。</div></div><div class="meaning-zh">无思与愚蠢不是同一件事。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">经验反例</div><div><div class="meaning-en">it can be found in <button class="expr-button" type="button">highly intelligent people</button><div class="expr-tip"><i>it</i> 指 absence of thought。</div></div><div class="meaning-zh">高度聪明的人也可能不思考。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">倒转因果</div><div><div class="meaning-en">it is probably <button class="expr-button" type="button">the other way round</button><div class="expr-tip"><b>the other way round</b> = “方向反过来”。后面的 <i>that</i> 说明反过来的具体内容。</div></div><div class="meaning-zh">不是邪恶造成无思，而可能是无思造成邪恶。</div></div></div></div>
+      <div class="read-again">整句只有一个关键转向：<b>not wicked heart → thoughtlessness; perhaps thoughtlessness → wickedness</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这并不是真的：缺乏思考不是愚蠢；它可以在高度聪明的人身上发现，而一颗邪恶的心并不是它的原因；很可能恰恰相反，即邪恶可能由缺乏思考造成。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">106</span>In any event, the matter can no longer be left to “specialists” as though thinking, like higher mathematics, were the <ruby>monopoly<rt>垄断、专属领域</rt></ruby> of a specialized discipline.</span></p>
+  <div class="sentence-aid" data-sentence="106">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">思考不能像高等数学那样交给专业共同体垄断</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">无论前面的因果关系最后如何，思考的问题都不能继续只交给哲学专家。高等数学可以是专业学科，但思考若关系到每个人的善恶判断，就不是任何专业的专属领地。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">实践结论</div><div><div class="meaning-en">the matter can <button class="expr-button" type="button">no longer be left to “specialists”</button><div class="expr-tip"><b>leave a matter to someone</b> = “把一件事交给某人处理”。引号质疑思想专家的特权。</div></div><div class="meaning-zh">不能再把思考托付给少数专家。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">被拒绝的类比</div><div><div class="meaning-en"><button class="expr-button" type="button">as though</button> thinking … were the monopoly of a discipline<div class="expr-tip"><b>as though + 虚拟式</b> = “仿佛……似的”；阿伦特否定这种设想。</div></div><div class="meaning-zh">思考不像高等数学那样属于专门学科。</div></div></div></div>
+      <div class="read-again">重音落在：<b>thinking cannot be left to specialists</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">无论如何，这件事不能再留给“专家”，仿佛思考像高等数学一样，是某一专门学科的垄断领域。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">107</span>Crucial for our enterprise is Kant’s distinction between <i>Vernunft</i> and <i>Verstand</i>, “reason” and “intellect” (not “understanding,” which I think is a mistranslation; Kant used the German <i>Verstand</i> to translate the Latin <i>intellectus</i>, and <i>Verstand</i>, though it is the noun of <i>verstehen</i>, hence “understanding” in current translations, has none of the connotations that are inherent in the German <i>das Verstehen</i>).</span></p>
+  <div class="sentence-aid" data-sentence="107">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">全书的关键术语：reason 对 intellect，不是通常译法 reason 对 understanding</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特接下来要靠康德对两种心智能力的区分推进论证：<i>Vernunft</i> 是 reason，<i>Verstand</i> 应译作 intellect。她特意拒绝惯常的 “understanding”，因为在康德这里 <i>Verstand</i> 对应拉丁文 <i>intellectus</i>，并不包含德语 <i>das Verstehen</i> 那种“理解”的丰富含义。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">核心区分</div><div><div class="meaning-en"><i>Vernunft</i> and <i>Verstand</i> = <button class="expr-button" type="button">“reason” and “intellect”</button><div class="expr-tip">本页以后保持对应：<b>Vernunft → reason → thinking</b>；<b>Verstand → intellect → knowing</b>。</div></div><div class="meaning-zh">理性与知性是两种不同能力。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">拒绝惯译</div><div><div class="meaning-en">not <button class="expr-button" type="button">“understanding”</button><div class="expr-tip">英译康德常把 <i>Verstand</i> 译作 understanding；阿伦特认为这会引入不属于该术语的含义。</div></div><div class="meaning-zh">她不用“理解力”来译 Verstand。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">第一理由</div><div><div class="meaning-en">Kant used <i>Verstand</i> to translate Latin <button class="expr-button" type="button"><i>intellectus</i></button><div class="expr-tip"><i>intellectus</i> 是 intellect 的拉丁来源，支持她的英文选词。</div></div><div class="meaning-zh">康德自己的拉丁文对应是 intellectus。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">第二理由</div><div><div class="meaning-en">has none of the connotations inherent in <button class="expr-button" type="button"><i>das Verstehen</i></button><div class="expr-tip">虽然 <i>Verstand</i> 形式上来自 <i>verstehen</i>，康德术语并不等于日常或哲学意义上的“理解活动”。</div></div><div class="meaning-zh">词源相近不代表概念含义相同。</div></div></div></div>
+      <div class="read-again">先把长括号移开：<b>Crucial is Kant’s distinction: Vernunft/reason versus Verstand/intellect.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">保留术语对应</span></summary><div class="translation-text">对我们的工作至关重要的是康德在 <i>Vernunft</i> 与 <i>Verstand</i>、“理性”与“知性”之间所作的区分（不是“理解力”；我认为这是一个误译。康德用德语 <i>Verstand</i> 翻译拉丁语 <i>intellectus</i>；而 <i>Verstand</i> 虽然是 <i>verstehen</i> 的名词，因而在现行译本中被译为“understanding”，却不具有德语 <i>das Verstehen</i> 内在包含的那些含义）。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b><i>Vernunft</i> / <i>Verstand</i></b> — <span class="zh">本书依阿伦特的选择译作“理性／知性”。重点不在寻找唯一标准汉译，而在维持她的功能区分：理性追问意义，知性追求知识。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">108</span>Kant drew this distinction between the two mental faculties after he had discovered the “scandal of reason,” that is, the fact that our mind is not capable of certain and verifiable knowledge regarding matters and questions that it nevertheless cannot help thinking about, and for him such matters, that is, those with which mere thought is concerned, were restricted to what we now often call the “ultimate questions” of God, freedom, and immortality.</span></p>
+  <div class="sentence-aid" data-sentence="108">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">理性的“丑闻”：无法确知，却无法不想</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德发现一种理性的悖论：心灵无法对某些问题获得确定、可验证的知识，却又无法停止思考它们。这促使他区分两种能力；不过他把纯思考的问题范围限制在上帝、自由和不朽这些“终极问题”。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">发现</div><div><div class="meaning-en">the <button class="expr-button" type="button">“scandal of reason”</button><div class="expr-tip"><i>scandal</i> 在这里不是丑闻八卦，而是理性内部令人震惊、无法消除的困境。</div></div><div class="meaning-zh">理性面对自身无法解决却无法放弃的问题。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不能做到</div><div><div class="meaning-en">not capable of <button class="expr-button" type="button">certain and verifiable knowledge</button><div class="expr-tip"><b>regarding</b> = “关于”；这些问题不能成为确证知识。</div></div><div class="meaning-zh">不能获得确定且可检验的答案。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">又不能停止</div><div><div class="meaning-en">questions it nevertheless <button class="expr-button" type="button">cannot help thinking about</button><div class="expr-tip"><b>cannot help doing</b> = “忍不住／无法不做……”。</div></div><div class="meaning-zh">即使不能知道，心灵仍必然会想。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">康德的限域</div><div><div class="meaning-en">restricted to the “ultimate questions” of <button class="expr-button" type="button">God, freedom, and immortality</button><div class="expr-tip">这三项是康德实践理性和形而上学的经典主题；阿伦特稍后会说思考的范围其实更广。</div></div><div class="meaning-zh">康德仍把纯思考主要限制在三个终极问题。</div></div></div></div>
+      <div class="read-again">抓住矛盾：<b>cannot know / cannot help thinking</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">康德是在发现“理性的丑闻”之后，作出这两种心智能力之间的区分的；所谓理性的丑闻，就是我们的心灵无法对某些事物和问题获得确定而可验证的知识，却仍然无法不去思考它们。对康德而言，这类事物，也就是单纯思想所关涉的事物，被限制在我们如今常说的关于上帝、自由和不朽的“终极问题”之中。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-zhu">注</span><b>“Scandal of reason”</b> — <span class="zh">这里概括康德《纯粹理性批判》的基本处境：理性会不可避免地提出超出可能经验的问题，却不能把它们转化为可证明的知识。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">109</span>But quite apart from the <ruby>existential<rt>关乎存在的</rt></ruby> interest men once took in these questions, and although Kant still believed that no “honest soul ever lived that could bear to think that everything is ended with death,”²² he was also quite aware that “the urgent need” of reason is both different from and “more than mere quest and desire for knowledge.”²³</span></p>
+  <div class="sentence-aid" data-sentence="109">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">理性的迫切需要不同于、并且多于求知欲</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">即使把人们对死后命运等终极问题的存在焦虑放在一边，康德仍清楚看见：理性要求思考的迫切需要，并不等于获取知识的欲望，而且比单纯求知包含得更多。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">暂时放开</div><div><div class="meaning-en"><button class="expr-button" type="button">quite apart from</button> the existential interest …<div class="expr-tip"><b>apart from</b> 在这里是“撇开……不谈”，不是把它否定掉。</div></div><div class="meaning-zh">论证不只依赖人对死亡等问题的切身焦虑。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">再让步</div><div><div class="meaning-en"><button class="expr-button" type="button">although</button> Kant still believed …<div class="expr-tip">这段引文说明康德仍保留对不朽问题的强烈存在关切。</div></div><div class="meaning-zh">康德仍认为诚实灵魂难以接受死亡终结一切。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">关键认识</div><div><div class="meaning-en">the urgent need of reason is <span class="pair-word">both</span> different from <span class="pair-word">and</span> more than <button class="expr-button" type="button">desire for knowledge</button><div class="expr-tip"><b>both A and B</b> 在这里连接两个判断：既不同于求知，又多于求知。</div></div><div class="meaning-zh">思考的需要不能还原为知识欲。</div></div></div></div>
+      <div class="read-again">长让步之后只保留结论：<b>reason’s need is different from—and more than—the desire to know</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">但是，完全撇开人们曾经对这些问题抱有的存在关切不谈，而且尽管康德仍相信，从没有一个“诚实的灵魂能够忍受去想一切都随着死亡而结束”，他也相当清楚：理性的“迫切需要”既不同于、也“多于单纯对知识的追求和欲望”。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Kant on death and reason’s need</b> — <span class="zh">两段引文分别来自康德著作与《未来形而上学导论》。阿伦特借第二段建立本页最重要的区分：思考的需要并非知识不足的临时替代品。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">110</span>Hence, the distinguishing of the two faculties, reason and intellect, coincides with a distinction between two altogether different mental activities, thinking and knowing, and two altogether different concerns, meaning, in the first category, and cognition, in the second.</span></p>
+  <div class="sentence-aid" data-sentence="110">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">三组一一对应：理性—思考—意义；知性—认识—认知</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德的能力区分同时划开了两种活动和两种目标：理性从事思考，关心意义；知性从事认识，关心认知。后文所有论证都依靠这两条对应关系。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">第一系列</div><div><div class="meaning-en"><button class="expr-button" type="button">reason → thinking → meaning</button><div class="expr-tip">原句用 <i>the first category</i> 把 meaning 指回 reason 和 thinking。</div></div><div class="meaning-zh">理性通过思考追问意义。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">第二系列</div><div><div class="meaning-en"><button class="expr-button" type="button">intellect → knowing → cognition</button><div class="expr-tip"><i>the second</i> 指 intellect / knowing 这一组。</div></div><div class="meaning-zh">知性通过认识取得认知。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">关系</div><div><div class="meaning-en">the distinctions <button class="expr-button" type="button">coincide</button><div class="expr-tip"><b>coincide with</b> = “与……相重合／对应”，不是说两组概念完全同义。</div></div><div class="meaning-zh">能力、活动和关切在结构上相互对应。</div></div></div></div>
+      <div class="read-again">把整句读成两行：<b>reason—thinking—meaning / intellect—knowing—cognition</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因此，对理性和知性这两种能力的区分，与两种全然不同的心智活动——思考和认识——之间的区分，以及两种全然不同的关切——第一类中的意义和第二类中的认知——相重合。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">111</span>Kant, though he had insisted on this distinction, was still so strongly bound by the enormous weight of the tradition of metaphysics that he <ruby>held fast to<rt>紧守、坚持</rt></ruby> its traditional subject matter, that is, to those topics which could be proved to be unknowable, and while he justified reason’s need to think beyond the limits of what can be known, he remained unaware of the fact that man’s need to reflect <ruby>encompasses<rt>涵盖</rt></ruby> nearly everything that happens to him, things he knows as well as things he can never know.</span></p>
+  <div class="sentence-aid" data-sentence="111">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">康德解放了思考，却仍把它限制在传统的“不可知对象”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德坚持思考与认识的区分，却仍受形而上学传统束缚：他把思考保留给那些可证明为不可知的传统主题。于是他没有看见，人对意义的反思其实覆盖几乎一切遭遇，包括已知之事和永远不可知之事。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">虽有突破</div><div><div class="meaning-en"><button class="expr-button" type="button">though</button> he had insisted on this distinction<div class="expr-tip"><b>though</b> 引出让步：康德已经作出关键区分，但没有贯彻到底。</div></div><div class="meaning-zh">他承认思考不同于认识。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">仍受传统束缚</div><div><div class="meaning-en"><button class="expr-button" type="button">held fast to</button> its traditional subject matter<div class="expr-tip"><b>hold fast to</b> = “牢牢坚持、不放开”。<i>its</i> 指形而上学传统。</div></div><div class="meaning-zh">思考仍只处理被证明不可知的传统主题。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">虽有正当化</div><div><div class="meaning-en"><button class="expr-button" type="button">while</button> he justified reason’s need …<div class="expr-tip"><i>while</i> 在这里形成“虽然做到了 A，却没看到 B”的对比。</div></div><div class="meaning-zh">他允许理性越过知识界限。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">漏掉的范围</div><div><div class="meaning-en">reflection encompasses <button class="expr-button" type="button">nearly everything that happens</button><div class="expr-tip"><b>things he knows as well as things he can never know</b> 说明“几乎一切”的两端。</div></div><div class="meaning-zh">思考不只面对终极不可知，也面对日常已知经验的意义。</div></div></div></div>
+      <div class="read-again">读成一个评价：<b>Kant opened the boundary, but kept the old subject matter.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">康德虽然坚持这一项区分，却仍受到形而上学传统巨大重量的强烈束缚，以至于他牢牢守着它的传统研究对象，也就是那些能够被证明为不可知的主题；而当他为理性超越可知界限的思考需要辩护时，他仍未意识到：人反思的需要涵盖几乎发生在他身上的一切，既包括他知道的事，也包括他永远无法知道的事。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">112</span>He remained less than fully aware of the extent to which he had liberated reason, the ability to think, by justifying it in terms of the ultimate questions.</span></p>
+  <div class="sentence-aid" data-sentence="112">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">康德没有完全意识到自己已经把思考从知识标准下解放出来</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德以终极问题为理性辩护时，实际上已经承认思考有独立于知识的正当性；但他没有充分意识到，这一步对思考能力的解放远超那几个终极问题。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">未充分自觉</div><div><div class="meaning-en">less than fully aware of <button class="expr-button" type="button">the extent to which</button> …<div class="expr-tip"><b>the extent to which</b> = “……达到何种程度”。</div></div><div class="meaning-zh">他低估了自己论证的范围。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">实际成就</div><div><div class="meaning-en">he had <button class="expr-button" type="button">liberated reason</button> … by justifying it<div class="expr-tip"><b>justify</b> = “证明……具有正当性”；理性不必以产生知识来证明自身。</div></div><div class="meaning-zh">他已为独立的思考能力打开空间。</div></div></div></div>
+      <div class="read-again">主句评价很短：<b>He did not fully realize how far he had liberated reason.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">他仍未充分意识到，通过以终极问题为理性——即思考能力——辩护，他已经在何种程度上解放了理性。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">113</span>He stated <ruby>defensively<rt>辩护式地</rt></ruby> that he had “found it necessary to deny <i>knowledge</i> . . . to make room for <i>faith</i>,”²⁴ but he had not made room for faith; he had made room for thought, and he had not “denied knowledge” but separated knowledge from thinking.</span></p>
+  <div class="sentence-aid" data-sentence="113">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">阿伦特改写康德：他不是给信仰让路，而是给思考让路</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德自称“否定知识，为信仰留出空间”。阿伦特认为这描述错了他的真实成就：他没有取消知识，也不只是替信仰辩护；他把知识与思考分开，从而给不能成为知识的思考留下合法空间。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">康德自述</div><div><div class="meaning-en">deny knowledge … <button class="expr-button" type="button">to make room for faith</button><div class="expr-tip"><b>make room for</b> = “为……腾出位置／可能性”。省略号属于原引文。</div></div><div class="meaning-zh">康德把自己的工作说成限制知识以容纳信仰。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">第一修正</div><div><div class="meaning-en">not faith; <button class="expr-button" type="button">thought</button><div class="expr-tip">阿伦特把康德的成果从宗教信仰重新解释为思考的独立正当性。</div></div><div class="meaning-zh">真正获得空间的是思考。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">第二修正</div><div><div class="meaning-en">not denied knowledge but <button class="expr-button" type="button">separated knowledge from thinking</button><div class="expr-tip"><b>not A but B</b> 精确替换错误描述：知识没有被取消，只是不再等同于思考。</div></div><div class="meaning-zh">他划界，而不是摧毁知识。</div></div></div></div>
+      <div class="read-again">听清两个改写：<b>faith → thought; deny knowledge → separate knowledge from thinking</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">保留两组纠正</span></summary><div class="translation-text">他以辩护的口吻说，自己“发现有必要否定知识……以便为信仰留出空间”；但他并没有为信仰留出空间，他为思想留出了空间；而且他并没有“否定知识”，而是把知识与思考分开了。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Kant, <i>Critique of Pure Reason</i></b> — <span class="zh">“否定知识，为信仰留地盘”是康德对批判哲学的一句著名自述。阿伦特不否定划定知识界限，而是重新命名其正面结果：使思考不再冒充知识。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">114</span>In the notes to his lectures on metaphysics he wrote: “The aim of metaphysics . . . is to extend, <ruby>albeit<rt>尽管、虽说</rt></ruby> only negatively, our use of reason beyond the limitations of the <ruby>sensorily given<rt>感官所给的</rt></ruby> world, that is, to <i>eliminate the obstacles by which reason hinders itself</i>” (italics added).²⁵</span></p>
+  <div class="sentence-aid" data-sentence="114">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">形而上学的消极任务：移除理性自己设置的障碍</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德在讲义笔记中把形而上学的作用说得很克制：它不是提供感官之外的正面知识，而只是消极地扩展理性的使用——清除理性阻碍自身越出感官世界的障碍。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">目标</div><div><div class="meaning-en">to extend … our use of reason <button class="expr-button" type="button">beyond the limitations</button> of the sensorily given world<div class="expr-tip"><b>beyond the limitations of</b> = “超出……的限制”。这里是理性的使用，不是知识对象的扩张。</div></div><div class="meaning-zh">让理性能够越过感官所给世界的边界。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">方式限定</div><div><div class="meaning-en"><button class="expr-button" type="button">albeit only negatively</button><div class="expr-tip"><b>albeit</b> = “虽然／尽管”；<i>negatively</i> 指不提供正面对象知识，只做清障。</div></div><div class="meaning-zh">这种扩展只有消极意义。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">消极任务</div><div><div class="meaning-en">eliminate the obstacles by which <button class="expr-button" type="button">reason hinders itself</button><div class="expr-tip"><b>hinder oneself</b> = “妨碍自己”。障碍并非都来自外界，而来自理性把别种标准施加给自身。</div></div><div class="meaning-zh">移除理性自己为自己设置的障碍。</div></div></div></div>
+      <div class="read-again">关键不在“获得超感性知识”，而在：<b>remove the obstacles to reason’s use</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">他在形而上学讲义笔记中写道：“形而上学的目标……是把我们对理性的使用扩展到感官所给世界的限制之外，尽管只是在消极意义上；也就是说，消除那些理性借以阻碍自身的障碍”（斜体为阿伦特所加）。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Kant’s metaphysics notes</b> — <span class="zh">阿伦特强调的是自己加斜体的部分：批判并非让理性沉默，而是防止理性用不合适的标准封死自己的思考活动。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">115</span>The great obstacle that reason (<i>Vernunft</i>) puts in its own way arises from the side of the intellect (<i>Verstand</i>) and the entirely justified criteria it has established for its own purposes, that is, for <ruby>quenching<rt>解除、满足</rt></ruby> our thirst, and meeting our need, for knowledge and cognition.</span></p>
+  <div class="sentence-aid" data-sentence="115">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">障碍不是知识标准本身，而是把知识标准拿来审判思考</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阻碍理性的力量来自知性所建立的知识标准。这些标准用于获得知识时完全正当；问题在于它们被越界使用，要求追问意义的思考也必须产生同样可验证的认知结果。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">障碍来源</div><div><div class="meaning-en">arises <button class="expr-button" type="button">from the side of the intellect</button><div class="expr-tip"><b>arise from</b> = “产生于”；障碍来自 Verstand 的标准侵入 Vernunft。</div></div><div class="meaning-zh">知性的知识标准被带进理性领域。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">先承认正当</div><div><div class="meaning-en">the <button class="expr-button" type="button">entirely justified criteria</button> … for its own purposes<div class="expr-tip">阿伦特不是反对证据和确定性；它们对知识活动完全正当。</div></div><div class="meaning-zh">知识标准在自己的领域没有错。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">自己的目的</div><div><div class="meaning-en">quenching our thirst and <button class="expr-button" type="button">meeting our need for knowledge</button><div class="expr-tip"><b>quench thirst</b> 原指解渴；这里比喻满足求知欲。</div></div><div class="meaning-zh">知性的任务是满足知识与认知需要。</div></div></div></div>
+      <div class="read-again">读出限定：<b>the intellect’s criteria are justified—for its own purposes</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">理性（<i>Vernunft</i>）放在自己道路上的巨大障碍，来自知性（<i>Verstand</i>）一方以及知性为自身目的所确立的完全正当的标准；所谓自身目的，就是解除我们对知识与认知的渴求，并满足我们对它们的需要。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">116</span>The reason neither Kant nor his successors ever paid much attention to thinking as an activity and even less to the experiences of thinking ego is that, all distinctions notwithstanding, they were demanding the kind of results and applying the kind of criteria for certainty and evidence that are the results and the criteria of cognition.</span></p>
+  <div class="sentence-aid" data-sentence="116">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">他们口头区分思考与认识，实际仍用认识的结果衡量思考</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德和后继者很少研究思考活动本身，更少研究思考中的自我经验。原因是：尽管他们作出了概念区分，实际仍要求思考产生认识才有的结果，并用认知领域的确定性与证据标准来评价它。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">需要解释的现象</div><div><div class="meaning-en">paid little attention to <button class="expr-button" type="button">thinking as an activity</button><div class="expr-tip"><b>as an activity</b> 强调不是思想内容或理论结论，而是思考正在发生的经验。</div></div><div class="meaning-zh">哲学家忽略了思考实际如何进行。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">甚至更少</div><div><div class="meaning-en">even less to the experiences of <button class="expr-button" type="button">thinking ego</button><div class="expr-tip"><b>thinking ego</b> = “正在思考的自我”，区别于日常行动、感知中的自我。</div></div><div class="meaning-zh">他们更少描述思考者自己的经验。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">真正原因</div><div><div class="meaning-en"><button class="expr-button" type="button">all distinctions notwithstanding</button>, they demanded cognitive results<div class="expr-tip"><b>A notwithstanding</b> = “尽管有 A”。概念上区分了，衡量方式却没有改变。</div></div><div class="meaning-zh">他们仍要求思考提供知识式结果。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">越界标准</div><div><div class="meaning-en">criteria for <button class="expr-button" type="button">certainty and evidence</button><div class="expr-tip">确定性与证据本是 cognition 的标准，不应自动成为 meaning 的标准。</div></div><div class="meaning-zh">用认知的证据要求评判意义追问。</div></div></div></div>
+      <div class="read-again">主干是因果：<b>They ignored thinking because they still demanded cognitive results from it.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">康德和他的后继者从未对作为活动的思考给予多少关注，对思考自我的经验就更少关注；其原因在于，尽管作出了所有这些区分，他们仍在要求那种属于认知结果的结果，并在运用那种属于认知标准的、关于确定性与证据的标准。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">117</span>But if it is true that thinking and reason are justified in transcending the limitations of cognition and the intellect—justified by Kant on the ground that the matters they deal with, though unknowable, are of the greatest <ruby>existential interest<rt>存在上的重大关切</rt></ruby> to man—then the assumption must be that thinking and reason are not concerned with what the intellect is concerned with.</span></p>
+  <div class="sentence-aid" data-sentence="117">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">既然思考有权越出认知，它必然关心不同的东西</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">如果思考与理性确实有正当理由超出认知和知性的界限——康德以不可知问题对人的存在重要性为它辩护——那么必须承认：思考追求的目标不同于知性追求的目标。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">条件</div><div><div class="meaning-en">if thinking and reason are <button class="expr-button" type="button">justified in transcending</button> cognition<div class="expr-tip"><b>be justified in doing</b> = “做……是有正当理由的”。</div></div><div class="meaning-zh">先接受思考可以合法越出知识范围。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">康德的理由</div><div><div class="meaning-en"><button class="expr-button" type="button">on the ground that</button> unknowable matters are existentially important<div class="expr-tip"><b>on the ground that</b> = “依据……这个理由”。两个破折号之间解释“如何获得正当性”。</div></div><div class="meaning-zh">不可知不等于对人的存在不重要。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">必然假设</div><div><div class="meaning-en">then the assumption <button class="expr-button" type="button">must be that</button> …<div class="expr-tip"><b>must be</b> 是逻辑必然，而非命令。</div></div><div class="meaning-zh">必须给两种能力安排不同的关切。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">区分结果</div><div><div class="meaning-en">reason is <button class="expr-button" type="button">not concerned with what the intellect is concerned with</button><div class="expr-tip"><b>be concerned with</b> = “以……为所关切／处理的对象”。</div></div><div class="meaning-zh">理性不能仍以知性的知识目标为目标。</div></div></div></div>
+      <div class="read-again">把破折号当注释：<b>If reason may transcend cognition, it must have a different concern.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">但是，如果思考与理性超越认知和知性的限制确实是正当的——康德的正当化理由是：它们所处理的事物虽然不可知，却对人具有最大的存在关切——那么就必须假定，思考与理性所关切的，并不是知性所关切的东西。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">118</span>To anticipate, and put it in a nutshell: <i>The need of reason is not inspired by the quest for truth but by the quest for meaning.</i></span></p>
+  <div class="sentence-aid" data-sentence="118">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">本书核心命题：理性寻求意义，不是寻求真理</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特提前给出全书论证的压缩结论：促使理性活动的不是找到可确证真理的需要，而是理解事物意义的需要。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">提前概括</div><div><div class="meaning-en"><button class="expr-button" type="button">To anticipate</button>, and <button class="expr-button" type="button">put it in a nutshell</button><div class="expr-tip"><b>anticipate</b> = “提前说出后文结论”；<b>in a nutshell</b> = “简而言之、压缩地说”。</div></div><div class="meaning-zh">她暂时越过后续论证，先交出结论。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">不是</div><div><div class="meaning-en">not inspired by the <button class="expr-button" type="button">quest for truth</button><div class="expr-tip"><b>be inspired by</b> = “由……驱动”；<i>quest</i> 是持续追寻。</div></div><div class="meaning-zh">理性思考不以可验证真理为直接目标。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">而是</div><div><div class="meaning-en">but by the <button class="expr-button" type="button">quest for meaning</button><div class="expr-tip"><b>not A but B</b> 给两种心智活动分配不同目标。</div></div><div class="meaning-zh">它由理解“这意味着什么”的需要驱动。</div></div></div></div>
+      <div class="read-again">这一句值得整句记住：<b>reason seeks meaning, not truth</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">先提前说出，并把它压缩成一句话：理性的需要不是由对真理的追寻所激发，而是由对意义的追寻所激发。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">119</span><i>And truth and meaning are not the same.</i></span></p>
+  <div class="sentence-aid" data-sentence="119">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">真理与意义必须保持区分</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">真理回答某个判断是否成立，意义追问事物对我们如何可理解、意味着什么。二者可以相关，却不能被当作同一种目标。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">明确划界</div><div><div class="meaning-en">truth and meaning are <button class="expr-button" type="button">not the same</button><div class="expr-tip">这不是说意义可以任意或不顾真理，而是说“有意义”和“为真”不是同一判准。</div></div><div class="meaning-zh">意义不能直接按真理的模式来定义。</div></div></div></div>
+      <div class="read-again">短句承担论证铰链：<b>different aims require different criteria</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">而且，真理与意义并不是同一回事。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">120</span>The basic <ruby>fallacy<rt>谬误</rt></ruby>, taking <ruby>precedence<rt>居先、优先</rt></ruby> over all specific metaphysical fallacies, is to interpret meaning on the model of truth.</span></p>
+  <div class="sentence-aid" data-sentence="120">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">所有具体形而上学谬误之前，还有一个根本误置</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">比任何具体形而上学错误更根本的错误，是拿“真理”的结构和标准去解释“意义”，仿佛意义也必须成为可证明、可认知的对象。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">最基本谬误</div><div><div class="meaning-en">the basic fallacy, <button class="expr-button" type="button">taking precedence over</button> all specific fallacies<div class="expr-tip"><b>take precedence over</b> = “在……之前、更为根本”。不是时间先后，而是逻辑优先。</div></div><div class="meaning-zh">它是产生其他形而上学错误的前提。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">错误内容</div><div><div class="meaning-en">interpret meaning <button class="expr-button" type="button">on the model of truth</button><div class="expr-tip"><b>on the model of</b> = “按照……的模型”。</div></div><div class="meaning-zh">把意义追问误装进真理认知的框架。</div></div></div></div>
+      <div class="read-again">主干只有：<b>The basic fallacy is to model meaning on truth.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">先于一切具体形而上学谬误的那个基本谬误，是按照真理的模型来解释意义。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">121</span>The latest and in some respects most <ruby>striking<rt>显著、惊人的</rt></ruby> instance of this occurs in Heidegger’s <i>Being and Time</i>, which starts out by raising “anew the question of the meaning of Being.”²⁶</span></p>
+  <div class="sentence-aid" data-sentence="121">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">海德格尔从“存在的意义”出发，成为最新例子</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特把《存在与时间》视为“用真理模型解释意义”的最近且尤其醒目的实例：这本书一开头重新提出的就是“存在的意义”问题。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">实例定位</div><div><div class="meaning-en">the latest and … most striking <button class="expr-button" type="button">instance of this</button><div class="expr-tip"><i>this</i> 指 S120 的基本谬误，而不是泛指所有形而上学。</div></div><div class="meaning-zh">海德格尔被用来检验前句的诊断。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">开篇问题</div><div><div class="meaning-en"><button class="expr-button" type="button">starts out by raising anew</button> the question …<div class="expr-tip"><b>start out by doing</b> = “以做……开篇”；<b>anew</b> = “重新、从头”。</div></div><div class="meaning-zh">《存在与时间》以重新追问存在意义开始。</div></div></div></div>
+      <div class="read-again">先不要替阿伦特判断海德格尔是否正确，只听她的例证关系：<b>basic fallacy → Heidegger as instance</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这一点最近的、并且在某些方面最引人注目的实例，出现在海德格尔的《存在与时间》中；这本书以“重新提出存在之意义的问题”开始。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Heidegger, <i>Being and Time</i></b> — <span class="zh">《存在与时间》开篇要求重新唤醒“存在的意义”问题。阿伦特接下来引用海德格尔后来的自释，说明这一“意义”问题又被表达为“真理”问题。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">122</span>Heidegger himself, in a later interpretation of his own initial question, says explicitly: “‘Meaning of Being’ and ‘Truth of Being’ say the same.”²⁷</span></p>
+  <div class="sentence-aid" data-sentence="122">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">海德格尔后来明确把“存在的意义”与“存在的真理”等同</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特的证据来自海德格尔自己的后期解释：他明确说，“存在的意义”和“存在的真理”说的是同一件事。这正好展示了她所批评的意义—真理等式。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">证据性质</div><div><div class="meaning-en">Heidegger <button class="expr-button" type="button">himself</button> … says explicitly<div class="expr-tip"><b>himself</b> 和 <b>explicitly</b> 强调：这不是阿伦特从外部强加的暗示。</div></div><div class="meaning-zh">海德格尔亲自而且明确地作出等同。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">等式</div><div><div class="meaning-en">“Meaning of Being” and “Truth of Being” <button class="expr-button" type="button">say the same</button><div class="expr-tip"><b>say the same</b> = “表达同一件事”。阿伦特据此认为两种不同追问再次被合并。</div></div><div class="meaning-zh">意义被重新解释成真理。</div></div></div></div>
+      <div class="read-again">这句是证据句：<b>Heidegger explicitly equates the two phrases.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">海德格尔本人在后来对自己最初问题的一次解释中明确说道：“‘存在的意义’与‘存在的真理’说的是同一件事。”</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>“Meaning of Being” / “Truth of Being”</b> — <span class="zh">引文来自海德格尔为《什么是形而上学？》所写的导论。阿伦特把它当作“意义按真理模型理解”的明说版本。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">123</span>The temptations to make the equation—which <ruby>comes down to<rt>归结为</rt></ruby> a refusal to accept and think through Kant’s distinction between reason and intellect, between the “urgent need” to think and the “desire to know”—are very great, and by no means due only to the weight of tradition.</span></p>
+  <div class="sentence-aid" data-sentence="123">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">意义—真理等式很诱人，原因不只是传统惯性</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">把意义等同于真理的诱惑非常强。这样做实质上拒绝真正贯彻康德的双重区分——理性与知性、思考的迫切需要与求知欲。阿伦特并不把这种失败简单归咎于传统压力。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">诱惑很强</div><div><div class="meaning-en">The temptations to <button class="expr-button" type="button">make the equation</button> are very great<div class="expr-tip"><i>the equation</i> 指 truth = meaning。</div></div><div class="meaning-zh">把两者合并看起来非常自然。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">等式实质</div><div><div class="meaning-en"><button class="expr-button" type="button">comes down to</button> a refusal to … think through Kant’s distinction<div class="expr-tip"><b>come down to</b> = “归根结底就是”；<b>think through</b> = “把一个区分的后果想到底”。</div></div><div class="meaning-zh">等同二者就是没有贯彻康德的区分。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">两种区分</div><div><div class="meaning-en">reason / intellect; urgent need to think / <button class="expr-button" type="button">desire to know</button><div class="expr-tip">第二组是第一组在动机层面的表达：意义需要与知识欲。</div></div><div class="meaning-zh">能力之分同时也是需要之分。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">原因不限于传统</div><div><div class="meaning-en"><button class="expr-button" type="button">by no means due only to</button> tradition<div class="expr-tip"><b>by no means</b> = “决不、绝非”；后文将说明康德的解放本身也产生新诱惑。</div></div><div class="meaning-zh">不能只说哲学家被旧传统拖回去了。</div></div></div></div>
+      <div class="read-again">破折号内解释“等式是什么”；外层结论是：<b>the temptation is great, not merely because of tradition</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">建立这个等式的诱惑非常强烈——这个等式归根结底就是拒绝接受并把康德在理性与知性之间、在思考的“迫切需要”与“求知欲”之间的区分贯彻到底——而且这种诱惑绝不只是由传统的重量造成的。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">124</span>Kant’s insights had an extraordinary <ruby>liberating effect<rt>解放作用</rt></ruby> on German philosophy, <ruby>touching off<rt>触发、引起</rt></ruby> the rise of German idealism.</span></p>
+  <div class="sentence-aid" data-sentence="124">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">康德的区分解放了德国哲学，并引发德国观念论</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德打破旧教条、为超出知识的思想留下空间，对德国哲学产生了巨大的解放作用；费希特、谢林、黑格尔等德国观念论由此兴起。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">直接影响</div><div><div class="meaning-en">an extraordinary <button class="expr-button" type="button">liberating effect</button><div class="expr-tip"><b>liberating</b> 承接 S112–114：思辨不再必须伪装成旧式形而上学知识。</div></div><div class="meaning-zh">康德使德国思想摆脱旧经院教条。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">历史结果</div><div><div class="meaning-en"><button class="expr-button" type="button">touching off</button> the rise of German idealism<div class="expr-tip"><b>touch off</b> = “触发、引起一连串发展”。现在分词说明前一影响的结果。</div></div><div class="meaning-zh">这种自由开启了德国观念论。</div></div></div></div>
+      <div class="read-again">一句历史过渡：<b>Kant liberated speculation → German idealism arose.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">康德的洞见对德国哲学产生了非同寻常的解放作用，引发了德国观念论的兴起。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>German idealism</b> — <span class="zh">通常指康德之后费希特、谢林、黑格尔等人的哲学。阿伦特把它理解为康德所释放的思辨自由迅速重新系统化、科学化的结果。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">125</span>No doubt, they had made room for <ruby>speculative thought<rt>思辨思想</rt></ruby>; but this thought again became a field for a new brand of specialists committed to the notion that philosophy’s “subject proper” is “the actual knowledge of what truly is.”²⁸</span></p>
+  <div class="sentence-aid" data-sentence="125">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">思辨获得自由后，又被新专家重新变成“真正的知识”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">德国观念论确实给思辨思想留下了空间；但自由很快被重新专业化。新的哲学专家仍相信，哲学的真正对象是对“真正存在者”的实际知识，于是意义追问又被包装成最高知识。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">先承认成果</div><div><div class="meaning-en"><button class="expr-button" type="button">No doubt</button>, they had made room for speculative thought<div class="expr-tip"><b>no doubt</b> = “毫无疑问”；阿伦特先承认德国观念论继承了解放效果。</div></div><div class="meaning-zh">思辨获得了旧教条下没有的自由。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">但又回落</div><div><div class="meaning-en">this thought <button class="expr-button" type="button">again became a field</button> for specialists<div class="expr-tip"><b>again</b> 是批评重心：少数人专业垄断以新形式回来。</div></div><div class="meaning-zh">思考再次成为专家领域。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">专家信念</div><div><div class="meaning-en">philosophy’s “subject proper” is <button class="expr-button" type="button">actual knowledge of what truly is</button><div class="expr-tip"><b>subject proper</b> = “本己的／真正的研究对象”。引文把哲学重新规定为关于真实存在的知识。</div></div><div class="meaning-zh">哲学又以获得最高知识为目标。</div></div></div></div>
+      <div class="read-again">听出先扬后抑：<b>made room for thought—but turned thought back into specialist knowledge</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">毫无疑问，他们已经为思辨思想留出了空间；但是这种思想再次成为一种新式专家的领域，这些专家坚信，哲学“真正的研究对象”是“关于真正存在者的实际知识”。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>“The actual knowledge of what truly is”</b> — <span class="zh">引自黑格尔《精神现象学》导论。阿伦特用它说明：思辨虽然摆脱旧教条，却仍把自己理解为比普通认知更高的知识。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">126</span>Liberated by Kant from the old school <ruby>dogmatism<rt>教条主义</rt></ruby> and its <ruby>sterile exercises<rt>贫乏无成果的操练</rt></ruby>, they erected not only new systems but a new “science”—the original title of the greatest of their works, Hegel’s <i>Phenomenology of Mind</i>, was “Science of the Experience of Consciousness”²⁹—eagerly blurring Kant’s distinction between reason’s concern with the unknowable and the intellect’s concern with cognition.</span></p>
+  <div class="sentence-aid" data-sentence="126">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">德国观念论摆脱旧教条，却建立新“科学”并抹平康德的区分</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">康德使德国观念论者摆脱旧经院形而上学的教条与空转，但他们不仅建立新体系，还把思辨建成一门新的“科学”。黑格尔著作的原题正显示这种抱负；结果是理性面对不可知者与知性追求认知之间的界线再次模糊。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">解放起点</div><div><div class="meaning-en"><button class="expr-button" type="button">Liberated by Kant from</button> old dogmatism<div class="expr-tip">过去分词短语修饰 <i>they</i>，指德国观念论者在康德之后获得自由。</div></div><div class="meaning-zh">他们摆脱旧学派的教条和空洞操练。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">新的建造</div><div><div class="meaning-en">erected <span class="pair-word">not only</span> new systems <span class="pair-word">but</span> a new <button class="expr-button" type="button">“science”</button><div class="expr-tip"><b>erect</b> = “建立”；引号中的 science 指声称具有系统知识和确定有效性的哲学科学。</div></div><div class="meaning-zh">他们不只建体系，还把思辨宣布为科学。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">黑格尔例证</div><div><div class="meaning-en"><button class="expr-button" type="button">“Science of the Experience of Consciousness”</button><div class="expr-tip">这是《精神现象学》的原始题名，直接把意识经验规定为一门“科学”。</div></div><div class="meaning-zh">书名本身体现新的知识抱负。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">结构后果</div><div><div class="meaning-en"><button class="expr-button" type="button">blurring Kant’s distinction</button><div class="expr-tip"><b>blur a distinction</b> = “使区分变模糊”。句末现在分词说明建造新科学所做的事情。</div></div><div class="meaning-zh">不可知者的意义追问与认知活动再次混合。</div></div></div></div>
+      <div class="read-again">拿掉破折号例证后读主干：<b>Liberated by Kant, they built a new science—blurring Kant’s distinction.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">他们被康德从旧学派的教条主义及其贫乏无成果的操练中解放出来之后，不仅建立了新体系，而且建立了一门新的“科学”——他们最伟大的著作，黑格尔的《精神现象学》，原题是“意识经验的科学”——并热切地模糊了康德在理性对不可知者的关切与知性对认知的关切之间所作的区分。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-zhu">注</span><b>Hegel’s original title</b> — <span class="zh">《精神现象学》的早期完整题名包含“意识经验的科学”。阿伦特抓住 “science” 一词，说明康德之后的思辨又要求知识式有效性。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">127</span>Pursuing the Cartesian ideal of certainty as though Kant had never existed, they believed in all earnest that the results of their speculations possessed the same kind of validity as the results of cognitive processes.</span></p>
+  <div class="sentence-aid" data-sentence="127">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">他们仿佛绕过康德，重新要求思辨具有认知结果的确定性</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">德国观念论继续追求笛卡尔式确定性，仿佛康德从未划定知识界限。他们真诚相信，哲学思辨所得的结果与认知过程所得的结果具有同一种有效性；这正是把意义重新当成真理知识。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">追求的理想</div><div><div class="meaning-en"><button class="expr-button" type="button">Pursuing the Cartesian ideal of certainty</button><div class="expr-tip"><b>Cartesian</b> = “笛卡尔式的”；这里指以不可怀疑的确定性作为哲学理想。</div></div><div class="meaning-zh">思辨仍想达到绝对确定。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">历史反讽</div><div><div class="meaning-en"><button class="expr-button" type="button">as though Kant had never existed</button><div class="expr-tip"><b>as though + 过去完成时</b> 表示与事实相反：康德已经出现并区分了知识与思考，他们却像没有这回事。</div></div><div class="meaning-zh">他们没有贯彻康德对知识界限的批判。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">真诚信念</div><div><div class="meaning-en">believed <button class="expr-button" type="button">in all earnest</button><div class="expr-tip"><b>in all earnest</b> = “完全认真地、真诚地”，不是假装或修辞夸张。</div></div><div class="meaning-zh">他们真的把思辨看作知识。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">最终等同</div><div><div class="meaning-en">speculative results possessed <button class="expr-button" type="button">the same kind of validity</button> as cognitive results<div class="expr-tip"><b>the same kind of A as B</b> = “与 B 具有同一种 A”。</div></div><div class="meaning-zh">意义思辨被要求并宣称拥有认知式有效性。</div></div></div></div>
+      <div class="read-again">Introduction 的最后一句回收核心错误：<b>speculation was treated as cognition again</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">他们追求笛卡尔式的确定性理想，仿佛康德从未存在过；他们完全认真地相信，自己思辨所得的结果，与认知过程所得的结果具有同一种有效性。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>The Cartesian ideal of certainty</b> — <span class="zh">笛卡尔试图从不可怀疑的确定性出发重建知识。阿伦特认为，康德已区分思考与认识，德国观念论却又让思辨结果追求同类的确定有效性。</span></div></div>
+</main>
+
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-dian">典故</span>allusion 典故</span>
+    <span><span class="tag t-yin">引用</span>quotation 引文</span>
+    <span><span class="tag t-zhu">注</span>note 说明</span>
+    <span><span class="tag t-ci">词</span>word 词义</span>
+  </div>
+  <a href="lotm-thinking-intro-02.html">← Introduction II · pp. 8–12 · S49–98</a><br>Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 12–16. Text transcribed verbatim from the page images. The Introduction is complete; Chapter 1, “The world’s phenomenal nature,” begins on printed p. 19.
+</footer>
+
+<script>
+  const body=document.body;
+  const tRuby=document.getElementById('t-ruby'),
+        tRem=document.getElementById('t-rem'),
+        tTrans=document.getElementById('t-trans'),
+        tTheme=document.getElementById('t-theme');
+  const setTheme=(theme,remember=false)=>{
+    const dark=theme==='dark';
+    document.documentElement.dataset.theme=dark?'dark':'light';
+    tTheme.setAttribute('aria-pressed',String(dark));
+    tTheme.textContent=dark?'Light Theme':'Dark Theme';
+    tTheme.title=dark?'Switch to Light Theme':'Switch to Dark Theme';
+    document.querySelectorAll('a[href*="lotm-thinking-intro"]').forEach(link=>{
+      const target=new URL(link.getAttribute('href'),location.href);
+      target.searchParams.set('theme',dark?'dark':'light');
+      link.href=target.href;
+    });
+    if(remember){try{localStorage.setItem('lotm-reading-theme',dark?'dark':'light');}catch(_){}}
+  };
+  setTheme(document.documentElement.dataset.theme);
+  tTheme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark',true);
+  tRuby.onclick=()=>{body.classList.toggle('hide-ruby'); tRuby.classList.toggle('off');};
+  tRem.onclick =()=>{body.classList.toggle('hide-remarks'); tRem.classList.toggle('off');};
+
+  const translations=[...document.querySelectorAll('.translation')];
+  tTrans.onclick=()=>{
+    const open=tTrans.getAttribute('aria-pressed')!=='true';
+    translations.forEach(item=>item.open=open);
+    tTrans.setAttribute('aria-pressed',String(open));
+    tTrans.textContent=open?'收起直译 99–127':'直译 99–127';
+  };
+
+  const rescues=[...document.querySelectorAll('.rescue')];
+  const clearFocus=()=>{
+    document.querySelectorAll('.active-sentence,.active-aid')
+      .forEach(item=>item.classList.remove('active-sentence','active-aid'));
+  };
+  rescues.forEach(rescue=>{
+    rescue.addEventListener('toggle',()=>{
+      if(rescue.open){
+        rescues.forEach(other=>{if(other!==rescue) other.open=false;});
+        clearFocus();
+        const aid=rescue.closest('.sentence-aid');
+        const sentence=aid.previousElementSibling;
+        aid.classList.add('active-aid');
+        if(sentence?.classList.contains('sent')) sentence.classList.add('active-sentence');
+        body.classList.add('rescue-mode');
+        rescue.scrollIntoView({behavior:'smooth',block:'center'});
+      }else if(!document.querySelector('.rescue[open]')){
+        clearFocus();
+        body.classList.remove('rescue-mode');
+      }
+    });
+  });
+</script>
+</body>
+</html>
