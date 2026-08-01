@@ -2,7 +2,7 @@
 
 parent: [CLAUDE.md](CLAUDE.md)
 
-## Status (2026-07-31)
+## Status (2026-08-01)
 
 **Live and working.** Custom domain active, HTTPS enforced, content published across three sections.
 
@@ -28,12 +28,12 @@ parent: [CLAUDE.md](CLAUDE.md)
   Live: https://yanhe-math.com/icm2026/
 
 - Homepage: hero (identity, satirical title), Research, Publications, Path, AI & Building (flagship: math-ai-framework), Others, Contact.
-- **philosophy/Life of the Mind** (extended 2026-07-31) — the Thinking Introduction
-  is complete across three linked pages: S1–48 (pp. 3–8), S49–98 (pp. 8–12), and the
-  new `lotm-thinking-intro-03.html` covering S99–127 (pp. 12–16). Page III keeps the
-  validated meaning-first rescue and folded literal translation but deliberately has
-  no Cain reader. Fixed cross-page theme propagation on all three pages by matching
-  absolute as well as relative reading-page links.
+- **philosophy/Life of the Mind** (extended 2026-08-01) — the Thinking Introduction
+  is complete across three linked pages (S1–127 / pp. 3–16), and
+  `lotm-thinking-appearance-01.html` continues with the complete first chapter of
+  Appearance I (S128–174 / pp. 19–23). The new page preserves the Auden epigraph and
+  keeps the validated meaning-first rescue plus folded literal translation, with no
+  Cain reader. Theme propagation now matches the whole `lotm-thinking-` series.
 - Others → Selected papers (arxiv-daily, external tracker), Phaedrus palinode (philosophy/socrate/), Arendt Life of the Mind + Marxism tracker + reading framework (philosophy/), World Cup Beijing-time tracker (worldcup/), Some small math (math-notes/), **Undergraduate reading seminar (reading-seminar/)**.
 - **reading-seminar/** (added 2026-07-16) — landing page "Undergraduate reading seminar" for algebraic geometry notes from working with undergraduates. First entry: "Blow-up — the scheme-theoretic point of view", copied in from `claude/obsidian-ai/math/Relearn algebraic geometry/student-surfaces-thesis/Blow-up — scheme-theoretic point of view.html` (self-contained, KaTeX via CDN), with a `← Undergraduate reading seminar` link added to its header. Same add-a-note pattern as math-notes/.
 - **bible/ is hidden** (since 2026-07-16, Yan's call): removed from the Others list and from `sitemap.xml`, and `robots.txt` now has `Disallow: /bible/`. Files are untouched and still live at `https://yanhe-math.com/bible/` — reachable by anyone with the direct link, just not advertised or crawled. To fully unpublish instead of just unlist, would need to actually delete the files from the repo.

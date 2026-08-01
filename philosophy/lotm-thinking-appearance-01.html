@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Life of the Mind · Thinking · Appearance I · Chapter 1</title>
+<script>
+  (()=>{
+    try{
+      const linked=new URLSearchParams(location.search).get('theme');
+      const saved=localStorage.getItem('lotm-reading-theme');
+      const choice=/^(dark|light)$/.test(linked||'')?linked:saved;
+      const dark=choice ? choice==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme=dark?'dark':'light';
+    }catch(_){ document.documentElement.dataset.theme='light'; }
+  })();
+</script>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --blue:#486a8b; --blue-soft:#e7eef5; --green:#4d7358; --green-soft:#e6efe8;
+  }
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#141311; --ink:#e8e0d4; --muted:#aaa092; --line:#3c3730;
+    --amber:#d5a45a; --amber-soft:#382b17; --purple:#c7a7e3; --purple-soft:#30263a;
+    --teal:#82c5b5; --teal-soft:#1d342f; --rose:#dc92a5; --rose-soft:#39242a;
+    --blue:#8fb6d5; --blue-soft:#20303d; --green:#91bd9b; --green-soft:#223529;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+    line-height:1.85;
+  }
+  /* top bar */
+  .bar{
+    position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;
+  }
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem;
+    cursor:pointer; transition:.15s;
+  }
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  .btn[aria-pressed="true"]{background:var(--green-soft); border-color:var(--green); color:var(--green)}
+  /* page */
+  main{max-width:720px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2.2rem}
+  header.doc h1{font-size:1.7rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  /* sentence units */
+  .sent{margin:0; padding:.35rem 0 .35rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .sent:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.6rem}
+  .stext{font-size:1.16rem}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted);
+     vertical-align:.45em; margin-right:.15em; user-select:none}
+  /* inline chinese ruby */
+  ruby{ruby-position:over}
+  rt{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+     font-size:.58em; color:var(--amber); font-weight:500; letter-spacing:.02em;
+     opacity:.92; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  /* remarks */
+  .remarks{margin:.45rem 0 .2rem; padding:.55rem .8rem;
+    background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber);
+    border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.6}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem}
+  .remark b{color:var(--ink)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em;
+    padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-dian{background:var(--purple-soft); color:var(--purple)}   /* 典故 */
+  .t-yin{background:var(--teal-soft); color:var(--teal)}        /* 引用 */
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}      /* 注 */
+  .t-ci{background:var(--rose-soft); color:var(--rose)}         /* 词 */
+  /* guided rescue; S32–47 use the validated meaning-first tree */
+  .practice-note{
+    margin:1.7rem 0 1rem; padding:.8rem 1rem; border:1px solid #cfdde8;
+    border-radius:8px; background:#eef4f8; color:#38536d;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.84rem; line-height:1.65;
+  }
+  .practice-note b{display:block; margin-bottom:.15rem}
+  .sentence-aid{
+    margin:.18rem 0 .7rem .9rem;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    transition:opacity .2s, filter .2s;
+  }
+  .sentence-aid details{border-radius:7px; overflow:hidden}
+  .sentence-aid summary{
+    display:flex; align-items:center; gap:.45rem; cursor:pointer; list-style:none;
+    padding:.38rem .65rem; font-size:.77rem; line-height:1.35; user-select:none;
+  }
+  .sentence-aid summary::-webkit-details-marker{display:none}
+  .sentence-aid summary::before{
+    content:"+"; width:1rem; height:1rem; display:inline-grid; place-items:center;
+    border-radius:50%; font-size:.8rem; font-weight:700; flex:0 0 auto;
+  }
+  .sentence-aid details[open] > summary::before{content:"−"}
+  .summary-hint{color:var(--muted); font-size:.7rem}
+  .rescue{border:1px solid #cfdde8; background:#f6f9fb}
+  .rescue > summary{color:var(--blue)}
+  .rescue > summary::before{background:var(--blue-soft); color:var(--blue)}
+  .translation{margin-top:.28rem; border:1px solid #d5e1d7; background:#f7faf7}
+  .translation > summary{color:var(--green)}
+  .translation > summary::before{background:var(--green-soft); color:var(--green)}
+  .rescue-body{padding:.2rem .75rem .75rem}
+  .step{display:grid; grid-template-columns:4.6rem 1fr; gap:.6rem; padding:.58rem 0}
+  .step + .step{border-top:1px dashed #d9e2e8}
+  .step-label{
+    color:var(--blue); font-size:.67rem; font-weight:750; letter-spacing:.04em;
+    text-transform:uppercase; padding-top:.15rem;
+  }
+  .core-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:1rem; line-height:1.55; color:var(--ink)}
+  .core-en strong{font-weight:650; color:#294e70}
+  .cue{margin-top:.2rem; color:#5f5a52; font-size:.76rem; line-height:1.55}
+  .meaning-overview{
+    margin:.5rem 0 .72rem; padding:.72rem .78rem; border:1px solid #c8d8e4;
+    border-radius:8px; background:#fff;
+  }
+  .meaning-kicker{
+    margin-bottom:.28rem; color:var(--blue); font-size:.68rem; font-weight:750;
+    letter-spacing:.045em;
+  }
+  .meaning-thesis{color:#334b5e; font-size:.86rem; line-height:1.68}
+  .meaning-thesis .next-sentence{color:var(--muted); font-size:.74rem}
+  .meaning-tree{margin:.15rem 0 .7rem}
+  .meaning-node{
+    position:relative; display:grid; grid-template-columns:5.3rem minmax(0,1fr);
+    gap:.58rem; align-items:start; margin-top:.18rem; padding:.42rem .52rem;
+    border-left:2px solid #d1dce4; border-radius:0 5px 5px 0;
+  }
+  .meaning-node.main{margin-left:0; border-left:3px solid var(--blue); background:#edf4f8}
+  .meaning-node.d1{margin-left:1.25rem}
+  .meaning-node.d2{margin-left:2.65rem}
+  .meaning-node.d3{margin-left:4.05rem}
+  .meaning-node:not(.main)::before{
+    content:""; position:absolute; left:-.72rem; top:1.05rem; width:.62rem;
+    border-top:1px solid #c2ced7;
+  }
+  .meaning-label{
+    padding-top:.12rem; color:#687887; font-size:.63rem; font-weight:750;
+    letter-spacing:.035em; line-height:1.3;
+  }
+  .meaning-node.main .meaning-label{color:var(--blue)}
+  .meaning-en{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); font-size:.94rem; line-height:1.48;
+  }
+  .meaning-node.main .meaning-en{font-weight:650; color:#294e70}
+  .meaning-zh{margin-top:.12rem; color:#625d55; font-size:.74rem; line-height:1.52}
+  .pair-word{color:#77541e; font-weight:650}
+  .expr-button{
+    appearance:none; margin:0; padding:.02rem .18rem; border:0;
+    border-bottom:1px dotted #a06e20; border-radius:3px; background:#fff2cf;
+    color:#69480f; font:inherit; line-height:inherit; cursor:help;
+  }
+  .expr-button::after{
+    content:"?"; display:inline-grid; place-items:center; width:.78rem; height:.78rem;
+    margin-left:.22rem; border-radius:50%; background:#dba94f; color:#fff;
+    font-family:system-ui,sans-serif; font-size:.55rem; font-weight:800;
+    vertical-align:.12rem;
+  }
+  .expr-button:focus-visible{outline:2px solid #d4a04a; outline-offset:2px}
+  .expr-tip{
+    display:none; margin:.38rem 0 .06rem; padding:.48rem .58rem;
+    border:1px solid #e3c98e; border-radius:6px; background:#fff9e9;
+    color:#594b33; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.72rem; line-height:1.58;
+  }
+  .expr-button:hover ~ .expr-tip,
+  .expr-button:focus ~ .expr-tip{display:block}
+  .expr-tip b{color:#674916}
+  .chunk-list{display:grid; gap:.32rem}
+  .chunk{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    gap:.65rem; align-items:baseline}
+  .chunk-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); line-height:1.45}
+  .chunk-zh{color:#6d665c; font-size:.74rem; line-height:1.45}
+  .read-again{
+    margin-top:.35rem; padding:.55rem .65rem; border-left:3px solid var(--blue);
+    background:#edf3f7; color:#38536d; font-size:.76rem; line-height:1.55;
+  }
+  .translation-text{padding:.6rem .75rem .72rem; border-top:1px solid #dfe8e0;
+    color:#334d39; font-size:.87rem; line-height:1.7}
+  body.rescue-mode main > .sent,
+  body.rescue-mode main > .remarks,
+  body.rescue-mode main > .sentence-aid,
+  body.rescue-mode main > .practice-note{opacity:.14; filter:saturate(.35)}
+  body.rescue-mode main > .sent.active-sentence,
+  body.rescue-mode main > .sentence-aid.active-aid{opacity:1; filter:none}
+  body.rescue-mode main > .sent.active-sentence{
+    border-left-color:var(--blue); background:#fbfcfd;
+  }
+  @media (max-width:600px){
+    .step{grid-template-columns:1fr; gap:.1rem}
+    .chunk{grid-template-columns:1fr; gap:.05rem; padding:.22rem 0}
+    .sentence-aid{margin-left:.35rem}
+    .meaning-node{grid-template-columns:4.15rem minmax(0,1fr); gap:.38rem}
+    .meaning-node.d1{margin-left:.55rem}
+    .meaning-node.d2{margin-left:1.1rem}
+    .meaning-node.d3{margin-left:1.65rem}
+  }
+  footer{max-width:720px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
+    font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  a{color:var(--blue)}
+  html[data-theme="dark"] body{background:#141311}
+  html[data-theme="dark"] .bar{background:rgba(20,19,17,.94)}
+  html[data-theme="dark"] .btn{background:#211f1b}
+  html[data-theme="dark"] .sent:hover{background:#1c1a17}
+  html[data-theme="dark"] .remarks{background:#1c1a17}
+  html[data-theme="dark"] .practice-note{background:#19242c; border-color:#334858; color:#bed0df}
+  html[data-theme="dark"] .rescue{background:#171f25; border-color:#344754}
+  html[data-theme="dark"] .translation{background:#18211b; border-color:#35483a}
+  html[data-theme="dark"] .step + .step{border-color:#35424a}
+  html[data-theme="dark"] .core-en strong,
+  html[data-theme="dark"] .meaning-node.main .meaning-en{color:#bdd2e3}
+  html[data-theme="dark"] .cue,
+  html[data-theme="dark"] .meaning-zh,
+  html[data-theme="dark"] .chunk-zh{color:#b9afa2}
+  html[data-theme="dark"] .meaning-overview{background:#1c1a17; border-color:#3a4b58}
+  html[data-theme="dark"] .meaning-thesis{color:#c2d3df}
+  html[data-theme="dark"] .meaning-node{border-color:#3b4851}
+  html[data-theme="dark"] .meaning-node.main{background:#1b2932}
+  html[data-theme="dark"] .meaning-node:not(.main)::before{border-color:#49565f}
+  html[data-theme="dark"] .meaning-label{color:#9ba9b4}
+  html[data-theme="dark"] .pair-word{color:#e0b870}
+  html[data-theme="dark"] .expr-button{background:#3b2d17; border-color:#b9893e; color:#f0cb88}
+  html[data-theme="dark"] .expr-tip{background:#292217; border-color:#6e5930; color:#d8c7aa}
+  html[data-theme="dark"] .expr-tip b{color:#f0cb88}
+  html[data-theme="dark"] .read-again{background:#1b2932; color:#bed0df}
+  html[data-theme="dark"] .translation-text{border-color:#344539; color:#bcd5c1}
+  html[data-theme="dark"] body.rescue-mode main > .sent.active-sentence{background:#192229}
+
+  .part-marker{font-family:system-ui,sans-serif;font-size:.72rem;font-weight:750;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:.45rem}
+  .epigraph{margin:1.25rem 0 0;padding:.85rem 1rem;border-left:3px solid var(--amber);background:#fcf9f2;color:var(--muted);font-style:italic}
+  .epigraph cite{display:block;margin-top:.35rem;font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.08em;color:var(--muted)}
+  html[data-theme="dark"] .epigraph{background:#1c1a17}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; <a href="lotm-thinking-intro-03.html">Introduction III</a> &nbsp;·&nbsp; Appearance I &nbsp;·&nbsp; pp.&nbsp;19–23</div>
+  <button class="btn" id="t-ruby">中文 注音</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-trans" aria-pressed="false">直译 128–174</button>
+  <button class="btn" id="t-theme" aria-pressed="false" title="Switch to Dark Theme">Dark Theme</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <div class="part-marker">Appearance I</div>
+    <h1>1 · The world’s phenomenal nature</h1>
+    <div class="sub">Hannah Arendt, <i>The Life of the Mind</i> · Volume One: Thinking · printed pp. 19–23</div>
+    <blockquote class="epigraph">Does God ever judge us by appearances? I suspect that he does.<cite>W. H. Auden</cite></blockquote>
+  </header>
+  <aside class="practice-note"><b>精读 · sentences 128–174</b>先把英文朗读一至两次。卡住时先看作者在说什么和整句关系；遇到带问号的表达，悬停或点按查看说明。只有在意思仍不落地时才展开直译，最后回到原句完整朗读一次。</aside>
+
+  <p class="sent para-start"><span class="stext"><span class="n">128</span>The world men are born into contains many things, natural and artificial, living and dead, <ruby>transient<rt>短暂的</rt></ruby> and <ruby>sempiternal<rt>绵延不息的</rt></ruby>, all of which have in common that they <i>appear</i> and hence are meant to be seen, heard, touched, tasted, and smelled, to be perceived by <ruby>sentient creatures<rt>有感知能力的生物</rt></ruby> endowed with the appropriate sense organs.</span></p>
+  <div class="sentence-aid" data-sentence="128">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">万物虽不同，却都以“显现给某种感官”为共同存在方式</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特从一个极朴素的事实起步：我们出生进入的世界充满不同种类的东西，但它们共同之处不是某种隐藏本质，而是都会显现，并且其显现指向能够感知它们的生物。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">世界的多样</div><div><div class="meaning-en">natural and artificial, living and dead, transient and sempiternal<div class="expr-tip">四组差异把范围扩到几乎一切事物。</div></div><div class="meaning-zh">世界中的东西性质各异。</div></div></div><div class="meaning-node main"><div class="meaning-label">共同性质</div><div><div class="meaning-en">all of which have in common that they <button class="expr-button" type="button">appear</button><div class="expr-tip"><b>appear</b> 在本章不是“看起来似乎”，而是“呈现、显现出来”。</div></div><div class="meaning-zh">差异之下，它们都显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">显现指向</div><div><div class="meaning-en">are <button class="expr-button" type="button">meant to be perceived</button> by sentient creatures<div class="expr-tip"><b>be meant to</b> 不是主观意图，而是结构上的“本来就是供……的”。</div></div><div class="meaning-zh">显现天然要求感知者。</div></div></div></div>
+      <div class="read-again">先听见总结构：<b>many kinds of things — one thing in common: they appear to perceivers</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">人们出生进入的世界包含许多事物：自然的和人工的、有生命的和无生命的、短暂的和绵延不息的；它们全都有一个共同点，即它们显现，因而本来就是要被看见、听见、触摸、品尝和嗅闻，要被赋有适当感觉器官的有感知能力的生物所感知。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">129</span>Nothing could appear, the word “appearance” would make no sense, if <ruby>recipients of appearances<rt>显现的接受者</rt></ruby> did not exist—living creatures able to acknowledge, recognize, and react to—in flight or desire, approval or disapproval, blame or praise—what is not merely there but appears to them and is meant for their perception.</span></p>
+  <div class="sentence-aid" data-sentence="129">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">没有接受显现并作出回应的生命，“显现”这个词便失去意义</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">显现不是物体单方面摆在那里。它只有在有生命者能够接收、辨认并以逃避、欲望、赞成或责备等方式回应时才成立；“出现”这个概念本身已经包含观看者。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">反事实条件</div><div><div class="meaning-en">if <button class="expr-button" type="button">recipients of appearances</button> did not exist<div class="expr-tip">recipient 是“接受者”；这里不是被动镜头，而是会确认、辨认和回应的生命。</div></div><div class="meaning-zh">若没有显现的接受者。</div></div></div><div class="meaning-node main"><div class="meaning-label">核心结论</div><div><div class="meaning-en">Nothing could appear; “appearance” would <button class="expr-button" type="button">make no sense</button><div class="expr-tip"><b>make no sense</b> = “失去意义、无法成立”。</div></div><div class="meaning-zh">就不会有任何东西能够显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">不只是存在</div><div><div class="meaning-en">not merely there but <button class="expr-button" type="button">appears to them</button><div class="expr-tip">there 与 appears 对照：前者只是“在那里”，后者是“向某人显现”。</div></div><div class="meaning-zh">显现总是向某个感知者显现。</div></div></div></div>
+      <div class="read-again">破折号内是“接受者”的定义；主干只有：<b>No recipient → no appearance.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">如果显现的接受者并不存在——也就是不存在能够确认、辨认并对那种不只是在那里、而且向它们显现并供它们感知的东西作出反应的生命；这些反应可以是逃避或欲望、赞成或不赞成、谴责或赞扬——那么任何东西都不可能显现，“显现”一词也就毫无意义。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">130</span>In this world which we enter, appearing from a nowhere, and from which we disappear into a nowhere, <i>Being and Appearing coincide</i>.</span></p>
+  <div class="sentence-aid" data-sentence="130">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">在人的世界经验中，存在与显现重合</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">我们从不知何处出生而显现，又在死亡时消失到不知何处。就这个共同世界而言，一个东西“存在”就是它以某种方式显现；阿伦特暂时拒绝把隐藏存在放在显现背后。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">人的轨迹</div><div><div class="meaning-en">we enter, <button class="expr-button" type="button">appearing from a nowhere</button> … disappear into a nowhere<div class="expr-tip">两个 a nowhere 强调：就世界而言，出生前与死后都不在显现范围内。</div></div><div class="meaning-zh">我们以显现进入世界，以消失离开。</div></div></div><div class="meaning-node main"><div class="meaning-label">核心命题</div><div><div class="meaning-en"><button class="expr-button" type="button">Being and Appearing coincide</button><div class="expr-tip"><b>coincide</b> = “重合”；不是说两词同义，而是说在此世界中存在离不开显现。</div></div><div class="meaning-zh">存在与显现重合。</div></div></div></div>
+      <div class="read-again">把插入修饰压缩后读：<b>In this world, Being and Appearing coincide.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在这个我们进入的世界中——我们从一个无处显现而来，又从这里消失到一个无处——存在与显现重合。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">131</span>Dead matter, natural and artificial, changing and unchanging, depends in its being, that is, in its <ruby>appearingness<rt>显现性</rt></ruby>, on the presence of living creatures.</span></p>
+  <div class="sentence-aid" data-sentence="131">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">连无生命物的“在场”也依赖生命作为见证者</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">石头或桥并不靠生命制造才存在；这里的 depends 指它们作为世界中可呈现之物的现实性，需要有生命者在场接收其显现。阿伦特立即用 appearingness 解释此处的 being。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">讨论对象</div><div><div class="meaning-en">Dead matter, natural and artificial, changing and unchanging<div class="expr-tip">列举说明命题覆盖各种无生命物。</div></div><div class="meaning-zh">无生命物也在讨论范围内。</div></div></div><div class="meaning-node main"><div class="meaning-label">关键同位语</div><div><div class="meaning-en">in its being, <button class="expr-button" type="button">that is, in its appearingness</button><div class="expr-tip"><b>that is</b> 明确改写：此处 being 按“显现性”来理解。</div></div><div class="meaning-zh">这里的存在就是能够显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">依赖关系</div><div><div class="meaning-en"><button class="expr-button" type="button">depends on</button> the presence of living creatures<div class="expr-tip">不是因果创造关系，而是显现需要在场的感知者。</div></div><div class="meaning-zh">其世界现实需要生命见证。</div></div></div></div>
+      <div class="read-again">读清解释关系：<b>being—that is, appearingness—depends on living creatures</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">无生命的物质，无论自然的还是人工的、变化的还是不变的，就其存在——也就是说，就其显现性——而言，都依赖于有生命者的在场。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">132</span>Nothing and nobody exists in this world whose very being does not <ruby>presuppose<rt>预设</rt></ruby> a spectator.</span></p>
+  <div class="sentence-aid" data-sentence="132">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">世界中的任何存在都已经预设一个观看者</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">这句话把前面的结论普遍化：没有任何物或人能够作为世界中的显现者而完全独立于观看者。spectator 不只是观众席上的人，而是任何使显现成为现实的感知者。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">全称否定</div><div><div class="meaning-en"><button class="expr-button" type="button">Nothing and nobody</button> exists …<div class="expr-tip">同时包括物与人，不留例外。</div></div><div class="meaning-zh">任何物、任何人都不例外。</div></div></div><div class="meaning-node main"><div class="meaning-label">存在条件</div><div><div class="meaning-en">whose very being <button class="expr-button" type="button">presupposes a spectator</button><div class="expr-tip"><b>presuppose</b> = “已经把……作为成立前提”。</div></div><div class="meaning-zh">存在本身预设观看者。</div></div></div></div>
+      <div class="read-again">把双重否定转成正面：<b>Everything that exists presupposes a spectator.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在这个世界中，没有任何东西、也没有任何人，其存在本身不预设一个观看者。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">133</span>In other words, nothing that is, <ruby>insofar as<rt>就……而言</rt></ruby> it appears, exists in the singular; everything that is is meant to be perceived by somebody.</span></p>
+  <div class="sentence-aid" data-sentence="133">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">凡是显现的存在都不是单数：它总与某个感知者成对出现</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">“不是单数”不是说每件物都有多个副本，而是说显现从来不是孤立的一项：只要某物显现，它就在与某个观看者的关系中存在。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">限定范围</div><div><div class="meaning-en">nothing that is, <button class="expr-button" type="button">insofar as it appears</button><div class="expr-tip"><b>insofar as</b> = “就……这一点而言”；这里只谈存在者作为显现者。</div></div><div class="meaning-zh">就它显现这一面而言。</div></div></div><div class="meaning-node main"><div class="meaning-label">关系结构</div><div><div class="meaning-en">exists <button class="expr-button" type="button">in the singular</button><div class="expr-tip"><b>in the singular</b> = “以单数、孤立一项的方式”。</div></div><div class="meaning-zh">显现绝不是孤零零的一方。</div></div></div><div class="meaning-node main"><div class="meaning-label">换句话说</div><div><div class="meaning-en">is meant to be perceived <button class="expr-button" type="button">by somebody</button><div class="expr-tip">somebody 提供显现关系的另一端。</div></div><div class="meaning-zh">它总是供某个感知者感知。</div></div></div></div>
+      <div class="read-again">这里的 singular 是关系概念：<b>appearance always means appearance-to-somebody</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">换句话说，凡存在的东西，就其显现而言，都不以单数存在；一切存在者本来就是要被某个人感知的。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">134</span><i>Not Man but men inhabit this planet.</i></span></p>
+  <div class="sentence-aid" data-sentence="134">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">居住在地球上的不是抽象的“人”，而是复数的人们</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特把抽象单数 Man 换成现实复数 men：世界不是由一个普遍人类主体面对，而是由彼此观看、彼此显现的许多人共同居住。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">排除抽象</div><div><div class="meaning-en"><span class="pair-word">Not</span> <button class="expr-button" type="button">Man</button><div class="expr-tip">大写 Man 指抽象的、单数的“人类主体”。</div></div><div class="meaning-zh">不是哲学抽象中的单一“人”。</div></div></div><div class="meaning-node main"><div class="meaning-label">肯定复数</div><div><div class="meaning-en"><span class="pair-word">but</span> <button class="expr-button" type="button">men</button><div class="expr-tip">小写复数 men 指实际存在的许多人。</div></div><div class="meaning-zh">而是彼此不同的复数人们。</div></div></div></div>
+      <div class="read-again">重音落在对照：<b>not Man — but men</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">居住在这个星球上的不是“人”，而是人们。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">135</span><i><ruby>Plurality<rt>复数性</rt></ruby> is the law of the earth.</i></span></p>
+  <div class="sentence-aid" data-sentence="135">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">复数性不是偶然附加，而是地球世界的基本法则</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">这是一句纲领性结论：世界之所以是共同世界，就因为总有多个存在者、多个视角和彼此的见证；单一绝对主体不是地球生活的基本形态。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">核心概念</div><div><div class="meaning-en"><button class="expr-button" type="button">Plurality</button><div class="expr-tip">不是简单的“人数很多”，而是每个人不同却共享同一世界的复数条件。</div></div><div class="meaning-zh">不同者共同存在。</div></div></div><div class="meaning-node main"><div class="meaning-label">命题强度</div><div><div class="meaning-en">is the <button class="expr-button" type="button">law of the earth</button><div class="expr-tip">law 在这里是基本结构或条件，不是成文法律。</div></div><div class="meaning-zh">这是地球存在的根本规则。</div></div></div></div>
+      <div class="read-again">短句要停顿读出它的纲领性：<b>Plurality / is the law / of the earth.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">复数性是大地的法则。</div></details>
+  </div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">136</span>Since sentient beings—men and animals, to whom things appear and who as recipients guarantee their reality—are themselves also appearances, meant and able both to see and be seen, hear and be heard, touch and be touched, they are never mere subjects and can never be understood as such; they are no less “objective” than stone and bridge.</span></p>
+  <div class="sentence-aid" data-sentence="136">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">感知者自己也显现，所以永远不只是主体，也同样是别人眼中的对象</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">人和动物一方面感知世界，使事物获得现实；另一方面它们自己也被看见、听见和触碰。因此不能把生命理解为站在世界外的纯主体：对别人而言，它们与石头、桥一样是客观显现者。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">原因</div><div><div class="meaning-en">Since sentient beings … <button class="expr-button" type="button">are themselves also appearances</button><div class="expr-tip">since 引出原因；感知主体自己也进入显现关系。</div></div><div class="meaning-zh">感知者也向别人显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">双向结构</div><div><div class="meaning-en"><span class="pair-word">both</span> to see <span class="pair-word">and</span> be seen …<div class="expr-tip">三组主动/被动说明感知关系永远可逆。</div></div><div class="meaning-zh">它既感知，也被感知。</div></div></div><div class="meaning-node main"><div class="meaning-label">第一结论</div><div><div class="meaning-en">never <button class="expr-button" type="button">mere subjects</button><div class="expr-tip"><b>mere</b> = “仅仅、纯粹”；不是否认主体性，而是否认只有主体性。</div></div><div class="meaning-zh">生命绝非纯主体。</div></div></div><div class="meaning-node main"><div class="meaning-label">第二结论</div><div><div class="meaning-en">no less <button class="expr-button" type="button">“objective”</button> than stone and bridge<div class="expr-tip"><b>no less A than B</b> = “和 B 一样 A”；引号提醒 objective 在主体/对象框架内使用。</div></div><div class="meaning-zh">它同样是世界中的对象。</div></div></div></div>
+      <div class="read-again">长破折号先括起；主干：<b>Since perceivers are appearances, they are never mere subjects; they are objective too.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">由于有感知能力的存在者——人和动物；事物向它们显现，而它们作为接受者保证事物的现实性——自身也同样是显现，既注定也能够看与被看、听与被听、触摸与被触摸，所以它们从来不只是主体，也绝不能仅仅作为主体来理解；它们并不比石头和桥更少“客观”。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">137</span>The <ruby>worldliness<rt>属世性、世界性</rt></ruby> of living things means that there is no subject that is not also an object and appears as such to somebody else, who guarantees its “objective” reality.</span></p>
+  <div class="sentence-aid" data-sentence="137">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">生命的“属世性”就是：每个主体同时也是他人的对象</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">活着意味着属于共同世界，而不只是拥有内在意识。凡主体都向别人显现为对象；正是别人的感知，使它作为世界中存在者的客观现实得到保证。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">概念解释</div><div><div class="meaning-en">The <button class="expr-button" type="button">worldliness</button> of living things means …<div class="expr-tip">worldliness 指“属于并卷入共同世界”，不是世俗或物质主义。</div></div><div class="meaning-zh">生命从属于共同世界。</div></div></div><div class="meaning-node main"><div class="meaning-label">双重身份</div><div><div class="meaning-en">no subject that is not <button class="expr-button" type="button">also an object</button><div class="expr-tip">双重否定等于：every subject is also an object。</div></div><div class="meaning-zh">每个主体同时是对象。</div></div></div><div class="meaning-node main"><div class="meaning-label">他者保证</div><div><div class="meaning-en">somebody else … <button class="expr-button" type="button">guarantees its “objective” reality</button><div class="expr-tip">他者的观看让它不只存在于自己的意识里。</div></div><div class="meaning-zh">客观现实由他人见证。</div></div></div></div>
+      <div class="read-again">把双重否定读正：<b>Every subject is also an object for somebody else.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">有生命者的世界性意味着：不存在一个不同时也是对象、并且不以对象身份向某个他者显现的主体；这个他者保证它的“客观”现实。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">138</span>What we usually call “consciousness,” the fact that I am aware of myself and therefore in a sense can appear to myself, would never <ruby>suffice<rt>足以</rt></ruby> to guarantee reality.</span></p>
+  <div class="sentence-aid" data-sentence="138">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">自我意识不足以单独保证现实</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">即使我意识到自己，因而在某种意义上也能向自己显现，这种内在自证仍不够。世界现实需要超出自我循环的其他观看者。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">同位解释</div><div><div class="meaning-en">“consciousness,” <button class="expr-button" type="button">the fact that I am aware of myself</button><div class="expr-tip">逗号后不是新主语，而是在解释这里所说的 consciousness。</div></div><div class="meaning-zh">此处意识就是自我觉知。</div></div></div><div class="meaning-node main"><div class="meaning-label">有限效果</div><div><div class="meaning-en">therefore <button class="expr-button" type="button">in a sense</button> can appear to myself<div class="expr-tip"><b>in a sense</b> 保留限定：这不等于公共世界中的充分显现。</div></div><div class="meaning-zh">我似乎也能成为自己的对象。</div></div></div><div class="meaning-node main"><div class="meaning-label">核心否定</div><div><div class="meaning-en">would never <button class="expr-button" type="button">suffice to guarantee reality</button><div class="expr-tip"><b>suffice to</b> = “足以做……”。</div></div><div class="meaning-zh">但这不足以担保现实。</div></div></div></div>
+      <div class="read-again">句首整块是主语；主干：<b>Consciousness would never suffice to guarantee reality.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我们通常所谓的“意识”——即我意识到自己、因而在某种意义上能够向自己显现这一事实——绝不足以保证现实。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">139</span>(Descartes’ <i>Cogito me cogitare ergo sum</i> is a <ruby>non sequitur<rt>不合逻辑的推论</rt></ruby> for the simple reason that this <i>res cogitans</i> never appears at all unless its <i>cogitationes</i> are made manifest in sounding-out or written-down speech, which is already meant for and presupposes auditors and readers as its recipients.)</span></p>
+  <div class="sentence-aid" data-sentence="139">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">笛卡尔从“我思”推出“我存在”，仍缺少让思想显现于共同世界的一步</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特并非否认思考发生，而是否认纯内在的思考物能够自行证明世界现实。只有当思想化为说出或写下的语言，它才显现；而语言从一开始就预设听者和读者。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">判断</div><div><div class="meaning-en">Descartes’ formula is a <button class="expr-button" type="button">non sequitur</button><div class="expr-tip">拉丁语 non sequitur 字面是“并不跟随”，指结论没有从前提推出。</div></div><div class="meaning-zh">“我思”不能直接推出公共现实中的“我在”。</div></div></div><div class="meaning-node d1"><div class="meaning-label">缺失环节</div><div><div class="meaning-en">the <i>res cogitans</i> <button class="expr-button" type="button">never appears</button> unless …<div class="expr-tip"><i>res cogitans</i> 是“思维之物”；unless 引出它显现的必要条件。</div></div><div class="meaning-zh">纯思维物本身不可见。</div></div></div><div class="meaning-node main"><div class="meaning-label">显现方式</div><div><div class="meaning-en">made manifest in <button class="expr-button" type="button">sounding-out or written-down speech</button><div class="expr-tip">思想通过说出或写下进入共同可感世界。</div></div><div class="meaning-zh">语言使思想显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">语言的他者</div><div><div class="meaning-en">speech … <button class="expr-button" type="button">presupposes auditors and readers</button><div class="expr-tip">语言的形式本身已面向接受者。</div></div><div class="meaning-zh">显现重新要求听者与读者。</div></div></div></div>
+      <div class="read-again">先读逻辑骨架：<b>Cogito is a non sequitur because thought appears only through speech, and speech presupposes others.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">（笛卡尔的“我思我思，故我在”是一个不合逻辑的推论，理由很简单：这个“思维之物”根本从不显现，除非它的思想活动在发声说出的语言或写下的语言中被显明；而这种语言本来就是为听者和读者而设，并把他们预设为自己的接受者。）</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>Descartes’ formula</b> — <span class="zh">阿伦特故意写成 <i>Cogito me cogitare ergo sum</i>（“我思我在思，故我在”），把问题集中到思考者能否仅凭内在思考保证自己作为世界存在者的现实。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">140</span>Seen from the perspective of the world, every creature born into it arrives well equipped to deal with a world in which Being and Appearing coincide; they are <ruby>fit for<rt>适合于</rt></ruby> worldly existence.</span></p>
+  <div class="sentence-aid" data-sentence="140">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">从世界的尺度看，每个出生者都已配备好进入显现关系</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">生命的感官和可见身体不是偶然附件，而是它进入共同世界的装备。它既能接收显现，也能自己显现，因此适合这个存在与显现重合的世界。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">观察尺度</div><div><div class="meaning-en"><button class="expr-button" type="button">Seen from the perspective of the world</button><div class="expr-tip">过去分词结构可理解为“若从世界的角度看”。</div></div><div class="meaning-zh">不是从纯意识内部看。</div></div></div><div class="meaning-node main"><div class="meaning-label">出生装备</div><div><div class="meaning-en">arrives <button class="expr-button" type="button">well equipped to deal with</button> a world …<div class="expr-tip"><b>be equipped to</b> = “具备做……所需条件”。</div></div><div class="meaning-zh">生命天生能够进入显现世界。</div></div></div><div class="meaning-node main"><div class="meaning-label">结论</div><div><div class="meaning-en">are <button class="expr-button" type="button">fit for worldly existence</button><div class="expr-tip"><b>fit for</b> = “适合于”；worldly 指属于这个共同世界。</div></div><div class="meaning-zh">它适合属世的存在。</div></div></div></div>
+      <div class="read-again">分号后是总结：<b>born equipped for a world of appearance; fit for worldly existence</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">从世界的视角来看，每一个出生到其中的生物，来到时都已充分装备好去应对一个存在与显现重合的世界；它们适合于属世的存在。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">141</span>Living beings, men and animals, are not just <i>in</i> the world, they are <i>of the world</i>, and this precisely because they are subjects and objects—perceiving and being perceived—at the same time.</span></p>
+  <div class="sentence-aid" data-sentence="141">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">生命不只位于世界之中，而是由双向显现关系构成的“世界所属者”</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">“在世界里”只说位置；“属于世界”说生命的存在方式。人和动物同时感知并被感知、同时是主体与对象，所以世界性不是外加环境，而进入了它们是什么。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">不只是位置</div><div><div class="meaning-en">not just <button class="expr-button" type="button"><i>in</i> the world</button><div class="expr-tip">in 只表示处在一个容器或地点中。</div></div><div class="meaning-zh">生命不只是放在世界里的东西。</div></div></div><div class="meaning-node main"><div class="meaning-label">更强命题</div><div><div class="meaning-en">they are <button class="expr-button" type="button"><i>of the world</i></button><div class="expr-tip"><b>of</b> 表示归属与构成：生命本性上属于世界。</div></div><div class="meaning-zh">生命由世界关系塑成。</div></div></div><div class="meaning-node main"><div class="meaning-label">确切理由</div><div><div class="meaning-en"><button class="expr-button" type="button">precisely because</button> they are subjects and objects … at the same time<div class="expr-tip">precisely 强调这就是 worldliness 的定义性理由。</div></div><div class="meaning-zh">因为它同时感知与被感知。</div></div></div></div>
+      <div class="read-again">重音放在介词对照：<b>not just IN the world — OF the world</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">有生命者——人和动物——不只是在世界之中；它们属于世界，而这恰恰因为它们同时既是主体又是对象——既感知又被感知。</div></details>
+  </div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">142</span>Nothing perhaps is more surprising in this world of ours than the almost infinite diversity of its appearances, the sheer <ruby>entertainment value<rt>供观赏的丰富趣味</rt></ruby> of its views, sounds, and smells, something that is hardly ever mentioned by the thinkers and philosophers.</span></p>
+  <div class="sentence-aid" data-sentence="142">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">最惊人的也许是显现世界本身几乎无穷的感官丰富性</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">哲学常急于穿过表面寻找本质，反而忽略一个近在眼前的奇迹：世界让我们看、听、闻的样态几乎无穷，而且这种丰富本身就有令人观赏和愉悦的价值。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">最高级结构</div><div><div class="meaning-en">Nothing perhaps is more surprising … <button class="expr-button" type="button">than</button> …<div class="expr-tip">nothing is more A than B = “没有什么比 B 更 A”。</div></div><div class="meaning-zh">最令人惊讶的是后面的内容。</div></div></div><div class="meaning-node main"><div class="meaning-label">惊讶对象</div><div><div class="meaning-en">the almost infinite <button class="expr-button" type="button">diversity of its appearances</button><div class="expr-tip">appearance 此处包括景象、声音、气味等一切感官显现。</div></div><div class="meaning-zh">显现样态几近无穷。</div></div></div><div class="meaning-node main"><div class="meaning-label">哲学遗漏</div><div><div class="meaning-en">hardly ever mentioned by <button class="expr-button" type="button">thinkers and philosophers</button><div class="expr-tip">批评传统哲学忽视显现本身的丰盛。</div></div><div class="meaning-zh">思想家很少谈这个明显事实。</div></div></div></div>
+      <div class="read-again">主干是最高级：<b>Nothing is more surprising than the diversity of appearances.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在我们的这个世界中，也许没有什么比其显现近乎无限的多样性、比其景象、声音和气味纯粹供人观赏的价值更令人惊讶；而思想家和哲学家几乎从不提到这一点。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">143</span>(Only Aristotle at least <ruby>incidentally<rt>顺带地</rt></ruby> counted the life of passive enjoyment of the pleasures our bodily organs provide as among the three ways of life that can be elected by those who, not being subject to necessity, can devote themselves to the <i>kalon</i>, to what is beautiful in opposition to what is necessary and useful.¹)</span></p>
+  <div class="sentence-aid" data-sentence="143">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">亚里士多德至少顺带承认：感官享受也可是一种自由选择的生活</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特给传统找出一个罕见例外。亚里士多德把被动享受身体感官愉悦列入自由人可选择的三种生活之一；这里的美与迫于必要、有用的活动相对。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">唯一例外</div><div><div class="meaning-en"><button class="expr-button" type="button">Only Aristotle at least incidentally</button> counted …<div class="expr-tip">only 强调例外；incidentally 表示他也只是顺带提到。</div></div><div class="meaning-zh">亚里士多德是少见的例外。</div></div></div><div class="meaning-node main"><div class="meaning-label">列入什么</div><div><div class="meaning-en">counted the life of passive enjoyment … <button class="expr-button" type="button">as among</button> the three ways of life<div class="expr-tip"><b>count A as among B</b> = “把 A 算作 B 中的一种”。</div></div><div class="meaning-zh">感官享受被算作可选生活。</div></div></div><div class="meaning-node main"><div class="meaning-label">自由条件</div><div><div class="meaning-en">not being <button class="expr-button" type="button">subject to necessity</button><div class="expr-tip"><b>be subject to</b> = “受……支配”。</div></div><div class="meaning-zh">只有脱离生存必需才谈得上选择。</div></div></div><div class="meaning-node main"><div class="meaning-label">价值对照</div><div><div class="meaning-en"><i>kalon</i> … beautiful <button class="expr-button" type="button">in opposition to</button> necessary and useful<div class="expr-tip"><i>kalon</i> 是希腊语“美好／高贵之物”。</div></div><div class="meaning-zh">美好与必要、有用相对。</div></div></div></div>
+      <div class="read-again">拿掉 who 从句：<b>Aristotle counted passive enjoyment among three elective ways of life.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">（至少只有亚里士多德顺带地把这样一种生活也算在三种可选择的生活方式之中：被动享受我们的身体器官所提供的愉悦；能够选择这种生活的人不受必需性支配，因而可以献身于 <i>kalon</i>，即与必要和有用相对的美好之物。¹）</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-zhu">注</span><b>Aristotle’s three ways of life</b> — <span class="zh">脚注所指是《尼各马可伦理学》I.5；三种生活通常概括为享乐生活、政治生活与沉思生活。阿伦特注意的是：感官愉悦至少曾被承认为自由生活的一种。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">144</span>This diversity is matched by an equally astounding <ruby>diverseness<rt>差异繁多</rt></ruby> of sense organs among the animal species, so that what actually appears to living creatures assumes the greatest variety of form and shape: every animal species lives in a world of its own.</span></p>
+  <div class="sentence-aid" data-sentence="144">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显现的多样与感官器官的多样相配，因此每个物种拥有自己的世界</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">世界不是先有一套完全相同的显现，再被各种动物照相般接收。不同物种的感觉器官不同，同一现实因而采取不同形态；每个物种生活在由其感官结构打开的独特世界中。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">两种多样相配</div><div><div class="meaning-en">This diversity <button class="expr-button" type="button">is matched by</button> … diverseness of sense organs<div class="expr-tip"><b>be matched by</b> = “与……相应、相匹配”。</div></div><div class="meaning-zh">世界样态与感官构造同样多样。</div></div></div><div class="meaning-node main"><div class="meaning-label">结果</div><div><div class="meaning-en"><button class="expr-button" type="button">so that</button> what appears assumes many forms<div class="expr-tip">so that 引出结果，不是目的。</div></div><div class="meaning-zh">不同感官产生不同显现形态。</div></div></div><div class="meaning-node main"><div class="meaning-label">冒号总结</div><div><div class="meaning-en">every animal species lives in <button class="expr-button" type="button">a world of its own</button><div class="expr-tip">不是各有一个物理宇宙，而是各有一种感知到的世界。</div></div><div class="meaning-zh">每个物种有自己的显现世界。</div></div></div></div>
+      <div class="read-again">听出因果链：<b>diverse organs → diverse appearances → a world of its own</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这种多样性，与动物物种之间同样令人惊异的感觉器官差异相匹配，以至于真正向有生命者显现的东西采取极其多样的形式与形状：每一个动物物种都生活在它自己的世界里。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">145</span>Still, all sense-endowed creatures have appearance as such in common, first, an appearing world and second, and perhaps even more important, the fact that they themselves are appearing and disappearing creatures, that there always was a world before their arrival and there always will be a world after their departure.</span></p>
+  <div class="sentence-aid" data-sentence="145">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">物种世界虽不同，却共享两个结构：世界向它们显现，而它们自己也显现后消失</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特在差异后重新找共同点。所有有感官的生物都面对一个显现世界；更重要的是，它们知道或体现出自己只是暂时登场者——世界在出生前已经存在，也将在死后继续。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">转折</div><div><div class="meaning-en"><button class="expr-button" type="button">Still</button>, all … have appearance as such in common<div class="expr-tip">still = “尽管如此”；从物种差异转回共同结构。</div></div><div class="meaning-zh">差异之中仍有共同点。</div></div></div><div class="meaning-node main"><div class="meaning-label">第一共同点</div><div><div class="meaning-en"><button class="expr-button" type="button">first</button>, an appearing world<div class="expr-tip">这里省略 have：共同拥有一个向它们显现的世界。</div></div><div class="meaning-zh">世界向生命显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">第二共同点</div><div><div class="meaning-en"><button class="expr-button" type="button">second</button> … they themselves are appearing and disappearing creatures<div class="expr-tip">第二点更重要：感知者也有进入和退出显现的历程。</div></div><div class="meaning-zh">生命自己也显现并消失。</div></div></div><div class="meaning-node main"><div class="meaning-label">时间含义</div><div><div class="meaning-en">a world <button class="expr-button" type="button">before their arrival</button> … after their departure<div class="expr-tip">arrival/departure 委婉但结构性地指出生与死亡。</div></div><div class="meaning-zh">世界先于个体并后于个体。</div></div></div></div>
+      <div class="read-again">按 first / second 分两拍：<b>an appearing world / appearing-and-disappearing creatures</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">尽管如此，所有赋有感官的生物都共同具有显现本身：第一，一个正在显现的世界；第二，也许甚至更重要的是，它们自身是显现并消失的生物——在它们到来之前一直已有一个世界，在它们离去之后也将一直有一个世界。</div></details>
+  </div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">146</span>To be alive means to live in a world that preceded one’s own arrival and will survive one’s own departure.</span></p>
+  <div class="sentence-aid" data-sentence="146">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">活着就是处在一个先于我、也会后于我的世界中</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">个体生命不是世界的起点或终点。我的出生把我带进一个早已存在的共同世界，我的死亡也不会带走它；有限生命因此从一开始就由世界的超越个体性界定。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">定义</div><div><div class="meaning-en"><button class="expr-button" type="button">To be alive means</button> to live in a world …<div class="expr-tip">不定式作主语；句子给“活着”作结构性定义。</div></div><div class="meaning-zh">生命意味着进入一个世界。</div></div></div><div class="meaning-node d1"><div class="meaning-label">世界先在</div><div><div class="meaning-en">that <button class="expr-button" type="button">preceded</button> one’s arrival<div class="expr-tip">precede = “先于”。</div></div><div class="meaning-zh">世界在我出生前已经存在。</div></div></div><div class="meaning-node main"><div class="meaning-label">世界留存</div><div><div class="meaning-en">will <button class="expr-button" type="button">survive</button> one’s departure<div class="expr-tip">survive 在此是“在……之后继续存在”。</div></div><div class="meaning-zh">世界在我死后仍继续。</div></div></div></div>
+      <div class="read-again">一句对称句：<b>world before arrival / world after departure</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">活着，意味着生活在一个先于自己的到来而存在、并将在自己的离去之后继续存在的世界中。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">147</span>On this level of sheer being alive, appearance and disappearance, as they follow upon each other, are the <ruby>primordial events<rt>原初事件</rt></ruby>, which as such mark out time, the time span between birth and death.</span></p>
+  <div class="sentence-aid" data-sentence="147">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">出生的显现与死亡的消失，是生命时间最原初的界标</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">在最基本的生命层面，时间首先不是钟表刻度，而是显现与消失之间的区间。出生和死亡这两个先后事件划出每个生命自己的时间跨度。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">讨论层面</div><div><div class="meaning-en">On this level of <button class="expr-button" type="button">sheer being alive</button><div class="expr-tip">sheer = “纯粹的、仅仅的”；先不谈人的高级心智活动。</div></div><div class="meaning-zh">只看生命作为生命。</div></div></div><div class="meaning-node main"><div class="meaning-label">原初事件</div><div><div class="meaning-en">appearance and disappearance … are the <button class="expr-button" type="button">primordial events</button><div class="expr-tip">primordial 指最初且构成性的事件。</div></div><div class="meaning-zh">显现与消失构成生命的开端和终结。</div></div></div><div class="meaning-node main"><div class="meaning-label">划出时间</div><div><div class="meaning-en"><button class="expr-button" type="button">mark out</button> time, the time span between birth and death<div class="expr-tip"><b>mark out</b> = “标出边界”；后半同位解释 time。</div></div><div class="meaning-zh">它们划出出生到死亡的区间。</div></div></div></div>
+      <div class="read-again">主干：<b>appearance and disappearance are primordial events that mark out time</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在这个仅仅活着的层面上，显现与消失随着彼此相继而来，是原初事件；它们正因为如此划出了时间，即出生与死亡之间的时间跨度。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">148</span>The finite life span allotted to each living creature determines not merely its life expectancy but also its time experience; it provides the secret <ruby>prototype<rt>原型</rt></ruby> for all time measurements no matter how far these then may transcend the allotted life span into past and future.</span></p>
+  <div class="sentence-aid" data-sentence="148">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">有限寿命不只决定活多久，也暗中塑造我们怎样经验和衡量时间</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">每个生命被分配的有限期限，是所有时间经验的隐秘模型。即使我们用历法和历史把时间推向出生前与死亡后，衡量方式仍以自身有限生命为原型。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">双重决定</div><div><div class="meaning-en">determines <span class="pair-word">not merely</span> life expectancy <span class="pair-word">but also</span> <button class="expr-button" type="button">time experience</button><div class="expr-tip">不只是客观寿命长度，也决定时间主观上如何流逝。</div></div><div class="meaning-zh">有限寿命同时塑造时间感。</div></div></div><div class="meaning-node main"><div class="meaning-label">隐秘模型</div><div><div class="meaning-en">provides the secret <button class="expr-button" type="button">prototype</button> for all time measurements<div class="expr-tip">prototype = 原型、最初模型；secret 表示通常未被察觉。</div></div><div class="meaning-zh">所有计时都暗含有限生命模型。</div></div></div><div class="meaning-node d1"><div class="meaning-label">即使超出</div><div><div class="meaning-en"><button class="expr-button" type="button">no matter how far</button> these … transcend the allotted life span<div class="expr-tip">these 指 time measurements；no matter how far 引出无论扩展多远。</div></div><div class="meaning-zh">历史时间仍从生命时间出发。</div></div></div></div>
+      <div class="read-again">分号前后：<b>finite span shapes experience; finite span prototypes every measurement</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">分配给每一个有生命者的有限生命跨度，不仅决定它的预期寿命，也决定它的时间经验；它为一切时间测量提供了隐秘的原型，无论这些测量后来在过去与未来方向上超出被分配的生命跨度有多远。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">149</span>Thus, the lived experience of the length of a year changes radically throughout our life.</span></p>
+  <div class="sentence-aid" data-sentence="149">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">因此，同样一年在一生不同阶段会被经验为完全不同的长度</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">客观历法的一年不变，但它占我们已活生命的比例不断变化，所以“这一年有多长”的切身经验会随年龄根本改变。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">推论标记</div><div><div class="meaning-en"><button class="expr-button" type="button">Thus</button><div class="expr-tip">thus 把这句话接回“有限寿命塑造时间经验”。</div></div><div class="meaning-zh">这是上一句的直接结果。</div></div></div><div class="meaning-node main"><div class="meaning-label">变化对象</div><div><div class="meaning-en">the <button class="expr-button" type="button">lived experience</button> of the length of a year<div class="expr-tip">lived experience 是实际经历到的感受，不是钟表长度。</div></div><div class="meaning-zh">改变的是一年被感受到的长度。</div></div></div><div class="meaning-node main"><div class="meaning-label">变化程度</div><div><div class="meaning-en">changes <button class="expr-button" type="button">radically throughout</button> our life<div class="expr-tip">radically = “从根本上”；throughout = “贯穿……全过程”。</div></div><div class="meaning-zh">这种时间感随一生而剧变。</div></div></div></div>
+      <div class="read-again">重音放在 lived：<b>the LIVED length changes, not the calendar year</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因此，对于一年之长度的切身经验，在我们一生之中会发生根本变化。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">150</span>A year that to a five-year-old constitutes a full fifth of his existence must seem much longer than when it will constitute a mere twentieth or thirtieth of his time on earth.</span></p>
+  <div class="sentence-aid" data-sentence="150">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">五岁时一年占生命五分之一，后来只占二十分之一或三十分之一</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特用比例解释时间感：对五岁孩子，一年相当于其全部经验的巨大部分；对二十或三十岁的人，同样一年只占很小一部分，所以主观上显得更短。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">儿童比例</div><div><div class="meaning-en">to a five-year-old <button class="expr-button" type="button">constitutes a full fifth</button> of his existence<div class="expr-tip"><b>constitute</b> = “构成、占到”；full 强调比例之大。</div></div><div class="meaning-zh">一年占五岁生命的五分之一。</div></div></div><div class="meaning-node main"><div class="meaning-label">比较结论</div><div><div class="meaning-en">must seem <button class="expr-button" type="button">much longer than</button> …<div class="expr-tip">must 是依据比例作出的必然推断，不是义务。</div></div><div class="meaning-zh">因此一年必然显得更长。</div></div></div><div class="meaning-node main"><div class="meaning-label">成年比例</div><div><div class="meaning-en">a <button class="expr-button" type="button">mere twentieth or thirtieth</button><div class="expr-tip">mere = “仅仅、不过”；与 full fifth 对照。</div></div><div class="meaning-zh">后来一年只占生命的小比例。</div></div></div></div>
+      <div class="read-again">抓比例对照：<b>a full fifth / a mere twentieth or thirtieth</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">对于一个五岁的孩子，一年构成其存在完整的五分之一；它必定显得远比后来只构成他在世时间二十分之一或三十分之一时更长。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">151</span>We all know how the years <ruby>revolve<rt>循环流转</rt></ruby> quicker and quicker as we get older, until, with the approach of old age, they slow down again because we begin to measure them against the psychologically and <ruby>somatically<rt>身体上</rt></ruby> anticipated date of our departure.</span></p>
+  <div class="sentence-aid" data-sentence="151">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">年龄增长使岁月加速，临近老年又因死亡预期而重新放慢</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">我们通常觉得年龄越大，年份过得越快；但阿伦特补上一处转折：当死亡成为心理和身体都可预期的近点，每一年又会被拿来与剩余时间比较，于是重新显得缓慢而有重量。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">共同经验</div><div><div class="meaning-en">years revolve <button class="expr-button" type="button">quicker and quicker</button> as we get older<div class="expr-tip">比较级重复表示越来越快。</div></div><div class="meaning-zh">年龄越大，岁月越快。</div></div></div><div class="meaning-node main"><div class="meaning-label">转折点</div><div><div class="meaning-en"><button class="expr-button" type="button">until</button>, with the approach of old age, they slow down again<div class="expr-tip">until 引出趋势停止并反转的点。</div></div><div class="meaning-zh">老年临近时又慢下来。</div></div></div><div class="meaning-node main"><div class="meaning-label">反转原因</div><div><div class="meaning-en">measure them <button class="expr-button" type="button">against</button> the … anticipated date of our departure<div class="expr-tip"><b>measure A against B</b> = “以 B 为参照衡量 A”；departure 指死亡。</div></div><div class="meaning-zh">年份开始以可预期的死亡为尺度。</div></div></div></div>
+      <div class="read-again">听出先快后慢：<b>quicker and quicker — until old age — slow down again</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">我们都知道，随着年纪增长，岁月怎样转得越来越快；直到老年临近时，它们又慢下来，因为我们开始把每一年同那个在心理上和身体上都已预期到的离去日期相衡量。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">152</span>Against this clock, inherent in living beings who are born and die, stands “objective” time, according to which the length of a year never changes.</span></p>
+  <div class="sentence-aid" data-sentence="152">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">与生命内在的主观时钟相对，客观时间中的一年恒定不变</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">出生并死亡的生命以自身有限期限经验时间；与这只内在时钟对立的是钟表和历法的客观时间。在后一尺度中，一年无论对谁、在何时都同样长。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">对照结构</div><div><div class="meaning-en"><button class="expr-button" type="button">Against this clock … stands</button> “objective” time<div class="expr-tip">这是倒装：主语是 objective time；against 表示与前述生命时钟相对。</div></div><div class="meaning-zh">客观时间站在生命时钟的对面。</div></div></div><div class="meaning-node d1"><div class="meaning-label">生命时钟</div><div><div class="meaning-en">inherent in living beings <button class="expr-button" type="button">who are born and die</button><div class="expr-tip">inherent in = “内在于”；有限性使这只钟成为生命固有结构。</div></div><div class="meaning-zh">主观时钟来自出生与死亡。</div></div></div><div class="meaning-node main"><div class="meaning-label">客观尺度</div><div><div class="meaning-en">according to which the length of a year <button class="expr-button" type="button">never changes</button><div class="expr-tip">which 指 objective time。</div></div><div class="meaning-zh">客观一年恒定。</div></div></div></div>
+      <div class="read-again">先还原倒装：<b>“Objective” time stands against this living clock.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">与这只内在于出生并死亡的有生命者的时钟相对而立的，是“客观”时间；按照这种时间，一年的长度从不改变。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">153</span>This is the time of the world, and its underlying assumption—regardless of any religious or scientific beliefs—is that the world has neither beginning nor end, an assumption that seems only natural for beings who always come into a world that preceded them and will survive them.</span></p>
+  <div class="sentence-aid" data-sentence="153">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">世界时间默认世界无始无终；这对总是中途到来的生命显得自然</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">客观时间是世界的时间，它在实际运作中把世界当作无始无终。这个假设不依赖具体宗教或科学理论；对每个都出生在一个先在世界、死后世界仍存的生命来说，它是自然形成的视角。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">定义</div><div><div class="meaning-en">This is <button class="expr-button" type="button">the time of the world</button><div class="expr-tip">this 指上一句不随生命阶段改变的 objective time。</div></div><div class="meaning-zh">客观时间属于世界尺度。</div></div></div><div class="meaning-node main"><div class="meaning-label">底层假设</div><div><div class="meaning-en">the world has <button class="expr-button" type="button">neither beginning nor end</button><div class="expr-tip">neither A nor B = “既无 A 也无 B”。破折号说明这不取决于特定信仰。</div></div><div class="meaning-zh">世界时间按无始无终来运行。</div></div></div><div class="meaning-node d1"><div class="meaning-label">为何自然</div><div><div class="meaning-en">beings who always <button class="expr-button" type="button">come into a world</button> that preceded and will survive them<div class="expr-tip">come into 表明生命总是后来者。</div></div><div class="meaning-zh">个体从不经验世界的绝对开端或终结。</div></div></div></div>
+      <div class="read-again">长句分两层：<b>world time assumes no beginning or end / finite newcomers naturally make that assumption</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这就是世界的时间，而它的底层假设——无论任何宗教或科学信念如何——是世界既无开端也无终结；对于那些总是来到一个先于它们并将在它们之后继续存在的世界中的生物来说，这个假设似乎再自然不过。</div></details>
+  </div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">154</span>In contrast to the inorganic <ruby>thereness<rt>单纯在那里</rt></ruby> of lifeless matter, living beings are not mere appearances.</span></p>
+  <div class="sentence-aid" data-sentence="154">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">生命不同于无机物的单纯在那里：它不只是被动显现</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">无生命物只是呈现在那里；生命虽然同样是显现，却还有一种主动回应自身显现的冲动。此句先否定“只是显现”，下一句才说明多出的是什么。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">对照项</div><div><div class="meaning-en">the inorganic <button class="expr-button" type="button">thereness</button> of lifeless matter<div class="expr-tip">Arendt 把 there 造为名词，指无机物被动、单纯的“在那里”。</div></div><div class="meaning-zh">无生命物只是被给予在那里。</div></div></div><div class="meaning-node main"><div class="meaning-label">否定限定</div><div><div class="meaning-en">living beings are not <button class="expr-button" type="button">mere appearances</button><div class="expr-tip">mere = “仅仅”；不是否认生命显现，而是说它还主动自我展示。</div></div><div class="meaning-zh">生命不只是被动表面。</div></div></div></div>
+      <div class="read-again">不要误读成“生命不是显现”：重音在 <b>not MERE appearances</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">与无生命物质那种无机的“单纯在那里”相对，有生命者不只是显现。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">155</span>To be alive means to be <ruby>possessed by<rt>被……支配</rt></ruby> an urge toward self-display which answers the fact of one’s own appearingness.</span></p>
+  <div class="sentence-aid" data-sentence="155">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">活着包含一种回应自身显现性的自我展示冲动</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">生命不仅被看见，还会主动把自己展示出来。它的自我展示欲是对一个先在事实的回应：自己已经是世界中的显现者，处在他者观看之下。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">生命定义</div><div><div class="meaning-en">To be alive means to be <button class="expr-button" type="button">possessed by an urge</button><div class="expr-tip"><b>be possessed by</b> 字面“被占有”，这里是被强烈冲动支配。</div></div><div class="meaning-zh">生命被一种冲动推动。</div></div></div><div class="meaning-node main"><div class="meaning-label">冲动方向</div><div><div class="meaning-en">an urge toward <button class="expr-button" type="button">self-display</button><div class="expr-tip">self-display 不是贬义的炫耀，而是让自身显现。</div></div><div class="meaning-zh">冲动指向自我展示。</div></div></div><div class="meaning-node d1"><div class="meaning-label">回应什么</div><div><div class="meaning-en">which <button class="expr-button" type="button">answers</button> the fact of one’s appearingness<div class="expr-tip">answer = “回应、对应”；which 修饰 urge。</div></div><div class="meaning-zh">展示回应自己已经显现这一事实。</div></div></div></div>
+      <div class="read-again">主干只有：<b>To live is to be driven to display oneself.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">活着，意味着被一种趋向自我展示的冲动所支配；这种冲动回应了自身显现性这一事实。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">156</span>Living things <i>make their appearance</i> like actors on a stage set for them.</span></p>
+  <div class="sentence-aid" data-sentence="156">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">生命像演员一样在预先搭好的世界舞台上登场</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">世界先于个体存在，像已经搭好的舞台；生命不是在空无中创造全部场景，而是作为可见的行动者进入其中，向共同演员与观看者登场。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">惯用表达</div><div><div class="meaning-en">Living things <button class="expr-button" type="button"><i>make their appearance</i></button><div class="expr-tip"><b>make one’s appearance</b> = “登场、露面”；此处又保留 appearance 的哲学意味。</div></div><div class="meaning-zh">生命进入显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">舞台比喻</div><div><div class="meaning-en">like actors on a <button class="expr-button" type="button">stage set for them</button><div class="expr-tip">set for them = “为它们预先布置好的”；世界早于个体。</div></div><div class="meaning-zh">生命在先在世界中登场。</div></div></div></div>
+      <div class="read-again">把短句读成舞台动作：<b>living things / make their appearance / like actors</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">有生命者像演员在为它们搭设的舞台上一样登场。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">157</span>The stage is common to all who are alive, but it <i>seems</i> different to each species, different also to each individual specimen.</span></p>
+  <div class="sentence-aid" data-sentence="157">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">舞台是共同的，但从每个物种乃至个体看来都不同</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特同时保留共同世界与视角差异。所有生命共享同一世界舞台，但显现总从某一感官与位置被接收，所以它对不同物种、甚至同物种个体呈现不同样貌。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">共同世界</div><div><div class="meaning-en">The stage is <button class="expr-button" type="button">common to all</button> who are alive<div class="expr-tip">common to = “为……共同拥有”；不是彼此隔绝的多个宇宙。</div></div><div class="meaning-zh">所有生命共处同一舞台。</div></div></div><div class="meaning-node main"><div class="meaning-label">视角差异</div><div><div class="meaning-en">but it <button class="expr-button" type="button"><i>seems</i> different</button> to each species<div class="expr-tip">seem 是“向某个观看者呈现为”；不是说它虚假。</div></div><div class="meaning-zh">同一舞台因物种而异。</div></div></div><div class="meaning-node d1"><div class="meaning-label">差异更细</div><div><div class="meaning-en">different also to each <button class="expr-button" type="button">individual specimen</button><div class="expr-tip">specimen 在此是一个物种中的个体。</div></div><div class="meaning-zh">个体视角也不完全相同。</div></div></div></div>
+      <div class="read-again">重读对照：<b>common stage — different seeming</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">舞台为一切活着的生物所共有，但它对每一个物种显得不同，对每一个个体样本也显得不同。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">158</span>Seeming—the <i>it-seems-to-me</i>, <i>dokei moi</i>—is the mode, perhaps the only possible one, in which an appearing world is acknowledged and perceived.</span></p>
+  <div class="sentence-aid" data-sentence="158">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">“在我看来”也许是显现世界唯一可能的被感知方式</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">世界显现从来不来自无位置的上帝视角，而总以“它向我如此显现”的方式被某个生命接收。seeming 在这里不是与真实相反的假象，而是显现必须采取的透视形式。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">术语改写</div><div><div class="meaning-en">Seeming—the <button class="expr-button" type="button"><i>it-seems-to-me</i>, <i>dokei moi</i></button>—<div class="expr-tip">希腊语 dokei moi 即“在我看来”；破折号定义 seeming。</div></div><div class="meaning-zh">显得总是显得给我。</div></div></div><div class="meaning-node main"><div class="meaning-label">命题</div><div><div class="meaning-en">is the mode, perhaps <button class="expr-button" type="button">the only possible one</button><div class="expr-tip">perhaps 保留谨慎，但命题很强：没有无视角的感知。</div></div><div class="meaning-zh">这也许是唯一可能方式。</div></div></div><div class="meaning-node main"><div class="meaning-label">所做之事</div><div><div class="meaning-en">in which an appearing world is <button class="expr-button" type="button">acknowledged and perceived</button><div class="expr-tip">acknowledge 不只是识别，还包括承认其现实。</div></div><div class="meaning-zh">世界在这种方式中被承认和感知。</div></div></div></div>
+      <div class="read-again">破折号当定义括号：<b>Seeming is the mode in which an appearing world is perceived.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">显得——“它在我看来如此”，<i>dokei moi</i>——是一种方式，也许是唯一可能的方式；一个显现着的世界正是在这种方式中被承认和感知。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b><i>dokei moi</i></b> — <span class="zh">希腊语意为“在我看来”。阿伦特借它强调：seeming 不是次等假象，而是任何显现进入一个具体视角时必有的形式。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">159</span>To appear always means to seem to others, and this seeming varies according to the standpoint and the perspective of the spectators.</span></p>
+  <div class="sentence-aid" data-sentence="159">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显现总是向他者显得如此，并随观看位置与透视而变化</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">一个东西要显现，就必然向某些观看者呈现。观看者的位置和透视不同，东西“显得怎样”也会变化；这种变化属于显现关系本身，不自动等于欺骗。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">定义关系</div><div><div class="meaning-en">To appear always means to <button class="expr-button" type="button">seem to others</button><div class="expr-tip">to others 指显现必有接受端。</div></div><div class="meaning-zh">显现总是向他者显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">变化原则</div><div><div class="meaning-en">varies <button class="expr-button" type="button">according to</button> the standpoint and perspective<div class="expr-tip"><b>according to</b> = “随着／依据”；standpoint 是站位，perspective 是由站位形成的透视。</div></div><div class="meaning-zh">显得如何取决于观看视角。</div></div></div></div>
+      <div class="read-again">一句关系公式：<b>to appear = to seem to others; seeming varies with perspective</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">显现总意味着向他者显得如此，而这种显得如何，会依观看者的立场和透视而变化。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">160</span>In other words, every appearing thing acquires, by virtue of its appearingness, a kind of <ruby>disguise<rt>伪装、外衣</rt></ruby> that may indeed—but does not have to—hide or disfigure it.</span></p>
+  <div class="sentence-aid" data-sentence="160">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显现必带视角性的“外衣”，但这层外衣不必然遮蔽或歪曲事物</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">因为任何东西都只能从某一角度出现，它的显现总带一种外在样貌，像一层伪装。但阿伦特拒绝传统的自动贬低：外观有可能遮蔽或变形，却不必然如此。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">为何获得外衣</div><div><div class="meaning-en"><button class="expr-button" type="button">by virtue of</button> its appearingness<div class="expr-tip"><b>by virtue of</b> = “由于、凭借”；不是后来人为加上。</div></div><div class="meaning-zh">只因要显现，就会有某种样貌。</div></div></div><div class="meaning-node main"><div class="meaning-label">外衣</div><div><div class="meaning-en">acquires a kind of <button class="expr-button" type="button">disguise</button><div class="expr-tip">disguise 在此泛指显现所采取的外貌，不一定有欺骗意图。</div></div><div class="meaning-zh">显现带有视角性的外形。</div></div></div><div class="meaning-node main"><div class="meaning-label">关键限定</div><div><div class="meaning-en">may indeed—<button class="expr-button" type="button">but does not have to</button>—hide or disfigure it<div class="expr-tip">may 与 does not have to 对照：可能遮蔽，但非必然。</div></div><div class="meaning-zh">外观可能失真，却也可能忠实。</div></div></div></div>
+      <div class="read-again">不要漏掉反转：<b>may hide — but does not have to</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">换句话说，每一个显现的东西，都凭其显现性而获得某种外衣；这种外衣确实可能——但并非必定——把它隐藏或歪曲。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">161</span>Seeming corresponds to the fact that every appearance, its identity notwithstanding, is perceived by a plurality of spectators.</span></p>
+  <div class="sentence-aid" data-sentence="161">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">“显得如何”对应复数观看者：同一东西会从多个视角被感知</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">显现者保持同一身份，并不取消观看差异。正因为总有多个观看者，同一个显现会以多种“在我看来”被接收；seeming 是复数性的感知形式。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">对应关系</div><div><div class="meaning-en">Seeming <button class="expr-button" type="button">corresponds to</button> the fact that …<div class="expr-tip"><b>correspond to</b> = “与……相对应”。</div></div><div class="meaning-zh">seeming 回应一个结构事实。</div></div></div><div class="meaning-node d1"><div class="meaning-label">让步插入</div><div><div class="meaning-en"><button class="expr-button" type="button">its identity notwithstanding</button><div class="expr-tip"><b>A notwithstanding</b> = “尽管 A”；同一身份仍被保留。</div></div><div class="meaning-zh">即使显现者还是同一个。</div></div></div><div class="meaning-node main"><div class="meaning-label">复数观看</div><div><div class="meaning-en">perceived by a <button class="expr-button" type="button">plurality of spectators</button><div class="expr-tip">plurality 使不同 seeming 成为必然。</div></div><div class="meaning-zh">它仍被多个观看者感知。</div></div></div></div>
+      <div class="read-again">主干：<b>Seeming corresponds to plurality, identity notwithstanding.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">显得如何，与这样一个事实相对应：每一个显现，尽管其身份保持不变，仍由复数的观看者来感知。</div></details>
+  </div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">162</span>The urge toward self-display—to respond by showing to the overwhelming effect of being shown—seems to be common to men and animals.</span></p>
+  <div class="sentence-aid" data-sentence="162">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">人和动物似乎都以主动展示回应自己被展示于世界的强大事实</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">生命发现自己已经被放到显现之中、处在他者眼前；它并非只被动承受，而以展示自己作出回应。阿伦特认为这种冲动不是人类虚荣，而可能是人与动物共有的生命结构。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">冲动</div><div><div class="meaning-en">The urge toward <button class="expr-button" type="button">self-display</button><div class="expr-tip">self-display 是主动呈现自己。</div></div><div class="meaning-zh">生命有自我展示冲动。</div></div></div><div class="meaning-node d1"><div class="meaning-label">破折号解释</div><div><div class="meaning-en">to respond <button class="expr-button" type="button">by showing</button> to … being shown<div class="expr-tip">by showing 与 being shown 构成主动/被动对照。</div></div><div class="meaning-zh">以展示回应被展示。</div></div></div><div class="meaning-node main"><div class="meaning-label">范围</div><div><div class="meaning-en"><button class="expr-button" type="button">seems to be common to</button> men and animals<div class="expr-tip">seems 保持经验判断的谨慎；common to = 共同具有。</div></div><div class="meaning-zh">这可能是人与动物共有的。</div></div></div></div>
+      <div class="read-again">听主动与被动的回声：<b>respond by SHOWING to the effect of BEING SHOWN</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">趋向自我展示的冲动——以展示来回应被展示这一事实的压倒性作用——似乎为人和动物所共有。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">163</span>And just as the actor depends upon stage, fellow-actors, and spectators, to make his entrance, every living thing depends upon a world that solidly appears as the location for its own appearance, on fellow-creatures to play with, and on spectators to acknowledge and recognize its existence.</span></p>
+  <div class="sentence-aid" data-sentence="163">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">如演员需要舞台、同伴和观众，生命也需要世界、同类和见证者才能登场</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">舞台比喻在此展开成三项依赖。生命需要一个稳定显现的世界作为地点，需要其他生命共同活动，还需要观看者确认它确实存在；自我显现从来不是单人独演。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">类比框架</div><div><div class="meaning-en"><button class="expr-button" type="button">just as</button> the actor depends upon …<div class="expr-tip"><b>just as A, B</b> = “正如 A，B 也……”；前半提供模型。</div></div><div class="meaning-zh">先看演员登场的条件。</div></div></div><div class="meaning-node main"><div class="meaning-label">第一依赖</div><div><div class="meaning-en">a world that solidly appears as the <button class="expr-button" type="button">location</button> for its appearance<div class="expr-tip">世界提供稳定的共同场所。</div></div><div class="meaning-zh">需要舞台般的世界。</div></div></div><div class="meaning-node main"><div class="meaning-label">第二依赖</div><div><div class="meaning-en">fellow-creatures <button class="expr-button" type="button">to play with</button><div class="expr-tip">play 同时保留游戏与舞台表演意味。</div></div><div class="meaning-zh">需要共同活动的生命。</div></div></div><div class="meaning-node main"><div class="meaning-label">第三依赖</div><div><div class="meaning-en">spectators to <button class="expr-button" type="button">acknowledge and recognize</button> its existence<div class="expr-tip">观看者的承认使登场成为世界事实。</div></div><div class="meaning-zh">需要见证其存在的观看者。</div></div></div></div>
+      <div class="read-again">按三项数：<b>world / fellow-creatures / spectators</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">正如演员为了登场而依赖舞台、同台演员和观众一样，每一个有生命者都依赖一个稳固显现、作为其自身显现地点的世界，依赖可与之共同活动的其他生物，也依赖承认并辨认其存在的观看者。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">164</span>Seen from the viewpoint of the spectators to whom it appears and from whose view it finally disappears, each individual life, its growth and decline, is a developmental process in which an entity unfolds itself in an upward movement until all its properties are fully exposed; this phase is followed by a period of standstill—its bloom or <ruby>epiphany<rt>盛放、完整显现</rt></ruby>, as it were—which in turn is succeeded by the downward movement of disintegration that is terminated by complete disappearance.</span></p>
+  <div class="sentence-aid" data-sentence="164">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">从观看者看，一生是显露、盛放、衰败直至消失的完整显现曲线</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">把生命当作舞台上的显现过程看，它先成长并展开性质，达到短暂的完整盛放，然后走向解体和消失。epiphany 在此不是神秘启示，而是生命最充分地把自己呈现出来的阶段。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">观看尺度</div><div><div class="meaning-en">Seen from the viewpoint of <button class="expr-button" type="button">the spectators</button> …<div class="expr-tip">整个生命历程从它向谁出现、又从谁眼中消失来描述。</div></div><div class="meaning-zh">生命作为被观看的显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">上行</div><div><div class="meaning-en">unfolds itself in an <button class="expr-button" type="button">upward movement</button><div class="expr-tip">unfold = 展开；成长使性质逐渐暴露。</div></div><div class="meaning-zh">成长并充分显露。</div></div></div><div class="meaning-node main"><div class="meaning-label">停驻顶点</div><div><div class="meaning-en">a period of standstill—its <button class="expr-button" type="button">bloom or epiphany</button><div class="expr-tip">as it were = “可以说”；epiphany 指完整显现的高点。</div></div><div class="meaning-zh">达到盛放时刻。</div></div></div><div class="meaning-node main"><div class="meaning-label">下行</div><div><div class="meaning-en">the downward movement of <button class="expr-button" type="button">disintegration</button> … complete disappearance<div class="expr-tip">disintegration = 解体；terminated by = 以……告终。</div></div><div class="meaning-zh">衰败并最终消失。</div></div></div></div>
+      <div class="read-again">把长句画成曲线读：<b>upward unfolding → bloom/epiphany → downward disintegration → disappearance</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">从生命向其显现、并最终从其视野中消失的观看者的立场来看，每一个体生命及其成长与衰退，都是一个发展过程：一个存在者沿着上行运动展开自身，直到其全部属性充分显露；随后是一个停驻阶段——可以说，是它的盛放或完整显现——继而又由下行的解体运动接替，并以彻底消失而告终。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">165</span>There are many perspectives in which this process can be seen, examined, and understood, but our criterion for what a living thing essentially is remains the same: in everyday life as well as in scientific study, it is determined by the relatively short time span of its full appearance, its epiphany.</span></p>
+  <div class="sentence-aid" data-sentence="165">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">观看角度虽多，我们仍用生命充分显现的短暂高点判断它本质上是什么</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">成长和衰退可以从许多角度解释，但日常与科学判断生命“究竟是什么”时，往往选择它最完整、最成熟、最充分显现的阶段作为标准，而不是胚胎或腐败状态。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">先承认多视角</div><div><div class="meaning-en">many perspectives in which this process can be <button class="expr-button" type="button">seen, examined, and understood</button><div class="expr-tip">三动词覆盖观看、研究和解释。</div></div><div class="meaning-zh">生命过程可有多种理解。</div></div></div><div class="meaning-node main"><div class="meaning-label">标准不变</div><div><div class="meaning-en"><button class="expr-button" type="button">but</button> our criterion … remains the same<div class="expr-tip">but 转向阿伦特要强调的实际判断标准。</div></div><div class="meaning-zh">多视角不改变本质判断。</div></div></div><div class="meaning-node main"><div class="meaning-label">标准内容</div><div><div class="meaning-en">determined by the short time span of its <button class="expr-button" type="button">full appearance</button>, its epiphany<div class="expr-tip">its epiphany 同位解释 full appearance。</div></div><div class="meaning-zh">以最充分显现的短暂阶段为准。</div></div></div></div>
+      <div class="read-again">冒号后回答 criterion 是什么：<b>the short span of full appearance</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这个过程可以从许多透视中被观看、考察和理解，但我们关于一个有生命者本质上是什么的标准仍然相同：无论在日常生活还是科学研究中，它都由该生命充分显现——即其完整盛放——的那段相对短暂的时间来决定。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">166</span>The choice, guided by the sole criteria of completeness and perfection in appearance, would be entirely <ruby>arbitrary<rt>任意的</rt></ruby> if reality were not first of all of a phenomenal nature.</span></p>
+  <div class="sentence-aid" data-sentence="166">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">若现实本身不首先具有显现性质，以完整外观判定本质便毫无根据</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">我们为何有权把成熟盛放期选作“真正的生命”？这个选择只在一种前提下不任意：现实首先就是显现性的，完整显现因此具有认识上的优先地位。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">被解释的选择</div><div><div class="meaning-en">The choice, guided by … <button class="expr-button" type="button">completeness and perfection in appearance</button><div class="expr-tip">指上一句选择 full appearance 作为本质标准。</div></div><div class="meaning-zh">我们按显现的完整与完善来选择。</div></div></div><div class="meaning-node main"><div class="meaning-label">反事实判断</div><div><div class="meaning-en">would be entirely arbitrary <button class="expr-button" type="button">if … not</button><div class="expr-tip">would + if were not 表示：若前提不成立，选择就无根据。</div></div><div class="meaning-zh">否则这个选择只是任意偏好。</div></div></div><div class="meaning-node main"><div class="meaning-label">使之成立的前提</div><div><div class="meaning-en">reality were <button class="expr-button" type="button">first of all of a phenomenal nature</button><div class="expr-tip">phenomenal = 现象性的、以显现为基本方式的。</div></div><div class="meaning-zh">现实首先具有显现性质。</div></div></div></div>
+      <div class="read-again">条件逻辑：<b>not arbitrary only because reality is phenomenal first of all</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这个由显现中的完整性与完善性这唯一标准所引导的选择，如果现实首先不是现象性的，就会完全是任意的。</div></details>
+  </div>
+
+  <p class="sent para-start"><span class="stext"><span class="n">167</span>The <ruby>primacy<rt>首要地位</rt></ruby> of appearance for all living creatures to whom the world appears in the mode of an <i>it-seems-to-me</i> is of great relevance to the topic we are going to deal with—those mental activities by which we distinguish ourselves from other animal species.</span></p>
+  <div class="sentence-aid" data-sentence="167">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显现的首要地位直接关系到本书主题：使人区别于动物的心智活动</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">前面并非离题的现象学铺垫。只有先承认人是显现世界中的生命，才能提出思维、意志等无形活动如何与这个世界相处的问题。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">前提</div><div><div class="meaning-en">The <button class="expr-button" type="button">primacy of appearance</button> for all living creatures …<div class="expr-tip">primacy 指显现在生命世界中的第一地位。</div></div><div class="meaning-zh">所有生命首先处在显现中。</div></div></div><div class="meaning-node main"><div class="meaning-label">关联强度</div><div><div class="meaning-en">is <button class="expr-button" type="button">of great relevance to</button> the topic<div class="expr-tip"><b>be of relevance to</b> = “与……密切相关”。</div></div><div class="meaning-zh">这直接进入全书论题。</div></div></div><div class="meaning-node main"><div class="meaning-label">破折号定义论题</div><div><div class="meaning-en">those <button class="expr-button" type="button">mental activities</button> by which we distinguish ourselves …<div class="expr-tip">破折号后的 those activities 同位解释 topic。</div></div><div class="meaning-zh">论题是人特有的心智活动。</div></div></div></div>
+      <div class="read-again">先把长主语圈起：<b>The primacy of appearance / is relevant / to mental activities.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">对于一切以“它在我看来如此”的方式让世界向其显现的有生命者来说，显现的首要地位，与我们将要处理的主题极为相关——也就是那些使我们区别于其他动物物种的心智活动。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">168</span>For although there are great differences among these activities, they all have in common a <ruby>withdrawal<rt>退离</rt></ruby> from the world as it appears and a bending back toward the self.</span></p>
+  <div class="sentence-aid" data-sentence="168">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">各种心智活动虽不同，却都从显现世界退回并转向自我</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">思考、意志和判断彼此差异很大，但都有相同动作：暂时退出眼前显现和感官投入，把注意力折回心灵自身。这个共同“退离”制造了心智与世界的张力。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">让步</div><div><div class="meaning-en"><button class="expr-button" type="button">although</button> there are great differences …<div class="expr-tip">although 先承认各种心智活动并不相同。</div></div><div class="meaning-zh">活动之间存在重大差异。</div></div></div><div class="meaning-node main"><div class="meaning-label">共同动作一</div><div><div class="meaning-en">a <button class="expr-button" type="button">withdrawal from</button> the world as it appears<div class="expr-tip">withdrawal from = 从……退出；不是肉体离开。</div></div><div class="meaning-zh">注意力退出当前显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">共同动作二</div><div><div class="meaning-en">a <button class="expr-button" type="button">bending back toward</button> the self<div class="expr-tip">bend back 是反折、回转；指心灵转向自身。</div></div><div class="meaning-zh">心智折回自我。</div></div></div></div>
+      <div class="read-again">让步后的主句：<b>different activities, one common movement—away from appearance, back to self</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因为，尽管这些活动之间存在很大差异，它们全都有一个共同点：从世界如其显现的样子中退离，并折返回自我。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">169</span>This would cause no great problem if we were mere spectators, godlike creatures thrown into the world to look after it or enjoy it and be entertained by it, but still in possession of some other region as our natural habitat.</span></p>
+  <div class="sentence-aid" data-sentence="169">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">若我们本来属于另一个领域、只来世界观赏，心智退离便不成问题</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">假如人像神一样，真正家园在世界之外，只是被投到这里观看、管理或娱乐，那么思维退出显现世界只是回家。但人并没有这样一个外部自然栖居地；下一句将否定这个假设。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">反事实条件</div><div><div class="meaning-en"><button class="expr-button" type="button">if we were mere spectators</button><div class="expr-tip">were 表示与事实相反的假设。</div></div><div class="meaning-zh">假如我们只是世界外来的观众。</div></div></div><div class="meaning-node main"><div class="meaning-label">观众任务</div><div><div class="meaning-en">to <button class="expr-button" type="button">look after</button> it or enjoy it and be entertained by it<div class="expr-tip"><b>look after</b> 此处可指照看、巡视；并列说明只是面对世界。</div></div><div class="meaning-zh">我们只负责看管或欣赏。</div></div></div><div class="meaning-node main"><div class="meaning-label">真正家园</div><div><div class="meaning-en">still <button class="expr-button" type="button">in possession of some other region</button> as natural habitat<div class="expr-tip">in possession of = 拥有；自然栖居地在另一区域。</div></div><div class="meaning-zh">另一个超世界领域才是家。</div></div></div><div class="meaning-node main"><div class="meaning-label">条件结果</div><div><div class="meaning-en">This would <button class="expr-button" type="button">cause no great problem</button><div class="expr-tip">this 指心智从显现世界退离。</div></div><div class="meaning-zh">那样退离就不会矛盾。</div></div></div></div>
+      <div class="read-again">把 if 句提到前面理解：<b>If our home were elsewhere, withdrawal from this world would be easy to explain.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">如果我们只是观看者，是被投入世界来照看它、享受它并从中获得娱乐的神一般的生物，同时仍拥有某个别的区域作为自己的自然栖居地，那么这不会造成什么大问题。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">170</span>However, <i>we are of the world and not merely in it</i>; we, too, are appearances by virtue of arriving and departing, of appearing and disappearing; and while we come from a nowhere, we arrive well equipped to deal with whatever appears to us and to take part in the play of the world.</span></p>
+  <div class="sentence-aid" data-sentence="170">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">但我们属于世界、自己也是显现者；心智退离者从来没有真正离开世界条件</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">人不是世界外的纯观众，而是通过出生和死亡参与显现的世界成员。即使来源不可见，我们来到时已具备感官和身体，能够回应世界并在其中演出；思维的退离始终发生在这种世界归属之内。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">纠正假设</div><div><div class="meaning-en"><button class="expr-button" type="button">However</button>, we are <i>of</i> the world and not merely <i>in</i> it<div class="expr-tip">however 否定上一句的反事实；of 比 in 更强。</div></div><div class="meaning-zh">我们本性上属于世界。</div></div></div><div class="meaning-node main"><div class="meaning-label">我们也显现</div><div><div class="meaning-en">we, too, are appearances <button class="expr-button" type="button">by virtue of</button> arriving and departing<div class="expr-tip">by virtue of = “由于”；出生/死亡就是显现/消失。</div></div><div class="meaning-zh">我们也是登场与退场者。</div></div></div><div class="meaning-node main"><div class="meaning-label">来到时的装备</div><div><div class="meaning-en">arrive <button class="expr-button" type="button">well equipped to deal with</button> whatever appears<div class="expr-tip">呼应 S140：生命天生适配显现世界。</div></div><div class="meaning-zh">我们能够感知并回应世界。</div></div></div><div class="meaning-node main"><div class="meaning-label">主动参与</div><div><div class="meaning-en">take part in the <button class="expr-button" type="button">play of the world</button><div class="expr-tip">play 延续舞台比喻：我们既是观看者，也是演员。</div></div><div class="meaning-zh">我们参与世界的演出。</div></div></div></div>
+      <div class="read-again">三个分号段落：<b>of the world / appearances too / equipped participants</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">然而，我们属于世界，而不只是在世界之中；凭着到来与离去、显现与消失，我们也同样是显现者；而且，尽管我们从一个无处而来，我们到来时已充分装备好去应对任何向我们显现的东西，并参与世界的演出。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">171</span>These properties do not vanish when we happen to be engaged in mental activities and close the eyes of our body, to use the Platonic metaphor, in order to be able to open the eyes of the mind.</span></p>
+  <div class="sentence-aid" data-sentence="171">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">进行心智活动时，身体的世界属性并不会因“闭肉眼、开心眼”而消失</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">思考需要退出当前感官显现，但思考者仍是有身体、会显现、属于共同世界的生命。柏拉图式“闭上身体之眼，打开心灵之眼”只描述注意力转移，不能把人变成另一个世界的居民。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">不消失的东西</div><div><div class="meaning-en"><button class="expr-button" type="button">These properties do not vanish</button><div class="expr-tip">these properties 指上一句的世界归属、显现性和参与能力。</div></div><div class="meaning-zh">思考不取消我们的世界性。</div></div></div><div class="meaning-node d1"><div class="meaning-label">发生时刻</div><div><div class="meaning-en">when we <button class="expr-button" type="button">happen to be engaged in</button> mental activities<div class="expr-tip"><b>be engaged in</b> = “正从事”；happen to 淡化为某时进入这种状态。</div></div><div class="meaning-zh">即使正在进行心智活动。</div></div></div><div class="meaning-node main"><div class="meaning-label">柏拉图比喻</div><div><div class="meaning-en">close the eyes of the body … <button class="expr-button" type="button">open the eyes of the mind</button><div class="expr-tip">比喻指暂停感官注意、转向不可见思想。</div></div><div class="meaning-zh">闭肉眼而开心眼。</div></div></div><div class="meaning-node main"><div class="meaning-label">目的结构</div><div><div class="meaning-en"><button class="expr-button" type="button">in order to</button> be able to …<div class="expr-tip">in order to 引出闭眼的目的。</div></div><div class="meaning-zh">感官退离为心智观看腾出空间。</div></div></div></div>
+      <div class="read-again">主干：<b>Our worldly properties do not vanish when we think.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">当我们碰巧投入心智活动，并且——借用柏拉图的比喻——为了能够睁开心灵之眼而闭上身体之眼时，这些属性并不会消失。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>The eyes of the mind</b> — <span class="zh">柏拉图传统把感官之眼与心灵之眼对立：哲学思考闭上对可见物的注意，以转向不可见的真理。阿伦特接受“退离”的经验，却拒绝由此推出我们属于另一个世界。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">172</span>The two-world theory belongs among the metaphysical fallacies but it would never have been able to survive for so many centuries if it had not so plausibly corresponded to some basic experiences.</span></p>
+  <div class="sentence-aid" data-sentence="172">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">两世界理论虽是谬误，却因贴合真实的心智退离经验而长久存活</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">把真实存在与显现世界分成两个领域，在阿伦特看来是形而上学谬误；但它不是凭空胡说。思考时注意力确实离开当前感官世界，这种基本经验使“两世界”解释显得可信。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">明确判断</div><div><div class="meaning-en">belongs among the <button class="expr-button" type="button">metaphysical fallacies</button><div class="expr-tip">fallacy 是推论错误：由退离经验推出另一个更真实世界。</div></div><div class="meaning-zh">两世界理论在逻辑上错误。</div></div></div><div class="meaning-node main"><div class="meaning-label">反事实推论</div><div><div class="meaning-en">would never have survived … <button class="expr-button" type="button">if it had not</button> corresponded …<div class="expr-tip">过去完成式反事实：它之所以存活，正因为满足后项。</div></div><div class="meaning-zh">但长期存活必有经验基础。</div></div></div><div class="meaning-node main"><div class="meaning-label">经验基础</div><div><div class="meaning-en">so plausibly <button class="expr-button" type="button">corresponded to</button> some basic experiences<div class="expr-tip">plausibly = “令人信服地”；经验是真的，理论解释未必真。</div></div><div class="meaning-zh">它贴合心智退离的基本经验。</div></div></div></div>
+      <div class="read-again">别只听到 fallacy：<b>false theory — plausible correspondence — basic experience</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">两世界理论属于形而上学谬误之列；但如果它不曾如此可信地与某些基本经验相对应，它就绝不可能存活这么多个世纪。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">173</span>As Merleau-Ponty once put it, “I can <i>flee being only into being</i>,”² and since Being and Appearing coincide for men, this means that I can flee appearance only into appearance.</span></p>
+  <div class="sentence-aid" data-sentence="173">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">我们无法逃出存在；对人而言，也就无法逃出显现，只能从一种显现进入另一种</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">梅洛-庞蒂指出，任何逃离仍发生在存在之中。阿伦特把这句话转换到自己的命题：人的存在与显现重合，因此思维即使离开眼前显现，也只能进入另一种仍需以某种方式显现的状态。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">引文</div><div><div class="meaning-en">I can <button class="expr-button" type="button"><i>flee being only into being</i></button><div class="expr-tip">逃离存在的动作本身仍在存在中，无法抵达彻底的非存在外部。</div></div><div class="meaning-zh">只能从存在逃进存在。</div></div></div><div class="meaning-node main"><div class="meaning-label">阿伦特前提</div><div><div class="meaning-en"><button class="expr-button" type="button">since</button> Being and Appearing coincide for men<div class="expr-tip">since 引出把引文转换为显现命题的理由。</div></div><div class="meaning-zh">对人，存在与显现重合。</div></div></div><div class="meaning-node main"><div class="meaning-label">转换结论</div><div><div class="meaning-en">flee appearance <button class="expr-button" type="button">only into appearance</button><div class="expr-tip">不是说所有显现相同，而是没有一个绝对不显现的外部家园。</div></div><div class="meaning-zh">只能从一种显现进入另一种显现。</div></div></div></div>
+      <div class="read-again">两句平行公式：<b>being → being; therefore appearance → appearance</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">正如梅洛-庞蒂曾说：“我只能从存在逃入存在。”² 而且，由于对人来说存在与显现重合，这就意味着：我只能从显现逃入显现。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-yin">引用</span><b>Merleau-Ponty</b> — <span class="zh">引文出自《可见的与不可见的》。阿伦特借它否定思维拥有一个完全脱离世界的自然家园：退离仍是世界中的退离。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">174</span>And that does not solve the problem, for the problem concerns the <ruby>fitness<rt>适合性</rt></ruby> of thought to appear at all, and the question is whether thinking and other invisible and soundless mental activities are meant to appear or whether in fact they can never find an adequate home in the world.</span></p>
+  <div class="sentence-aid" data-sentence="174">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">真正悬而未决的是：无形无声的思维究竟能否在显现世界中出现并安家</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">“只能从显现逃进显现”没有解决核心难题。人属于显现世界，但思维活动本身不可见、无声；那么它是否本来就能以适当方式显现，还是注定无法在世界中找到与其性质相称的家？这正把 Chapter 1 推向下一章。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">仍未解决</div><div><div class="meaning-en">that <button class="expr-button" type="button">does not solve the problem</button><div class="expr-tip">that 指上一句“只能从显现逃入显现”的结论。</div></div><div class="meaning-zh">排除世界外部仍不等于解释思维。</div></div></div><div class="meaning-node main"><div class="meaning-label">问题焦点</div><div><div class="meaning-en">the <button class="expr-button" type="button">fitness of thought to appear at all</button><div class="expr-tip">fitness to = “做……的适合性”；at all 加强疑问：究竟能不能显现。</div></div><div class="meaning-zh">思维是否适合进入显现。</div></div></div><div class="meaning-node main"><div class="meaning-label">第一可能</div><div><div class="meaning-en">mental activities <button class="expr-button" type="button">are meant to appear</button><div class="expr-tip">meant to 与 S128 呼应：是否其结构本就指向显现。</div></div><div class="meaning-zh">无形活动也有适当显现方式。</div></div></div><div class="meaning-node main"><div class="meaning-label">第二可能</div><div><div class="meaning-en">can never find an <button class="expr-button" type="button">adequate home in the world</button><div class="expr-tip">adequate home 是能容纳其性质的恰当存在方式。</div></div><div class="meaning-zh">或者思维在世界中无家可归。</div></div></div></div>
+      <div class="read-again">最后读成真正二选一：<b>meant to appear — or never at home in the world?</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">而这并没有解决问题，因为问题关乎思维究竟是否适合显现；问题是：思考以及其他不可见、无声的心智活动，本来是否就是要显现的，还是事实上它们永远无法在世界中找到一个恰当的家。</div></details>
+  </div>
+</main>
+
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-dian">典故</span>allusion 典故</span>
+    <span><span class="tag t-yin">引用</span>quotation 引文</span>
+    <span><span class="tag t-zhu">注</span>note 说明</span>
+    <span><span class="tag t-ci">词</span>word 词义</span>
+  </div>
+  <a href="lotm-thinking-intro-03.html">← Introduction III · pp. 12–16 · S99–127</a><br>Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 19–23. Text transcribed verbatim from the page images. Chapter 1 is complete; Chapter 2, “(True) being and (mere) appearance: the two-world theory,” begins on printed p. 23.
+</footer>
+
+<script>
+  const body=document.body;
+  const tRuby=document.getElementById('t-ruby'),
+        tRem=document.getElementById('t-rem'),
+        tTrans=document.getElementById('t-trans'),
+        tTheme=document.getElementById('t-theme');
+  const setTheme=(theme,remember=false)=>{
+    const dark=theme==='dark';
+    document.documentElement.dataset.theme=dark?'dark':'light';
+    tTheme.setAttribute('aria-pressed',String(dark));
+    tTheme.textContent=dark?'Light Theme':'Dark Theme';
+    tTheme.title=dark?'Switch to Light Theme':'Switch to Dark Theme';
+    document.querySelectorAll('a[href*="lotm-thinking-"]').forEach(link=>{
+      const target=new URL(link.getAttribute('href'),location.href);
+      target.searchParams.set('theme',dark?'dark':'light');
+      link.href=target.href;
+    });
+    if(remember){try{localStorage.setItem('lotm-reading-theme',dark?'dark':'light');}catch(_){}}
+  };
+  setTheme(document.documentElement.dataset.theme);
+  tTheme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark',true);
+  tRuby.onclick=()=>{body.classList.toggle('hide-ruby'); tRuby.classList.toggle('off');};
+  tRem.onclick =()=>{body.classList.toggle('hide-remarks'); tRem.classList.toggle('off');};
+
+  const translations=[...document.querySelectorAll('.translation')];
+  tTrans.onclick=()=>{
+    const open=tTrans.getAttribute('aria-pressed')!=='true';
+    translations.forEach(item=>item.open=open);
+    tTrans.setAttribute('aria-pressed',String(open));
+    tTrans.textContent=open?'收起直译 128–174':'直译 128–174';
+  };
+
+  const rescues=[...document.querySelectorAll('.rescue')];
+  const clearFocus=()=>{
+    document.querySelectorAll('.active-sentence,.active-aid')
+      .forEach(item=>item.classList.remove('active-sentence','active-aid'));
+  };
+  rescues.forEach(rescue=>{
+    rescue.addEventListener('toggle',()=>{
+      if(rescue.open){
+        rescues.forEach(other=>{if(other!==rescue) other.open=false;});
+        clearFocus();
+        const aid=rescue.closest('.sentence-aid');
+        const sentence=aid.previousElementSibling;
+        aid.classList.add('active-aid');
+        if(sentence?.classList.contains('sent')) sentence.classList.add('active-sentence');
+        body.classList.add('rescue-mode');
+        rescue.scrollIntoView({behavior:'smooth',block:'center'});
+      }else if(!document.querySelector('.rescue[open]')){
+        clearFocus();
+        body.classList.remove('rescue-mode');
+      }
+    });
+  });
+</script>
+</body>
+</html>

@@ -59,3 +59,18 @@ attribute to an absolute URL. A later theme switch could no longer select the sa
 so it kept the previous `?theme=` value. The website's `lotm-` filename prefix made the
 source selector miss even sooner. Changed all three pages to a stable filename-substring
 selector and verified dark → light → dark propagation.
+
+## 2026-08-01 — Arendt Appearance I, Chapter 1
+
+Published `philosophy/lotm-thinking-appearance-01.html`, covering S128–174 / printed
+pp. 19–23 and preserving the W. H. Auden epigraph. The page ends exactly with Chapter
+1's question about whether invisible and soundless mental activities can appear or
+find a home in the world; Chapter 2 begins next. All 47 sentences have the approved
+meaning-first rescue, expression notes, reread cue, and folded literal translation.
+No Cain reader was added.
+
+Because the new filename is no longer an Introduction filename, generalized all four
+reading-page theme selectors from `lotm-thinking-intro` to `lotm-thinking-`. Local
+browser testing passed the epigraph, S164's dense life-curve structure, S174's ending,
+expression focus, all-translation toggle, rescue focus, footer, both themes, and
+Introduction III → Chapter 1 theme carryover.

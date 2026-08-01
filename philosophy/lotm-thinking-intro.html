@@ -1131,7 +1131,7 @@
     tTheme.setAttribute('aria-pressed',String(dark));
     tTheme.textContent=dark?'Light Theme':'Dark Theme';
     tTheme.title=dark?'Switch to Light Theme':'Switch to Dark Theme';
-    document.querySelectorAll('a[href*="lotm-thinking-intro"]').forEach(link=>{
+    document.querySelectorAll('a[href*="lotm-thinking-"]').forEach(link=>{
       const target=new URL(link.getAttribute('href'),location.href);
       target.searchParams.set('theme',dark?'dark':'light');
       link.href=target.href;
