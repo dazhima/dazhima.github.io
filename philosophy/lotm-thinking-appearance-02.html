@@ -933,5 +933,78 @@
 })();
 </script>
 <!-- reading-anchors:end -->
+<!-- cain-reader:start -->
+<style>
+  .cain-btn{
+    appearance:none; border:0; background:none; cursor:pointer; padding:0 .1rem;
+    margin-left:.35rem; color:var(--muted); font-size:.72rem; vertical-align:.08em;
+    font-family:system-ui,sans-serif; opacity:.55; transition:.15s;
+  }
+  .sent:hover .cain-btn{opacity:1; color:var(--amber)}
+  .cain-btn.playing{opacity:1; color:var(--amber)}
+  .sent.cain-now{border-left-color:var(--amber); background:var(--amber-soft)}
+  html[data-theme="dark"] .sent.cain-now{background:#241d10}
+</style>
+<script>
+(()=>{
+  const AUDIO_DIR="audio/lotm-thinking-appearance-02";
+  const audio=new Audio(); audio.preload="none";
+  let cur=null;          // currently playing button
+  let readAll=false;     // continuous mode
+  const sents=[...document.querySelectorAll("p.sent")].map(p=>{
+    const num=p.querySelector(".n")?.textContent.trim();
+    if(!num) return null;
+    const btn=document.createElement("button");
+    btn.className="cain-btn"; btn.dataset.n=num; btn.textContent="\u25B6";
+    btn.title="Deckard Cain reads this sentence";
+    (p.querySelector(".stext")||p).appendChild(btn);
+    return {p,btn,num};
+  }).filter(Boolean);
+
+  const stop=()=>{
+    audio.pause();
+    if(cur){cur.btn.textContent="\u25B6"; cur.btn.classList.remove("playing");
+             cur.p.classList.remove("cain-now");}
+    cur=null;
+  };
+  const setAllBtn=()=>{
+    tCain.setAttribute("aria-pressed",String(readAll));
+    tCain.textContent=readAll?"\u25A0 停止朗读":"\u25B6 Cain 朗读";
+  };
+  const play=(s,scroll)=>{
+    stop();
+    cur=s;
+    audio.src=`${AUDIO_DIR}/s${s.num}.mp3`;
+    audio.play().catch(()=>{stop(); readAll=false; setAllBtn();});
+    s.btn.textContent="\u25A0"; s.btn.classList.add("playing");
+    s.p.classList.add("cain-now");
+    if(scroll) s.p.scrollIntoView({behavior:"smooth",block:"center"});
+  };
+  audio.addEventListener("ended",()=>{
+    const i=cur?sents.indexOf(cur):-1;
+    stop();
+    if(readAll && i>=0 && i+1<sents.length) play(sents[i+1],true);
+    else {readAll=false; setAllBtn();}
+  });
+  sents.forEach(s=>s.btn.addEventListener("click",()=>{
+    if(cur===s){stop(); readAll=false; setAllBtn(); return;}
+    readAll=false; setAllBtn(); play(s,false);
+  }));
+
+  // top-bar continuous-read toggle
+  const bar=document.querySelector(".bar");
+  const tCain=document.createElement("button");
+  tCain.className="btn"; tCain.id="t-cain";
+  bar.insertBefore(tCain, document.getElementById("t-theme"));
+  setAllBtn();
+  tCain.addEventListener("click",()=>{
+    if(readAll){readAll=false; stop(); setAllBtn(); return;}
+    readAll=true; setAllBtn();
+    const i=cur?sents.indexOf(cur):0;
+    play(sents[Math.max(i,0)],true);
+  });
+})();
+</script>
+<!-- cain-reader:end -->
 </body>
 </html>
