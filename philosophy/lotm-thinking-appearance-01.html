@@ -1088,9 +1088,12 @@
     font-family:system-ui,sans-serif; opacity:.55; transition:.15s;
   }
   .sent:hover .cain-btn{opacity:1; color:var(--amber)}
-  .cain-btn.playing{opacity:1; color:var(--amber)}
+  .cain-btn.playing,.cain-btn.paused{opacity:1; color:var(--amber)}
   .sent.cain-now{border-left-color:var(--amber); background:var(--amber-soft)}
+  /* paused keeps the place visible but stops shouting about it */
+  .sent.cain-paused{background:transparent}
   html[data-theme="dark"] .sent.cain-now{background:#241d10}
+  html[data-theme="dark"] .sent.cain-paused{background:transparent}
 </style>
 <script>
 (()=>{
@@ -1108,48 +1111,60 @@
     return {p,btn,num};
   }).filter(Boolean);
 
-  const stop=()=>{
-    audio.pause();
-    if(cur){cur.btn.textContent="\u25B6"; cur.btn.classList.remove("playing");
-             cur.p.classList.remove("cain-now");}
-    cur=null;
+  // Pausing must KEEP the position. Yan reads along with the voice and needs to
+  // stop for a moment when he falls behind; restarting a 40-word sentence from
+  // the beginning was the whole problem. So `cur` stays loaded while paused, and
+  // only switching to another sentence reloads the audio.
+  const paint=()=>{
+    const live=cur && !audio.paused;
+    sents.forEach(s=>{
+      const on=(s===cur);
+      s.btn.textContent=(on && live)?"\u23F8":"\u25B6";     // pause bars / play
+      s.btn.classList.toggle("playing", on && !!live);
+      s.btn.classList.toggle("paused", on && !live);
+      s.btn.title=(on && live)?"暂停（保留位置）":"Deckard Cain reads this sentence";
+      s.p.classList.toggle("cain-now", on);
+      s.p.classList.toggle("cain-paused", on && !live);
+    });
+    if(tCain){
+      tCain.setAttribute("aria-pressed",String(readAll));
+      tCain.textContent=!readAll?"\u25B6 Cain 朗读"
+                      : live?"\u23F8 暂停":"\u25B6 继续";
+    }
   };
-  const setAllBtn=()=>{
-    tCain.setAttribute("aria-pressed",String(readAll));
-    tCain.textContent=readAll?"\u25A0 停止朗读":"\u25B6 Cain 朗读";
-  };
-  const play=(s,scroll)=>{
-    stop();
+  const stop=()=>{ audio.pause(); cur=null; paint(); };
+  const load=(s,scroll)=>{
     cur=s;
     audio.src=`${AUDIO_DIR}/s${s.num}.mp3`;
-    audio.play().catch(()=>{stop(); readAll=false; setAllBtn();});
-    s.btn.textContent="\u25A0"; s.btn.classList.add("playing");
-    s.p.classList.add("cain-now");
+    audio.play().catch(()=>{ readAll=false; stop(); });
     if(scroll) s.p.scrollIntoView({behavior:"smooth",block:"center"});
+    paint();
   };
+  const toggle=()=>{ if(audio.paused) audio.play().catch(paint); else audio.pause(); };
+  audio.addEventListener("play",paint);
+  audio.addEventListener("pause",paint);
   audio.addEventListener("ended",()=>{
     const i=cur?sents.indexOf(cur):-1;
-    stop();
-    if(readAll && i>=0 && i+1<sents.length) play(sents[i+1],true);
-    else {readAll=false; setAllBtn();}
+    if(readAll && i>=0 && i+1<sents.length) load(sents[i+1],true);
+    else { readAll=false; stop(); }
   });
   sents.forEach(s=>s.btn.addEventListener("click",()=>{
-    if(cur===s){stop(); readAll=false; setAllBtn(); return;}
-    readAll=false; setAllBtn(); play(s,false);
+    if(cur===s){ toggle(); return; }   // same sentence -> pause/resume in place
+    readAll=false; load(s,false);        // different sentence -> start it
   }));
 
-  // top-bar continuous-read toggle
+  // top-bar continuous read: start, then pause/resume without losing the place
   const bar=document.querySelector(".bar");
   const tCain=document.createElement("button");
-  tCain.className="btn"; tCain.id="t-cain";
+  tCain.className="btn"; tCain.id="t-cain"; tCain.type="button";
   bar.insertBefore(tCain, document.getElementById("t-theme"));
-  setAllBtn();
   tCain.addEventListener("click",()=>{
-    if(readAll){readAll=false; stop(); setAllBtn(); return;}
-    readAll=true; setAllBtn();
-    const i=cur?sents.indexOf(cur):0;
-    play(sents[Math.max(i,0)],true);
+    if(readAll && cur){ toggle(); return; }
+    readAll=true;
+    if(cur && audio.paused && audio.currentTime>0) toggle();
+    else load(sents[Math.max(cur?sents.indexOf(cur):0,0)],true);
   });
+  paint();
 })();
 </script>
 <!-- cain-reader:end -->
