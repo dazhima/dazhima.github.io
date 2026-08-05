@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The Life of the Mind · Thinking · Appearance I · §3</title>
+<script>
+  (()=>{
+    try{
+      const linked=new URLSearchParams(location.search).get('theme');
+      const saved=localStorage.getItem('lotm-reading-theme');
+      const choice=/^(dark|light)$/.test(linked||'')?linked:saved;
+      const dark=choice ? choice==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme=dark?'dark':'light';
+    }catch(_){ document.documentElement.dataset.theme='light'; }
+  })();
+</script>
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --blue:#486a8b; --blue-soft:#e7eef5; --green:#4d7358; --green-soft:#e6efe8;
+  }
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#141311; --ink:#e8e0d4; --muted:#aaa092; --line:#3c3730;
+    --amber:#d5a45a; --amber-soft:#382b17; --purple:#c7a7e3; --purple-soft:#30263a;
+    --teal:#82c5b5; --teal-soft:#1d342f; --rose:#dc92a5; --rose-soft:#39242a;
+    --blue:#8fb6d5; --blue-soft:#20303d; --green:#91bd9b; --green-soft:#223529;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+    line-height:1.85;
+  }
+  /* top bar */
+  .bar{
+    position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;
+  }
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem;
+    cursor:pointer; transition:.15s;
+  }
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  .btn[aria-pressed="true"]{background:var(--green-soft); border-color:var(--green); color:var(--green)}
+  /* page */
+  main{max-width:720px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:2.2rem}
+  header.doc h1{font-size:1.7rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  /* sentence units */
+  .sent{margin:0; padding:.35rem 0 .35rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .sent:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:1.6rem}
+  .stext{font-size:1.16rem}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted);
+     vertical-align:.45em; margin-right:.15em; user-select:none}
+  /* inline chinese ruby */
+  ruby{ruby-position:over}
+  rt{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+     font-size:.58em; color:var(--amber); font-weight:500; letter-spacing:.02em;
+     opacity:.92; line-height:1}
+  .hide-ruby rt{display:none}
+  .hide-ruby ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  /* remarks */
+  .remarks{margin:.45rem 0 .2rem; padding:.55rem .8rem;
+    background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber);
+    border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.6}
+  .hide-remarks .remarks{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem}
+  .remark b{color:var(--ink)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em;
+    padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-dian{background:var(--purple-soft); color:var(--purple)}   /* 典故 */
+  .t-yin{background:var(--teal-soft); color:var(--teal)}        /* 引用 */
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}      /* 注 */
+  .t-ci{background:var(--rose-soft); color:var(--rose)}         /* 词 */
+  /* guided rescue; S32–47 use the validated meaning-first tree */
+  .practice-note{
+    margin:1.7rem 0 1rem; padding:.8rem 1rem; border:1px solid #cfdde8;
+    border-radius:8px; background:#eef4f8; color:#38536d;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.84rem; line-height:1.65;
+  }
+  .practice-note b{display:block; margin-bottom:.15rem}
+  .sentence-aid{
+    margin:.18rem 0 .7rem .9rem;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    transition:opacity .2s, filter .2s;
+  }
+  .sentence-aid details{border-radius:7px; overflow:hidden}
+  .sentence-aid summary{
+    display:flex; align-items:center; gap:.45rem; cursor:pointer; list-style:none;
+    padding:.38rem .65rem; font-size:.77rem; line-height:1.35; user-select:none;
+  }
+  .sentence-aid summary::-webkit-details-marker{display:none}
+  .sentence-aid summary::before{
+    content:"+"; width:1rem; height:1rem; display:inline-grid; place-items:center;
+    border-radius:50%; font-size:.8rem; font-weight:700; flex:0 0 auto;
+  }
+  .sentence-aid details[open] > summary::before{content:"−"}
+  .summary-hint{color:var(--muted); font-size:.7rem}
+  .rescue{border:1px solid #cfdde8; background:#f6f9fb}
+  .rescue > summary{color:var(--blue)}
+  .rescue > summary::before{background:var(--blue-soft); color:var(--blue)}
+  .translation{margin-top:.28rem; border:1px solid #d5e1d7; background:#f7faf7}
+  .translation > summary{color:var(--green)}
+  .translation > summary::before{background:var(--green-soft); color:var(--green)}
+  .rescue-body{padding:.2rem .75rem .75rem}
+  .step{display:grid; grid-template-columns:4.6rem 1fr; gap:.6rem; padding:.58rem 0}
+  .step + .step{border-top:1px dashed #d9e2e8}
+  .step-label{
+    color:var(--blue); font-size:.67rem; font-weight:750; letter-spacing:.04em;
+    text-transform:uppercase; padding-top:.15rem;
+  }
+  .core-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    font-size:1rem; line-height:1.55; color:var(--ink)}
+  .core-en strong{font-weight:650; color:#294e70}
+  .cue{margin-top:.2rem; color:#5f5a52; font-size:.76rem; line-height:1.55}
+  .meaning-overview{
+    margin:.5rem 0 .72rem; padding:.72rem .78rem; border:1px solid #c8d8e4;
+    border-radius:8px; background:#fff;
+  }
+  .meaning-kicker{
+    margin-bottom:.28rem; color:var(--blue); font-size:.68rem; font-weight:750;
+    letter-spacing:.045em;
+  }
+  .meaning-thesis{color:#334b5e; font-size:.86rem; line-height:1.68}
+  .meaning-thesis .next-sentence{color:var(--muted); font-size:.74rem}
+  .meaning-tree{margin:.15rem 0 .7rem}
+  .meaning-node{
+    position:relative; display:grid; grid-template-columns:5.3rem minmax(0,1fr);
+    gap:.58rem; align-items:start; margin-top:.18rem; padding:.42rem .52rem;
+    border-left:2px solid #d1dce4; border-radius:0 5px 5px 0;
+  }
+  .meaning-node.main{margin-left:0; border-left:3px solid var(--blue); background:#edf4f8}
+  .meaning-node.d1{margin-left:1.25rem}
+  .meaning-node.d2{margin-left:2.65rem}
+  .meaning-node.d3{margin-left:4.05rem}
+  .meaning-node:not(.main)::before{
+    content:""; position:absolute; left:-.72rem; top:1.05rem; width:.62rem;
+    border-top:1px solid #c2ced7;
+  }
+  .meaning-label{
+    padding-top:.12rem; color:#687887; font-size:.63rem; font-weight:750;
+    letter-spacing:.035em; line-height:1.3;
+  }
+  .meaning-node.main .meaning-label{color:var(--blue)}
+  .meaning-en{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); font-size:.94rem; line-height:1.48;
+  }
+  .meaning-node.main .meaning-en{font-weight:650; color:#294e70}
+  .meaning-zh{margin-top:.12rem; color:#625d55; font-size:.74rem; line-height:1.52}
+  .pair-word{color:#77541e; font-weight:650}
+  .expr-button{
+    appearance:none; margin:0; padding:.02rem .18rem; border:0;
+    border-bottom:1px dotted #a06e20; border-radius:3px; background:#fff2cf;
+    color:#69480f; font:inherit; line-height:inherit; cursor:help;
+  }
+  .expr-button::after{
+    content:"?"; display:inline-grid; place-items:center; width:.78rem; height:.78rem;
+    margin-left:.22rem; border-radius:50%; background:#dba94f; color:#fff;
+    font-family:system-ui,sans-serif; font-size:.55rem; font-weight:800;
+    vertical-align:.12rem;
+  }
+  .expr-button:focus-visible{outline:2px solid #d4a04a; outline-offset:2px}
+  .expr-tip{
+    display:none; margin:.38rem 0 .06rem; padding:.48rem .58rem;
+    border:1px solid #e3c98e; border-radius:6px; background:#fff9e9;
+    color:#594b33; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:.72rem; line-height:1.58;
+  }
+  .expr-button:hover ~ .expr-tip,
+  .expr-button:focus ~ .expr-tip{display:block}
+  .expr-tip b{color:#674916}
+  .chunk-list{display:grid; gap:.32rem}
+  .chunk{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    gap:.65rem; align-items:baseline}
+  .chunk-en{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); line-height:1.45}
+  .chunk-zh{color:#6d665c; font-size:.74rem; line-height:1.45}
+  .read-again{
+    margin-top:.35rem; padding:.55rem .65rem; border-left:3px solid var(--blue);
+    background:#edf3f7; color:#38536d; font-size:.76rem; line-height:1.55;
+  }
+  .translation-text{padding:.6rem .75rem .72rem; border-top:1px solid #dfe8e0;
+    color:#334d39; font-size:.87rem; line-height:1.7}
+  body.rescue-mode main > .sent,
+  body.rescue-mode main > .remarks,
+  body.rescue-mode main > .sentence-aid,
+  body.rescue-mode main > .practice-note{opacity:.14; filter:saturate(.35)}
+  body.rescue-mode main > .sent.active-sentence,
+  body.rescue-mode main > .sentence-aid.active-aid{opacity:1; filter:none}
+  body.rescue-mode main > .sent.active-sentence{
+    border-left-color:var(--blue); background:#fbfcfd;
+  }
+  @media (max-width:600px){
+    .step{grid-template-columns:1fr; gap:.1rem}
+    .chunk{grid-template-columns:1fr; gap:.05rem; padding:.22rem 0}
+    .sentence-aid{margin-left:.35rem}
+    .meaning-node{grid-template-columns:4.15rem minmax(0,1fr); gap:.38rem}
+    .meaning-node.d1{margin-left:.55rem}
+    .meaning-node.d2{margin-left:1.1rem}
+    .meaning-node.d3{margin-left:1.65rem}
+  }
+  footer{max-width:720px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem;
+    font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  a{color:var(--blue)}
+  html[data-theme="dark"] body{background:#141311}
+  html[data-theme="dark"] .bar{background:rgba(20,19,17,.94)}
+  html[data-theme="dark"] .btn{background:#211f1b}
+  html[data-theme="dark"] .sent:hover{background:#1c1a17}
+  html[data-theme="dark"] .remarks{background:#1c1a17}
+  html[data-theme="dark"] .practice-note{background:#19242c; border-color:#334858; color:#bed0df}
+  html[data-theme="dark"] .rescue{background:#171f25; border-color:#344754}
+  html[data-theme="dark"] .translation{background:#18211b; border-color:#35483a}
+  html[data-theme="dark"] .step + .step{border-color:#35424a}
+  html[data-theme="dark"] .core-en strong,
+  html[data-theme="dark"] .meaning-node.main .meaning-en{color:#bdd2e3}
+  html[data-theme="dark"] .cue,
+  html[data-theme="dark"] .meaning-zh,
+  html[data-theme="dark"] .chunk-zh{color:#b9afa2}
+  html[data-theme="dark"] .meaning-overview{background:#1c1a17; border-color:#3a4b58}
+  html[data-theme="dark"] .meaning-thesis{color:#c2d3df}
+  html[data-theme="dark"] .meaning-node{border-color:#3b4851}
+  html[data-theme="dark"] .meaning-node.main{background:#1b2932}
+  html[data-theme="dark"] .meaning-node:not(.main)::before{border-color:#49565f}
+  html[data-theme="dark"] .meaning-label{color:#9ba9b4}
+  html[data-theme="dark"] .pair-word{color:#e0b870}
+  html[data-theme="dark"] .expr-button{background:#3b2d17; border-color:#b9893e; color:#f0cb88}
+  html[data-theme="dark"] .expr-tip{background:#292217; border-color:#6e5930; color:#d8c7aa}
+  html[data-theme="dark"] .expr-tip b{color:#f0cb88}
+  html[data-theme="dark"] .read-again{background:#1b2932; color:#bed0df}
+  html[data-theme="dark"] .translation-text{border-color:#344539; color:#bcd5c1}
+  html[data-theme="dark"] body.rescue-mode main > .sent.active-sentence{background:#192229}
+
+  .part-marker{font-family:system-ui,sans-serif;font-size:.72rem;font-weight:750;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:.45rem}
+  .epigraph{margin:1.25rem 0 0;padding:.85rem 1rem;border-left:3px solid var(--amber);background:#fcf9f2;color:var(--muted);font-style:italic}
+  .epigraph cite{display:block;margin-top:.35rem;font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.08em;color:var(--muted)}
+  html[data-theme="dark"] .epigraph{background:#1c1a17}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; The Life of the Mind &rsaquo; <b>Thinking</b> &rsaquo; Appearance I &nbsp;·&nbsp; §3 &nbsp;·&nbsp; pp.&nbsp;26–30</div>
+  <button class="btn" id="t-ruby">中文 注音</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-trans" aria-pressed="false">直译 203–246</button>
+  <button class="btn" id="t-theme" aria-pressed="false" title="Switch to Dark Theme">Dark Theme</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <div class="part-marker">Appearance I</div>
+    <h1>3 · The reversal of the metaphysical hierarchy: the value of the surface</h1>
+    <div class="sub">Hannah Arendt, <i>The Life of the Mind</i> · Volume One: Thinking · printed pp. 26–30</div>
+  </header>
+  <aside class="practice-note"><b>精读 · sentences 203–246</b>先朗读英文。卡住时先看简短主旨和句子关系；表达提示按需展开，直译最后再看。本节围绕一个倒转展开：不是显现服务于生命，而是生命为了显现。</aside>
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">203</span>The everyday common-sense world, which neither the scientist nor the philosopher ever <ruby>eludes<rt>逃脱、避开</rt></ruby>, knows error as well as illusion.</span></p>
+  <div class="sentence-aid" data-sentence="203">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">常识世界本来就懂错误，也懂幻象</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">科学家和哲学家都逃不出日常常识世界；而这个世界并不天真，它早就分得清「弄错了」和「看走眼了」这两回事。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">谁都逃不掉</div><div><div class="meaning-en">which neither the scientist nor the philosopher ever <button class="expr-button" type="button">eludes</button><div class="expr-tip"><b>elude</b> = 「躲开、逃脱」。定语从句先堵死一条退路：没有人站在常识世界之外。</div></div><div class="meaning-zh">常识世界是不能退出的居所。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">它知道两样</div><div><div class="meaning-en">knows <span class="pair-word">error</span> as well as <span class="pair-word">illusion</span><div class="meaning-zh">错误与幻象是两类不同的失误，常识都熟悉。</div></div></div></div></div>
+      <div class="read-again">先记住这一对：<b>error（判断错了）／illusion（显现骗了你）</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">日常的常识世界——科学家和哲学家都从未逃脱过它——既知道错误，也知道幻象。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">204</span>Yet no elimination of errors or <ruby>dispelling<rt>驱散</rt></ruby> of illusions can arrive at a region beyond appearance.</span></p>
+  <div class="sentence-aid" data-sentence="204">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">纠错再多，也走不到显现之外</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">承认有错误和幻象，并不等于承认存在一个「显现之外」的区域。无论清除多少错误、驱散多少幻象，抵达的仍然是显现。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">让步转折</div><div><div class="meaning-en"><button class="expr-button" type="button">Yet</button> no elimination … can arrive<div class="expr-tip"><b>Yet</b> 接上一句：常识确实会纠错，<i>但是</i>纠错的方向并不通向别处。</div></div><div class="meaning-zh">纠错是真的，越界是假的。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">到不了的地方</div><div><div class="meaning-en">a region <button class="expr-button" type="button">beyond appearance</button><div class="expr-tip"><b>beyond</b> 在这里是空间比喻：一个位于显现之外、不再显现的区域。全章的靶子。</div></div><div class="meaning-zh">「显现之外」不是纠错所能到达的目的地。</div></div></div></div>
+      <div class="read-again">主干极短：<b>no elimination … can arrive beyond appearance</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">然而，无论怎样清除错误或驱散幻象，都不能抵达一个位于显现之外的区域。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">205</span>“For when an illusion <ruby>dissipates<rt>消散</rt></ruby>, when an appearance suddenly breaks up, it is always for the profit of a new appearance which takes up again for its own account the <ruby>ontological<rt>存在论的</rt></ruby> function of the first. . . . The dis-illusion is the loss of one evidence only because it is the acquisition of <i>another evidence</i> . . . there is no <i>Schein</i> without an <i>Erscheinung</i>, every <i>Schein</i> is the counterpart of an <i>Erscheinung</i>.”¹⁰</span></p>
+  <div class="sentence-aid" data-sentence="205">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">幻象破灭＝换来另一个显现，不是换来「无显现」</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">引文给出理由：幻象破灭时，顶替它的仍是一个显现，并接手原来那个的存在论职能。所以「醒悟」不是失去证据而进入真空，而是用一份证据换另一份证据。假象（<i>Schein</i>）永远依附于显现（<i>Erscheinung</i>）而存在。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">破灭之后</div><div><div class="meaning-en">always <button class="expr-button" type="button">for the profit of</button> a new appearance<div class="expr-tip"><b>for the profit of</b> = 「以……获益的方式／让……得利」。破灭的收益方是下一个显现。</div></div><div class="meaning-zh">位置立刻被另一个显现补上。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">接手职能</div><div><div class="meaning-en">takes up again <button class="expr-button" type="button">for its own account</button> the ontological function<div class="expr-tip"><b>for one's own account</b> = 「以自己的名义、由自己承担」。新显现不是附庸，它自己承担「充当存在者」的角色。</div></div><div class="meaning-zh">新显现自行承担旧显现的存在论职能。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">重新定义醒悟</div><div><div class="meaning-en">the loss of one evidence <span class="pair-word">only because</span> it is the acquisition of another<div class="meaning-zh">失去，恰恰因为获得；不是走向空无。</div></div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">德文术语对</div><div><div class="meaning-en">no <button class="expr-button" type="button"><i>Schein</i></button> without an <i>Erscheinung</i><div class="expr-tip"><b>Schein</b> 假象／似是而非的显得；<b>Erscheinung</b> 显现／现象。前者是后者的对应物，不能独立存在。</div></div><div class="meaning-zh">假象只能寄生在显现上。</div></div></div></div>
+      <div class="read-again">整段只证一件事：<b>illusion breaks → another appearance, never no appearance</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">保留德文术语</span></summary><div class="translation-text">「因为当一个幻象消散、当一个显现突然瓦解时，这总是有利于一个新的显现，后者以自己的名义重新接手前者的存在论职能。……醒悟之所以是失去一份明证，只是因为它是获得<i>另一份明证</i>……没有<i>Erscheinung</i>就没有<i>Schein</i>，每一个<i>Schein</i>都是某个<i>Erscheinung</i>的对应物。」</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b><i>Schein</i> / <i>Erscheinung</i></b> — <span class="zh">这一段的支点。<i>Erscheinung</i>＝显现、现象：某物向感官呈现出来。<i>Schein</i>＝假象、似显：看起来如此而实非如此。中文务必分开，不要都译成「现象」——阿伦特的论点正是二者互相依存：要有假象，先得有显现。</span></div><div class="remark"><span class="tag t-yin">引用</span><b>注 10</b> — <span class="zh">与本章前文（S194 的「没有任何事物、任何侧面不通过主动隐藏其他侧面而显示自己」）同出一源，属梅洛-庞蒂一系的现象学表述。阿伦特借它把「醒悟」从形而上学的越界改写成显现内部的替换。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">206</span>That modern science, in its <ruby>relentless<rt>不懈的</rt></ruby> search for <i>the</i> truth behind <i>mere</i> appearances, will ever be able to resolve this <ruby>predicament<rt>困局</rt></ruby> is, to say the least, highly doubtful, if only because the scientist himself belongs to the world of appearances although his perspective on this world may differ from the common-sense perspective.</span></p>
+  <div class="sentence-aid" data-sentence="206">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">科学解不开这个困局，因为科学家自己也住在显现之中</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">现代科学不停地追寻「单纯显现背后的那个真理」，但它能否解开上述困局非常可疑——理由很简单：科学家本人也属于显现世界，他只是视角不同于常识，并没有站到世界外面去。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">主语很长</div><div><div class="meaning-en"><button class="expr-button" type="button">That</button> modern science … will ever be able to resolve this predicament<div class="expr-tip">句首 <b>That…</b> 引导的是整句的<b>主语从句</b>：「现代科学能解决这个困局（这件事）」。真正的谓语是后面的 <i>is highly doubtful</i>。</div></div><div class="meaning-zh">「科学终将解决它」这件事本身。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">判断</div><div><div class="meaning-en">is, <button class="expr-button" type="button">to say the least</button>, highly doubtful<div class="expr-tip"><b>to say the least</b> = 「至少可以说……」，一种克制的强调：这已经是最轻的说法了。</div></div><div class="meaning-zh">高度可疑，且这还是客气的讲法。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">唯一理由</div><div><div class="meaning-en"><button class="expr-button" type="button">if only because</button> the scientist himself belongs to the world of appearances<div class="expr-tip"><b>if only because</b> = 「哪怕仅仅因为……」：只举一条理由就够了。</div></div><div class="meaning-zh">科学家也在显现世界之内。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">让步</div><div><div class="meaning-en"><span class="pair-word">although</span> his perspective … may differ<div class="meaning-zh">视角不同，位置不变。</div></div></div></div></div>
+      <div class="read-again">把长主语折起来读：<b>That … is highly doubtful — because the scientist too belongs to appearance.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">现代科学在其不懈追寻<i>那个</i>隐藏于<i>单纯</i>显现背后的真理时，究竟是否终将能够解决这一困局——至少可以说，这是高度可疑的；哪怕仅仅因为：科学家本人就属于显现世界，尽管他看待这个世界的视角可能不同于常识的视角。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">207</span>Historically speaking, it seems that an <ruby>irremovable<rt>无法去除的</rt></ruby> doubt has been <ruby>inherent in<rt>内在于</rt></ruby> the whole enterprise ever since its beginnings with the rise of science in the modern age.</span></p>
+  <div class="sentence-aid" data-sentence="207">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">这份怀疑从近代科学诞生起就在里面，不是后来添的</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">从历史上看，这种怀疑并非科学发展到后期才出现的疲惫，而是自近代科学兴起之初就内嵌在整个事业之中。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">性质</div><div><div class="meaning-en">an irremovable doubt has been <button class="expr-button" type="button">inherent in</button> the whole enterprise<div class="expr-tip"><b>inherent in</b> = 「内在于、固有于」。不是外来的攻击，是自带的。呼应导论 S49–98：危机来自内部。</div></div><div class="meaning-zh">怀疑是这项事业的内在成分。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">起点</div><div><div class="meaning-en"><button class="expr-button" type="button">ever since</button> its beginnings with the rise of science<div class="expr-tip"><b>ever since</b> 强调时间的连续性：从那时起一直如此。</div></div><div class="meaning-zh">自近代科学兴起之初便已如此。</div></div></div></div>
+      <div class="read-again">听出「与生俱来」：<b>inherent … ever since its beginnings</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">从历史上说，似乎自从近代科学兴起、这项事业开始之时起，一种无法去除的怀疑就一直内在于其中。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">208</span>The first entirely new notion brought in by the new age—the seventeenth-century idea of an unlimited <i>progress</i>, which after a few centuries became the most <ruby>cherished<rt>珍视的</rt></ruby> dogma of <i>all</i> men living in a scientifically oriented world—seems intended to take care of the predicament: though one expects to progress further and further, no one seems ever to have believed in reaching a final absolute goal of truth.</span></p>
+  <div class="sentence-aid" data-sentence="208">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">「无限进步」这个观念，正是用来安置这份怀疑的</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">近代带来的第一个全新观念是十七世纪的「无限进步」。阿伦特读出它的功能：它不是解决困局，而是安置困局——因为它一边许诺永远向前，一边从不许诺终点。既然本来就没人相信会抵达最终真理，永远抵达不了也就不再是失败。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">主干</div><div><div class="meaning-en">The first entirely new notion … <button class="expr-button" type="button">seems intended to take care of</button> the predicament<div class="expr-tip"><b>take care of</b> 在这里不是「解决」，而是「打理、安置、料理掉」——让问题不再刺人，未必让它消失。</div></div><div class="meaning-zh">进步观念的作用是安置这个困局。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">插入语</div><div><div class="meaning-en">the seventeenth-century idea of <button class="expr-button" type="button">unlimited <i>progress</i></button><div class="expr-tip">两个破折号之间是对 <i>notion</i> 的同位说明，可整段折起来再读主干。</div></div><div class="meaning-zh">十七世纪的无限进步观。</div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">后来的地位</div><div><div class="meaning-en">became the most cherished <button class="expr-button" type="button">dogma</button> of <i>all</i> men<div class="expr-tip"><b>dogma</b> = 教条：不再被论证、只被信奉的东西。斜体 <i>all</i> 强调它跨越了少数与多数的界线。</div></div><div class="meaning-zh">数百年后成为所有人的教条。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">冒号后的解释</div><div><div class="meaning-en"><span class="pair-word">though</span> one expects to progress further, <span class="pair-word">no one</span> believed in reaching a final absolute goal<div class="meaning-zh">永远前进，却从不承诺终点——这正是它能安置怀疑的原因。</div></div></div></div></div>
+      <div class="read-again">拿掉破折号：<b>The first new notion … seems intended to take care of the predicament.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">新时代带来的第一个全新观念——十七世纪那个无限<i>进步</i>的观念，它在几个世纪之后成为生活在科学取向世界中的<i>所有</i>人最为珍视的教条——似乎意在安置这一困局：尽管人们期待着不断向前推进，却似乎从来没有人相信会抵达一个最终的、绝对的真理目标。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-zhu">注</span><b>十七世纪的「无限进步」</b> — <span class="zh">指近代科学兴起后形成的观念：知识可以无止境累积、后人必定超过前人。阿伦特在《过去与未来之间》等处多次分析它。此处的重点不在它是否为真，而在它的<b>功能</b>：把「永远达不到终极真理」从一项失败改写成一种常态。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">209</span>It is obvious that consciousness of the predicament should be most acute in the sciences that deal directly with men, and the answer—reduced to its lowest common <ruby>denominator<rt>公分母</rt></ruby>—of the various branches of biology, sociology, and psychology is to interpret all appearances as <ruby>functions<rt>功能、函数</rt></ruby> of the life process.</span></p>
+  <div class="sentence-aid" data-sentence="209">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">人的科学最敏感，它的共同答案是：显现＝生命过程的功能</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">直接研究人的学科最能感到这个困局。把生物学、社会学、心理学的各种回答归约到最小公分母，得到的是同一条：一切显现都被解释为生命过程的功能。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">为何最敏感</div><div><div class="meaning-en">most <button class="expr-button" type="button">acute</button> in the sciences that deal directly with men<div class="expr-tip"><b>acute</b> = 「尖锐、剧烈」。研究人的科学无法把观察者摘出去，所以困局最刺目。</div></div><div class="meaning-zh">人的科学躲不开自身。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">归约</div><div><div class="meaning-en"><button class="expr-button" type="button">reduced to its lowest common denominator</button><div class="expr-tip">数学比喻：把各科不同说法约到最小公分母，剩下共有的那一条。</div></div><div class="meaning-zh">撇开学科差异，取其共同点。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">共同答案</div><div><div class="meaning-en">interpret all appearances as <button class="expr-button" type="button">functions of the life process</button><div class="expr-tip"><b>function of</b> 一语双关：既是「功能」，也是数学的「函数」——显现被当作生命过程的因变量。</div></div><div class="meaning-zh">显现被解释成生命过程的功能。</div></div></div></div>
+      <div class="read-again">主干：<b>the answer … is to interpret all appearances as functions of the life process</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">显然，对这一困局的意识在直接研究人的科学中应当最为尖锐；而生物学、社会学、心理学各分支的回答——归约到其最小公分母——就是把一切显现都解释为生命过程的功能。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">210</span>The great advantage of <ruby>functionalism<rt>功能主义</rt></ruby> is that it presents us again with a <ruby>unitary<rt>统一的</rt></ruby> world view, and the old metaphysical dichotomy of (true) Being and (mere) Appearance, together with the old prejudice of Being’s supremacy over appearance, is still kept intact, albeit in a different manner.</span></p>
+  <div class="sentence-aid" data-sentence="210">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">功能主义给回一个统一世界，却原封不动保留了旧的二分与等级</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">功能主义的好处是重新给出一个统一的世界图景。但阿伦特马上指出代价：真实存在与单纯显现的旧二分、以及存在高于显现的旧偏见，都被完整保留了下来，只是换了个方式。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">先承认好处</div><div><div class="meaning-en">presents us again with a <button class="expr-button" type="button">unitary world view</button><div class="expr-tip"><b>unitary</b> = 「单一的、统一的」：不再需要两个世界。<b>again</b> 暗示两世界理论曾把它撕开。</div></div><div class="meaning-zh">世界重新变回一个。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">但结构未变</div><div><div class="meaning-en">the old dichotomy … is still <button class="expr-button" type="button">kept intact</button><div class="expr-tip"><b>keep intact</b> = 「原封不动地保留」。这是本段的批评焦点。</div></div><div class="meaning-zh">旧二分完好无损。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">等级也在</div><div><div class="meaning-en">the old prejudice of <button class="expr-button" type="button">Being’s supremacy over appearance</button><div class="expr-tip"><b>supremacy over</b> = 「凌驾于……之上」。接第 2 节的核心术语对。</div></div><div class="meaning-zh">存在高于显现的偏见仍在。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">让步收尾</div><div><div class="meaning-en"><button class="expr-button" type="button">albeit</button> in a different manner<div class="expr-tip"><b>albeit</b> = 「尽管、虽然」。方式变了，结构没变——下一句解释怎么变的。</div></div><div class="meaning-zh">只是换了一种形式。</div></div></div></div>
+      <div class="read-again">先扬后抑：<b>advantage: unitary — but the dichotomy is kept intact.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">功能主义的巨大优势在于，它重新向我们呈现出一个统一的世界观；而（真实）存在与（单纯）显现之间那个古老的形而上学二分，连同存在凌驾于显现之上的古老偏见，仍然被原封不动地保留着，尽管是以另一种方式。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">211</span>The argument has shifted; appearances are no longer <ruby>depreciated<rt>贬低</rt></ruby> as “secondary qualities” but understood as necessary conditions for essential processes that go on inside the living organism.</span></p>
+  <div class="sentence-aid" data-sentence="211">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显现不再被贬为「次性质」，改被当成内部过程的必要条件</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">论证方式变了：显现不再像近代早期那样被贬低为「次性质」，而是被抬举为必要条件——但条件仍然是<b>为了</b>内部的本质过程。地位提高了，从属关系没变。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">变化本身</div><div><div class="meaning-en">The argument has <button class="expr-button" type="button">shifted</button><div class="expr-tip"><b>shift</b> = 「移位」而非「推翻」：论据换了，结论的方向没换。</div></div><div class="meaning-zh">论证移位，不是翻转。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">不再是</div><div><div class="meaning-en">no longer depreciated as <button class="expr-button" type="button">“secondary qualities”</button><div class="expr-tip">洛克式术语：颜色、气味、声音等被认为只存在于知觉者之中，低于广延、形状等「首性质」。</div></div><div class="meaning-zh">不再被贬为次性质。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">而是</div><div><div class="meaning-en">understood as <button class="expr-button" type="button">necessary conditions</button> for essential processes<div class="expr-tip"><b>necessary condition for X</b> = 「X 的必要条件」：没有它 X 不成立——但重要的仍是 X。</div></div><div class="meaning-zh">成为内部本质过程的必要条件。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">重心仍在内</div><div><div class="meaning-en">processes that go on <button class="expr-button" type="button">inside</button> the living organism<div class="expr-tip">inside／outside 这一对从这里起贯穿全节，直到 S233「如果内部显现出来，我们看上去会一模一样」。</div></div><div class="meaning-zh">本质仍被安置在内部。</div></div></div></div>
+      <div class="read-again">注意升级不等于翻转：<b>not depreciated — but still for the sake of what is inside.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">论证已经移位：显现不再被贬低为「次性质」，而是被理解为那些在活的有机体内部进行的本质过程的必要条件。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-dian">典故</span><b>“secondary qualities”（次性质）</b> — <span class="zh">出自洛克《人类理解论》的经典区分：<b>首性质</b>（primary qualities，如广延、形状、运动）被认为属于物体本身；<b>次性质</b>（secondary qualities，如颜色、声音、气味）只是物体在我们感官中引起的观念。这一区分把可感的、显现出来的一面降为派生物——正是阿伦特要追踪的「贬低显现」的近代版本。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">212</span>This hierarchy has recently been challenged in a way that seems to me highly significant.</span></p>
+  <div class="sentence-aid" data-sentence="212">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">一句短过渡：等级最近被挑战了</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">这一句是全节的转轴。前面铺陈了「内部本质／外部显现」的等级，现在宣布：这个等级最近受到了挑战，而阿伦特认为这个挑战非常重要。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">对象</div><div><div class="meaning-en"><button class="expr-button" type="button">This hierarchy</button> has been challenged<div class="expr-tip"><i>This hierarchy</i> 回指前段：内部本质过程高于外部显现。</div></div><div class="meaning-zh">被挑战的是内外等级。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">她的表态</div><div><div class="meaning-en">in a way that <button class="expr-button" type="button">seems to me</button> highly significant<div class="expr-tip">罕见的第一人称评价，提示读者：接下来的材料对她自己的论证是关键，不是顺带的例子。</div></div><div class="meaning-zh">她明说自己看重这一挑战。</div></div></div></div>
+      <div class="read-again">这是路标句，记住它指向后文：<b>the challenge is coming.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这一等级秩序最近受到了挑战，而在我看来，这种挑战的方式意义重大。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">213</span>Could it not be that appearances are not there for the sake of the life process but, on the contrary, that the life process is there for the sake of appearances?</span></p>
+  <div class="sentence-aid" data-sentence="213">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">本节标题所说的「倒转」，就在这一问里</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">整节以此命名的倒转在这里被提出：会不会不是显现服务于生命过程，而恰恰相反——生命过程是为了显现而存在的？注意她用的是疑问句，不是断言。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">句式</div><div><div class="meaning-en"><button class="expr-button" type="button">Could it not be that</button> …?<div class="expr-tip">「难道不可能是……吗？」——修辞性反问，倾向明显，但保留为假设，不作论断。</div></div><div class="meaning-zh">以提问方式提出，而非断言。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">否定项</div><div><div class="meaning-en">appearances are <span class="pair-word">not</span> there <button class="expr-button" type="button">for the sake of</button> the life process<div class="expr-tip"><b>for the sake of X</b> = 「为了 X 之故」。这是目的关系，问的是谁服务于谁。</div></div><div class="meaning-zh">显现并非为生命过程而存在。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">倒转项</div><div><div class="meaning-en"><span class="pair-word">on the contrary</span>, the life process is there for the sake of <button class="expr-button" type="button">appearances</button><div class="expr-tip">这就是「形而上学等级的倒转」：目的与手段调换位置。</div></div><div class="meaning-zh">生命过程反倒是为了显现。</div></div></div></div>
+      <div class="read-again">整节的主命题，值得整句记住：<b>the life process is there for the sake of appearances</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">难道不可能是：显现并不是为了生命过程之故而存在，恰恰相反，生命过程才是为了显现之故而存在的吗？</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">214</span>Since we live in an <i>appearing</i> world, is it not much more plausible that the relevant and the meaningful in this world of ours should be located precisely on the surface?</span></p>
+  <div class="sentence-aid" data-sentence="214">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">既然世界是显现的，重要的东西为什么不能就在表面？</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">第二问补强第一问：既然我们生活在一个显现着的世界里，那么把「相关的、有意义的东西」正好安放在表面上，岂不是比把它埋进内部更说得通？</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">前提</div><div><div class="meaning-en"><button class="expr-button" type="button">Since</button> we live in an <i>appearing</i> world<div class="expr-tip"><b>Since</b> 表原因。斜体 <i>appearing</i> 是现在分词作定语：世界不是「有显现」，而是「正在显现着」。</div></div><div class="meaning-zh">我们所居的世界本身就在显现。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">推论</div><div><div class="meaning-en">the relevant and the meaningful should be located <button class="expr-button" type="button">precisely on the surface</button><div class="expr-tip"><b>precisely</b> 是挑衅：偏偏就在最被轻视的地方。这一短语在 S242「表面的价值」处收束。</div></div><div class="meaning-zh">要紧之物恰恰位于表面。</div></div></div></div>
+      <div class="read-again">记住这个词组，它是本节的口号：<b>the value of the surface</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">既然我们生活在一个<i>显现着的</i>世界里，那么，认为我们这个世界中相关而有意义的东西恰恰就位于表面之上，岂不是要合理得多吗？</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">215</span>In a number of publications on the various shapes and forms in animal life, the Swiss zoologist and biologist Adolf Portmann has shown that the facts themselves speak a very different language from the <ruby>simplistic<rt>过于简单的</rt></ruby> functional hypothesis that holds that appearances in living beings serve merely the twofold purpose of self-preservation and preservation of the species.</span></p>
+  <div class="sentence-aid" data-sentence="215">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">波特曼：事实本身说的话，跟功能假说很不一样</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">阿伦特请出证人：瑞士动物学家波特曼在多部关于动物形态的著作中表明，事实本身所说的语言，与那个把生物显现仅仅归结为「保存个体、保存物种」的简化功能假说，很不相同。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">证据说话</div><div><div class="meaning-en">the facts themselves <button class="expr-button" type="button">speak a very different language</button><div class="expr-tip">比喻：不是波特曼有别的主张，而是材料本身不肯配合那套假说。</div></div><div class="meaning-zh">事实与假说对不上。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">被质疑的假说</div><div><div class="meaning-en">the simplistic functional hypothesis that holds …<div class="meaning-zh">把显现只当作生存工具的看法。</div></div></div></div>
+  <div class="meaning-node d2"><div class="meaning-label">它的两项目的</div><div><div class="meaning-en">the <button class="expr-button" type="button">twofold purpose</button> of self-preservation and preservation of the species<div class="expr-tip">达尔文式的双重目的：保存自己、保存物种。后文 S217 正是把这两项<b>反过来</b>安置。</div></div><div class="meaning-zh">仅为保存个体与物种。</div></div></div></div>
+      <div class="read-again">主干：<b>the facts speak a different language from the functional hypothesis</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在若干论述动物生命中各种形状与形式的著作中，瑞士动物学家兼生物学家阿道夫·波特曼表明：事实本身所说的语言，与那个认为生物身上的显现仅仅服务于保存自身与保存物种这一双重目的的简化功能假说，很不相同。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-zhu">注</span><b>Adolf Portmann（阿道夫·波特曼，1897–1982）</b> — <span class="zh">瑞士巴塞尔的动物学家、生物学家。他研究动物的外形、羽色、花纹，主张这些「外观」不能被完全还原为生存功能，提出以<b>显现</b>本身为对象的形态学。阿伦特之所以需要他，是因为她要论证「显现优先」时必须避免只靠哲学内部的辩论——波特曼提供的是来自经验科学的证据。她并不因此接受他的全部结论：S231 就当面指出他自己也落回了他所批评的说法。</span></div></div>
+
+  <p class="sent"><span class="stext"><span class="n">216</span>From a different and, as it were, more innocent viewpoint, it rather looks as though, on the contrary, the inner, non-appearing organs exist only in order to bring forth and maintain the appearances.</span></p>
+  <div class="sentence-aid" data-sentence="216">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">换个天真的视角看：内脏是为了撑起外观而存在的</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">换一个未被理论训练过的视角来看，情况反而像是：那些不显现的内部器官之所以存在，只是为了产生并维持外部的显现。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">视角限定</div><div><div class="meaning-en">from a … <button class="expr-button" type="button">more innocent</button> viewpoint<div class="expr-tip"><b>innocent</b> 这里指「未被理论成见污染的」，近乎「素朴的」，不是道德上的清白。<b>as it were</b> = 「可以说」，为这个用词打个招呼。</div></div><div class="meaning-zh">从一个较素朴的角度看。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">倒过来的图景</div><div><div class="meaning-en">the inner, non-appearing organs exist <button class="expr-button" type="button">only in order to</button> bring forth and maintain the appearances<div class="expr-tip"><b>only in order to</b> 把内部器官降为手段——正是 S213 之问的具体形态。</div></div><div class="meaning-zh">内部器官只为造出并维持显现。</div></div></div></div>
+      <div class="read-again">听清目的关系倒过来了：<b>inner organs exist in order to maintain the appearances</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">从一个不同的、可以说更为素朴的视角来看，情况反倒像是：那些内部的、不显现的器官之所以存在，只是为了产生并维持这些显现。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">217</span>“Prior to all functions for the purpose of preservation of the individual and the species . . . we find the simple fact of appearing as self-display <i>that makes these functions meaningful</i>” (italics added).¹¹</span></p>
+  <div class="sentence-aid" data-sentence="217">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显现在先，正是它让那些功能变得有意义</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">波特曼的原话：在一切以保存个体与物种为目的的功能<b>之前</b>，先有一个简单事实——作为自我显示的显现；而正是这个事实使那些功能成为有意义的。斜体是阿伦特自己加的，标出她真正要用的半句。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">次序</div><div><div class="meaning-en"><button class="expr-button" type="button">Prior to</button> all functions … we find the simple fact of appearing<div class="expr-tip"><b>prior to</b> 在此不是时间上的先后，而是<b>地位上的在先</b>：功能要成立，先得有显现。</div></div><div class="meaning-zh">显现在功能之先。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">阿伦特加的斜体</div><div><div class="meaning-en"><button class="expr-button" type="button">that makes these functions meaningful</button><div class="expr-tip">她标出的正是这半句：显现不只是先于功能，而且是功能之所以「有意义」的来源。「(italics added)」＝斜体为引用者所加。</div></div><div class="meaning-zh">显现使那些功能获得意义。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">术语首现</div><div><div class="meaning-en">appearing as <button class="expr-button" type="button">self-display</button><div class="expr-tip"><b>self-display</b>（德语 <i>Selbstdarstellung</i>）在此第一次出现，S234 起成为核心术语。</div></div><div class="meaning-zh">显现即自我显示。</div></div></div></div>
+      <div class="read-again">读她标出的那半句：<b>appearing … makes these functions meaningful</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">「在一切以保存个体与物种为目的的功能之先……我们发现一个简单的事实：作为自我显示的显现，<i>正是它使这些功能成为有意义的</i>」（斜体为引用者所加）。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">218</span>Moreover, Portmann demonstrates with a great wealth of fascinating example, what should be obvious to the naked eye—that the enormous variety of animal and plant life, the very richness of display in its sheer functional <i>superfluity</i>, cannot be accounted for by the common theories that understand life in terms of functionality.</span></p>
+  <div class="sentence-aid" data-sentence="218">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显现之丰富远超功能所需——这是肉眼可见的事</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">波特曼用大量例证展示一件本该一眼可见的事：动植物形态的巨大多样、显现的丰富到了纯粹功能上「多余」的地步，这是功能主义理论无法解释的。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">本该显然</div><div><div class="meaning-en">what should be <button class="expr-button" type="button">obvious to the naked eye</button><div class="expr-tip"><b>to the naked eye</b> = 「用肉眼就能看到」。讽刺意味：需要科学家来证明一件不用仪器就看得见的事。</div></div><div class="meaning-zh">不必仪器，肉眼即可见。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">关键词</div><div><div class="meaning-en">the very richness of display in its sheer functional <button class="expr-button" type="button"><i>superfluity</i></button><div class="expr-tip"><b>superfluity</b> = 「多余、过剩」。这是本段的证据核心：显现<b>多过</b>功能所需——多出来的那部分，功能主义解释不了。</div></div><div class="meaning-zh">显现在功能上是过剩的。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">结论</div><div><div class="meaning-en">cannot be <button class="expr-button" type="button">accounted for</button> by the common theories<div class="expr-tip"><b>account for</b> = 「解释、说明」。</div></div><div class="meaning-zh">通行的功能理论无法解释。</div></div></div></div>
+      <div class="read-again">抓 <b>superfluity</b> 一词：多余的部分才是证据。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">此外，波特曼以大量引人入胜的例证展示了一件本该用肉眼就看得见的事：动物与植物生命的巨大多样性，那种在纯粹功能意义上<i>过剩</i>的显现之丰富，是那些以功能性来理解生命的通行理论所无法解释的。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">219</span>Thus, the <ruby>plumage<rt>羽衣、羽毛</rt></ruby> of birds, “which at first, we consider to be of value as a warm, protective covering, is thus in addition so formed that its visible parts—and these only—build up a coloured garment, the <ruby>intrinsic<rt>内在的、本身的</rt></ruby> worth of which lies solely in its visible appearance.”¹²</span></p>
+  <div class="sentence-aid" data-sentence="219">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">羽毛：保暖之外，只有看得见的部分才组成那件彩衣</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">第一个例证。鸟的羽衣起初被看作保暖的护层；但它还被这样造出来：<b>只有</b>可见的那些部分才构成一件彩色衣裳，而这件衣裳的价值全在于它被看见。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">功能解释</div><div><div class="meaning-en">of value as a <button class="expr-button" type="button">warm, protective covering</button><div class="expr-tip">先给出功能主义会说的那一层：保暖、防护。</div></div><div class="meaning-zh">先承认保暖功能。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">证据点</div><div><div class="meaning-en">its visible parts—<span class="pair-word">and these only</span>—build up a coloured garment<div class="meaning-zh">只有可见部分才参与构成彩衣：这正是「多余」的可测形态。</div></div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">价值所在</div><div><div class="meaning-en">the intrinsic worth of which lies <button class="expr-button" type="button">solely in its visible appearance</button><div class="expr-tip"><b>solely</b> 排他：这件彩衣的价值不在别处，就在「被看见」。</div></div><div class="meaning-zh">其本身价值全在于可见的显现。</div></div></div></div>
+      <div class="read-again">证据的形状是「只有可见的部分」：<b>visible parts—and these only</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">于是，鸟的羽衣——「我们起初把它看作一层温暖的保护性覆盖物而认为它有价值——却还被这样造就：它可见的那些部分，而且仅仅是这些部分，构成了一件彩色的衣裳，而这件衣裳本身的价值全然在于它可见的显现。」</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">220</span>Generally speaking, “the functional form pure and simple, so much <ruby>extolled<rt>盛赞</rt></ruby> by some as <ruby>befitting<rt>合乎、相称于</rt></ruby> Nature [adequate to nature’s purpose], is a rare and special case.”¹³</span></p>
+  <div class="sentence-aid" data-sentence="220">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">纯功能形态其实是罕见特例，不是常态</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">概括的一句：那种被一些人盛赞为「合乎自然」的纯粹功能性形态，其实是罕见的特例。方括号里是阿伦特为德文原意补的解释。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">被推崇者</div><div><div class="meaning-en">the <button class="expr-button" type="button">functional form pure and simple</button><div class="expr-tip"><b>pure and simple</b> 后置强调：「纯粹就是功能形态、别无其他」。</div></div><div class="meaning-zh">纯之又纯的功能形态。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">补注</div><div><div class="meaning-en">as befitting Nature <button class="expr-button" type="button">[adequate to nature’s purpose]</button><div class="expr-tip">方括号是阿伦特加的释义，说明 <i>befitting Nature</i> 的德文原意是「合乎自然的目的」。</div></div><div class="meaning-zh">即「符合自然目的」。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">判定</div><div><div class="meaning-en">is a <button class="expr-button" type="button">rare and special case</button><div class="expr-tip">把功能主义眼中的常态降为例外——这是全段的反转句。</div></div><div class="meaning-zh">是罕见的特例，而非通例。</div></div></div></div>
+      <div class="read-again">常态与例外对调：<b>the functional form … is a rare and special case</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">一般说来，「那种纯粹而单一的功能性形态——被一些人如此盛赞为合乎自然（即符合自然的目的）——乃是一种罕见的特殊情形。」</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">221</span>Hence, it is wrong to take into account only the functional process that goes on inside the living organism and to regard everything that is outside and “offers itself to the senses as the more or less subordinate consequence of the much more essential, ‘central,’ and ‘real’ processes.”¹⁴</span></p>
+  <div class="sentence-aid" data-sentence="221">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">把外部当成内部过程的附带结果，是错的</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">由上可得：只盯着有机体内部的功能过程，并把一切外在的、呈现给感官的东西看成那些「更本质、更中心、更真实」的过程的次要后果——这种做法是错的。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">两个被否的动作</div><div><div class="meaning-en">wrong <span class="pair-word">to take into account only</span> … and <span class="pair-word">to regard</span> …<div class="meaning-zh">一是只算内部，二是把外部降为后果。</div></div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">被贬的地位</div><div><div class="meaning-en">the more or less <button class="expr-button" type="button">subordinate consequence</button><div class="expr-tip"><b>subordinate</b> = 「从属的、次要的」；<b>consequence</b> = 「后果」。外部被同时降级两次：既从属，又只是结果。</div></div><div class="meaning-zh">外部被当作从属性的后果。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">三个引号</div><div><div class="meaning-en">the much more essential, <button class="expr-button" type="button">‘central,’ and ‘real’</button> processes<div class="expr-tip">引号是波特曼／阿伦特的距离标记：这些词是被批评的立场自己的说法，不是作者认可的判断。</div></div><div class="meaning-zh">「中心的」「真实的」都带引号。</div></div></div></div>
+      <div class="read-again">主干：<b>it is wrong to take into account only the inside</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因此，只考虑活的有机体内部进行的功能过程，并把一切外在的、「呈现于感官的东西看作那些更为本质的、『中心的』和『真实的』过程或多或少从属性的后果」，乃是错误的。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">222</span>According to that prevailing <ruby>misinterpretation<rt>误解</rt></ruby>, “the external shape of the animal serves to conserve the essential, the inside apparatus, through movement and intake of food, avoidance of enemies, and finding sexual partners.”¹⁵</span></p>
+  <div class="sentence-aid" data-sentence="222">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">通行误解：外形只是为了养住内部装置</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">把上述立场完整说出来：按照那种流行的误解，动物的外形只是通过运动、摄食、避敌、求偶来保住那个本质性的东西——内部装置。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">被服务的对象</div><div><div class="meaning-en">serves to conserve <button class="expr-button" type="button">the essential, the inside apparatus</button><div class="expr-tip">同位语：所谓「本质的东西」就是「内部装置」。目的关系再次落在内部。</div></div><div class="meaning-zh">外形服务于内部装置。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">四种手段</div><div><div class="meaning-en">movement, intake of food, avoidance of enemies, finding sexual partners<div class="meaning-zh">动、食、避敌、求偶——全部是生存与繁殖。</div></div></div></div></div>
+      <div class="read-again">这是被批评的立场，不是作者的：<b>that prevailing misinterpretation</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">按照那种流行的误解，「动物的外部形状是通过运动、摄取食物、躲避敌人和寻找性伴侣，来保存那本质性的东西，即内部装置。」</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">223</span>Against this approach Portmann proposes his “<ruby>morphology<rt>形态学</rt></ruby>,” a new science that would reverse the priorities: “<i>Not what something is, but how it ‘appears’ is the research problem</i>” (italics added).¹⁶</span></p>
+  <div class="sentence-aid" data-sentence="223">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">形态学：研究问题不是「是什么」，而是「如何显现」</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">波特曼提出「形态学」作为一门会把优先次序颠倒过来的新科学：研究的问题不是某物<b>是什么</b>，而是它<b>如何显现</b>。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">新学科</div><div><div class="meaning-en">a new science that would <button class="expr-button" type="button">reverse the priorities</button><div class="expr-tip"><b>reverse the priorities</b> = 「把优先次序颠倒过来」。整节标题里的 <i>reversal</i> 在此落到一门具体学科上。</div></div><div class="meaning-zh">一门颠倒优先次序的科学。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">研究问题的转换</div><div><div class="meaning-en"><span class="pair-word">Not what</span> something is, <span class="pair-word">but how</span> it ‘appears’<div class="meaning-zh">从「是什么」转到「如何显现」。</div></div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">引号的用意</div><div><div class="meaning-en">how it <button class="expr-button" type="button">‘appears’</button><div class="expr-tip">单引号提示这是被提升为主题的术语本身——显现不再是通往本质的窗口，而是研究对象。</div></div><div class="meaning-zh">「显现」本身成了课题。</div></div></div></div>
+      <div class="read-again">一句可以背下来的纲领：<b>not what something is, but how it appears</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">针对这一进路，波特曼提出他的「形态学」——一门会把优先次序颠倒过来的新科学：「<i>研究的问题不是某物是什么，而是它如何『显现』</i>」（斜体为引用者所加）。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b>morphology（形态学）</b> — <span class="zh">原是生物学中研究生物形态与结构的分支。波特曼在此赋予它纲领意义：<b>把「如何显现」而不是「是什么」立为研究问题</b>。这正是本节标题所说的「形而上学等级的倒转」在科学中的对应物——本质不再是提问的终点，显现不再是通往本质的途径。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">224</span>This means that the very shape of an animal “must be <ruby>appraised<rt>评估、判定</rt></ruby> as a special organ of reference in relationship to a <ruby>beholding<rt>观看的</rt></ruby> eye. . . . The eye and what is to be looked at form a functional unit which is fitted together according to rules as strict as those <ruby>obtaining<rt>成立、通行</rt></ruby> between food and digestive organs.”¹⁷</span></p>
+  <div class="sentence-aid" data-sentence="224">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">外形是一个「指向观看之眼」的器官；眼与被看之物构成一个单元</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">形态学的后果：动物的外形本身要被当作一个器官——一个朝向观看者之眼的「指涉器官」。眼睛和被看之物组成一个功能单元，二者的配合像食物与消化器官一样严格。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">外形是器官</div><div><div class="meaning-en">a special <button class="expr-button" type="button">organ of reference</button> in relationship to a beholding eye<div class="expr-tip"><b>organ of reference</b>：一个「有所指向」的器官。它的功能不是处理什么，而是<b>指向一个看它的人</b>。</div></div><div class="meaning-zh">外形是朝向观看者的器官。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">成对存在</div><div><div class="meaning-en">The eye and what is to be looked at form a <button class="expr-button" type="button">functional unit</button><div class="expr-tip">关键：看与被看不是两件事，而是一个单元的两端。没有眼睛，「被看的形状」就不成立。</div></div><div class="meaning-zh">眼与被看之物构成一个单元。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">类比强度</div><div><div class="meaning-en">rules as strict as those <button class="expr-button" type="button">obtaining</button> between food and digestive organs<div class="expr-tip"><b>obtain</b> 作不及物动词＝「（规则、条件）成立、通行」。这个类比把「显现—观看」提到与「食物—消化」同等的必然性。</div></div><div class="meaning-zh">其配合像食物与消化器官一样严格。</div></div></div></div>
+      <div class="read-again">记住这个配对：<b>the eye and what is to be looked at form a functional unit</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这意味着，动物的形状本身「必须被判定为一个特殊的指涉器官，它关联于一只观看的眼睛。……眼睛与那被观看之物构成一个功能单元，它们依照与食物和消化器官之间同样严格的规则彼此配合。」</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">225</span>And in accordance with this reversal, Portmann distinguishes between “<ruby>authentic<rt>本真的</rt></ruby> appearances,” which come to light <ruby>of their own accord<rt>自行、自发地</rt></ruby>, and “inauthentic” ones, such as the roots of a plant or the inner organs of an animal, which become visible only through <ruby>interference<rt>干预</rt></ruby> with and <ruby>violation<rt>侵犯、破坏</rt></ruby> of the “authentic” appearance.</span></p>
+  <div class="sentence-aid" data-sentence="225">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">本真显现＝自己显出来的；非本真＝要破坏外表才看得见的</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">依照这个倒转，波特曼区分两类显现：<b>本真的</b>——自行来到光亮中；<b>非本真的</b>——如植物的根、动物的内脏，只有通过干预并破坏本真显现才会变得可见。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">本真显现</div><div><div class="meaning-en">come to light <button class="expr-button" type="button">of their own accord</button><div class="expr-tip"><b>of one's own accord</b> = 「自行、不待外力」。判据不是「重不重要」，而是<b>是否自己显出来</b>。</div></div><div class="meaning-zh">自行进入光亮之中。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">非本真显现</div><div><div class="meaning-en">become visible <span class="pair-word">only through</span> interference with and violation of the “authentic” appearance<div class="meaning-zh">必须破坏外表才看得见。</div></div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">两个例子</div><div><div class="meaning-en">the <button class="expr-button" type="button">roots of a plant</button> or the inner organs of an animal<div class="expr-tip">根与内脏：都真实存在，但都不是「自行显现」的。这一区分回击了「内部更真实」的直觉。</div></div><div class="meaning-zh">植物的根、动物的内脏。</div></div></div></div>
+      <div class="read-again">判据只有一条：<b>does it come to light of its own accord?</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">并且，与这一倒转相一致，波特曼区分了「本真的显现」——它们自行来到光亮之中——和「非本真的」显现，例如植物的根或动物的内部器官，后者只有通过对「本真」显现的干预与破坏才变得可见。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b>authentic / inauthentic appearance（本真／非本真显现）</b> — <span class="zh">波特曼的术语，判据是<b>是否自行显现</b>，而非重要与否、真实与否。植物的根、动物的内脏当然真实存在，但要看见它们就必须破坏那个自行显现的外表——所以它们是「非本真的」显现。⚠ 这里的 authentic 与海德格尔 <i>eigentlich</i>（本真／非本真的此在）无关，不要串到一起。S238 会用这个术语回头界定「自我显示」的两种含义。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">226</span>Two facts of equal importance give this reversal its main <ruby>plausibility<rt>可信性</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="226">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">路标句：接下来是两条理由</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">结构提示句：有两个同等重要的事实使这一倒转显得可信。第一条从这里到 S233，第二条从 S234 开始。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">数量与分量</div><div><div class="meaning-en"><button class="expr-button" type="button">Two facts of equal importance</button><div class="expr-tip">先声明「两条、且同等重要」，提醒读者不要把第二条当补充。<i>First</i> 在 S227，<i>second</i> 在 S234。</div></div><div class="meaning-zh">两条理由，分量相同。</div></div></div></div>
+      <div class="read-again">读到这里先做个记号：<b>两条理由，S227 与 S234</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">有两个同等重要的事实，赋予这一倒转以主要的可信性。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">227</span>First, the impressive <ruby>phenomenal<rt>现象上的</rt></ruby> difference between “authentic” and “inauthentic” appearances, between outside shapes and the inside surfaces.</span></p>
+  <div class="sentence-aid" data-sentence="227">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">第一条：外表与内部在现象上差别极大</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">第一条理由：本真显现与非本真显现之间、外部形状与内部表面之间，存在着令人印象深刻的现象差别。下面几句逐一展开这个差别。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">差别的性质</div><div><div class="meaning-en">the impressive <button class="expr-button" type="button">phenomenal</button> difference<div class="expr-tip"><b>phenomenal</b> 在此是「就显现／现象而言的」，不是口语里的「了不起的」。差别不在理论上，而在看上去的样子上。</div></div><div class="meaning-zh">差别就在现象层面。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">对应关系</div><div><div class="meaning-en">between outside shapes <span class="pair-word">and</span> the inside surfaces<div class="meaning-zh">「本真／非本真」在此等同于「外形／内表面」。</div></div></div></div></div>
+      <div class="read-again">这是无谓语的名词句，承接上句：<b>First, [there is] the difference …</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">第一，「本真的」与「非本真的」显现之间、外部形状与内部表面之间，那种令人印象深刻的现象差别。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">228</span>The outside shapes are infinitely varied and highly <ruby>differentiated<rt>分化的</rt></ruby>; among the higher animals we can usually tell one individual from another.</span></p>
+  <div class="sentence-aid" data-sentence="228">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">外形千差万别，高等动物甚至能分辨个体</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">差别的第一面：外部形状无限多样、高度分化，在高等动物中我们通常能把一个个体和另一个区分开来。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">外部特征</div><div><div class="meaning-en">infinitely varied and highly <button class="expr-button" type="button">differentiated</button><div class="expr-tip"><b>differentiated</b> = 「彼此分化、区别开来的」。这正是「个体性」得以被看见的条件。</div></div><div class="meaning-zh">无限多样且高度分化。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">后果</div><div><div class="meaning-en">we can usually <button class="expr-button" type="button">tell one individual from another</button><div class="expr-tip"><b>tell A from B</b> = 「把 A 与 B 区分开」。个体之所以是个体，靠的是外表。</div></div><div class="meaning-zh">能分辨出个体。</div></div></div></div>
+      <div class="read-again">记住外部的关键词：<b>varied, differentiated, individual</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">外部形状无限多样且高度分化；在高等动物之中，我们通常能够把一个个体与另一个个体区别开来。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">229</span>Outside features of living things, moreover, are arranged according to the law of <ruby>symmetry<rt>对称</rt></ruby> so that they appear in a definite and pleasing order.</span></p>
+  <div class="sentence-aid" data-sentence="229">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">外部还遵循对称律，显得有序而悦目</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">外部特征还按对称律排列，因而以一种确定而悦目的秩序显现出来。「悦目」不是修辞——它本身就是证据：秩序是给眼睛看的。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">排列原则</div><div><div class="meaning-en">arranged according to the <button class="expr-button" type="button">law of symmetry</button><div class="expr-tip">对称在功能上并非必要，却普遍存在于外表——又一处「功能上的多余」。</div></div><div class="meaning-zh">依对称律排列。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">效果</div><div><div class="meaning-en">appear in a definite and <button class="expr-button" type="button">pleasing</button> order<div class="expr-tip"><b>pleasing</b> = 「令人愉悦的」。这个词预设了一个观看者：秩序是<b>对某人</b>而言悦目。</div></div><div class="meaning-zh">以确定而悦目的秩序显现。</div></div></div></div>
+      <div class="read-again">注意 <b>pleasing</b> 一词已经预设了观看者。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">此外，生物的外部特征依照对称的法则排列，因而以一种确定而令人愉悦的秩序显现出来。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">230</span>Inside organs, on the contrary, are never pleasing to the eye; once forced into view, they look as though they had been thrown together <ruby>piecemeal<rt>零碎地</rt></ruby> and, unless deformed by disease or some peculiar <ruby>abnormality<rt>异常</rt></ruby>, they appear alike; not even the various animal species, let alone the individuals, are easy to tell from each other by the mere inspection of their <ruby>intestines<rt>内脏、肠</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="230">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">内脏从不悦目、彼此雷同，连物种都难分辨</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">与外部完全相反：内部器官从不悦目；一旦被迫暴露，看上去像是零碎拼凑起来的；除非因疾病或异常而变形，它们彼此看起来都差不多。仅凭查看内脏，连物种都难以分辨，更不用说个体。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">三项对照</div><div><div class="meaning-en">never pleasing · thrown together <button class="expr-button" type="button">piecemeal</button> · they <span class="pair-word">appear alike</span><div class="expr-tip">逐条对着上一句读：悦目↔不悦目、对称有序↔零碎拼凑、高度分化↔彼此雷同。</div></div><div class="meaning-zh">不悦目、无秩序、无差别。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">条件</div><div><div class="meaning-en"><button class="expr-button" type="button">once forced into view</button><div class="expr-tip"><b>forced into view</b> = 「被迫进入视野」——呼应 S225：内脏只有被破坏外表才可见。</div></div><div class="meaning-zh">必须被迫才进入视野。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">递进</div><div><div class="meaning-en">not even the various species, <button class="expr-button" type="button">let alone</button> the individuals<div class="expr-tip"><b>let alone</b> = 「更不用说」。连大类都分不出，个体就更无从谈起。</div></div><div class="meaning-zh">连物种都难分，何况个体。</div></div></div></div>
+      <div class="read-again">与 S228–229 逐项对读，这句只是把每一项取反。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">相反，内部器官从来不悦目；一旦被迫进入视野，它们看上去就像是被零碎地拼凑在一起；而且，除非因疾病或某种特殊的异常而变形，它们看起来都彼此相似；仅凭查看内脏，甚至连各个动物物种都不容易彼此区分，更不用说个体了。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">231</span>When Portmann defines life as “the appearance of an inside in an outside,”¹⁸ he seems to fall victim to the very views he criticizes; for the point of his own findings is that what appears outside is so hopelessly <i>different</i> from the inside that one can hardly say that the inside ever appears at all.</span></p>
+  <div class="sentence-aid" data-sentence="231">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">阿伦特当面纠正波特曼：他自己的发现推翻了他的定义</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她不照单全收。波特曼把生命定义为「一个内部在一个外部中的显现」——这句话本身又落回了他所批评的看法。因为按他自己的发现：外部所显现的与内部<b>如此不同</b>，以至于根本谈不上内部曾经显现过。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">他的定义</div><div><div class="meaning-en">life as “the appearance of an <button class="expr-button" type="button">inside in an outside</button>”<div class="expr-tip">这个说法预设内部<b>确实</b>在外部中显现出来——正是「内部才是本质」的旧图式。</div></div><div class="meaning-zh">生命＝内部在外部中的显现。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">她的判断</div><div><div class="meaning-en">seems to <button class="expr-button" type="button">fall victim to</button> the very views he criticizes<div class="expr-tip"><b>fall victim to</b> = 「成为……的牺牲品」；<b>the very views</b> 中的 <i>very</i> 意为「正是那些」。</div></div><div class="meaning-zh">他反倒栽在自己批评的观点上。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">理由</div><div><div class="meaning-en">so hopelessly <i>different</i> … <span class="pair-word">that</span> one can hardly say that the inside ever appears at all<div class="meaning-zh">内外差异之大，使「内部显现」这个说法站不住。</div></div></div></div></div>
+      <div class="read-again">这是一处纠正，不是转述：<b>his own findings contradict his definition</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">当波特曼把生命定义为「一个内部在一个外部之中的显现」时，他似乎恰恰成了他所批评的那些观点的牺牲品；因为他自己的发现所指出的正是：外部所显现出来的东西与内部如此无可救药地<i>不同</i>，以至于人们几乎不能说内部曾经显现过。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">232</span>The inside, the functional apparatus of the life process, is covered up by an outside which, as far as the life process is concerned, has only one function, namely, to hide and protect it, to prevent its exposure to the light of an appearing world.</span></p>
+  <div class="sentence-aid" data-sentence="232">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">就生命过程而言，外部只有一个功能：把内部藏起来</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">内部——生命过程的功能装置——被一个外部盖住。而这个外部，<b>仅就生命过程而言</b>，只有一个功能：遮蔽并保护内部，防止它暴露在显现世界的光亮之中。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">限定语很重要</div><div><div class="meaning-en"><button class="expr-button" type="button">as far as the life process is concerned</button><div class="expr-tip">「就生命过程而言」——只在这一视角下外部才只有一个功能。换个视角（显现），外部还有别的分量。别漏掉这个限定。</div></div><div class="meaning-zh">仅限于生命过程这一视角。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">唯一功能</div><div><div class="meaning-en">to <span class="pair-word">hide</span> and <span class="pair-word">protect</span> it<div class="meaning-zh">遮蔽并保护内部。</div></div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">要防的是什么</div><div><div class="meaning-en">to prevent its <button class="expr-button" type="button">exposure to the light of an appearing world</button><div class="expr-tip">承接第 2 节 S195「它们既暴露，也保护不被暴露」。显现世界被写成「光」，内部则属于不该见光的一侧。</div></div><div class="meaning-zh">防止内部暴露于显现世界之光。</div></div></div></div>
+      <div class="read-again">别漏限定：<b>as far as the life process is concerned</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">内部，即生命过程的功能装置，被一个外部所覆盖；而这个外部，就生命过程而言，只有一项功能，即遮蔽并保护它，防止它暴露于一个显现着的世界的光亮之中。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">233</span>If this inside were to appear, we would all look alike.</span></p>
+  <div class="sentence-aid" data-sentence="233">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">如果内部显现出来，我们全都长得一样</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">一句极短的收束，把整条论证钉住：假如内部真的显现出来，我们所有人看上去都会一模一样。个体性只存在于外表。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">虚拟条件</div><div><div class="meaning-en"><button class="expr-button" type="button">If this inside were to appear</button><div class="expr-tip"><b>were to</b> 是与事实相反的虚拟：内部并没有显现，这只是设想。</div></div><div class="meaning-zh">假设内部真的显现。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">结论</div><div><div class="meaning-en">we would all <button class="expr-button" type="button">look alike</button><div class="expr-tip">呼应 S228「能分辨个体」与 S230「内脏彼此雷同」。个体性的所在地是外表，不是内里。</div></div><div class="meaning-zh">我们会全都一个样。</div></div></div></div>
+      <div class="read-again">这一句值得整句记住：<b>If this inside were to appear, we would all look alike.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">如果这个内部真的显现出来，我们所有人看上去都会是一样的。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">234</span>There is, second, the equally impressive evidence for the existence of an <ruby>innate<rt>天生的</rt></ruby> impulse—no less <ruby>compelling<rt>强制性的、不可抗的</rt></ruby> than the merely functional instinct of preservation—which Portmann calls “the urge to self-display” (<i>Selbstdarstellung</i>).</span></p>
+  <div class="sentence-aid" data-sentence="234">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">第二条理由：存在一种天生的「自我显示的冲动」</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">第二条同等重要的理由：有证据表明存在一种天生的冲动，其强制力不亚于单纯功能性的保存本能——波特曼称之为「自我显示的冲动」（<i>Selbstdarstellung</i>）。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">第二条</div><div><div class="meaning-en">There is, <button class="expr-button" type="button">second</button>, the equally impressive evidence<div class="expr-tip">接 S226 的「两个事实」。<i>second</i> 插在句中，主干是 <b>There is … the evidence for …</b>。</div></div><div class="meaning-zh">第二条证据，与第一条同等有力。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">分量对比</div><div><div class="meaning-en"><button class="expr-button" type="button">no less compelling than</button> the merely functional instinct<div class="expr-tip"><b>no less … than</b> = 「不亚于」。她要说的不是「显现也有点重要」，而是它和保存本能一样强制。</div></div><div class="meaning-zh">强制力不亚于保存本能。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">术语正式登场</div><div><div class="meaning-en">the <button class="expr-button" type="button">urge to self-display</button> (<i>Selbstdarstellung</i>)<div class="expr-tip"><b>urge</b> = 冲动、迫切的驱力，比 instinct 更主动。这个术语在 S238 被指出有歧义。</div></div><div class="meaning-zh">自我显示的冲动。</div></div></div></div>
+      <div class="read-again">主干：<b>There is, second, the evidence for an innate impulse … the urge to self-display.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">保留德文术语</span></summary><div class="translation-text">其次，还有同样令人印象深刻的证据，表明存在着一种天生的冲动——其强制性不亚于那种单纯功能性的保存本能——波特曼称之为「自我显示的冲动」（<i>Selbstdarstellung</i>）。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">235</span>This instinct is entirely <ruby>gratuitous<rt>无端的、多余的</rt></ruby> in terms of life-preservation; it far <ruby>transcends<rt>超出</rt></ruby> what may be deemed necessary for sexual attraction.</span></p>
+  <div class="sentence-aid" data-sentence="235">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">这种冲动在生存上完全多余，也远超求偶所需</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">堵住两条最容易的功能主义退路：就保存生命而言，这种本能完全是多余的；而它也远远超出了性吸引所需要的程度。两个现成解释都不够用。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">退路一：生存</div><div><div class="meaning-en">entirely <button class="expr-button" type="button">gratuitous</button> in terms of life-preservation<div class="expr-tip"><b>gratuitous</b> = 「无缘无故的、白给的、多余的」。呼应 S218 的 <i>superfluity</i>：多出来的部分才是证据。</div></div><div class="meaning-zh">对保存生命毫无必要。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">退路二：求偶</div><div><div class="meaning-en">far transcends what may be <button class="expr-button" type="button">deemed necessary</button> for sexual attraction<div class="expr-tip"><b>deem</b> = 「认为、视作」。即使把标准放宽到性吸引，显现的丰富仍然溢出。</div></div><div class="meaning-zh">也远超性吸引所需。</div></div></div></div>
+      <div class="read-again">两条解释都被排除：<b>not preservation, not even sexual attraction</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">就保存生命而言，这种本能完全是多余的；它远远超出了那种可被认为对性吸引而言必要的程度。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">236</span>These findings suggest that the <ruby>predominance<rt>优势地位</rt></ruby> of outside appearance implies, in addition to the sheer <ruby>receptivity<rt>接受性</rt></ruby> of our senses, a spontaneous activity: <i>whatever can see wants to be seen, whatever can hear calls out to be heard, whatever can touch presents itself to be touched.</i></span></p>
+  <div class="sentence-aid" data-sentence="236">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">感官不只是被动接受；能看的想被看，能听的呼求被听</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">这些发现指向一个结论：外部显现之所以居首，不仅因为我们的感官能接受，还因为存在一种<b>自发的活动</b>。斜体那三句是全节最著名的表述：凡能看的都想被看，凡能听的都呼求被听，凡能触的都把自己送上前来被触。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">不只是被动</div><div><div class="meaning-en">in addition to the sheer <button class="expr-button" type="button">receptivity</button> of our senses<div class="expr-tip"><b>receptivity</b> = 「接受性、感受性」，康德用语中感性的被动一面。她要加上的是<b>主动</b>的一面。</div></div><div class="meaning-zh">除了感官的单纯接受性之外。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">加上的东西</div><div><div class="meaning-en">a <button class="expr-button" type="button">spontaneous activity</button><div class="expr-tip"><b>spontaneous</b> = 「自发的、不待外因的」。显现不是等着被看，而是主动求看。</div></div><div class="meaning-zh">一种自发的活动。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">三句排比</div><div><div class="meaning-en">whatever can see <span class="pair-word">wants to be seen</span> · can hear <span class="pair-word">calls out to be heard</span> · can touch <span class="pair-word">presents itself to be touched</span><div class="meaning-zh">能感知者同时也求被感知。</div></div></div></div></div>
+      <div class="read-again">这三句值得朗读两遍：<b>whatever can see wants to be seen …</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这些发现表明：外部显现的优势地位，除了意味着我们感官的单纯接受性之外，还意味着一种自发的活动——<i>凡是能看的都想被看，凡是能听的都呼求被听，凡是能触的都把自己呈上以待被触。</i></div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">237</span>It is indeed as though everything that is alive—in addition to the fact that its surface is made for appearance, fit to be seen and meant to appear to others—has an <i>urge to appear</i>, to fit itself into the world of appearances by displaying and showing, not its “inner self” but itself as an individual.</span></p>
+  <div class="sentence-aid" data-sentence="237">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显示的是「作为个体的自己」，不是「内在自我」</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">一切活的东西仿佛都有一种<b>显现的冲动</b>：通过展示和显示，把自己嵌入显现世界。关键在句末的辨析——它所显示的<b>不是</b>「内在自我」，而是<b>作为个体的自己</b>。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">已有的事实</div><div><div class="meaning-en">its surface is <button class="expr-button" type="button">made for appearance</button>, fit to be seen and meant to appear<div class="expr-tip">三重叠加：为显现而造、宜于被看、意在向他者显现。这是被动的一面。</div></div><div class="meaning-zh">表面本就为显现而设。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">再加上冲动</div><div><div class="meaning-en">has an <button class="expr-button" type="button"><i>urge to appear</i></button><div class="expr-tip">斜体是阿伦特的强调。被造得可被看，与主动要显现，是两回事。</div></div><div class="meaning-zh">还有主动显现的冲动。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">关键辨析</div><div><div class="meaning-en"><span class="pair-word">not</span> its “inner self” <span class="pair-word">but</span> itself as an individual<div class="meaning-zh">显示的是作为个体的自身，不是内在自我。</div></div></div></div></div>
+      <div class="read-again">句末的 not…but 是重点：<b>not its “inner self” but itself as an individual</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">事实上仿佛是：每一个活着的东西——除了它的表面本就是为显现而造、宜于被看并意在向他者显现这一事实之外——都还有一种<i>显现的冲动</i>，即通过展示与显示，把自己嵌入显现世界之中；所显示的并不是它的「内在自我」，而是作为个体的它自身。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">238</span>(The word “self-display,” like the German <i>Selbstdarstellung</i>, is <ruby>equivocal<rt>有歧义的</rt></ruby>: it can mean that I actively make my presence felt, seen, and heard, or that I display my <i>self</i>, something inside me that otherwise would not appear at all—that is, in Portmann’s terminology, an “inauthentic” appearance.</span></p>
+  <div class="sentence-aid" data-sentence="238">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">「自我显示」有两义，她只取第一义</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">插入的术语澄清。「自我显示」有歧义：<b>第一义</b>＝我主动让人感到、看到、听到我的在场；<b>第二义</b>＝我把我的「自我」——某种本来根本不会显现的内在之物——展示出来。按波特曼的术语，第二义恰恰是一种「非本真的」显现。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">第一义</div><div><div class="meaning-en">I actively <button class="expr-button" type="button">make my presence felt</button>, seen, and heard<div class="expr-tip">重心在 <b>presence</b>（在场）：显示的是「我在这里」，不是「我里面是什么」。</div></div><div class="meaning-zh">主动使自己的在场被感知。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">第二义</div><div><div class="meaning-en">I display my <button class="expr-button" type="button"><i>self</i></button>, something inside me<div class="expr-tip">斜体 <i>self</i> 指内在的自我。这一义把显现重新当作「内部的外露」。</div></div><div class="meaning-zh">把内在自我展示出来。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">她的定性</div><div><div class="meaning-en">that is … an <button class="expr-button" type="button">“inauthentic” appearance</button><div class="expr-tip">用 S225 的术语判定第二义：需要把本来不显现的东西弄出来，因此是非本真的。</div></div><div class="meaning-zh">第二义属非本真显现。</div></div></div></div>
+      <div class="read-again">分清两义：<b>my presence（在场） vs. my self（内在自我）</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">（「自我显示」一词，如同德语的 <i>Selbstdarstellung</i>，是有歧义的：它可以指我主动地使自己的在场被感到、被看到、被听到，也可以指我展示我的<i>自我</i>，即我内部某种否则根本不会显现的东西——按波特曼的术语，那就是一种「非本真的」显现。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">239</span>In the following we shall use the word in the first meaning.)</span></p>
+  <div class="sentence-aid" data-sentence="239">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">她声明：以下只用第一义</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">术语约定：以下全书使用「自我显示」的<b>第一义</b>——主动使在场被感知，而非展示内在自我。这一条要记住，后文会反复用到。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">约定</div><div><div class="meaning-en">use the word in <button class="expr-button" type="button">the first meaning</button><div class="expr-tip">第一义＝S238 的前半：make my presence felt, seen, and heard。括号在此闭合。</div></div><div class="meaning-zh">取「使在场被感知」这一义。</div></div></div></div>
+      <div class="read-again">记住这条约定，它管着后面所有的 self-display。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">在下文中，我们将在第一种意义上使用这个词。）</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b><i>Selbstdarstellung</i>（自我显示）</b> — <span class="zh">德文由 <i>selbst</i>（自己）＋ <i>Darstellung</i>（呈现、演出、表现）构成，本可指舞台上的「自我表演」。阿伦特特意拆开两义并当场选定第一义：<b>使自己的在场被感知</b>（显现出来、被看被听），而<b>不是</b>把内心的自我摊开给人看。这个选择是全书的关键之一：它使「显现」不必依赖任何「内在真我」的假设，也使 S246 对「内在生活更真实」这一常识的批评成为可能。译作「自我显示」而非「自我表现」，正为避开「表现内心」的联想。</span></div></div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">240</span>It is precisely this self-display, quite <ruby>prominent<rt>显著的</rt></ruby> already in the higher forms of animal life, that reaches its <ruby>climax<rt>顶点</rt></ruby> in the human species.</span></p>
+  <div class="sentence-aid" data-sentence="240">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">一句过桥：自我显示在人这里达到顶点</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">短短一句把论证从动物带到人：正是这种在高等动物身上已经很显著的自我显示，在人类物种这里达到顶点。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">强调句式</div><div><div class="meaning-en"><button class="expr-button" type="button">It is precisely this self-display … that</button> reaches its climax<div class="expr-tip">这是 <b>It is … that …</b> 强调结构，被强调的是 <i>this self-display</i>。去掉框架即 <i>This self-display reaches its climax in the human species.</i></div></div><div class="meaning-zh">强调的是「自我显示」这一项。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">跨到人</div><div><div class="meaning-en">reaches its climax <button class="expr-button" type="button">in the human species</button><div class="expr-tip">波特曼的证据取自动物；这一句是阿伦特把它转用于人的接口。</div></div><div class="meaning-zh">在人类这里达到顶点。</div></div></div></div>
+      <div class="read-again">去掉强调框架读：<b>This self-display reaches its climax in the human species.</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">正是这种在动物生命的较高形式中已经相当显著的自我显示，在人类物种这里达到了它的顶点。</div></details>
+  </div>
+
+  <!-- paragraph -->
+  <p class="sent para-start"><span class="stext"><span class="n">241</span>Portmann’s morphological reversal of the usual priorities has far-reaching consequences, which he himself, however—perhaps for very good reasons—does not <ruby>elaborate<rt>详加阐述</rt></ruby>.</span></p>
+  <div class="sentence-aid" data-sentence="241">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">后果很深远，但波特曼自己没有展开——她来展开</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">末段开场。波特曼这一形态学上的倒转有深远后果，而他本人没有加以阐述——「也许有很好的理由」。这半句既是礼貌，也是分界：以下的推论由阿伦特负责，不再是波特曼的科学主张。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">后果</div><div><div class="meaning-en">has <button class="expr-button" type="button">far-reaching consequences</button><div class="expr-tip"><b>far-reaching</b> = 「影响深远的」。后果不限于生物学。</div></div><div class="meaning-zh">倒转的后果影响深远。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">他没做</div><div><div class="meaning-en">he himself … does not <button class="expr-button" type="button">elaborate</button><div class="expr-tip"><b>elaborate</b> = 「详细展开」。插入语「perhaps for very good reasons」是善意的：作为科学家，他有理由不越界谈哲学。</div></div><div class="meaning-zh">他本人未加展开。</div></div></div></div>
+      <div class="read-again">这是责任分界句：<b>以下的推论是阿伦特的，不是波特曼的。</b></div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">波特曼对通常优先次序所作的形态学倒转具有深远的后果，然而他本人——也许出于很好的理由——并没有详加阐述。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">242</span>They point to what he calls “the value of the surface,” that is, to the fact that “the appearance shows a maximum power of expression compared with the internal, whose functions are of a more <ruby>primitive<rt>原始的、初级的</rt></ruby> order.”¹⁹</span></p>
+  <div class="sentence-aid" data-sentence="242">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">「表面的价值」：显现的表达力最大，内部反而初级</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">这些后果指向他所说的「表面的价值」：与内部相比，显现具有最大的表达力，而内部的功能属于更初级的层次。整节标题的后半句在此兑现。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">标题兑现</div><div><div class="meaning-en">what he calls <button class="expr-button" type="button">“the value of the surface”</button><div class="expr-tip">本节标题 <i>the value of the surface</i> 就出自这里。从 S214「恰恰位于表面」到此，一条线收拢。</div></div><div class="meaning-zh">表面的价值。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">比较</div><div><div class="meaning-en">a <button class="expr-button" type="button">maximum power of expression</button> compared with the internal<div class="expr-tip">注意这里出现了 <b>expression</b>——正是下一句要挑剔的那个词。</div></div><div class="meaning-zh">显现的表达力最大。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">内部的位置</div><div><div class="meaning-en">whose functions are of a <button class="expr-button" type="button">more primitive order</button><div class="expr-tip"><b>of a … order</b> = 「属于……层次／等级」。内部不是更高，而是更初级——等级被彻底掉转。</div></div><div class="meaning-zh">内部的功能层次更低。</div></div></div></div>
+      <div class="read-again">留意 <b>expression</b> 这个词，下一句立刻要拆它。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">这些后果指向他所称的「表面的价值」，也就是指向这一事实：「与内部相比，显现展示出最大的表达力量，而内部的功能属于更为初级的层次。」</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">243</span>The use of the word “expression” shows clearly the <ruby>terminological<rt>术语上的</rt></ruby> difficulties this consequence is bound to encounter.</span></p>
+  <div class="sentence-aid" data-sentence="243">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">「表达」这个词本身就暴露了麻烦</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她抓住上一句引文里的 <i>expression</i>：这个词的使用清楚显示出，这一后果注定会遇到术语上的困难。问题不在波特曼说错了，而在现成的词汇本身带着旧的形而上学结构。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">线索</div><div><div class="meaning-en">The use of the word <button class="expr-button" type="button">“expression”</button><div class="expr-tip">她不是反驳内容，而是检查用词——这是她惯常的做法：术语里藏着未经检验的形而上学。</div></div><div class="meaning-zh">从「表达」一词入手。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">注定的困难</div><div><div class="meaning-en">is <button class="expr-button" type="button">bound to</button> encounter<div class="expr-tip"><b>be bound to</b> = 「注定会、必然会」。不是偶然的措辞不当，是无法回避的。</div></div><div class="meaning-zh">必然会遇到术语困难。</div></div></div></div>
+      <div class="read-again">主干很短：<b>the word “expression” shows the terminological difficulties</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">「表达」一词的使用清楚地显示出，这一后果注定会遭遇的术语上的困难。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">244</span>For an “expression” cannot but express something, and to the inevitable question, What does the expression express? (that is, press out), the answer will always be: something inside—an idea, a thought, an emotion.</span></p>
+  <div class="sentence-aid" data-sentence="244">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">「表达」一定要表达某物，而答案总会指向内部</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">困难的机制：「表达」这个词必然要求一个宾语——表达<b>什么</b>？而这个问题的答案永远指向内部：一个观念、一个思想、一种情感。于是词汇本身把我们拽回「内部才是本质」的旧图式。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">词义的强制</div><div><div class="meaning-en">an “expression” <button class="expr-button" type="button">cannot but</button> express something<div class="expr-tip"><b>cannot but do</b> = 「不能不、必然要」。这是语义上的强制，不是经验观察。</div></div><div class="meaning-zh">「表达」必然要有所表达。</div></div></div>
+  <div class="meaning-node d1"><div class="meaning-label">拆词</div><div><div class="meaning-en">What does the expression express? <button class="expr-button" type="button">(that is, press out)</button><div class="expr-tip">她把 <i>ex-press</i> 拆开还原为「向外压出」。既然是「压出」，就必定有个「里面」作为来源。词根本身就预设了内部。</div></div><div class="meaning-zh">ex-press ＝ 向外压出。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">必然的答案</div><div><div class="meaning-en">always be: <button class="expr-button" type="button">something inside</button>—an idea, a thought, an emotion<div class="expr-tip">三个例子都在内部。语言把「本质在内」这条形而上学假设固化成了语法。</div></div><div class="meaning-zh">答案总是内部之物。</div></div></div></div>
+      <div class="read-again">关键在拆词：<b>ex-press ＝ press out，必先有个「里面」</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">因为一个「表达」不可能不表达某种东西；而对于那个不可避免的问题——这表达究竟表达出什么（也就是压出什么）？——答案永远都会是：某种内部之物，一个观念、一个思想、一种情感。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">245</span>The <ruby>expressiveness<rt>表达性</rt></ruby> of an appearance, however, is of a different order; it “expresses” nothing but itself, that is, it <ruby>exhibits<rt>展示、陈列</rt></ruby> or displays.</span></p>
+  <div class="sentence-aid" data-sentence="245">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">显现的表达性只表达它自己——即：它是展示，不是表达</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">她给出替换：显现的表达性属于另一种层次——它不表达任何别的东西，只表达它自己；也就是说，它是<b>展示</b>（exhibit / display），而不是<b>表达</b>（express）。</div></div>
+      <div class="meaning-tree"><div class="meaning-node main"><div class="meaning-label">层次不同</div><div><div class="meaning-en">is of a <button class="expr-button" type="button">different order</button><div class="expr-tip">不是程度差异，是类别差异——所以不能沿用同一个词。</div></div><div class="meaning-zh">属于另一种层次。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">关键限定</div><div><div class="meaning-en">“expresses” <button class="expr-button" type="button">nothing but itself</button><div class="expr-tip">引号里的 expresses 是借用：它没有「里面」可压出，因此严格说来并不表达。</div></div><div class="meaning-zh">除自身外不表达任何东西。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">正确的词</div><div><div class="meaning-en">it <span class="pair-word">exhibits</span> or <span class="pair-word">displays</span><div class="meaning-zh">展示／显示，而非表达。</div></div></div></div></div>
+      <div class="read-again">换词是全段的落点：<b>not express, but exhibit / display</b>。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">然而，一个显现的表达性属于另一种层次；它除了它自身之外不「表达」任何东西，也就是说，它是在展示或显示。</div></details>
+  </div>
+
+  <p class="sent"><span class="stext"><span class="n">246</span>It follows from Portmann’s findings that our habitual standards of judgment, so firmly rooted in metaphysical assumptions and prejudices—according to which the essential lies beneath the surface, and the surface is “superficial”—are wrong, that our common conviction that what is inside ourselves, our “inner life,” is more relevant to what we “are” than what appears on the outside is an illusion; but when it comes to correcting these fallacies, it turns out that our language, or at least our terminological <ruby>discourse<rt>话语</rt></ruby>, fails us.</span></p>
+  <div class="sentence-aid" data-sentence="246">
+    <details class="rescue"><summary><b>卡住了？</b><span class="summary-hint">两条常识都错了；但要纠正它们时，语言本身不够用</span></summary><div class="rescue-body">
+      <div class="meaning-overview"><div class="meaning-kicker">作者在说什么</div><div class="meaning-thesis">全节的结论，三步：(1) 我们惯常的判断标准——本质在表面之下、表面是「肤浅的」——是错的；(2) 我们那个「内在生活比外表更能说明我们『是』什么」的共同信念是幻象；(3) 然而当我们着手纠正这些谬误时，却发现语言本身、至少我们的术语话语，帮不了我们。</div></div>
+      <div class="meaning-tree"><div class="meaning-node d1"><div class="meaning-label">结构</div><div><div class="meaning-en">It follows … <span class="pair-word">that</span> … , <span class="pair-word">that</span> … ; <span class="pair-word">but</span> …<div class="meaning-zh">两个 that 从句是两条被推翻的成见，分号后的 but 是转折。</div></div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">第一条错</div><div><div class="meaning-en">the essential lies beneath the surface, and the surface is <button class="expr-button" type="button">“superficial”</button><div class="expr-tip">英文的 <i>superficial</i> 同时是「表面的」与「肤浅的」——这个词本身就把贬低写进了词义。这正是下文说「语言帮不了我们」的例子。</div></div><div class="meaning-zh">本质在下、表面肤浅——错。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">第二条错</div><div><div class="meaning-en">our “inner life” is more relevant to what we <button class="expr-button" type="button">“are”</button><div class="expr-tip">引号里的 <i>are</i> 提示这正是有问题的用法：把「是什么」定位在内部。这条常识被判为 <b>an illusion</b>。</div></div><div class="meaning-zh">内在生活更能说明我们是谁——幻象。</div></div></div>
+  <div class="meaning-node main"><div class="meaning-label">转折：真正的障碍</div><div><div class="meaning-en">our language … <button class="expr-button" type="button">fails us</button><div class="expr-tip"><b>fail sb.</b> = 「辜负某人、在关键时刻不管用」。她没有说常识不可纠正，而是说现成的术语话语不足以承担纠正。</div></div><div class="meaning-zh">语言在此力有不逮。</div></div></div></div>
+      <div class="read-again">三步读完：<b>两条成见错了 — 但语言不够用</b>。这也是下一节开头要接住的问题。</div>
+    </div></details>
+    <details class="translation"><summary><b>直译</b><span class="summary-hint">需要时再展开</span></summary><div class="translation-text">由波特曼的发现可以推出：我们那些牢牢扎根于形而上学假设与偏见之中的惯常判断标准——按照这些标准，本质位于表面之下，而表面是「肤浅的」——是错误的；我们那个共同的信念，即认为我们内部的东西、我们的「内在生活」，比外部所显现出来的更能说明我们「是」什么，乃是一种幻象；但是，当着手纠正这些谬误时，事情却表明：我们的语言，或至少我们的术语话语，辜负了我们。</div></details>
+  </div>
+  <div class="remarks"><div class="remark"><span class="tag t-ci">词</span><b>express / exhibit（表达／展示）</b> — <span class="zh">本节最后的术语手术。<b>express</b> 的词根是 ex-（向外）＋ press（压），字面即「压出来」——这个词在语义上强制要求一个「里面」作为来源，因此一用它就等于承认了「本质在内」。阿伦特改用 <b>exhibit / display</b>（展示、显示）：显现不是把内部压出来，而是把自己摆出来。中译取「展示」而非「表现」，理由相同：「表现」也带「表现内心」的暗示。</span></div><div class="remark"><span class="tag t-zhu">注</span><b>“superficial” 的双关</b> — <span class="zh">英文 <i>superficial</i> 兼有「位于表面的」与「肤浅的」两义，贬义已经长在词义里。阿伦特举它正是为了说明末句所谓「语言辜负了我们」：即使你已经在理智上接受了「表面才是要紧处」，现成的词汇仍会在你说出口的瞬间把判断偷偷倒回去。</span></div></div>
+
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-dian">典故</span>allusion 典故</span>
+    <span><span class="tag t-yin">引用</span>quotation 引文</span>
+    <span><span class="tag t-zhu">注</span>note 说明</span>
+    <span><span class="tag t-ci">词</span>word 词义</span>
+  </div>
+  <a href="lotm-thinking-appearance-02.html">← Chapter 1 §2 · pp. 23–26 · S175–202</a><br>Source: <i>The Life of the Mind</i> (Harcourt, 1978), pp. 26–30. Text transcribed verbatim from the page images. Section 3 is complete; §4, “Body and soul; soul and mind,” begins on printed p. 30.
+</footer>
+
+<script>
+  const body=document.body;
+  const tRuby=document.getElementById('t-ruby'),
+        tRem=document.getElementById('t-rem'),
+        tTrans=document.getElementById('t-trans'),
+        tTheme=document.getElementById('t-theme');
+  const setTheme=(theme,remember=false)=>{
+    const dark=theme==='dark';
+    document.documentElement.dataset.theme=dark?'dark':'light';
+    tTheme.setAttribute('aria-pressed',String(dark));
+    tTheme.textContent=dark?'Light Theme':'Dark Theme';
+    tTheme.title=dark?'Switch to Light Theme':'Switch to Dark Theme';
+    document.querySelectorAll('a[href*="lotm-thinking-"]').forEach(link=>{
+      const target=new URL(link.getAttribute('href'),location.href);
+      target.searchParams.set('theme',dark?'dark':'light');
+      link.href=target.href;
+    });
+    if(remember){try{localStorage.setItem('lotm-reading-theme',dark?'dark':'light');}catch(_){}}
+  };
+  setTheme(document.documentElement.dataset.theme);
+  tTheme.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark',true);
+  tRuby.onclick=()=>{body.classList.toggle('hide-ruby'); tRuby.classList.toggle('off');};
+  tRem.onclick =()=>{body.classList.toggle('hide-remarks'); tRem.classList.toggle('off');};
+
+  const translations=[...document.querySelectorAll('.translation')];
+  tTrans.onclick=()=>{
+    const open=tTrans.getAttribute('aria-pressed')!=='true';
+    translations.forEach(item=>item.open=open);
+    tTrans.setAttribute('aria-pressed',String(open));
+    tTrans.textContent=open?'收起直译 175–202':'直译 175–202';
+  };
+
+  const rescues=[...document.querySelectorAll('.rescue')];
+  const clearFocus=()=>{
+    document.querySelectorAll('.active-sentence,.active-aid')
+      .forEach(item=>item.classList.remove('active-sentence','active-aid'));
+  };
+  rescues.forEach(rescue=>{
+    rescue.addEventListener('toggle',()=>{
+      if(rescue.open){
+        rescues.forEach(other=>{if(other!==rescue) other.open=false;});
+        clearFocus();
+        const aid=rescue.closest('.sentence-aid');
+        const sentence=aid.previousElementSibling;
+        aid.classList.add('active-aid');
+        if(sentence?.classList.contains('sent')) sentence.classList.add('active-sentence');
+        body.classList.add('rescue-mode');
+        rescue.scrollIntoView({behavior:'smooth',block:'center'});
+      }else if(!document.querySelector('.rescue[open]')){
+        clearFocus();
+        body.classList.remove('rescue-mode');
+      }
+    });
+  });
+</script>
+
+
+<!-- reading-anchors:start -->
+<style>
+  @media (min-width:900px){
+    main{max-width:790px}
+    p.sent{position:relative; padding-left:46px}
+    main > .remarks, main > .sentence-aid, main > .practice-note{margin-left:46px}
+    .mgn{position:absolute; left:0; top:.42rem; width:32px; text-align:right;
+         font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+         line-height:1; user-select:none}
+    .sent > .stext > .n{display:none}
+  }
+  @media (max-width:899px){
+    .mgn{display:none !important}
+    .sent > .stext > .n{display:inline}
+  }
+  .mgn-n{appearance:none; border:0; background:none; padding:.12rem 0; cursor:pointer;
+         font:inherit; font-size:.68rem; color:var(--muted); opacity:.72}
+  .mgn-n:hover,.mgn-n:focus-visible{color:var(--amber); opacity:1}
+  .mgn-n:focus-visible{outline:1px solid var(--amber); outline-offset:3px; border-radius:2px}
+  p.sent.marked .mgn-n{color:var(--amber); opacity:1; font-weight:750}
+  p.sent.marked{background:linear-gradient(90deg,var(--amber-soft),transparent 72%);
+                border-left-color:var(--amber)}
+
+  .reading-map,#t-map{display:none}
+  @media (min-width:1280px){
+    #t-map{display:inline-block}
+    .reading-map{
+      display:block; position:fixed;
+      left:max(16px,calc(50vw - 640px)); top:4.3rem; width:212px;
+      z-index:8; padding:.75rem .8rem .8rem;
+      /* Whole extent should always be visible (no scrolling map). The cap is a
+         safety net for unusually short windows only — with the trimmed chrome
+         the longest page fits ~700px of viewport height. */
+      max-height:calc(100vh - 5.2rem); overflow:auto; overscroll-behavior:contain;
+      scrollbar-width:thin;
+      border:1px solid var(--line); border-radius:10px;
+      background:color-mix(in srgb,var(--paper) 94%,transparent);
+      box-shadow:0 10px 32px rgba(55,42,24,.07);
+      backdrop-filter:blur(8px);
+      font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+    }
+    body.map-hidden .reading-map{display:none}
+  }
+  .map-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+  .map-title{font-size:.72rem;font-weight:760;letter-spacing:.04em;color:var(--ink)}
+  .map-hide{margin-left:auto;border:0;background:none;color:var(--muted);padding:.1rem;
+            font:inherit;font-size:.62rem;cursor:pointer}
+  .map-hide:hover{color:var(--amber)}
+  .map-kicker{margin:.4rem 0 .18rem;font-size:.55rem;font-weight:760;letter-spacing:.13em;
+              text-transform:uppercase;color:var(--muted)}
+
+  .bk-work{font-size:.66rem;font-weight:700;color:var(--ink);margin:.05rem 0 .12rem}
+  .bk-work small{font-weight:400;color:var(--muted);font-size:.55rem;margin-left:.3rem}
+  .bk-unit{display:flex;align-items:baseline;gap:.3rem;padding:.09rem .3rem;border-radius:5px;
+           font-size:.63rem;color:var(--muted)}
+  .bk-unit.built{color:var(--ink)}
+  .bk-unit.current{background:var(--amber-soft);font-weight:700}
+  .bk-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bk-segs{margin-left:auto;flex:none;display:flex;gap:.22rem}
+  .bk-seg{color:var(--muted);text-decoration:none;font-size:.55rem;
+          font-variant-numeric:tabular-nums;padding:.02rem .18rem;border-radius:3px}
+  .bk-seg:hover{background:var(--amber-soft);color:var(--ink)}
+  .bk-seg.here{background:var(--amber);color:var(--paper);font-weight:700}
+
+
+  .pg-map{display:grid;grid-template-columns:14px 1fr;gap:.5rem;margin-top:.15rem}
+  .pg-strip{position:relative;width:14px;border:1px solid var(--line);border-radius:4px;
+            background:
+              repeating-linear-gradient(to bottom,
+                transparent 0, transparent calc(8px - 1px),
+                color-mix(in srgb,var(--line) 55%,transparent) calc(8px - 1px),
+                color-mix(in srgb,var(--line) 55%,transparent) 8px)
+              var(--paper);
+            cursor:pointer}
+  .pg-para{position:absolute;left:0;right:0;height:2px;background:var(--line);
+           filter:brightness(.82);pointer-events:none}
+  .pg-view{position:absolute;left:-3px;right:-3px;border:1px solid var(--amber);
+           background:color-mix(in srgb,var(--amber) 16%,transparent);
+           border-radius:3px;pointer-events:none;transition:top .1s,height .1s}
+  .pg-dot{position:absolute;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;
+          border-radius:50%;background:var(--amber);border:1px solid var(--paper);cursor:pointer}
+  .pg-labels{position:relative}
+  .pg-lab{position:absolute;left:0;right:0;display:block;border:0;background:none;
+          text-align:left;padding:0 .25rem;font:inherit;cursor:pointer;color:var(--muted);
+          border-radius:5px;display:flex;flex-direction:column;justify-content:center}
+  .pg-lab:hover{background:var(--amber-soft);color:var(--ink)}
+  .pg-lab.active{color:var(--ink)}
+  .pg-lab.active .pg-zh{color:var(--amber)}
+  .pg-range{font-size:.52rem;font-variant-numeric:tabular-nums;color:var(--muted);line-height:1.1}
+  .pg-zh{font-size:.66rem;font-weight:650;line-height:1.2}
+  .pg-en{font-size:.55rem;color:var(--muted);line-height:1.15}
+  .pg-lab.thesis .pg-zh::after{content:" ◆";font-size:.5rem;color:var(--amber)}
+  .map-hint{margin-top:.5rem;font-size:.55rem;line-height:1.45;color:var(--muted)}
+  html[data-theme="dark"] .reading-map{box-shadow:0 12px 34px rgba(0,0,0,.28)}
+  html[data-theme="dark"] p.sent.marked{background:linear-gradient(90deg,var(--amber-soft),transparent 72%)}
+</style>
+
+<script>
+(()=>{
+  const CFG={"first": 203, "last": 246, "paras": [203, 207, 209, 212, 215, 218, 224, 226, 234, 240, 241], "regions": [{"s": 203, "e": 206, "zh": "幻象与失望", "en": "error, illusion, dis-illusion"}, {"s": 207, "e": 208, "zh": "进步无终点", "en": "progress without a final truth"}, {"s": 209, "e": 211, "zh": "功能主义", "en": "appearances as functions"}, {"s": 212, "e": 214, "zh": "倒转之问", "en": "is life for the sake of appearing?", "thesis": true}, {"s": 215, "e": 223, "zh": "显现的多余", "en": "Portmann: display exceeds function"}, {"s": 224, "e": 233, "zh": "本真与非本真", "en": "authentic vs inauthentic appearances"}, {"s": 234, "e": 240, "zh": "自我显示", "en": "the urge to self-display"}, {"s": 241, "e": 246, "zh": "表面的价值", "en": "the value of the surface"}], "book": {"work": "Thinking · 思维", "units": [{"title": "Introduction · 导论", "segments": [{"href": "lotm-thinking-intro.html", "label": "S1–48"}, {"href": "lotm-thinking-intro-02.html", "label": "S49–98"}, {"href": "lotm-thinking-intro-03.html", "label": "S99–127"}]}, {"title": "I · Appearance", "segments": [{"href": "lotm-thinking-appearance-01.html", "label": "S128–174"}, {"href": "lotm-thinking-appearance-02.html", "label": "S175–202"}, {"href": "lotm-thinking-appearance-03.html", "label": "S203–246"}]}, {"title": "II · Mental activities", "segments": []}, {"title": "III · What makes us think?", "segments": []}, {"title": "IV · Where are we when we think?", "segments": []}], "later": "Willing · Judging"}, "self": "lotm-thinking-appearance-03.html"};
+  const PX=8;
+  const sents=[...document.querySelectorAll("p.sent")];
+  if(!sents.length) return;
+  const markKey="reading-marks:"+location.pathname;
+  const mapKey="lotm-reading-map-visible";
+  let marks=new Set();
+  try{ marks=new Set(JSON.parse(localStorage.getItem(markKey)||"[]")); }catch(_){}
+  const saveMarks=()=>{try{localStorage.setItem(markKey,JSON.stringify([...marks]));}catch(_){}};
+  const byNumber=n=>sents.find(p=>p.dataset.n===String(n));
+  const y=n=>(n-CFG.first)*PX;
+
+  // --- sentence number margin (stable coordinates; click = mark) ---
+  sents.forEach(p=>{
+    const n=p.querySelector(".n")?.textContent.trim();
+    if(!n) return;
+    p.dataset.n=n;
+    const box=document.createElement("div"); box.className="mgn";
+    const btn=document.createElement("button");
+    btn.className="mgn-n"; btn.type="button"; btn.textContent=n;
+    btn.title="Mark sentence "+n;
+    btn.addEventListener("click",()=>{
+      if(marks.has(n)){marks.delete(n); p.classList.remove("marked");}
+      else{marks.add(n); p.classList.add("marked");}
+      saveMarks(); drawMarks();
+    });
+    box.appendChild(btn); p.insertBefore(box,p.firstChild);
+    if(marks.has(n)) p.classList.add("marked");
+  });
+
+  // --- map shell ---
+  const H=(CFG.last-CFG.first+1)*PX;
+  const map=document.createElement("aside");
+  map.className="reading-map"; map.setAttribute("aria-label","Reading map");
+  const bookRows=CFG.book.units.map(u=>{
+    const segs=u.segments.map(s=>{
+      const here=location.pathname.endsWith("/"+s.href)||location.pathname.endsWith(s.href);
+      return `<a class="bk-seg${here?" here":""}" href="${s.href}"${here?' aria-current="page"':''}>${s.label}</a>`;
+    }).join("");
+    const built=u.segments.length>0;
+    const cur=u.segments.some(s=>location.pathname.endsWith("/"+s.href)||location.pathname.endsWith(s.href));
+    return `<div class="bk-unit${built?" built":""}${cur?" current":""}">`+
+           `<span class="bk-title">${u.title}</span><span class="bk-segs">${segs}</span></div>`;
+  }).join("");
+  map.innerHTML=
+    `<div class="map-head"><div class="map-title">Reading map</div>`+
+    `<button class="map-hide" type="button">Hide</button></div>`+
+    `<div class="map-kicker">The book</div>`+
+    `<div class="bk-work">${CFG.book.work}<small>之后 ${CFG.book.later}</small></div>${bookRows}`+
+    `<div class="map-kicker">This page</div>`+
+    `<nav class="pg-map" aria-label="Argument map">`+
+    `<div class="pg-strip" style="height:${H}px"></div>`+
+    `<div class="pg-labels" style="height:${H}px"></div></nav>`+
+    `<div class="map-hint"></div>`;
+  document.body.appendChild(map);
+
+  // The map is created after the page's initial theme pass, so propagate the
+  // active theme now as well (needed especially for direct file:// reading).
+  const theme=document.documentElement.dataset.theme;
+  map.querySelectorAll('a[href*="thinking-"]').forEach(link=>{
+    const target=new URL(link.getAttribute("href"),location.href);
+    target.searchParams.set("theme",theme);
+    link.href=target.href;
+  });
+
+  const strip=map.querySelector(".pg-strip");
+  const labels=map.querySelector(".pg-labels");
+  const hint=map.querySelector(".map-hint");
+
+  CFG.paras.forEach(n=>{
+    if(n===CFG.first) return;
+    const t=document.createElement("div");
+    t.className="pg-para"; t.style.top=(y(n)-1)+"px"; strip.appendChild(t);
+  });
+  const view=document.createElement("div"); view.className="pg-view"; strip.appendChild(view);
+
+  // The STRIP carries the honest proportional geometry (ticks, marks, band).
+  // The LABEL column only has to stay adjacent, ordered and readable, so a
+  // short region gets a legible minimum height and later labels are pushed
+  // down rather than overlapping. Decoupling the two keeps proportion exact
+  // where it matters without making 3-sentence regions unreadable.
+  const MINLAB=34;
+  const labBtns=CFG.regions.map(r=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="pg-lab"+(r.thesis?" thesis":"");
+    b.innerHTML=`<span class="pg-range">${r.s}–${r.e}</span>`+
+                `<span class="pg-zh">${r.zh}</span><span class="pg-en">${r.en}</span>`;
+    b.addEventListener("click",()=>jump(r.s));
+    labels.appendChild(b); return b;
+  });
+  let bottom=-1e9;
+  labBtns.forEach((b,i)=>{
+    const r=CFG.regions[i];
+    const h=Math.max((r.e-r.s+1)*PX,MINLAB);
+    const top=Math.max(y(r.s),bottom+2);
+    b.style.top=top+"px"; b.style.height=h+"px";
+    bottom=top+h;
+  });
+  labels.style.height=Math.max(H,bottom)+"px";
+
+  function jump(n){
+    const p=byNumber(n); if(!p) return;
+    p.scrollIntoView({behavior:"smooth",block:"center"});
+    history.replaceState(null,"","#s"+n);
+  }
+  strip.addEventListener("click",e=>{
+    const f=(e.clientY-strip.getBoundingClientRect().top)/strip.clientHeight;
+    jump(CFG.first+Math.min(CFG.last-CFG.first,Math.max(0,Math.round(f*(CFG.last-CFG.first)))));
+  });
+
+  function drawMarks(){
+    strip.querySelectorAll(".pg-dot").forEach(d=>d.remove());
+    [...marks].map(Number).filter(Number.isFinite).sort((a,b)=>a-b).forEach(n=>{
+      const d=document.createElement("button");
+      d.className="pg-dot"; d.type="button"; d.title="S"+n;
+      d.style.top=(y(n)+PX/2)+"px";
+      d.addEventListener("click",ev=>{ev.stopPropagation(); jump(n);});
+      strip.appendChild(d);
+    });
+    hint.textContent=marks.size?"":"点句号数字可在地图上留下标记。";
+  }
+  drawMarks();
+
+  // viewport band + active region, in sentence coordinates (stable, meaningful)
+  function visibleRange(){
+    let a=null,b=null;
+    for(const p of sents){
+      const r=p.getBoundingClientRect();
+      if(r.bottom<0||r.top>innerHeight) continue;
+      const n=Number(p.dataset.n);
+      if(a===null||n<a) a=n;
+      if(b===null||n>b) b=n;
+    }
+    return a===null?null:[a,b];
+  }
+  function onScroll(){
+    const vr=visibleRange(); if(!vr) return;
+    view.style.top=y(vr[0])+"px";
+    view.style.height=Math.max(6,(vr[1]-vr[0]+1)*PX)+"px";
+    const mid=(vr[0]+vr[1])/2;
+    CFG.regions.forEach((r,i)=>labBtns[i].classList.toggle("active",mid>=r.s&&mid<=r.e));
+  }
+  addEventListener("scroll",onScroll,{passive:true});
+  addEventListener("resize",onScroll);
+  onScroll();
+
+  // top-bar toggle (persisted)
+  const bar=document.querySelector(".bar");
+  const mapToggle=document.createElement("button");
+  mapToggle.className="btn"; mapToggle.id="t-map"; mapToggle.type="button";
+  bar.insertBefore(mapToggle,document.getElementById("t-theme"));
+  function setMapVisible(v,remember=false){
+    document.body.classList.toggle("map-hidden",!v);
+    mapToggle.setAttribute("aria-pressed",String(v));
+    mapToggle.textContent=v?"Hide Map":"Show Map";
+    if(remember){try{localStorage.setItem(mapKey,v?"1":"0");}catch(_){}}
+  }
+  let vis=true; try{vis=localStorage.getItem(mapKey)!=="0";}catch(_){}
+  setMapVisible(vis);
+  mapToggle.addEventListener("click",()=>setMapVisible(document.body.classList.contains("map-hidden"),true));
+  map.querySelector(".map-hide").addEventListener("click",()=>setMapVisible(false,true));
+})();
+</script>
+<!-- reading-anchors:end -->
+<!-- cain-reader:start -->
+<style>
+  .cain-btn{
+    appearance:none; border:0; background:none; cursor:pointer; padding:0 .1rem;
+    margin-left:.35rem; color:var(--muted); font-size:.72rem; vertical-align:.08em;
+    font-family:system-ui,sans-serif; opacity:.55; transition:.15s;
+  }
+  .sent:hover .cain-btn{opacity:1; color:var(--amber)}
+  .cain-btn.playing,.cain-btn.paused{opacity:1; color:var(--amber)}
+  .sent.cain-now{border-left-color:var(--amber); background:var(--amber-soft)}
+  /* paused keeps the place visible but stops shouting about it */
+  .sent.cain-paused{background:transparent}
+  html[data-theme="dark"] .sent.cain-now{background:#241d10}
+  html[data-theme="dark"] .sent.cain-paused{background:transparent}
+</style>
+<script>
+(()=>{
+  const AUDIO_DIR="audio/lotm-thinking-appearance-03";
+  const audio=new Audio(); audio.preload="none";
+  let cur=null;          // currently playing button
+  let readAll=false;     // continuous mode
+  const sents=[...document.querySelectorAll("p.sent")].map(p=>{
+    const num=p.querySelector(".n")?.textContent.trim();
+    if(!num) return null;
+    const btn=document.createElement("button");
+    btn.className="cain-btn"; btn.dataset.n=num; btn.textContent="\u25B6";
+    btn.title="Deckard Cain reads this sentence";
+    (p.querySelector(".stext")||p).appendChild(btn);
+    return {p,btn,num};
+  }).filter(Boolean);
+
+  // Pausing must KEEP the position. Yan reads along with the voice and needs to
+  // stop for a moment when he falls behind; restarting a 40-word sentence from
+  // the beginning was the whole problem. So `cur` stays loaded while paused, and
+  // only switching to another sentence reloads the audio.
+  const paint=()=>{
+    const live=cur && !audio.paused;
+    sents.forEach(s=>{
+      const on=(s===cur);
+      s.btn.textContent=(on && live)?"\u23F8":"\u25B6";     // pause bars / play
+      s.btn.classList.toggle("playing", on && !!live);
+      s.btn.classList.toggle("paused", on && !live);
+      s.btn.title=(on && live)?"暂停（保留位置）":"Deckard Cain reads this sentence";
+      s.p.classList.toggle("cain-now", on);
+      s.p.classList.toggle("cain-paused", on && !live);
+    });
+    if(tCain){
+      tCain.setAttribute("aria-pressed",String(readAll));
+      tCain.textContent=!readAll?"\u25B6 Cain 朗读"
+                      : live?"\u23F8 暂停":"\u25B6 继续";
+    }
+  };
+  const stop=()=>{ audio.pause(); cur=null; paint(); };
+  const load=(s,scroll)=>{
+    cur=s;
+    audio.src=`${AUDIO_DIR}/s${s.num}.mp3`;
+    audio.play().catch(()=>{ readAll=false; stop(); });
+    if(scroll) s.p.scrollIntoView({behavior:"smooth",block:"center"});
+    paint();
+  };
+  const toggle=()=>{ if(audio.paused) audio.play().catch(paint); else audio.pause(); };
+  audio.addEventListener("play",paint);
+  audio.addEventListener("pause",paint);
+  audio.addEventListener("ended",()=>{
+    const i=cur?sents.indexOf(cur):-1;
+    if(readAll && i>=0 && i+1<sents.length) load(sents[i+1],true);
+    else { readAll=false; stop(); }
+  });
+  sents.forEach(s=>s.btn.addEventListener("click",()=>{
+    if(cur===s){ toggle(); return; }   // same sentence -> pause/resume in place
+    readAll=false; load(s,false);        // different sentence -> start it
+  }));
+
+  // top-bar continuous read: start, then pause/resume without losing the place
+  const bar=document.querySelector(".bar");
+  const tCain=document.createElement("button");
+  tCain.className="btn"; tCain.id="t-cain"; tCain.type="button";
+  bar.insertBefore(tCain, document.getElementById("t-theme"));
+  tCain.addEventListener("click",()=>{
+    if(readAll && cur){ toggle(); return; }
+    readAll=true;
+    if(cur && audio.paused && audio.currentTime>0) toggle();
+    else load(sents[Math.max(cur?sents.indexOf(cur):0,0)],true);
+  });
+  paint();
+})();
+</script>
+<!-- cain-reader:end -->
+</body>
+</html>
