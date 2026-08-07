@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>互動地球儀 · 星座的數學基礎 · Yan He</title>
+<meta name="description" content="可拖曳的 3D 地球 + 北投影/南投影兩個複平面 + Mercator 世界地圖：點任一點，同步畫出地平大圓、黃道十二宮與上升點，並印出整條推導鏈的每一個中間值。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="互動地球儀 + 雙投影複平面">
+<meta property="og:url" content="https://yanhe-math.com/zodiac/globe.html">
+<link rel="canonical" href="https://yanhe-math.com/zodiac/globe.html">
+<!--
+================================================================================
+  互動地球儀 + 雙投影複平面
+  依據：sign-ascendant-pure-math.md（§1–§7）。本檔不修改任何既有檔案。
+  2026-08-07
+
+  原則：可推算性。螢幕上每一個數只是五個輸入（日期、時刻、時區、緯度、經度）的
+  純函數；不依賴點擊順序、不依賴上一幀、不做增量更新、不快取。
+  compute() 是唯一的計算入口，render() 只讀 compute() 的回傳值。
+
+================================================================================
+  一、南投影 π_S 的推導（文件只給了北投影，這一段是本檔補的）
+================================================================================
+
+  定義  π_S(q) := 連 -e₃ 與 q 的直線和赤道面 {q₃=0} 的交點。
+
+  (0) 公式與逆映射
+      L(u) = -e₃ + u(q + e₃)，第三分量 -1 + u(q₃+1) = 0 給 u = 1/(1+q₃)：
+
+          π_S(q) = (q₁ + i q₂) / (1 + q₃)                     … (S0)
+
+      逆：z = x+iy，L(u) = (ux, uy, -1+u)，代入 |L|² = 1：
+          u²x² + u²y² + 1 - 2u + u² = 1  ⟹  u(|z|²+1) = 2  ⟹  u = 2/(|z|²+1)
+
+          π_S⁻¹(z) = ( 2x , 2y , 1 - |z|² ) / ( |z|² + 1 )     … (S1)
+
+      對照北投影 π_N⁻¹(z) = (2x, 2y, |z|²-1)/(|z|²+1)：第三分量整個變號。
+      幾何：北極 e₃ ↦ 0，南極是無窮遠，北半球落在單位圓內。赤道 |z|=1 不動。
+
+  (1) 南投影下的大圓公式  c_S(m), r_S(m)        —— 照 §2.1 的證明重跑
+
+      Γ_m = { q ∈ S² : ⟨q,m⟩ = 0 }。把 (S1) 代進去，去掉恆正分母 (|z|²+1)：
+
+          2x m₁ + 2y m₂ + (1 - |z|²) m₃ = 0
+
+      這正是 §2.1 那一行把 (|z|²-1) 換成 (1-|z|²)。m₃ ≠ 0 時除以 (-m₃)：
+
+          |z|² - 2x (m₁/m₃) - 2y (m₂/m₃) - 1 = 0
+          |z|² - 2 Re( conj(c_S) · z ) - 1 = 0 ，   c_S := (m₁ + i m₂)/m₃
+
+      配方，並且**唯一用到 |m|=1 的一步**同樣是 m₁²+m₂² = 1-m₃²：
+
+          | z - c_S |² = 1 + |c_S|² = 1 + (1-m₃²)/m₃² = 1/m₃²
+
+          ┌────────────────────────────────────────────────────────┐
+          │  c_S(m) = + (m₁ + i m₂)/m₃  = - c_N(m) ,   r_S = 1/|m₃| = r_N │
+          └────────────────────────────────────────────────────────┘
+
+      m₃ = 0 時仍是過原點的直線 m₁x + m₂y = 0（與北投影同一條線）。
+
+      推論 A：r_S² - |c_S|² = 1 —— §2.3 的充要刻畫在南投影原樣成立，
+              兩投影的圓方程是同一個形狀 |z|² - 2Re(āz) - 1 = 0，
+              所以 §4 的交點公式 v₁,₂ = i(-A ± √(A²+|D|²))/conj(D) 可以逐字沿用。
+      推論 B：球座標版 c_S = + e^{iθ} tanφ，r_S = sec φ（§2.2 只差一個負號）。
+
+  (2) 兩投影的關係  π_S = 1 / conj(π_N)          —— 單位圓反演
+
+          π_N(q) · conj(π_S(q))
+            = (q₁+iq₂)(q₁-iq₂) / [ (1-q₃)(1+q₃) ]
+            = (q₁²+q₂²) / (1-q₃²)
+            = (1-q₃²) / (1-q₃²)   [用 |q|=1]
+            = 1
+          ⟹  π_S(q) = 1 / conj( π_N(q) )                       … (S2)
+
+      這與 §2.4 的 π_N(-q) = -1/conj(π_N(q)) 並排：
+          z ↦ 1/z̄      = 換投影中心（北極 ↔ 南極），單位圓上為恆等；
+          z ↦ -1/z̄     = 球面對徑 q ↦ -q，無不動點。
+      兩者相差一個 z ↦ -z（即 q ↦ (-q₁,-q₂,q₃)，繞極軸轉 180°）。這就是 §7.1
+      射影那一層在畫面上的直觀：ℝP² = S²/± ，而換投影只是換仿射座標卡。
+
+      一致性交叉檢查（不靠 (1) 的結論，獨立重得 c_S = -c_N）：
+      把 |z|² - 2Re(c̄_N z) - 1 = 0 作代換 z = 1/w̄，兩邊乘 |w|²：
+          1 - 2Re(c̄_N w) - |w|² = 0  ⟹  |w|² - 2Re( conj(-c_N) w ) - 1 = 0
+      即像圓的圓心是 -c_N。與 (1) 相符。
+
+  (3) 南投影下的上升判準                          —— 照 §5 重推
+
+      觀測者天頂 p = (sinφ cosθ, sinφ sinθ, cosφ)。帶符號高度：
+
+          ⟨ π_S⁻¹(z), p ⟩ = [ 2x p₁ + 2y p₂ + (1-|z|²) p₃ ] / (|z|²+1)
+                          = -p₃/(|z|²+1) · [ |z|² - 2x(p₁/p₃) - 2y(p₂/p₃) - 1 ]
+                          = -cosφ/(|z|²+1) · ( |z - c_S|² - r_S² )      … (S3)
+
+      對照 §5 的 ⟨π_N⁻¹(z),p⟩ = +cosφ/(|z|²+1) · (|z-c_N|² - r_N²)。
+
+          ⚠ 符號翻了。φ < π/2 時：
+            北投影  地平之上 = 圓外
+            南投影  地平之上 = 圓內          （這就是「注意會翻」那一項）
+
+      再固定 z、讓 θ 走。c_S(θ) = e^{iθ} tanφ：
+
+          |z - c_S|² = |z|² - 2 tanφ Re(e^{-iθ} z) + tan²φ
+          ∂_θ |z - c_S|² = -2 tanφ Re( -i e^{-iθ} z ) · (-1)… 逐步寫：
+              d/dθ e^{-iθ} = -i e^{-iθ}
+              ∂_θ Re(e^{-iθ}z) = Re(-i e^{-iθ}z) = Im(e^{-iθ}z)
+          ⟹  ∂_θ |z - c_S|² = -2 tanφ · Im(e^{-iθ} z)          … (S4)
+
+      r_S 與 θ 無關。把 (S4) 代進 (S3) 對 θ 微分：
+
+          ∂_θ ⟨π_S⁻¹(z),p⟩ = -cosφ/(|z|²+1) · ( -2 tanφ Im(e^{-iθ}z) )
+                            = +2 sinφ /(|z|²+1) · Im(e^{-iθ} z)
+
+      sinφ > 0 對 φ ∈ (0,π) 恆成立（南北半球都對），故
+
+          ┌──────────────────────────────────────────┐
+          │  v 正在升起  ⟺  Im( e^{-iθ} v ) > 0        │   （南投影）
+          └──────────────────────────────────────────┘
+
+      **兩個負號互相抵消**：地平上下的判定翻了（S3），圓心也翻了 c_S = -c_N，
+      於是判準的形狀不變。這不是抄北投影的結論——上面是獨立推導，而且它與
+      (S2) 一致：Im(e^{-iθ} z_S) = Im(e^{-iθ}/conj(z_N))
+                              = Im(e^{-iθ} z_N)/|z_N|²  ，同號。
+
+      注意 ± 兩支的標號會對調：D_S = -D_N、A_S = +A_N ⟹ v_k^S = -v_k^N，
+      而 -v₁^N = ... 對應的球面點其實是 v₂^N 那一顆（因 §4 的 v₂ = -1/conj(v₁)
+      與 (S2) 合起來 π_S(π_N⁻¹(v₁)) = 1/conj(v₁) = -v₂）。同一對對徑點，
+      只是被 ± 挑中的順序不同——所以判準必須逐支重算，不能靠標號。
+
+================================================================================
+  二、數值驗證方式（七項，開頁即在「驗算」面板實跑，見頁面下方）
+================================================================================
+  驗算 1  台北 1990-07-15 08:30 UTC+8, 25.05N 121.53E
+          → λ☉ 112.2907 · LST 61.6354 · 上升 154.4376      【逐位相符】
+  驗算 2  北京 1993-03-03 20:00 UTC+8, 39.90N 116.41E
+          → 上升 186.1426（目標 186.143）                   【逐位相符】
+          ⚠ λ☉：本檔在**出生瞬刻**算，得 342.9261；文件 §7.3 的 342.592 是
+            **當地正午**的值（該日「太陽星座」是日層級敘述）。本檔兩個都印出來
+            並印出時刻差，不藏。同一天同一個星座（雙魚），差 0.334° = 8h 的太陽
+            自行。驗算 1 的 λ☉ 目標本身就是出生瞬刻值，逐位相符，確認了取瞬刻
+            這個約定。
+  驗算 3  r² - |c|² = 1     隨機 2000 個 m（|m₃|>10⁻³），南北兩投影同測
+  驗算 4  v₁·conj(v₂) = -1  隨機 2000 對圓心
+  驗算 5  π_S(q) = 1/conj(π_N(q))  隨機 2000 個 q ∈ S²
+  驗算 6  十二宮相鄰分點在北投影下的弦長比 max/min = 2.1819（文件 §3.4 記 2.18）
+  驗算 7  南北兩投影各自算出的 λ_ASC 相同（隨機 2000 組 LST×緯度）
+  另附   南投影判準 (S3)(S4) 對照球面上 ∂_θ⟨q,p⟩ 的實際符號，2000 組零分歧；
+         繞數 wind(v₁) 在 |緯度| 跨過 66.5607° 時由 1 翻到 0（§6）。
+
+  誤差量級說明（不是「越小越好」而已，要能解釋）：
+    驗算 3 的最大絕對誤差落在 10⁻¹⁰ 量級，因為 |m₃| 可以小到 10⁻³，
+    此時 r ≈ 10³、r² ≈ 10⁶，10⁻¹⁰ 是相對 10⁻¹⁶ 的浮點 ulp，不是 bug。
+    面板同時印絕對與相對誤差，判準看相對值。
+    驗算 4/5/7 是 10⁻¹²～10⁻¹⁵ 量級，直接看絕對值即可。
+
+================================================================================
+  三、精度界限（誠實聲明，畫面上也寫）
+================================================================================
+    精確（機器精度）：所有幾何——投影、大圓、交點、上升判準、繞數。
+    近似：λ☉ 用低階級數（平黃經 + 中心方程），誤差 ~0.01°。
+          未含章動與光行差 ~0.005°。ε 取固定值 23.4392811°，未隨時間歲差。
+          GMST 用 IAU 1982/2000 多項式（UT1≈UTC，忽略 ΔUT1 < 0.9s ≈ 0.004°）。
+    ⟹ 出生落在宮界 ±1′ 內時本檔不足以判定，需換高精度星曆。幾何框架不變。
+================================================================================
+-->
+<style>
+:root{
+  --bg:#0b0c0e; --panel:#111316; --ink:#dfe3e8; --dim:#7d858f; --line:#2a2f36;
+  --hot:#ffd76a; --ok:#5fd08a; --bad:#ff6b6b; --white:#f2f4f7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:"SFMono-Regular",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  font-size:12px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--hot)}
+#bar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;
+  padding:8px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
+#bar label{color:var(--dim)}
+input[type=date],input[type=time],input[type=number]{
+  background:#000;color:var(--ink);border:1px solid var(--line);padding:2px 4px;
+  font-family:inherit;font-size:12px}
+input[type=number]{width:82px}
+input[type=range]{width:280px;vertical-align:middle;accent-color:#ffd76a}
+#grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line)}
+#grid2{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.cellM{height:min(42vh,400px);min-height:270px;padding-top:58px}
+button{background:#000;color:var(--hot);border:1px solid var(--line);padding:3px 12px;
+  font-family:inherit;font-size:12px;cursor:pointer}
+button:hover{border-color:var(--hot)}
+select{background:#000;color:var(--ink);border:1px solid var(--line);font-family:inherit;font-size:12px}
+.cell{background:var(--bg);position:relative;height:min(52vh,460px);min-height:320px;overflow:hidden}
+.cap{position:absolute;top:6px;left:8px;color:var(--dim);z-index:5;pointer-events:none;
+  text-shadow:0 0 4px #000}
+.cap b{color:var(--ink);font-weight:normal}
+#globe{width:100%;height:100%;display:block;cursor:grab}
+#globe.drag{cursor:grabbing}
+svg{width:100%;height:100%;display:block;background:#000;cursor:crosshair}
+#chain{padding:10px 12px;border-top:1px solid var(--line);background:var(--panel);
+  white-space:pre;overflow-x:auto;font-size:12px}
+#tests{padding:10px 12px;border-top:1px solid var(--line);background:#0e1013;
+  white-space:pre;overflow-x:auto;font-size:12px;color:var(--dim)}
+.k{color:var(--dim)} .v{color:var(--ink)} .h{color:var(--hot)}
+.ok{color:var(--ok)} .bad{color:var(--bad)} .w{color:var(--white)}
+#note{padding:8px 12px;color:var(--dim);border-top:1px solid var(--line);white-space:pre-wrap}
+/* 窄螢幕：三欄改成單欄堆疊；推導鏈本來就是等寬定寬對齊，只能整塊橫向捲動 */
+@media (max-width:1000px){
+  #grid{grid-template-columns:1fr}
+  .cell{height:min(58vh,400px)}
+  .cellM{height:min(46vh,340px);padding-top:52px}
+  #bar{gap:9px;padding:7px 9px}
+  input[type=range]{width:180px}
+}
+@media (max-width:640px){
+  body{font-size:11px}
+  .cell{height:min(52vh,330px)}
+  .cellM{height:min(42vh,290px);padding-top:64px}
+  input[type=number]{width:66px}
+  input[type=range]{width:130px}
+  #chain,#tests{font-size:10.5px}
+  .cap{font-size:10px}
+}
+
+#crumb{padding:7px 12px;border-bottom:1px solid var(--line);background:#0e1013;
+  color:var(--dim);font-size:12px}
+#crumb a{color:var(--hot);text-decoration:none}
+#crumb a:hover{text-decoration:underline}
+#crumb .sp{float:right;color:var(--dim)}
+@media (max-width:900px){#crumb .sp{display:none}}
+</style>
+</head>
+<body>
+
+<div id="crumb"><a href="../index.html">主頁</a> &rsaquo; <a href="index.html">星座的數學基礎</a> &rsaquo; 互動地球儀
+  <span class="sp">推導在 <a href="index.html">這裡</a>：球極投影 → 大圓的像 → 交點 → 上升判準 → 繞數</span></div>
+<div id="bar">
+  <span><label>日期</label> <input type="date" id="date" value="1993-03-03"></span>
+  <span><label>時刻</label> <input type="time" id="time" value="20:00" step="60"></span>
+  <span><label>時區</label> <input type="number" id="tz" value="8" step="0.5"></span>
+  <span><label>緯度</label> <input type="number" id="lat" value="39.90" step="0.01"></span>
+  <span><label>經度</label> <input type="number" id="lon" value="116.41" step="0.01"></span>
+  <span><label>時間滑桿</label> <input type="range" id="slider" min="0" max="1439" step="1" value="1200">
+    <span id="sliderv" class="h">20:00</span></span>
+  <span><button id="play">▶ 自轉</button>
+    <label>速度</label> <select id="speed">
+      <option value="6">很慢（1 日 ≈ 240s）</option>
+      <option value="12">慢（1 日 ≈ 120s）</option>
+      <option value="24" selected>中（1 日 ≈ 60s）</option>
+      <option value="96">快（1 日 ≈ 15s）</option>
+      <option value="360">極快（1 日 ≈ 4s）</option>
+    </select> <span class="k">模擬分/真實秒</span></span>
+  <span><label>預設</label>
+    <select id="preset" style="background:#000;color:#dfe3e8;border:1px solid #2a2f36;font-family:inherit;font-size:12px">
+      <option value="">—</option>
+      <option value="1993-03-03|20:00|8|39.90|116.41">北京 1993-03-03 20:00</option>
+      <option value="1990-07-15|08:30|8|25.05|121.53">台北 1990-07-15 08:30</option>
+      <option value="1993-03-03|20:00|8|70.00|116.41">極區 lat 70（繞數 0）</option>
+      <option value="1993-03-03|20:00|8|66.00|116.41">臨界下 lat 66（繞數 1）</option>
+      <option value="1993-03-03|20:00|8|-33.87|151.21">雪梨（南半球）</option>
+    </select></span>
+</div>
+
+<div id="grid">
+  <div class="cell"><div class="cap">3D 地球　<b>拖曳=轉視角　點擊=選觀測者</b><br>
+    赤道(白細)・黃道十二宮(彩)・地平大圓(白粗)・● 上升點</div>
+    <canvas id="globe"></canvas></div>
+  <div class="cell"><div class="cap">北投影 ℂ_N　<b>π_N(q)=(q₁+iq₂)/(1−q₃)</b><br>
+    南極在原點・單位圓=赤道・地平之上=圓外<br>滾輪縮放・點擊=反投影選點</div>
+    <svg id="svgN" viewBox="-3 -3 6 6" preserveAspectRatio="xMidYMid meet"></svg></div>
+  <div class="cell"><div class="cap">南投影 ℂ_S　<b>π_S(q)=(q₁+iq₂)/(1+q₃)</b><br>
+    北極在原點・單位圓=赤道・地平之上=圓內<br>π_S = 1/conj(π_N)（單位圓反演）
+    <br>亮區=白晝（晨昏線 Γ_{ι(λ☉)}）：北投影在圓外時，南投影必在圓內</div>
+    <svg id="svgS" viewBox="-3 -3 6 6" preserveAspectRatio="xMidYMid meet"></svg></div>
+</div>
+
+<div id="grid2">
+  <div class="cell cellM"><div class="cap">常用世界地圖（Mercator）　<b>= log(ℂ_N)，精確不是近似（§7.2）</b>
+    　z=cot(φ/2)e^{iθ} ⟹ log z = ln cot(φ/2) + iθ：實部＝Mercator 縱座標，虛部＝經度
+    <br>同一組物件的第四種畫法：海岸線(灰)・黃道十二宮(彩)・地平大圓(白)・● 上升點・▲ 觀測者</div>
+    <svg id="svgM" viewBox="0 0 1000 460" preserveAspectRatio="xMidYMid meet"></svg></div>
+</div>
+<div id="chain"></div>
+<div id="tests">驗算執行中…</div>
+<div id="note"></div>
+<div id="crumb" style="border-top:1px solid var(--line);border-bottom:0"><a href="index.html">&larr; 回「星座的數學基礎」推導</a> · <a href="../index.html">主頁</a></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* ============================================================================
+   0. 常數與小工具
+   ========================================================================== */
+const D2R=Math.PI/180, R2D=180/Math.PI;
+const EPSDEG=23.4392811, EPS=EPSDEG*D2R, TE=Math.tan(EPS), SECE=1/Math.cos(EPS);
+const LATC=90-EPSDEG;                       // 臨界緯度 66.5607189°
+const SIGN=["牡羊","金牛","雙子","巨蟹","獅子","處女","天秤","天蠍","射手","摩羯","水瓶","雙魚"];
+const COL=k=>`hsl(${k*30+15},62%,58%)`;
+const GAM =[0,1,0];                          // γ = π⁻¹(i) = e₂ （春分點）
+const GAMP=[-Math.cos(EPS),0,Math.sin(EPS)]; // γ' = n × γ
+const NVEC=[Math.sin(EPS),0,Math.cos(EPS)];  // 黃道面法向量 n
+
+const mod360=x=>((x%360)+360)%360;
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+// 複數以 [re,im] 表示
+const C=(re,im)=>[re,im];
+const cadd=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+const csub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
+const cmul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];
+const cconj=a=>[a[0],-a[1]];
+const cabs2=a=>a[0]*a[0]+a[1]*a[1];
+const cabs=a=>Math.hypot(a[0],a[1]);
+const cdiv=(a,b)=>{const d=cabs2(b);return [(a[0]*b[0]+a[1]*b[1])/d,(a[1]*b[0]-a[0]*b[1])/d]};
+const cexp_i=t=>[Math.cos(t),Math.sin(t)];
+const cscale=(a,s)=>[a[0]*s,a[1]*s];
+
+/* ============================================================================
+   1. 時間與太陽（唯一的「近似」來源，見頂端註解 §三）
+   ========================================================================== */
+function julianDay(y,m,d,hh){                       // hh = UT 小時（可為小數/負）
+  if(m<=2){y-=1;m+=12}
+  const A=Math.floor(y/100), B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+hh/24+B-1524.5;
+}
+function gmstDeg(J){                                 // IAU 多項式，度
+  const T=(J-2451545)/36525;
+  return mod360(280.46061837+360.98564736629*(J-2451545)+3.87933e-4*T*T-T*T*T/38710000);
+}
+function sunLonDeg(J){                               // 平黃經 + 中心方程，~0.01°
+  const T=(J-2451545)/36525;
+  const L0=mod360(280.46646+36000.76983*T);
+  const M=mod360(357.52911+35999.05029*T)*D2R;
+  const Cc=(1.914602-0.004817*T)*Math.sin(M)+(0.019993-1.01e-4*T)*Math.sin(2*M)
+          +2.89e-4*Math.sin(3*M);
+  return {L0:L0,M:M*R2D,C:Cc,lam:mod360(L0+Cc)};
+}
+
+/* ============================================================================
+   2. 幾何（全部精確）
+   ========================================================================== */
+const piN   = q => [q[0]/(1-q[2]), q[1]/(1-q[2])];
+const piS   = q => [q[0]/(1+q[2]), q[1]/(1+q[2])];
+const piNinv= z => {const d=cabs2(z)+1; return [2*z[0]/d, 2*z[1]/d, (cabs2(z)-1)/d]};
+const piSinv= z => {const d=cabs2(z)+1; return [2*z[0]/d, 2*z[1]/d, (1-cabs2(z))/d]};
+// 黃道上黃經 λ(rad) 的球面點：ι(λ) = cosλ·γ + sinλ·γ'
+const iota = l => [Math.cos(l)*GAM[0]+Math.sin(l)*GAMP[0],
+                   Math.cos(l)*GAM[1]+Math.sin(l)*GAMP[1],
+                   Math.cos(l)*GAM[2]+Math.sin(l)*GAMP[2]];
+const lamOf= q => mod360(Math.atan2(dot(q,GAMP),dot(q,GAM))*R2D);   // §3.4
+// §4 兩圓交點（南北兩投影同一形狀的方程，故同一公式）
+function meet(a,b){
+  const D=csub(b,a), A=cmul(cconj(a),b)[1], R=Math.sqrt(A*A+cabs2(D));
+  const cD=cconj(D);
+  return {D:D,A:A,R:R,
+          v1:cdiv([0,-A+R],cD),      // i(-A+R)/conj(D)
+          v2:cdiv([0,-A-R],cD)};
+}
+// §5 / (S4) 上升判準：Im(e^{-iθ} v) > 0  （南北投影同形，見頂端推導）
+const rising = (v,th) => cmul(cexp_i(-th),v)[1];
+
+/* ============================================================================
+   3. compute() —— 唯一計算入口。純函數：同輸入永遠同輸出。
+   ========================================================================== */
+function compute(inp){
+  const S={inp:inp};
+  // --- 時間 ---
+  const hloc=inp.hh+inp.mi/60;
+  S.hloc=hloc;
+  S.hut =hloc-inp.tz;
+  S.J   =julianDay(inp.y,inp.mo,inp.d,S.hut);
+  S.G   =gmstDeg(S.J);
+  S.LST =mod360(S.G+inp.lon);
+  S.sun =sunLonDeg(S.J);
+  // 同日當地正午的太陽（僅為與 §7.3 的日層級敘述對照，畫面標明來源）
+  S.Jnoon=julianDay(inp.y,inp.mo,inp.d,12-inp.tz);
+  S.sunNoon=sunLonDeg(S.Jnoon);
+  // --- §7.1 字典 ---
+  S.phiDeg=90-inp.lat;              S.phi=S.phiDeg*D2R;
+  S.thDeg =mod360(S.LST+90);        S.th =S.thDeg*D2R;
+  S.tanphi=Math.tan(S.phi);
+  S.p=[Math.sin(S.phi)*Math.cos(S.th),Math.sin(S.phi)*Math.sin(S.th),Math.cos(S.phi)];
+  // --- 兩投影各跑一遍。sg = c 的符號：北 -1、南 +1 ---
+  S.proj={};
+  for(const [tag,sg] of [["N",-1],["S",+1]]){
+    const P={sg:sg};
+    P.ecl ={c:C(sg*TE,0),                       r:Math.abs(SECE)};
+    P.hor ={c:cscale(cexp_i(S.th),sg*S.tanphi), r:Math.abs(1/Math.cos(S.phi))};
+    P.eclInv=P.ecl.r*P.ecl.r-cabs2(P.ecl.c);    // 應恆 = 1
+    P.horInv=P.hor.r*P.hor.r-cabs2(P.hor.c);    // 應恆 = 1
+    const M=meet(P.ecl.c,P.hor.c);
+    P.D=M.D; P.A=M.A; P.R=M.R; P.v1=M.v1; P.v2=M.v2;
+    P.anti=cmul(M.v1,cconj(M.v2));              // 應恆 = -1
+    P.crit1=rising(M.v1,S.th); P.crit2=rising(M.v2,S.th);
+    P.pick = P.crit1>0 ? 1 : 2;
+    P.v    = P.pick===1 ? M.v1 : M.v2;
+    P.q    = (tag==="N"?piNinv:piSinv)(P.v);
+    P.lam  = lamOf(P.q);
+    P.desc = P.pick===1 ? M.v2 : M.v1;          // 下降點
+    P.descQ= (tag==="N"?piNinv:piSinv)(P.desc);
+    P.descLam=lamOf(P.descQ);
+    S.proj[tag]=P;
+  }
+  // 太陽在理論標架的方向 = 黃道上黃經 λ☉ 的那一點；它同時就是「太陽直射點」的方向
+  S.sunQ  = iota(S.sun.lam*D2R);
+  S.sunGeo= theoryToGeo(S.sunQ,S.G);          // 直射點的地理座標（緯度=赤緯，經度≈當地正午）
+  S.sunK  = Math.floor(mod360(S.sun.lam)/30)%12;
+  S.lamASC=S.proj.N.lam;
+  S.dNS=Math.abs(S.proj.N.lam-S.proj.S.lam); S.dNS=Math.min(S.dNS,360-S.dNS);
+  // --- §6 繞數：只依 φ 與 ε 比大小 ---
+  S.wind = S.phiDeg>EPSDEG && S.phiDeg<180-EPSDEG ? 1 : 0;
+  S.polar= Math.abs(inp.lat)>LATC;
+  // --- 通用閉式對照（§7.4），供「極區回傳下降點」現象顯示 ---
+  {const t=S.LST*D2R, la=inp.lat*D2R;
+   S.std=mod360(Math.atan2(Math.cos(la)*Math.cos(t),
+        -Math.sin(EPS)*Math.sin(la)-Math.cos(EPS)*Math.cos(la)*Math.sin(t))*R2D);
+   let d=Math.abs(S.std-S.lamASC); S.dStd=Math.min(d,360-d);}
+  // --- 上升點 / 觀測者 在兩投影的座標（供繪圖，全部由上面推出） ---
+  S.ascQ=S.proj.N.q;
+  S.ascGeo=theoryToGeo(S.ascQ,S.G);
+  S.ascK  =Math.floor(mod360(S.lamASC)/30)%12;
+  S.obsQ=S.p;
+  return S;
+}
+// 球面點（理論標架）→ 地理座標。經度 lon 滿足 θ = GMST + lon + 90
+function theoryToGeo(q,G){
+  const lat=Math.asin(Math.max(-1,Math.min(1,q[2])))*R2D;
+  const th=Math.atan2(q[1],q[0])*R2D;
+  let lon=th-90-G; lon=((lon%360)+360)%360; if(lon>180)lon-=360;
+  return {lat:lat,lon:lon};
+}
+function geoToTheory(lat,lon,G){
+  const ph=(90-lat)*D2R, th=(G+lon+90)*D2R;
+  return [Math.sin(ph)*Math.cos(th),Math.sin(ph)*Math.sin(th),Math.cos(ph)];
+}
+
+/* ============================================================================
+   4. 格式化
+   ========================================================================== */
+const f=(x,n)=>{let s=(x<0?"":"+")+x.toFixed(n); return s};
+const fu=(x,n)=>x.toFixed(n);
+const pad=(s,n)=>{s=String(s); while(s.length<n)s+=" "; return s};
+const lpad=(s,n)=>{s=String(s); while(s.length<n)s=" "+s; return s};
+const cf=(z,n)=>`${f(z[0],n)}${z[1]<0?"−":"+"}${Math.abs(z[1]).toFixed(n)}i`;
+const signOf=l=>`${SIGN[Math.floor(mod360(l)/30)%12]} ${(mod360(l)%30).toFixed(2)}°`;
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ============================================================================
+   5. SVG 兩個複平面
+   ========================================================================== */
+const VIEW={N:3,S:3};
+function drawPlane(tag,S){
+  const P=S.proj[tag], el=document.getElementById("svg"+tag), V=VIEW[tag];
+  el.setAttribute("viewBox",`${-V} ${-V} ${2*V} ${2*V}`);
+  // sw(k)：把 k 換成「固定的螢幕像素」——與縮放倍率 V 和面板大小都無關。
+  // 換算：1 user unit = side/(2V) px，故 k 個單位在螢幕上恆為 k*83.3 px。
+  const rb=el.getBoundingClientRect();
+  const side=Math.max(60,Math.min(rb.width||500,rb.height||500));
+  const sw=k=>(k*83.3*2*V/side).toFixed(4);
+  let o="";
+  /* 日照：晨昏線就是大圓 Γ_{ι(λ☉)}，所以在平面上它也只是一個圓（主定理 §2.1）。
+     由 §5 / 頂端推導 (S3) 的帶符號高度，把 p 換成太陽方向 s：
+        北投影  ⟨π_N⁻¹(z),s⟩ = +s₃/(|z|²+1)·(|z−c_N|²−r²)   c_N = −(s₁+is₂)/s₃
+        南投影  ⟨π_S⁻¹(z),s⟩ = −s₃/(|z|²+1)·(|z−c_S|²−r²)   c_S = +(s₁+is₂)/s₃
+     ⟹ s₃>0 時：北投影的白晝在圓外，南投影的白晝在圓內。**兩者相反**——
+     這就是那個「會翻」的符號，用太陽自己畫出來給眼睛看。 */
+  {const sv=S.sunQ, sg=(tag==="N")?-1:1, s3=sv[2];
+   const lit = (tag==="N") ? (s3>0) : (s3<0);      // true = 圓外是白晝
+   const B=1e4;
+   if(Math.abs(s3)<1e-3){                          // 退化：晨昏線過原點的直線
+     const nx=sv[0],ny=sv[1],L=Math.hypot(nx,ny)||1;
+     const ux=-ny/L,uy=nx/L;                       // 直線方向
+     const px=nx/L,py=ny/L;                        // 指向白晝側
+     o+=`<path d="M${(ux*B).toFixed(1)},${(-uy*B).toFixed(1)} L${(-ux*B).toFixed(1)},${(uy*B).toFixed(1)} `
+       +`L${(-ux*B+px*B).toFixed(1)},${(uy*B-py*B).toFixed(1)} L${(ux*B+px*B).toFixed(1)},${(-uy*B-py*B).toFixed(1)} Z" fill="#0c151d"/>`;
+     o+=`<line x1="${(ux*B).toFixed(1)}" y1="${(-uy*B).toFixed(1)}" x2="${(-ux*B).toFixed(1)}" y2="${(uy*B).toFixed(1)}" stroke="#5b5330" stroke-width="${sw(0.022)}" stroke-dasharray="${sw(0.12)} ${sw(0.10)}"/>`;
+   }else{
+     const c=cscale(C(sv[0],sv[1]),sg/s3), r=1/Math.abs(s3);
+     const cx=c[0], cy=-c[1];
+     if(lit)  // 白晝在圓外：整片塗滿再用 evenodd 挖掉圓
+       o+=`<path fill-rule="evenodd" fill="#0c151d" d="M${-B},${-B} H${B} V${B} H${-B} Z `
+         +`M${(cx-r).toFixed(4)},${cy.toFixed(4)} a${r.toFixed(4)},${r.toFixed(4)} 0 1,0 ${(2*r).toFixed(4)},0 a${r.toFixed(4)},${r.toFixed(4)} 0 1,0 ${(-2*r).toFixed(4)},0 Z"/>`;
+     else     // 白晝在圓內
+       o+=`<circle cx="${cx.toFixed(4)}" cy="${cy.toFixed(4)}" r="${r.toFixed(4)}" fill="#0c151d"/>`;
+     o+=`<circle cx="${cx.toFixed(4)}" cy="${cy.toFixed(4)}" r="${r.toFixed(4)}" fill="none" `
+       +`stroke="#5b5330" stroke-width="${sw(0.022)}" stroke-dasharray="${sw(0.12)} ${sw(0.10)}"/>`;
+   }}
+  // 網格
+  o+=`<g stroke="#1b1f25" stroke-width="${sw(0.008)}">`;
+  for(let k=-Math.ceil(V);k<=Math.ceil(V);k++){
+    o+=`<line x1="${k}" y1="${-V}" x2="${k}" y2="${V}"/>`;
+    o+=`<line x1="${-V}" y1="${k}" x2="${V}" y2="${k}"/>`;}
+  o+=`</g>`;
+  o+=`<line x1="${-V}" y1="0" x2="${V}" y2="0" stroke="#333a44" stroke-width="${sw(0.012)}"/>`;
+  o+=`<line x1="0" y1="${-V}" x2="0" y2="${V}" stroke="#333a44" stroke-width="${sw(0.012)}"/>`;
+  // 海岸線（隨地球自轉：繞極軸轉 A 度 ⟺ 平面像 ×e^{iA} ⟺ SVG rotate(−A)）
+  o+=`<g fill="none" stroke="#55707f" stroke-width="${sw(0.018)}" stroke-linejoin="round"`
+   + ` transform="rotate(${(-(S.G+90)).toFixed(4)})">${COASTPATH[tag]}</g>`;
+  // 赤道 = 單位圓
+  o+=`<circle cx="0" cy="0" r="1" fill="none" stroke="#5a636e" stroke-width="${sw(0.02)}"/>`;
+  // 黃道十二宮（彩色弧 + 直接寫在弧上的宮名）
+  const pr = tag==="N"?piN:piS;
+  let defs="";
+  for(let k=0;k<12;k++){
+    const sc=[];
+    for(let j=0;j<=24;j++){const z=pr(iota((k*30+j*30/24)*D2R)); sc.push([z[0],-z[1]]);}
+    const d=sc.map((q,j)=>(j?"L":"M")+q[0].toFixed(4)+","+q[1].toFixed(4)).join(" ");
+    // 文字要順著弧走；弧若由右往左，把路徑反過來才不會倒著寫
+    const lab = sc[sc.length-1][0]<sc[0][0] ? sc.slice().reverse() : sc;
+    defs+=`<path id="ec${tag}${k}" d="${lab.map((q,j)=>(j?"L":"M")+q[0].toFixed(4)+","+q[1].toFixed(4)).join(" ")}"/>`;
+    o+=`<path d="${d}" fill="none" stroke="${COL(k)}" stroke-width="${sw(0.055)}" stroke-linecap="round"/>`;}
+  o=`<defs>${defs}</defs>`+o;
+  // 分點
+  for(let k=0;k<12;k++){const z=pr(iota(k*30*D2R));
+    o+=`<circle cx="${z[0].toFixed(4)}" cy="${(-z[1]).toFixed(4)}" r="${sw(0.045)}" fill="${COL(k)}"/>`;}
+  // 地平大圓（白）
+  o+=`<circle cx="${P.hor.c[0].toFixed(5)}" cy="${(-P.hor.c[1]).toFixed(5)}" r="${P.hor.r.toFixed(5)}"
+       fill="none" stroke="#f2f4f7" stroke-width="${sw(0.035)}"/>`;
+  // 圓心
+  o+=`<circle cx="${P.hor.c[0].toFixed(5)}" cy="${(-P.hor.c[1]).toFixed(5)}" r="${sw(0.03)}" fill="#f2f4f7" opacity="0.55"/>`;
+  o+=`<circle cx="${P.ecl.c[0].toFixed(5)}" cy="${(-P.ecl.c[1]).toFixed(5)}" r="${sw(0.03)}" fill="#888" opacity="0.7"/>`;
+  // γ = i
+  o+=`<circle cx="0" cy="-1" r="${sw(0.05)}" fill="none" stroke="#9aa3ad" stroke-width="${sw(0.02)}"/>`;
+  o+=`<text x="0.08" y="-1.06" font-size="${sw(0.16)}" fill="#9aa3ad" font-family="monospace">γ</text>`;
+  // 下降點（空心）
+  o+=`<circle cx="${P.desc[0].toFixed(5)}" cy="${(-P.desc[1]).toFixed(5)}" r="${sw(0.07)}"
+       fill="none" stroke="#7d858f" stroke-width="${sw(0.025)}"/>`;
+  // 上升點（實心亮）
+  o+=`<circle cx="${P.v[0].toFixed(5)}" cy="${(-P.v[1]).toFixed(5)}" r="${sw(0.09)}" fill="#ffd76a"/>`;
+  // 太陽 ☉：黃道上黃經 λ☉ 的那一點
+  {const zs=pr(S.sunQ);
+   o+=`<circle cx="${zs[0].toFixed(5)}" cy="${(-zs[1]).toFixed(5)}" r="${sw(0.12)}" fill="none" stroke="#fff3c4" stroke-width="${sw(0.03)}"/>`;
+   o+=`<circle cx="${zs[0].toFixed(5)}" cy="${(-zs[1]).toFixed(5)}" r="${sw(0.045)}" fill="#fff3c4"/>`;}
+  // 洲名（隨地球自轉，但文字保持水平——所以逐幀算位置，不放進 rotate 群組）
+  for(const [nm,la,lo] of CONT){
+    const z=pr(geoToTheory(la,lo,S.G));
+    if(cabs(z)>V*1.6)continue;
+    o+=`<text x="${z[0].toFixed(4)}" y="${(-z[1]).toFixed(4)}" font-family="inherit" `
+      +`font-size="${sw(0.145)}" fill="#8fb0c4" opacity="0.85" text-anchor="middle">${nm}</text>`;}
+  // 宮名寫在染色後的黃道上：☉ 所在那宮＝太陽星座，● 所在那宮＝上升星座
+  for(let k=0;k<12;k++){
+    const hot = (k===S.sunK||k===S.ascK);
+    const tx  = SIGN[k] + (k===S.sunK?" ☉":"") + (k===S.ascK?" ●":"");
+    o+=`<text font-family="inherit" font-size="${sw(hot?0.185:0.155)}" `
+      +`fill="${hot?"#ffffff":COL(k)}" opacity="${hot?1:0.92}">`
+      +`<textPath href="#ec${tag}${k}" xlink:href="#ec${tag}${k}" startOffset="50%" `
+      +`text-anchor="middle" dy="${sw(-0.105)}">${tx}</textPath></text>`;}
+  el.innerHTML=o;
+}
+
+/* ----------------------------------------------------------------------------
+   5b. Mercator 世界地圖 = log(ℂ_N)（§7.2，精確）
+   縱座標 mercY(lat) = ln tan(45°+lat/2) = ln cot(φ/2) = Re(log π_N(q))
+   橫座標 lon        = θ − 90° − GMST    ，而 θ = Im(log π_N(q))
+   -------------------------------------------------------------------------- */
+const mercY=lat=>Math.log(Math.tan(Math.PI/4+lat*D2R/2));
+const MY=1.75;                                  // 縱向裁切 ±1.75 ≈ ±80.0°
+const MW=1000,MH=460,ML=46,MR=14,MT=14,MB=18;
+const mX=lon=>ML+(lon+180)/360*(MW-ML-MR);
+const mY=y=>MT+(MY-y)/(2*MY)*(MH-MT-MB);
+let MERC_COAST=null;
+function mercCoast(){
+  if(MERC_COAST)return MERC_COAST;
+  let o="";
+  for(const line of COASTLL){
+    let d="",prev=null;
+    for(const [la,lo] of line){
+      if(Math.abs(la)>=89.5){prev=null;continue}
+      if(prev!==null&&Math.abs(lo-prev)>180){prev=null}      // 跨換日線斷開
+      d+=(prev===null?"M":"L")+mX(lo).toFixed(1)+","+mY(mercY(la)).toFixed(1)+" ";
+      prev=lo;}
+    if(d)o+=`<path d="${d}"/>`;}
+  MERC_COAST=`<g fill="none" stroke="#55707f" stroke-width="0.9" stroke-linejoin="round">${o}</g>`;
+  return MERC_COAST;
+}
+function drawMerc(S){
+  const el=$("svgM"); let o="";
+  o+=`<rect x="0" y="0" width="${MW}" height="${MH}" fill="#000"/>`;
+  // 經緯格線
+  o+=`<g stroke="#1b1f25" stroke-width="0.7">`;
+  for(let lo=-180;lo<=180;lo+=30)o+=`<line x1="${mX(lo)}" y1="${mY(MY)}" x2="${mX(lo)}" y2="${mY(-MY)}"/>`;
+  for(const la of [-75,-60,-45,-30,-15,15,30,45,60,75])
+    o+=`<line x1="${ML}" y1="${mY(mercY(la))}" x2="${MW-MR}" y2="${mY(mercY(la))}"/>`;
+  o+=`</g>`;
+  o+=mercCoast();
+  // 赤道 / 回歸線 / 極圈（由 ε 決定，§7.2：黃道振幅 = ln cot(66.56°/2) = 0.42101）
+  o+=`<line x1="${ML}" y1="${mY(0)}" x2="${MW-MR}" y2="${mY(0)}" stroke="#5a636e" stroke-width="1"/>`;
+  [[EPSDEG,"回歸線"],[-EPSDEG,""],[LATC,"極圈"],[-LATC,""]].forEach(([la,lb])=>{
+    o+=`<line x1="${ML}" y1="${mY(mercY(la))}" x2="${MW-MR}" y2="${mY(mercY(la))}" stroke="#6b5a2a" stroke-width="0.9" stroke-dasharray="6 5"/>`;
+    if(lb)o+=`<text x="${MW-MR-4}" y="${mY(mercY(la))-4}" font-size="11" fill="#6b5a2a" text-anchor="end" font-family="monospace">±${la.toFixed(2)}° ${lb}</text>`;});
+  // 黃道十二宮：把 ι(λ) 由理論標架轉回地理座標畫上去
+  for(let k=0;k<12;k++){
+    let d="",prev=null;
+    for(let j=0;j<=30;j++){
+      const g=theoryToGeo(iota((k*30+j)*D2R),S.G);
+      if(prev!==null&&Math.abs(g.lon-prev)>180)prev=null;
+      d+=(prev===null?"M":"L")+mX(g.lon).toFixed(1)+","+mY(mercY(g.lat)).toFixed(1)+" ";
+      prev=g.lon;}
+    o+=`<path d="${d}" fill="none" stroke="${COL(k)}" stroke-width="3" stroke-linecap="round"/>`;}
+  // 地平大圓
+  {let u=[S.p[1],-S.p[0],0]; let n=Math.hypot(u[0],u[1]); if(n<1e-9){u=[1,0,0];n=1} u=u.map(x=>x/n);
+   const w=[S.p[1]*u[2]-S.p[2]*u[1],S.p[2]*u[0]-S.p[0]*u[2],S.p[0]*u[1]-S.p[1]*u[0]];
+   let d="",prev=null;
+   for(let j=0;j<=360;j++){const t=j/360*2*Math.PI;
+     const q=[Math.cos(t)*u[0]+Math.sin(t)*w[0],Math.cos(t)*u[1]+Math.sin(t)*w[1],
+              Math.cos(t)*u[2]+Math.sin(t)*w[2]];
+     const g=theoryToGeo(q,S.G);
+     if(Math.abs(g.lat)>80){prev=null;continue}
+     if(prev!==null&&Math.abs(g.lon-prev)>180)prev=null;
+     d+=(prev===null?"M":"L")+mX(g.lon).toFixed(1)+","+mY(mercY(g.lat)).toFixed(1)+" ";
+     prev=g.lon;}
+   o+=`<path d="${d}" fill="none" stroke="#f2f4f7" stroke-width="1.6"/>`;}
+  // 洲名
+  o+=`<g font-size="13" fill="#8fb0c4" opacity="0.8" text-anchor="middle" font-family="monospace">`;
+  for(const [nm,la,lo] of CONT) if(Math.abs(mercY(la))<MY)
+    o+=`<text x="${mX(lo).toFixed(1)}" y="${mY(mercY(la)).toFixed(1)}">${nm}</text>`;
+  o+=`</g>`;
+  // 宮名寫在黃道上（取每宮中點）
+  for(let k=0;k<12;k++){
+    const g=theoryToGeo(iota((k*30+15)*D2R),S.G), hot=(k===S.sunK||k===S.ascK);
+    o+=`<text x="${mX(g.lon).toFixed(1)}" y="${(mY(mercY(g.lat))-9).toFixed(1)}" font-size="${hot?14:12}" `
+      +`fill="${hot?"#fff":COL(k)}" text-anchor="middle" font-family="monospace">`
+      +`${SIGN[k]}${k===S.sunK?" ☉":""}${k===S.ascK?" ●":""}</text>`;}
+  // 太陽直射點 ☉（= ι(λ☉) 的地理座標：緯度即赤緯，經度即當地正午所在）
+  {const g=S.sunGeo;
+   o+=`<circle cx="${mX(g.lon).toFixed(1)}" cy="${mY(mercY(g.lat)).toFixed(1)}" r="9" fill="none" stroke="#fff3c4" stroke-width="1.8"/>`;
+   o+=`<circle cx="${mX(g.lon).toFixed(1)}" cy="${mY(mercY(g.lat)).toFixed(1)}" r="3" fill="#fff3c4"/>`;}
+  // 觀測者 ▲ 與上升點 ●
+  o+=`<path d="M${mX(S.inp.lon)},${mY(mercY(S.inp.lat))-7} l6,10 l-12,0 z" fill="#5fd08a"/>`;
+  const ga=S.ascGeo;
+  if(Math.abs(ga.lat)<89.5)
+    o+=`<circle cx="${mX(ga.lon).toFixed(1)}" cy="${mY(mercY(ga.lat)).toFixed(1)}" r="6" fill="#ffd76a"/>`;
+  // 座標軸刻度
+  o+=`<g font-size="11" fill="#7d858f" font-family="monospace">`;
+  for(let lo=-180;lo<=180;lo+=60)o+=`<text x="${mX(lo)}" y="${MH-4}" text-anchor="middle">${lo}°</text>`;
+  for(const la of [-60,-30,0,30,60])
+    o+=`<text x="${ML-5}" y="${mY(mercY(la))+4}" text-anchor="end">${la>0?"+":""}${la}°</text>`;
+  o+=`<text x="${ML-5}" y="${mY(MY)+10}" text-anchor="end">ln cot(φ/2)</text>`;
+  o+=`</g>`;
+  el.innerHTML=o;
+}
+
+/* ============================================================================
+   6. 3D 地球（three.js r128）
+   ========================================================================== */
+let renderer,scene,camera,earth,gAsc,gHor,gEcl,gObs,sphere,sunMat,gSun,gLbl,gRay,gRayGlow,gHit,gSub;
+const LITMATS=[];
+let camTh=-1.0, camPh=1.1, camR=4.5;
+function init3D(){
+  const cv=document.getElementById("globe");
+  renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:false,preserveDrawingBuffer:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  scene=new THREE.Scene(); scene.background=new THREE.Color(0x000000);
+  camera=new THREE.PerspectiveCamera(38,1,0.1,100);
+  // 不透明球體（遮擋背面的線），暗色
+  // 日照：被太陽照亮的半球亮一點。純視覺，不參與任何計算——
+  // 判準就是 ⟨q, ι(λ☉)⟩ 的符號，晨昏線正是大圓 Γ_{ι(λ☉)}。
+  sunMat=new THREE.ShaderMaterial({uniforms:{uSun:{value:new THREE.Vector3(0,0,1)}},
+    vertexShader:`varying vec3 vN; void main(){vN=normalize(position);
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:`uniform vec3 uSun; varying vec3 vN;
+      void main(){float k=smoothstep(-0.09,0.11,dot(normalize(vN),normalize(uSun)));
+        gl_FragColor=vec4(mix(vec3(0.022,0.030,0.040),vec3(0.125,0.205,0.262),k),1.0);}`});
+  sphere=new THREE.Mesh(new THREE.SphereGeometry(0.995,72,54),sunMat);
+  scene.add(sphere);
+  // 大氣輝光（背面加色，只為好看）
+  scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.035,48,36),
+    new THREE.ShaderMaterial({side:THREE.BackSide,transparent:true,depthWrite:false,
+      blending:THREE.AdditiveBlending,
+      uniforms:{uSun:{value:new THREE.Vector3(0,0,1)}},
+      vertexShader:`varying vec3 vN; varying vec3 vP; void main(){vN=normalize(normalMatrix*position);
+        vP=normalize((modelViewMatrix*vec4(position,1.0)).xyz);
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+      fragmentShader:`uniform vec3 uSun; varying vec3 vN; varying vec3 vP;
+        void main(){float rim=pow(1.0-abs(dot(vN,vP)),4.5);
+          gl_FragColor=vec4(vec3(0.10,0.22,0.36)*rim*0.55,rim*0.55);}`})));
+  // 地球隨自轉的物件（經緯網、城市），繞 e₃ 轉 GMST+90
+  earth=new THREE.Group(); scene.add(earth);
+  const litMat=(night,day)=>new THREE.ShaderMaterial({transparent:true,
+    uniforms:{uSun:{value:new THREE.Vector3(0,0,1)},
+              uN:{value:new THREE.Color(night)},uD:{value:new THREE.Color(day)}},
+    vertexShader:`uniform vec3 uSun; varying float vK;
+      void main(){vK=smoothstep(-0.16,0.16,dot(normalize(position),normalize(uSun)));
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:`uniform vec3 uN,uD; varying float vK;
+      void main(){gl_FragColor=vec4(mix(uN,uD,vK),1.0);}`});
+  const gm=litMat(0x212831,0x424e5b), gmMaj=litMat(0x39424c,0x69798a);
+  LITMATS.push(gm,gmMaj);
+  for(let la=-75;la<=75;la+=15){                 // 緯線
+    const pts=[]; for(let j=0;j<=120;j++){const lo=-180+j*3;
+      const v=geoToTheory(la,lo,-90); pts.push(new THREE.Vector3(v[0],v[1],v[2]));}
+    earth.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+      (la===0)?gmMaj:gm));}
+  for(let lo=-180;lo<180;lo+=15){                // 經線
+    const pts=[]; for(let j=0;j<=60;j++){const la=-90+j*3;
+      const v=geoToTheory(la,lo,-90); pts.push(new THREE.Vector3(v[0],v[1],v[2]));}
+    earth.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+      (lo===0)?gmMaj:gm));}
+  // 回歸線 / 極圈（黃道在地面上的界限，§7.2）
+  const trm=litMat(0x4d411e,0x8a7436); LITMATS.push(trm);
+  [EPSDEG,-EPSDEG,LATC,-LATC].forEach(la=>{
+    const pts=[]; for(let j=0;j<=120;j++){const lo=-180+j*3;
+      const v=geoToTheory(la,lo,-90); pts.push(new THREE.Vector3(v[0],v[1],v[2]));}
+    earth.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),trm));});
+  // 海岸線（Natural Earth 110m，公有領域）——與兩個複平面上畫的是同一組點
+  const cm=litMat(0x44596a,0xb6d8ee); LITMATS.push(cm);
+  COASTQ.forEach(line=>{
+    const pts=line.map(v=>new THREE.Vector3(v[0]*1.002,v[1]*1.002,v[2]*1.002));
+    earth.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),cm));});
+  // 參考城市
+  CITIES.forEach(c=>{
+    const v=geoToTheory(c[1],c[2],-90);
+    const m=new THREE.Mesh(new THREE.SphereGeometry(0.012,8,6),
+      new THREE.MeshBasicMaterial({color:0x8fa4b8}));
+    m.position.set(v[0]*1.004,v[1]*1.004,v[2]*1.004); earth.add(m);});
+  // 天赤道（固定在理論標架，不隨地球轉）
+  scene.add(circleFromNormal([0,0,1],0xf2f4f7,1.002));
+  // 黃道十二段
+  gEcl=new THREE.Group(); scene.add(gEcl);
+  for(let k=0;k<12;k++){
+    const pts=[]; for(let j=0;j<=30;j++){const v=iota((k*30+j)*D2R);
+      pts.push(new THREE.Vector3(v[0]*1.012,v[1]*1.012,v[2]*1.012));}
+    gEcl.add(new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),48,0.0085,8,false),
+      new THREE.MeshBasicMaterial({color:new THREE.Color(COL(k))})));}
+  // 黃道上直接寫宮名（固定在理論標架，不隨地球轉）——放大就讀得到
+  gLbl=[];
+  for(let k=0;k<12;k++){
+    const v=iota((k*30+15)*D2R), sp=makeLabel(SIGN[k],COL(k),0.30);
+    sp.position.set(v[0]*1.13,v[1]*1.13,v[2]*1.13); scene.add(sp); gLbl.push(sp);}
+  // 洲名（隨地球轉）
+  CONT.forEach(([nm,la,lo])=>{
+    const v=geoToTheory(la,lo,-90), sp=makeLabel(nm,"#a8c6da",0.32);
+    sp.position.set(v[0]*1.03,v[1]*1.03,v[2]*1.03); earth.add(sp);});
+  // 太陽：方向 ι(λ☉)，同時就是直射點的方向
+  // 太陽放在遠處（方向 ι(λ☉)），射一根線下來打在黃道上、再落到地表的直射點。
+  // 距離不按比例（實距 ≈ 23500 地球半徑）——有意義的只有方向。
+  gSun=new THREE.Group(); scene.add(gSun);
+  gSun.add(new THREE.Mesh(new THREE.SphereGeometry(0.075,20,16),
+    new THREE.MeshBasicMaterial({color:0xfff6d8})));
+  gSun.add(new THREE.Mesh(new THREE.SphereGeometry(0.16,20,16),
+    new THREE.MeshBasicMaterial({color:0xffd98a,transparent:true,opacity:0.22,
+      blending:THREE.AdditiveBlending,depthWrite:false})));
+  {const lb=makeLabel("☉ 太陽","#fff3c4",0.34); lb.position.set(0,0,0.30); gSun.add(lb);}
+  // 射線：太陽 → 黃道 → 地表直射點（同一條直線，因為三者同方向）
+  gRay=new THREE.Mesh(new THREE.CylinderGeometry(0.007,0.007,1,10,1,true),
+    new THREE.MeshBasicMaterial({color:0xffe9b0,transparent:true,opacity:0.75,
+      blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));
+  scene.add(gRay);
+  gRayGlow=new THREE.Mesh(new THREE.CylinderGeometry(0.022,0.022,1,10,1,true),
+    new THREE.MeshBasicMaterial({color:0xffd070,transparent:true,opacity:0.16,
+      blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));
+  scene.add(gRayGlow);
+  // 射線打在黃道上的那一點（= 太陽黃經 λ☉ 所在，讀它旁邊的宮名就是太陽星座）
+  gHit=new THREE.Mesh(new THREE.SphereGeometry(0.032,14,10),
+    new THREE.MeshBasicMaterial({color:0xfff6d8})); scene.add(gHit);
+  // 地表直射點
+  gSub=new THREE.Mesh(new THREE.SphereGeometry(0.019,12,10),
+    new THREE.MeshBasicMaterial({color:0xfff3c4})); scene.add(gSub);
+  gHor=new THREE.Group(); scene.add(gHor);
+  gAsc=new THREE.Mesh(new THREE.SphereGeometry(0.028,12,10),
+        new THREE.MeshBasicMaterial({color:0xffd76a})); scene.add(gAsc);
+  gObs=new THREE.Mesh(new THREE.SphereGeometry(0.022,12,10),
+        new THREE.MeshBasicMaterial({color:0x5fd08a})); scene.add(gObs);
+}
+/* ---- 海岸線資料：Natural Earth 110m coastline（公有領域，naturalearthdata.com）
+   Douglas–Peucker 簡化 tol=0.4°，2 位小數 → 114 條折線 / 1958 點。
+   編碼："lon,lat lon,lat ...;lon,lat ..."。這是本頁唯一的外部資料，
+   它不參與任何計算，只是把同一組幾何畫在可辨認的地球上。 ---- */
+const COAST_RAW="-16.26,19.1 -16.97,21.89 -14.44,26.25 -9.56,29.93 -9.3,32.56 -6.91,34.11 -5.93,35.76 -2.17,35.17 1.47,36.61 9.51,37.35 10.18,36.72 11.1,36.9 10.34,33.79 15.25,32.27 15.71,31.38 19.09,30.27 20.05,30.99 20.13,32.24 21.54,32.84 28.91,30.87 30.98,31.56 31.96,30.93 33.77,30.97 36,34.64 36.16,36.65 32.51,36.11 31.7,36.64 29.7,36.14 27.64,36.66 26.32,38.21 26.8,38.99 26.17,39.46 27.28,40.42 28.82,40.46 29.24,41.22 31.15,41.09 33.51,42.02 38.35,40.95 41.55,41.54 41.45,42.65 36.68,45.24 38.23,46.24 37.67,46.64 39.12,47.26 34.96,46.27 35.02,45.65 36.53,45.47 36.33,45.11 33.88,44.36 32.45,45.33 33.3,46.08 30.75,46.58 29.63,45.04 28.84,44.91 27.67,42.58 28.81,41.05 26.36,40.15 26.06,40.82 24.93,40.95 23.71,40.69 24.41,40.12 23.9,39.96 22.63,40.26 24.04,37.66 23.12,37.92 23.15,36.42 22.49,36.41 19.41,40.25 19.54,41.72 13.14,45.74 12.33,45.38 12.59,44.09 18.48,40.17 16.87,40.44 16.45,39.8 17.05,38.9 16.1,37.99 15.68,37.91 16.11,38.96 15.41,40.05 12.11,41.7 10.51,42.93 10.2,43.92 8.89,44.37 6.53,43.13 3.1,43.08 3.04,41.89 0.81,41.01 -0.28,39.31 0.11,38.74 -2.15,36.67 -4.37,36.68 -5.38,35.95 -6.52,36.94 -8.9,36.87 -8.84,38.27 -9.53,38.74 -8.77,40.76 -9.39,43.03 -7.98,43.75 -1.9,43.42 -1.38,44.02 -1.19,46.01 -2.96,47.57 -4.49,47.95 -4.59,48.68 -1.62,48.64 -1.93,49.78 -0.99,49.35 1.34,50.13 1.64,50.95 3.83,51.62 4.71,53.09 8.12,53.53 8.8,54.02 8.12,55.52 8.54,57.11 10.58,57.73 10.25,56.89 10.91,56.46 9.65,55.47 10.94,54.01 12.52,54.47 14.12,53.76 17.62,54.85 19.66,54.43 21.27,55.19 21.58,57.41 22.52,57.75 24.12,57.03 24.43,58.38 23.43,58.61 23.34,59.19 29.12,60.03 28.07,60.5 22.87,59.85 21.32,60.72 21.06,62.61 21.54,63.19 25.4,65.11 23.9,66.01 22.18,65.72 21.21,65.03 21.37,64.41 17.85,62.75 17.12,61.34 18.79,60.08 17.87,58.95 16.83,58.72 15.88,56.1 12.94,55.36 10.36,59.47 8.38,58.31 5.67,58.59 4.99,61.97 10.53,64.49 14.76,67.81 19.18,69.82 28.17,71.19 31.29,70.45 30.01,70.19 31.1,69.56 32.13,69.91 40.29,67.93 41.13,66.79 40.02,66.27 33.18,66.63 34.81,65.9 34.94,64.41 37.01,63.85 36.54,64.76 37.18,65.14 39.59,64.52 40.44,64.76 39.76,65.5 42.09,66.48 43.95,66.07 44.53,66.76 43.7,67.35 44.17,67.96 43.45,68.57 46.25,68.25 46.82,67.69 45.56,67.57 45.56,67.01 46.35,66.67 53.72,68.86 54.47,68.81 53.49,68.2 58.8,68.88 59.94,68.28 61.08,68.94 60.03,69.52 60.55,69.85 68.51,68.09 69.18,68.62 66.93,69.45 66.69,71.03 69.94,73.04 72.59,72.78 72.8,72.22 71.85,71.41 72.79,70.39 72.56,69.02 73.67,68.41 71.28,66.32 72.42,66.17 75.05,67.76 74.47,68.33 74.94,68.99 73.84,69.07 73.6,69.63 74.4,70.63 73.1,71.45 74.89,72.12 74.66,72.83 75.68,72.3 75.29,71.34 76.36,71.15 75.9,71.87 77.58,72.27 81.5,71.75 80.61,72.58 80.51,73.65 86.82,73.94 86.01,74.46 87.17,75.12 100.76,76.43 101.99,77.29 104.35,77.7 107.24,76.48 111.08,76.71 114.13,75.85 113.89,75.33 109.4,74.18 113.02,73.98 113.53,73.34 115.57,73.75 123.2,72.97 123.26,73.74 126.98,73.57 128.59,73.04 129.05,72.4 128.46,71.98 131.29,70.79 132.25,71.84 139.87,71.49 139.15,72.42 140.47,72.85 149.5,72.2 152.97,70.84 159,70.87 159.83,70.45 159.71,69.72 160.94,69.44 167.86,69.57 169.58,68.69 170.82,69.01 170.01,69.65 170.45,70.1 175.72,69.88 180,68.96;-77.88,7.22 -79.12,9 -80.38,8.3 -80,7.55 -80.42,7.27 -83.51,8.45 -84.71,9.91 -85.66,9.93 -85.71,11.09 -87.49,13.3 -91.23,13.93 -94.69,16.2 -96.56,15.65 -103.5,18.29 -105.49,19.95 -105.27,21.42 -106.03,22.77 -109.26,25.58 -109.29,26.44 -112.23,28.95 -113.87,31.57 -114.78,31.8 -114.67,30.16 -111.62,26.66 -110.66,24.3 -109.41,23.36 -110.03,22.82 -112.18,24.74 -112.3,26.01 -115.06,27.72 -114.16,28.57 -115.52,29.56 -117.3,33.05 -120.62,34.61 -124.4,40.31 -123.9,45.52 -124.69,48.18 -123.12,48.04 -122.59,47.1 -122.84,49 -127.44,50.83 -127.85,52.33 -129.13,52.76 -129.31,53.56 -131.97,55.5 -134.08,58.12 -136.63,58.21 -139.87,59.54 -147.11,60.88 -148.22,60.67 -148.02,59.98 -151.72,59.16 -151.41,60.73 -150.62,61.28 -154.02,59.35 -153.29,58.86 -154.23,58.15 -158.43,55.99 -164.79,54.4 -157.72,57.57 -157.04,58.92 -161.97,58.67 -161.87,59.63 -163.82,59.8 -166.12,61.5 -164.56,63.15 -160.77,63.77 -161.52,64.4 -160.78,64.79 -164.96,64.45 -168.11,65.67 -164.47,66.58 -161.68,66.12 -166.76,68.36 -163.17,69.37 -161.91,70.33 -156.58,71.36 -136.5,68.9 -129.79,70.19 -129.11,69.78 -128.14,70.48 -125.76,69.48 -124.42,70.16 -124.29,69.4 -121.47,69.8 -115.25,68.91 -113.9,68.4 -115.3,67.9 -109.95,67.98 -108.88,67.38 -107.79,67.89 -108.81,68.31 -108.17,68.65 -106.15,68.8 -101.45,67.65 -98.44,67.78 -98.56,68.4 -97.67,68.58 -96.12,68.24 -96.13,67.29 -95.49,68.09 -94.68,68.06 -94.23,69.07 -96.47,70.09 -96.39,71.19 -95.21,71.92 -92.88,71.32 -91.52,70.19 -92.41,69.7 -90.55,69.5 -90.55,68.47 -89.22,69.26 -88.02,68.62 -88.32,67.87 -87.35,67.2 -85.58,68.78 -85.52,69.88 -81.28,69.16 -81.96,68.13 -81.39,67.11 -83.34,66.41 -85.77,66.56 -87.32,64.78 -90.7,63.61 -90.77,62.96 -91.93,62.84 -94.24,60.9 -94.68,58.95 -93.22,58.78 -92.3,57.09 -90.9,57.28 -85.01,55.3 -82.27,55.15 -82.13,53.28 -79.91,51.21 -78.6,52.56 -79.83,54.67 -76.54,56.53 -77.3,58.05 -78.52,58.8 -77.34,59.85 -78.11,62.32 -73.84,62.44 -71.37,61.14 -69.59,61.06 -69.29,58.96 -67.65,58.21 -64.58,60.34 -61.4,56.97 -61.8,56.34 -57.33,54.63 -55.76,53.27 -55.68,52.15 -60.03,50.24 -66.4,50.23 -71.1,46.82 -68.65,48.3 -65.06,49.23 -64.17,48.74 -65.12,48.07 -64.47,46.24 -61.52,45.88 -60.52,47.01 -59.8,45.92 -65.36,43.55 -66.12,43.62 -66.16,44.47 -64.43,45.29 -67.14,45.14 -70.65,43.09 -70.83,42.33 -69.97,41.64 -73.71,40.93 -71.95,40.93 -73.95,40.75 -74.91,38.94 -75.53,39.5 -75.06,38.4 -75.94,37.22 -76.35,39.15 -76.33,38.08 -76.99,38.24 -76.3,37.92 -75.73,35.55 -81.34,31.44 -80.06,26.88 -80.38,25.21 -81.71,25.87 -82.93,29.1 -84.1,30.09 -85.11,29.64 -86.4,30.4 -89.18,30.32 -89.59,30.16 -89.22,29.29 -90.15,29.12 -93.85,29.71 -97.14,27.83 -97.87,22.44 -95.9,18.83 -94.43,18.14 -91.41,18.88 -90.28,21 -87.05,21.54 -86.85,20.85 -87.84,18.26 -88.3,18.5 -88.36,16.53 -88.93,15.89 -84.98,16 -83.41,15.27 -83.86,11.37 -82.55,9.57;180,64.98 177.41,64.61 179.37,62.98 179.23,62.3 177.36,62.52 173.68,61.65 170.33,59.88 168.9,60.57 166.29,59.79 163.54,59.87 162.02,58.24 163.19,57.62 163.06,56.16 162.13,56.12 161.7,55.29 162.12,54.86 160.37,54.34 160.02,53.2 158.53,52.96 158.23,51.94 156.79,51.01 155.43,55.38 155.91,56.77 156.81,57.83 158.36,58.06 163.67,61.14 164.47,62.55 163.26,62.47 160.12,60.54 159.3,61.77 156.72,61.43 154.22,59.76 155.04,59.14 151.27,58.78 151.34,59.5 149.78,59.66 142.2,59.04 135.13,54.73 138.16,53.76 139.9,54.19 141.35,53.09 141.38,52.24 140.6,51.24 140.06,48.45 138.22,46.31 134.87,43.4 133.54,42.81 132.28,43.28 127.53,39.76 127.39,39.21 129.46,36.78 129.09,35.08 126.49,34.39 126.12,36.73 126.86,36.89 126.17,37.75 124.71,38.11 125.32,39.55 124.27,39.93 121.05,38.9 122.17,40.42 121.64,40.95 118.04,39.2 117.53,38.74 118.91,37.45 119.7,37.16 120.82,37.87 122.36,37.45 122.52,36.93 121.1,36.65 119.15,34.91 120.23,34.36 121.91,31.69 121.26,30.68 122.09,29.83 121.68,28.23 118.66,24.55 115.89,22.78 110.79,21.4 110.44,20.34 109.89,20.28 109.86,21.4 108.52,21.72 105.88,19.75 105.66,19.06 108.88,15.28 109.34,13.43 109.2,11.67 105.16,8.6 105.08,9.92 103.5,10.63 102.58,12.19 100.83,12.63 100.98,13.41 100.1,13.41 99.22,9.24 99.87,9.21 100.46,7.43 103.38,4.86 104.23,1.29 101.39,2.76 100.09,6.46 98.5,8.38 98.34,7.79 98.76,11.44 97.16,16.93 95.37,15.71 94.19,16.04 94.32,18.21 91.42,22.77 90.5,22.81 90.27,21.84 86.98,21.5 86.5,20.15 85.06,19.48 82.19,16.56 80.32,15.9 79.86,10.36 77.54,7.97 76.59,8.9 73.53,15.99 72.63,21.36 70.47,20.88 69.16,22.09 69.35,22.84 67.44,23.94 66.37,25.43 61.5,25.08 57.4,25.74 56.97,26.97 54.72,26.48 51.52,27.87 50.12,30.15 47.97,29.98 50.81,24.75 51.01,26.01 51.59,25.8 51.79,24.02 54.01,24.12 56.36,26.4 56.85,24.24 58.73,23.57 59.81,22.31 57.83,20.24 57.69,18.94 55.27,17.23 52.39,16.38 52.17,15.6 48.68,14 43.48,12.64 42.65,16.77 39.14,21.29 38.49,23.69 34.63,28.06 34.92,29.5 33.92,27.65 32.42,29.85 35.69,23.93 35.53,23.1 36.87,22 37.48,18.61 38.41,18 39.27,15.92 43.32,12.39 42.72,11.74 44.61,10.44 51.11,12.02 51.05,10.64 47.74,4.22 40.26,-2.57 39.2,-4.68 38.74,-5.91 39.44,-6.84 39.19,-8.49 40.48,-10.77 40.78,-14.69 40.09,-16.1 34.79,-19.78 35.56,-22.09 35.46,-24.12 32.57,-25.73 32.46,-28.3 30.06,-31.14 25.78,-33.94 22.57,-33.86 19.62,-34.82 18.38,-34.14 18.22,-31.66 15.21,-27.09 14.26,-22.11 11.79,-18.07 11.78,-15.79 13.63,-12.04 13.69,-10.73 11.91,-5.04 8.8,-1.11 9.8,3.07 9.4,3.73 8.5,4.77 5.9,4.26 4.33,6.27 1.87,6.14 -1.96,4.71 -4.65,5.17 -7.52,4.34 -9,4.83 -12.43,7.26 -14.84,10.88 -16.61,12.17 -16.71,13.59 -17.63,14.73 -16.46,16.14 -16.26,19.1;-180,-84.71 -179.06,-84.14 -174.38,-84.53 -169.95,-83.88 -158.07,-85.37 -148.53,-85.61 -143.11,-85.04 -142.89,-84.57 -153.59,-83.69 -152.86,-82.04 -156.84,-81.1 -150.65,-81.34 -146.42,-80.34 -149.53,-79.36 -155.33,-79.06 -158.05,-78.03 -158.37,-76.89 -151.33,-77.4 -146.1,-76.48 -146.2,-75.38 -144.91,-75.2 -135.21,-74.3 -119.7,-74.48 -113.94,-73.71 -112.3,-74.71 -100.65,-75.3 -100.12,-74.87 -102.55,-74.11 -103.68,-72.62 -96.34,-73.62 -90.09,-73.32 -89.23,-72.56 -85.19,-73.48 -81.47,-73.85 -80.3,-73.13 -76.22,-73.97 -68.94,-73.01 -67.13,-72.05 -68.54,-69.72 -67.25,-66.88 -63,-64.64 -57.81,-63.27 -57.22,-63.53 -57.6,-63.86 -62.51,-65.09 -62.12,-66.19 -63.75,-66.5 -65.67,-67.95 -63.2,-69.23 -61.81,-70.72 -60.83,-73.7 -64.35,-75.26 -70.6,-76.63 -77.24,-76.71 -73.66,-77.91 -77.93,-78.38 -78.02,-79.18 -75.36,-80.26 -59.69,-82.38 -58.22,-83.22 -49.76,-81.73 -42.81,-82.08 -40.77,-81.36 -28.55,-80.34 -29.69,-79.26 -35.64,-79.46 -35.33,-78.12 -17.52,-75.13 -15.7,-74.5 -15.41,-74.11 -16.47,-73.87 -15.45,-73.15 -10.3,-71.27 -7.42,-71.7 -6.87,-70.93 -0.23,-71.64 7.74,-69.89 9.53,-70.01 10.82,-70.83 13.42,-69.97 15.13,-70.4 19.26,-69.89 22.57,-70.7 27.09,-70.46 31.99,-69.66 33.87,-68.5 38.65,-69.78 54.53,-65.82 61.43,-67.95 64.05,-67.41 68.89,-67.93 69.67,-69.23 67.81,-70.31 69.07,-70.68 67.95,-71.85 69.87,-72.26 71.02,-72.09 73.86,-69.87 77.64,-69.46 79.11,-68.33 82.78,-67.21 86.75,-67.15 87.99,-66.21 89.67,-67.15 95.78,-67.39 99.72,-67.25 102.83,-65.56 106.18,-66.93 113.6,-65.88 119.83,-67.27 123.22,-66.48 128.8,-66.76 134.76,-66.21 135.07,-65.31 137.46,-66.95 145.49,-66.92 146.65,-67.9 148.84,-68.39 154.28,-68.56 161.57,-70.58 167.31,-70.83 171.21,-71.7 169.29,-73.66 166.09,-74.38 163.57,-76.24 163.49,-77.07 164.74,-78.18 167,-78.75 161.77,-79.16 159.79,-80.95 169.4,-83.83 180,-84.71;-46.76,82.63 -38.62,83.55 -27.1,83.52 -20.85,82.73 -31.4,82.02 -22.9,82.09 -22.07,81.73 -23.17,81.15 -15.77,81.91 -12.21,81.29 -20.05,80.18 -17.73,80.13 -19.7,78.75 -19.67,77.64 -18.47,76.99 -21.68,76.63 -19.83,76.1 -19.6,75.25 -20.67,75.16 -19.37,74.3 -21.59,74.22 -20.43,73.82 -20.76,73.46 -23.57,73.31 -22.3,72.18 -24.79,72.33 -22.13,71.47 -21.75,70.66 -23.54,70.47 -25.54,71.43 -25.2,70.75 -26.36,70.23 -22.35,70.13 -27.75,68.47 -31.78,68.12 -34.2,66.68 -39.81,65.46 -41.19,63.48 -42.82,62.68 -42.42,61.9 -43.38,60.1 -44.79,60.04 -46.26,60.85 -48.26,60.86 -51.63,63.63 -53.97,67.19 -52.98,68.36 -51.48,68.73 -50.87,69.93 -53.46,69.28 -54.68,69.61 -54.36,70.82 -51.39,70.57 -55.83,71.65 -54.72,72.59 -58.59,75.52 -61.27,76.1 -68.5,76.06 -71.4,77.01 -66.76,77.38 -73.3,78.04 -65.71,79.39 -65.32,79.76 -68.02,80.12 -62.23,81.32 -62.65,81.77 -53.04,81.89 -50.39,82.44 -44.52,81.66 -46.9,82.2 -46.76,82.63;126.15,-32.22 124.22,-32.96 123.66,-33.89 119.89,-33.98 118.02,-35.06 115.03,-34.2 115.8,-32.21 113.34,-26.12 113.78,-26.55 113.44,-25.62 114.23,-26.3 113.39,-24.38 113.74,-22.48 114.15,-21.76 114.23,-22.52 116.71,-20.7 120.86,-19.68 123.01,-16.41 123.43,-17.27 123.86,-17.07 123.5,-16.6 125.69,-14.23 127.07,-13.82 128.36,-14.87 129.62,-14.97 129.41,-14.42 130.62,-12.54 132.58,-12.11 131.82,-11.27 132.36,-11.13 135.3,-12.25 136.49,-11.86 136.95,-12.35 135.96,-13.32 135.5,-15 140.22,-17.71 141.27,-16.39 141.69,-12.41 142.52,-10.67 143.92,-14.55 144.56,-14.17 145.37,-14.98 146.39,-18.96 148.85,-20.39 149.68,-22.34 150.73,-22.4 150.9,-23.46 152.86,-25.27 153.57,-28.11 152.89,-31.64 150.33,-35.67 150,-37.43 146.32,-39.04 144.88,-38.42 145.03,-37.9 143.61,-38.81 140.64,-38.02 139.57,-36.14 138.12,-35.61 138.21,-34.38 136.83,-35.26 137.81,-32.9 135.99,-34.89 134.27,-32.62 131.33,-31.5 126.15,-32.22;-77.35,8.67 -75.67,9.44 -74.91,11.08 -73.41,11.23 -71.75,12.44 -71.14,12.11 -71.95,11.42 -71.7,9.07 -71.04,9.86 -71.4,10.97 -70.16,11.38 -69.94,12.16 -68.19,10.55 -64.89,10.08 -64.32,10.64 -61.88,10.72 -62.73,10.42 -62.39,9.95 -60.83,9.38 -60.67,8.58 -59.1,8 -57.15,5.97 -53.96,5.76 -51.3,4.12 -49.97,1.74 -50.39,-0.08 -48.62,-0.24 -48.58,-1.24 -47.82,-0.58 -44.91,-1.55 -44.58,-2.69 -39.98,-2.87 -37.22,-4.82 -35.6,-5.15 -34.73,-7.34 -35.13,-9 -38.67,-13.06 -39.27,-17.87 -40.94,-21.94 -41.99,-22.97 -44.65,-23.35 -47.65,-24.89 -48.5,-25.88 -48.89,-28.67 -53.81,-34.4 -56.22,-34.86 -58.43,-33.91 -56.74,-36.41 -57.75,-38.18 -62.34,-38.83 -62.15,-40.68 -65.12,-41.06 -64.98,-42.06 -63.76,-42.04 -63.46,-42.56 -65.18,-43.5 -65.57,-45.04 -67.29,-45.55 -67.58,-46.3 -65.64,-47.24 -69.14,-50.73 -68.15,-52.35 -70.85,-52.9 -71.43,-53.86 -74.95,-52.26;-78.77,72.35 -77.82,72.75 -74.1,71.33 -72.24,71.56 -68.79,70.53 -66.97,69.19 -68.81,68.72 -61.85,66.86 -63.92,65 -66.72,66.39 -68.02,66.26 -68.14,65.69 -65.32,64.38 -64.67,63.39 -65.01,62.67 -68.78,63.75 -66.17,61.93 -71.02,62.91 -74.83,64.68 -77.71,64.23 -78.56,64.57 -77.9,65.31 -73.96,65.45 -73.94,66.31 -72.65,67.28 -73.31,68.07 -76.87,68.89 -76.23,69.15 -78.96,70.17 -81.31,69.74 -88.68,70.41 -89.51,70.76 -88.47,71.22 -89.89,71.22 -90.21,72.24 -88.41,73.54 -85.83,73.8 -86.56,73.16 -85.77,72.53 -84.85,73.34 -82.32,73.75 -80.6,72.72 -80.75,72.06 -78.77,72.35;141,-2.6 144.58,-3.86 145.98,-5.47 147.65,-6.08 147.89,-6.61 146.97,-6.72 147.19,-7.39 150.69,-10.58 147.91,-10.13 146.05,-8.07 144.74,-7.63 143.29,-8.25 143.41,-8.98 142.63,-9.33 139.13,-8.1 137.61,-8.41 138.67,-7.32 137.93,-5.39 133.66,-3.54 132.98,-4.11 131.99,-2.82 133.7,-2.21 132.23,-2.21 130.52,-0.94 132.38,-0.37 133.99,-0.78 134.42,-2.77 135.46,-3.37 137.44,-1.7 141,-2.6;-77.88,7.22 -77.13,3.85 -78.86,1.38 -80.09,0.77 -80.93,-1.06 -80.97,-2.25 -79.77,-2.66 -81.41,-4.74 -81.25,-6.14 -79.76,-7.19 -76.01,-14.65 -71.46,-17.36 -70.37,-18.35 -70.16,-19.76 -71.49,-28.86 -71.44,-32.42 -73.59,-37.16 -73.22,-39.26 -74.33,-43.22 -73.7,-43.37 -73.39,-42.12 -72.72,-42.38 -73.24,-44.45 -74.35,-44.1 -74.69,-45.76 -75.64,-46.65 -74.13,-46.94 -75.61,-48.67 -74.95,-52.26;-106.52,73.08 -105.4,72.67 -104.46,70.99 -100.98,70.02 -102.73,69.5 -102.09,69.12 -102.43,68.75 -105.96,69.18 -113.31,68.54 -117.34,69.96 -112.42,70.37 -117.9,70.54 -118.43,70.91 -116.11,71.31 -119.4,71.56 -117.87,72.71 -115.19,73.31 -114.17,73.12 -114.67,72.65 -112.44,72.96 -111.05,72.45 -109.92,72.96 -108.19,71.65 -107.69,72.07 -108.4,73.09 -106.52,73.08;-91.59,81.89 -85.5,82.65 -83.18,82.32 -79.31,83.13 -61.85,82.63 -67.66,81.5 -65.48,81.51 -71.18,79.8 -76.91,79.32 -75.53,79.2 -76.22,79.02 -75.39,78.53 -79.76,77.21 -77.89,76.78 -80.56,76.18 -89.49,76.47 -89.62,76.95 -87.77,77.18 -88.26,77.9 -84.98,77.54 -87.96,78.37 -85.09,79.35 -86.93,80.25 -81.85,80.46 -87.6,80.52 -91.59,81.89;46.68,44.61 49.1,46.4 51.19,47.05 53.04,46.85 53.04,45.26 50.31,44.61 51.34,43.13 52.5,42.79 52.81,41.14 52.92,41.87 53.72,42.12 54.74,40.95 52.92,40.88 52.69,40.03 53.36,39.98 53.1,39.29 53.88,38.95 53.83,36.97 50.84,36.87 49.2,37.58 48.86,38.82 49.57,40.18 50.39,40.26 47.49,42.99 46.68,44.61;-4.21,58.55 -3.01,58.63 -4.07,57.55 -1.96,57.68 -3.12,55.97 -2.09,55.91 0.47,52.93 1.68,52.74 1.05,51.81 1.45,51.29 -5.78,50.16 -3.41,51.43 -5.27,51.99 -4.22,52.3 -4.58,53.5 -3.09,53.4 -2.95,53.98 -4.84,54.79 -5.05,55.78 -5.59,55.31 -6.15,56.79 -5.01,58.63 -4.21,58.55;-55.6,51.32 -56.8,49.81 -56.14,50.15 -55.47,49.94 -55.82,49.59 -53.48,49.25 -53.79,48.52 -53.09,48.69 -52.65,47.54 -53.07,46.66 -54.18,46.81 -54.24,47.75 -55.4,46.88 -56,46.92 -55.29,47.39 -56.25,47.63 -59.27,47.6 -58.8,48.25 -59.23,48.52 -57.36,50.72 -55.6,51.32;122.93,0.88 125.07,1.64 124.44,0.43 120.18,0.24 120.04,-0.52 120.94,-1.41 123.34,-0.62 121.51,-1.9 123.16,-5.34 122.24,-5.28 122.72,-4.46 121.49,-4.57 120.97,-2.63 120.31,-2.93 120.43,-5.53 119.8,-5.67 119.5,-3.49 118.77,-2.8 119.83,0.15 120.89,1.31 122.93,0.88;141.88,39.18 140.96,38.17 140.25,35.14 137.22,34.61 135.79,33.46 135.08,34.6 130.99,33.89 132,33.15 131.33,31.45 130.69,31.03 130.2,31.42 130.45,32.32 129.41,33.3 132.62,35.43 135.68,35.53 136.72,37.3 137.39,36.83 139.43,38.22 140.31,41.2 141.37,41.38 141.88,39.18;114.2,4.53 116.73,6.92 119.18,5.41 117.31,3.23 119,0.9 117.81,0.78 117.52,-0.8 116.56,-1.49 116.15,-4.01 110.22,-2.93 110.07,-1.59 109.09,-0.46 109.07,1.34 109.66,2.01 111.17,1.85 111.37,2.7 113,3.1 114.2,4.53;53.51,73.75 55.9,74.63 55.63,75.08 61.17,76.25 68.16,76.94 68.85,76.54 58.48,74.31 55.42,72.37 55.62,71.54 57.54,70.72 53.68,70.76 51.6,71.47 51.46,72.01 52.48,72.23 52.44,72.77 54.43,73.63 53.51,73.75;126.38,8.41 126.54,7.19 126.2,6.27 125.83,7.29 125.36,6.79 125.4,5.58 124.22,6.16 124.24,7.36 123.61,7.83 121.92,7.19 123.49,8.69 123.84,8.24 125.47,8.99 125.41,9.76 126.38,8.41;-180,68.96 -174.93,67.21 -175.01,66.58 -174.34,66.34 -174.57,67.06 -171.86,66.91 -169.9,65.98 -172.53,65.44 -172.96,64.25 -176.21,65.36 -178.36,65.39 -178.69,66.11 -179.88,65.87 -179.43,65.4 -180,64.98;49.54,-12.47 50.38,-15.71 49.67,-15.71 49.77,-16.88 47.1,-24.94 45.41,-25.6 44.04,-24.99 43.35,-22.78 44.46,-19.44 43.96,-17.41 44.45,-16.22 46.31,-15.78 49.19,-12.04 49.54,-12.47;104.37,-1.08 104.89,-2.34 106.11,-3.06 105.82,-5.85 104.71,-5.87 101.4,-2.8 98.6,1.82 95.29,5.48 97.48,5.25 100.64,2.1 102.5,1.4 103.84,0.1 103.44,-0.71 104.37,-1.08;176.89,-40.07 176.01,-41.29 175.24,-41.69 174.65,-41.28 175.23,-40.46 173.82,-39.51 174.57,-38.8 174.7,-37.38 172.64,-34.53 174.33,-35.27 175.96,-37.56 178.52,-37.7 176.89,-40.07;144.61,43.96 145.32,44.38 145.54,43.26 144.06,42.99 143.18,42 141.61,42.68 141.07,41.58 139.96,41.57 139.82,42.56 140.31,43.33 141.38,43.39 141.97,45.55 144.61,43.96;-88.15,74.39 -92.42,74.84 -93.89,76.32 -97.12,76.75 -96.75,77.16 -91.61,76.78 -89.19,75.61 -81.13,75.71 -80.06,75.34 -79.83,74.92 -80.46,74.66 -88.15,74.39;-107.82,75.85 -105.88,75.97 -106.31,75.01 -112.22,74.42 -113.87,74.72 -111.79,75.16 -117.71,75.22 -115.4,76.48 -109.07,75.47 -110.5,76.43 -109.58,76.79 -107.82,75.85;169.67,-43.56 172.8,-40.49 173.25,-41.33 173.96,-40.93 174.25,-41.35 172.71,-43.37 173.08,-43.85 171.45,-44.24 170.62,-45.91 169.33,-46.64 166.51,-45.85 169.67,-43.56;-14.51,66.46 -14.74,65.81 -13.61,65.13 -18.66,63.5 -22.76,63.96 -21.78,64.4 -23.96,64.89 -22.23,65.38 -24.33,65.61 -22.13,66.41 -20.58,65.73 -14.51,66.46;142.91,53.7 144.65,48.98 143.17,49.31 142.56,47.86 143.51,46.14 142.75,46.74 142.09,45.97 141.68,53.3 142.61,53.76 142.21,54.23 142.91,53.7;-74.66,-52.84 -71.11,-54.07 -70.27,-52.93 -68.63,-52.64 -67.75,-53.85 -65.05,-54.7 -65.5,-55.2 -66.96,-54.9 -69.23,-55.5 -72.26,-54.5 -74.66,-52.84;-71.71,19.71 -69.95,19.65 -68.32,18.61 -70.67,18.43 -71.4,17.6 -72.37,18.21 -73.92,18.03 -74.37,18.66 -72.33,18.67 -73.19,19.92 -71.71,19.71;-82.27,23.19 -78.35,22.51 -74.18,20.28 -77.76,19.86 -77.09,20.41 -78.72,21.6 -81.82,22.19 -81.8,22.64 -84.97,21.9 -82.27,23.19;-83.88,65.11 -80.1,63.73 -80.99,63.41 -83.11,64.1 -85.52,63.05 -85.87,63.64 -87.22,63.54 -86.35,64.04 -85.88,65.74 -83.88,65.11;-100.44,72.71 -101.54,73.36 -100.36,73.84 -97.38,73.76 -98.05,72.99 -96.54,72.56 -96.72,71.66 -98.36,71.27 -102.48,72.48 -100.44,72.71;-73.92,-71.27 -72.07,-71.19 -71.74,-69.51 -70.25,-68.88 -68.33,-71.41 -68.78,-72.17 -72.39,-72.48 -71.9,-72.09 -74.95,-72.07 -73.92,-71.27;122.34,18.22 121.73,14.33 123.95,13.78 124.08,12.54 122.93,13.55 120.63,13.86 120.99,14.53 119.92,15.41 120.72,18.51 122.34,18.22;15.14,79.67 16.99,80.05 21.54,78.96 19.03,78.56 17.12,76.81 15.91,76.77 13.76,77.38 14.67,77.74 10.44,79.65 15.14,79.67;-6.2,53.87 -6.03,53.15 -6.79,52.26 -9.98,51.82 -9.17,52.86 -9.69,53.88 -7.57,55.13 -5.66,54.55 -6.2,53.87;151.3,-5.84 149.71,-6.32 148.32,-5.75 150.14,-5 150.81,-5.46 151.54,-4.17 152.14,-4.15 152.32,-4.87 151.3,-5.84;108.49,-6.42 112.61,-6.95 112.98,-7.59 115.71,-8.37 114.56,-8.75 106.45,-7.35 105.37,-6.85 106.05,-5.9 108.49,-6.42;125.5,12.16 125.78,11.05 125.01,11.31 125.28,10.36 124.8,10.13 124.3,11.5 124.88,11.79 124.27,12.56 125.5,12.16;-96.02,80.6 -92.41,81.26 -85.81,79.34 -89.04,78.29 -92.88,78.34 -93.95,78.75 -93.15,79.38 -96.71,80.16 -96.02,80.6;-121.54,74.45 -115.51,73.48 -123.09,70.9 -125.93,71.87 -123.94,73.68 -124.92,74.29 -121.54,74.45;-132.71,54.04 -131.75,54.12 -132.05,52.98 -131.18,52.18 -133.05,53.41 -133.18,54.17 -132.71,54.04;-48.66,-78.05 -43.92,-78.48 -43.33,-80.03 -50.48,-81.03 -54.16,-80.63 -50.99,-79.61 -48.66,-78.05;-66.29,-80.26 -61.88,-80.39 -60.61,-79.63 -59.57,-80.04 -60.16,-81 -64.49,-80.92 -66.29,-80.26;122.59,9.98 122.95,10.88 123.5,10.94 123.34,10.27 124.08,11.23 123,9.02 122.59,9.98;8.71,40.9 9.21,41.21 9.81,40.5 9.67,39.18 8.81,38.91 8.16,40.95 8.71,40.9;93.78,81.02 95.94,81.25 100.19,79.78 99.94,78.88 94.97,79.04 91.18,80.34 93.78,81.02;-94.5,74.13 -90.51,73.86 -94.27,72.02 -95.41,72.06 -96.02,73.44 -94.5,74.13;-125.42,49.95 -123.92,49.06 -123.51,48.51 -124.01,48.37 -128.44,50.54 -125.42,49.95;-105.49,79.3 -100.83,78.8 -99.67,77.91 -105.18,78.38 -104.21,78.68 -105.49,79.3;147.69,-40.81 148.29,-40.88 147.91,-43.21 146.05,-43.55 144.74,-40.7 147.69,-40.81;81.79,7.52 81.64,6.48 80.35,5.97 79.7,8.2 80.15,9.82 81.79,7.52;129.37,-2.8 130.47,-3.09 130.83,-3.86 127.9,-3.39 128.14,-2.84 129.37,-2.8;109.48,18.2 108.66,18.51 108.63,19.37 110.79,20.08 110.34,18.68 109.48,18.2;12.37,56.11 12.69,55.61 12.09,54.8 11.04,55.36 10.9,55.78 12.37,56.11;44.85,80.59 51.52,80.7 47.59,80.01 46.5,80.25 47.07,80.56 44.85,80.59;24.72,77.85 20.73,77.68 21.42,77.94 20.81,78.25 22.88,78.45 24.72,77.85;14.76,38.14 15.52,38.23 15.1,36.62 12.43,37.61 12.57,38.13 14.76,38.14;-75.22,67.44 -76.99,67.1 -77.24,67.59 -75.9,68.29 -75.11,68.01 -75.22,67.44;-96.56,69.68 -95.65,69.11 -96.27,68.76 -99.8,69.4 -98.22,70.14 -96.56,69.68;138.83,76.14 145.09,75.56 144.3,74.82 138.96,74.61 136.97,75.26 138.83,76.14;-98.58,76.59 -97.74,76.26 -98.16,75 -102.5,75.56 -102.57,76.34 -98.58,76.59;102.84,79.28 105.37,78.71 105.08,78.31 99.44,77.92 101.26,79.23 102.84,79.28;-163.71,-78.6 -161.25,-78.38 -159.21,-79.5 -161.13,-79.63 -163.71,-78.6;-96.75,78.77 -95.56,78.42 -97.31,77.85 -98.63,78.87 -96.75,78.77;-111.26,78.15 -109.85,78 -110.19,77.7 -113.53,77.73 -111.26,78.15;-66.28,18.51 -65.85,17.98 -67.18,17.95 -67.1,18.52 -66.28,18.51;-77.57,18.49 -76.2,17.89 -77.77,17.86 -78.34,18.23 -77.57,18.49;-122.85,76.12 -119.1,77.51 -116.2,77.65 -117.11,76.53 -122.85,76.12;-153.23,57.97 -152.14,57.59 -154.52,56.99 -154.67,57.46 -153.23,57.97;32.95,35.39 34.58,35.67 32.98,34.57 32.26,35.1 32.95,35.39;-102.33,-71.89 -96.79,-71.95 -96.2,-72.52 -100.78,-72.5 -102.33,-71.89;165.78,-21.08 167.12,-22.16 166.19,-22.13 164.03,-20.11 165.78,-21.08;152.64,-3.66 152.83,-4.77 152.41,-3.79 150.66,-2.74 152.64,-3.66;162.12,-10.48 162.4,-10.83 161.7,-10.82 161.32,-10.2 162.12,-10.48;127.93,2.17 128.69,1.13 128.1,-0.9 127.4,1.01 127.93,2.17;120.3,-10.26 118.97,-9.56 119.9,-9.36 120.78,-9.97 120.3,-10.26;120.83,12.7 120.32,13.47 121.53,13.07 121.26,12.21 120.83,12.7;121.78,24.39 120.75,21.97 120.11,23.56 121.5,25.3 121.78,24.39;118.5,9.32 117.17,8.37 119.51,11.37 119.69,10.55 118.5,9.32;122.04,11.42 121.88,11.89 123.12,11.58 122,10.44 122.04,11.42;27.41,80.06 23.02,79.4 17.37,80.32 22.92,80.66 27.41,80.06;132.37,33.46 133.9,34.36 134.77,33.81 133.01,32.7 132.37,33.46;125.95,-8.43 126.97,-8.67 123.46,-10.24 123.98,-9.29 125.95,-8.43;-61.2,-51.85 -58.55,-51.1 -57.75,-51.55 -59.4,-52.2 -61.2,-51.85;178.13,-17.5 178.72,-17.63 178.55,-18.15 177.38,-18.16 178.13,-17.5;-61.68,10.76 -60.9,10.86 -60.94,10.11 -61.95,10.09 -61.68,10.76;-155.4,20.08 -154.81,19.51 -155.69,18.92 -156.07,19.7 -155.4,20.08;-64.01,47.04 -62.01,46.44 -62.87,45.97 -64.14,46.39 -64.01,47.04;-79.78,72.8 -80.88,73.33 -80.35,73.76 -76.25,72.83 -79.78,72.8;148.22,75.35 150.73,75.08 147.98,74.78 146.12,75.17 148.22,75.35;-93.61,74.98 -96.82,74.93 -94.85,75.65 -93.61,74.98;-110.96,78.8 -109.66,78.6 -112.54,78.41 -110.96,78.8;-166.47,60.38 -165.58,59.91 -167.46,60.21 -166.47,60.38;-171.73,63.78 -168.69,63.3 -169.53,62.98 -171.73,63.78;26.29,35.3 23.51,35.28 23.7,35.71 26.29,35.3;166.79,-15.67 166.63,-14.63 167.27,-15.74 166.79,-15.67;-122.62,-73.66 -118.72,-73.48 -120.23,-74.09 -122.62,-73.66;160.85,-9.87 159.85,-9.79 159.7,-9.24 160.85,-9.87;126.87,-3.79 125.99,-3.18 127,-3.13 126.87,-3.79;121.34,-8.54 122.9,-8.09 122.76,-8.65 121.34,-8.54;118.26,-8.36 119.13,-8.71 116.74,-9.03 118.26,-8.36;8.75,42.63 9.39,43.01 9.23,41.38 8.75,42.63;-82.55,9.57 -81.44,8.79 -79.02,9.55 -77.35,8.67;68.94,-48.62 70.56,-49.26 68.75,-49.77 68.94,-48.62;-78.19,25.21 -77.53,23.76 -78.41,24.58 -78.19,25.21;-77.79,27.04 -77,26.59 -77.17,25.88 -77.79,27.04;-80.32,62.09 -79.27,62.16 -79.66,61.63 -80.32,62.09;-83.99,62.45 -81.88,62.9 -83.07,62.16 -83.99,62.45;139.86,73.37 142.06,73.86 143.6,73.21 139.86,73.37;-106.6,73.6 -104.5,73.42 -105.38,72.76 -106.6,73.6";
+const COASTLL=COAST_RAW.split(";").map(l=>l.split(" ").map(p=>{
+  const a=p.split(","); return [ +a[1], +a[0] ];}));      // [lat, lon]
+/* 基準標架（G=-90 ⟹ θ=lon）下的球面點與兩投影像。
+   繞極軸轉 A 度只是把平面像乘上 e^{iA}（π 的等變性）——所以海岸線在兩個複平面上
+   只需算一次，之後每幀用 SVG 的 rotate(-A) 轉，不重算。 */
+const COASTQ =COASTLL.map(l=>l.map(([la,lo])=>geoToTheory(la,lo,-90)));
+const COASTZ ={N:COASTQ.map(l=>l.map(piN)), S:COASTQ.map(l=>l.map(piS))};
+const CLIP=90;                                            // |z|>CLIP 斷開（趨近投影中心）
+function coastPathsPlane(tag){
+  let o="";
+  for(const line of COASTZ[tag]){
+    let d="",pen=false;
+    for(const z of line){
+      if(cabs(z)>CLIP){pen=false;continue}
+      d+=(pen?"L":"M")+z[0].toFixed(3)+","+(-z[1]).toFixed(3)+" "; pen=true;}
+    if(d)o+=`<path d="${d}"/>`;}
+  return o;
+}
+const COASTPATH={N:coastPathsPlane("N"), S:coastPathsPlane("S")};
+/* 七大洲標籤的代表點（lat, lon）——純標示用，不參與任何計算。
+   投影後地球會被拉扯得不直觀，這些名字是給眼睛用的路標。 */
+const CONT=[["亞洲",45,90],["歐洲",50,15],["非洲",2,20],["北美洲",45,-100],
+            ["南美洲",-15,-60],["大洋洲",-25,134],["南極洲",-82,0]];
+const CITIES=[["台北",25.05,121.53],["北京",39.90,116.41],["東京",35.68,139.69],
+  ["雪梨",-33.87,151.21],["倫敦",51.51,-0.13],["紐約",40.71,-74.01],
+  ["洛杉磯",34.05,-118.24],["聖保羅",-23.55,-46.63],["開普敦",-33.92,18.42],
+  ["莫斯科",55.76,37.62],["新德里",28.61,77.21],["奈洛比",-1.29,36.82],
+  ["雷克雅維克",64.15,-21.94],["特羅姆瑟",69.65,18.96],["基多",-0.18,-78.47]];
+function makeLabel(text,color,w){
+  const W=256,H=64,c=document.createElement("canvas"); c.width=W; c.height=H;
+  const g=c.getContext("2d");
+  g.font="600 34px 'PingFang TC','Heiti TC','Hiragino Sans TC',sans-serif";
+  g.textAlign="center"; g.textBaseline="middle";
+  g.shadowColor="#000"; g.shadowBlur=7;
+  g.fillStyle=color; g.fillText(text,W/2,H/2);
+  const t=new THREE.CanvasTexture(c); t.minFilter=THREE.LinearFilter;
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:true}));
+  sp.scale.set(w,w*H/W,1); return sp;
+}
+function circleFromNormal(m,color,rad){
+  let u=[m[1],-m[0],0]; let n=Math.hypot(u[0],u[1]);
+  if(n<1e-9){u=[1,0,0];n=1} u=u.map(x=>x/n);
+  const w=[m[1]*u[2]-m[2]*u[1],m[2]*u[0]-m[0]*u[2],m[0]*u[1]-m[1]*u[0]];
+  const pts=[];
+  for(let j=0;j<=180;j++){const s=j/180*2*Math.PI;
+    pts.push(new THREE.Vector3(
+      (Math.cos(s)*u[0]+Math.sin(s)*w[0])*rad,
+      (Math.cos(s)*u[1]+Math.sin(s)*w[1])*rad,
+      (Math.cos(s)*u[2]+Math.sin(s)*w[2])*rad));}
+  return new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts),
+    new THREE.LineBasicMaterial({color:color}));
+}
+function resize3D(){
+  const cv=document.getElementById("globe"), r=cv.parentElement.getBoundingClientRect();
+  renderer.setSize(r.width,r.height,true);
+  camera.aspect=r.width/Math.max(1,r.height); camera.updateProjectionMatrix();
+}
+function render3D(S){
+  earth.rotation.z=(S.G+90)*D2R;                 // 地理經度 → θ = GMST+lon+90
+  // 日照方向：球體在世界標架，直接用 ι(λ☉)；earth 群組被轉了 A，故餵 R_{−A}·ι(λ☉)
+  sunMat.uniforms.uSun.value.set(S.sunQ[0],S.sunQ[1],S.sunQ[2]);
+  {const A=(S.G+90)*D2R, ca=Math.cos(A), sa=Math.sin(A);
+   const sl=[S.sunQ[0]*ca+S.sunQ[1]*sa, -S.sunQ[0]*sa+S.sunQ[1]*ca, S.sunQ[2]];
+   LITMATS.forEach(m=>m.uniforms.uSun.value.set(sl[0],sl[1],sl[2]));}
+  {const s=S.sunQ, FAR=1.62;
+   gSun.position.set(s[0]*FAR,s[1]*FAR,s[2]*FAR);
+   gHit.position.set(s[0]*1.012,s[1]*1.012,s[2]*1.012);   // 黃道帶上
+   gSub.position.set(s[0]*1.002,s[1]*1.002,s[2]*1.002);   // 地表直射點
+   const A=FAR-0.15, Bn=0.995, dir=new THREE.Vector3(s[0],s[1],s[2]).normalize();
+   const q=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),dir);
+   [gRay,gRayGlow].forEach(m=>{m.position.copy(dir).multiplyScalar((A+Bn)/2);
+     m.quaternion.copy(q); m.scale.set(1,A-Bn,1);});}
+  while(gHor.children.length)gHor.remove(gHor.children[0]);
+  gHor.add(circleFromNormal(S.p,0xf2f4f7,1.018));
+  gHor.add(circleFromNormal(S.sunQ,0x6f6440,1.001));   // 晨昏線 Γ_{ι(λ☉)}（暗黃細線）
+  gAsc.position.set(S.ascQ[0]*1.02,S.ascQ[1]*1.02,S.ascQ[2]*1.02);
+  gObs.position.set(S.p[0]*1.02,S.p[1]*1.02,S.p[2]*1.02);
+  const R=camR*(camera.aspect<1?1/camera.aspect:1);   // 窄面板時退遠，保證整顆球在框內
+  camera.position.set(R*Math.sin(camPh)*Math.cos(camTh),
+                      R*Math.sin(camPh)*Math.sin(camTh),
+                      R*Math.cos(camPh));
+  camera.up.set(0,0,1); camera.lookAt(0,0,0);
+  renderer.render(scene,camera);
+}
+
+/* ============================================================================
+   7. 推導鏈面板
+   ========================================================================== */
+function renderChain(S){
+  const i=S.inp, N=S.proj.N, P=S.proj.S;
+  const iv=(x)=>{const d=Math.abs(x-1); return `<span class="${d<1e-9?'ok':'bad'}">${fu(x,6)}</span>`};
+  const av=(z)=>{const d=Math.hypot(z[0]+1,z[1]); return `<span class="${d<1e-9?'ok':'bad'}">${cf(z,6)}</span>`};
+  const L=[];
+  const K=(a,b)=>`<span class="k">${pad(a,8)}</span>${b}`;
+  L.push(K("輸入",`日期 ${i.y}-${String(i.mo).padStart(2,"0")}-${String(i.d).padStart(2,"0")}　時刻 ${String(i.hh).padStart(2,"0")}:${String(i.mi).padStart(2,"0")}　時區 ${f(i.tz,1)}　緯度 ${f(i.lat,4)}　經度 ${f(i.lon,4)}　← 全頁只有這五個自由度`));
+  L.push(K("觀測者",`lat=${f(i.lat,4)}  lon=${f(i.lon,4)}   <span class="k">φ=90°−lat=</span>${f(S.phiDeg,4)}°  <span class="k">θ=LST+90°=</span>${f(S.thDeg,4)}°   <span class="k">tanφ=</span>${f(S.tanphi,6)}`));
+  L.push(K("",`p=(sinφcosθ, sinφsinθ, cosφ)=(${f(S.p[0],6)}, ${f(S.p[1],6)}, ${f(S.p[2],6)})　|p|=${fu(Math.hypot(S.p[0],S.p[1],S.p[2]),6)}`));
+  L.push(K("時間",`本地時 ${fu(S.hloc,4)}h  −時區 ${f(i.tz,1)} → UT ${f(S.hut,4)}h　JD=${S.J.toFixed(6)}　T=(JD−2451545)/36525=${f((S.J-2451545)/36525,8)}`));
+  L.push(K("",`GMST=${fu(S.G,4)}°　LST=GMST+東經=${fu(S.G,4)}+${f(i.lon,4)}=${fu(S.LST,4)}°　θ=LST+90=${fu(S.thDeg,4)}°　<span class="k">(+90° 來自約定 γ=+i，§7.1)</span>`));
+  L.push(K("太陽",`L₀=${fu(S.sun.L0,4)}°  M=${fu(S.sun.M,4)}°  C=${f(S.sun.C,4)}°  →  λ☉=L₀+C=${fu(S.sun.lam,4)}° → <span class="h">${signOf(S.sun.lam)}</span>　<span class="k">[級數 ~0.01°]</span>`));
+  L.push(K("",`<span class="k">同日當地正午 λ☉=${fu(S.sunNoon.lam,4)}°（日層級「太陽星座」用，§7.3 的 342.592 即此）　差 ${f(S.sun.lam-S.sunNoon.lam,4)}° = ${f(S.hloc-12,3)}h × 0.9856°/d</span>`));
+  L.push("");
+  L.push(K("黃道",`ε=${EPSDEG}°  tanε=${fu(TE,6)}  secε=${fu(SECE,6)}`));
+  L.push(K("",`c_N=${cf(N.ecl.c,6)}  r_N=${fu(N.ecl.r,6)}   r²−|c|²=${iv(N.eclInv)}`));
+  L.push(K("",`c_S=${cf(P.ecl.c,6)}  r_S=${fu(P.ecl.r,6)}   r²−|c|²=${iv(P.eclInv)}　<span class="k">c_S=−c_N（頂端推導 (1)）</span>`));
+  L.push(K("地平",`c_N=−e^{iθ}tanφ=${cf(N.hor.c,6)}  r_N=|secφ|=${fu(N.hor.r,6)}   r²−|c|²=${iv(N.horInv)}`));
+  L.push(K("",`c_S=+e^{iθ}tanφ=${cf(P.hor.c,6)}  r_S=|secφ|=${fu(P.hor.r,6)}   r²−|c|²=${iv(P.horInv)}`));
+  L.push("");
+  for(const [tag,Q] of [["北投影 ℂ_N",N],["南投影 ℂ_S",P]]){
+    L.push(`<span class="k">${pad(tag,8)}</span><span class="k">D=b−a=</span>${cf(Q.D,6)}　<span class="k">A=Im(ā b)=</span>${f(Q.A,6)}　<span class="k">R=√(A²+|D|²)=</span>${fu(Q.R,6)}`);
+    L.push(K("",`v₁=i(−A+R)/conj(D)=${cf(Q.v1,6)}　v₂=i(−A−R)/conj(D)=${cf(Q.v2,6)}`));
+    L.push(K("",`v₁·conj(v₂)=${av(Q.anti)}　<span class="k">✓對徑（§4 韋達）</span>`));
+    L.push(K("",`判準 Im(e^{−iθ}v₁)=${f(Q.crit1,6)} ${Q.crit1>0?"&gt; 0":"&lt; 0"}　Im(e^{−iθ}v₂)=${f(Q.crit2,6)} ${Q.crit2>0?"&gt; 0":"&lt; 0"}　→ <span class="h">v${Q.pick} 上升</span>`));
+    L.push(K("",`π⁻¹(v)=(${f(Q.q[0],6)}, ${f(Q.q[1],6)}, ${f(Q.q[2],6)})　⟨·,γ⟩=${f(dot(Q.q,GAM),6)}  ⟨·,γ'⟩=${f(dot(Q.q,GAMP),6)}　λ=atan2 → ${fu(Q.lam,4)}°`));
+  }
+  L.push("");
+  {const zN=N.v, zS=P.v, inv=cdiv([1,0],cconj(zN));
+   const e1=cabs(csub(zS,inv)), e2=cabs(cadd(P.v1,N.v1));
+   L.push(K("關係",`π_S = 1/conj(π_N)（單位圓反演）：由上升點 v_N=${cf(zN,6)} 得 1/conj(v_N)=${cf(inv,6)}，即南平面的上升點 v_S=${cf(zS,6)}　|差|=<span class="${e1<1e-9?'ok':'bad'}">${e1.toExponential(2)}</span>`));
+   L.push(K("",`原始 ± 標號：D_S=−D_N、A_S=+A_N ⟹ v_k^S=−v_k^N，|v₁^S+v₁^N|=<span class="${e2<1e-9?'ok':'bad'}">${e2.toExponential(2)}</span>。故同號標指到<span class="k">不同</span>球面點（§4 的 v₂=−1/conj(v₁)），上升在 ℂ_N 取 v${N.pick}、在 ℂ_S 取 v${P.pick}——判準必須逐支重算，不能靠標號。`));
+   L.push(K("",`§2.4 對照：z↦1/z̄ = 換投影中心（單位圓為不動點集）　z↦−1/z̄ = 球面對徑 q↦−q（無不動點）　兩者差一個 z↦−z`));}
+  L.push(K("繞數",`φ=${f(S.phiDeg,4)}° <span class="k">vs</span> ε=${EPSDEG}° → ${S.phiDeg>EPSDEG&&S.phiDeg<180-EPSDEG?"φ &gt; ε":"φ &lt; ε"}　<span class="h">wind(v₁)=${S.wind}</span>　<span class="k">臨界緯度 90°−ε=${LATC.toFixed(4)}°，本點 |lat|=${Math.abs(i.lat).toFixed(4)}° → ${S.polar?"極區（擺盪，角色換手，180° 跳躍）":"中低緯（上升點每日繞黃道一圈）"}</span>`));
+  L.push(K("閉式",`通用閉式 atan2(cos·lat cos·LST, −sinε sin·lat − cosε cos·lat sin·LST)=${fu(S.std,4)}°　差 ${S.dStd.toExponential(2)}° ${S.dStd<1e-9?'<span class="ok">一致</span>':'<span class="bad">相差 '+S.dStd.toFixed(1)+'° ← 極區，閉式回傳下降點（§7.4）</span>'}`));
+  L.push("");
+  {const zA=N.v, lz=[Math.log(cabs(zA)), Math.atan2(zA[1],zA[0])*R2D];
+   const my=mercY(S.ascGeo.lat), e=Math.abs(lz[0]-my);
+   L.push(K("log",`§7.2 Mercator = log(ℂ_N)（精確）：上升點 log v_N = ${f(lz[0],6)} + i·${f(mod360(lz[1]),4)}°　`
+     +`Re → Mercator 縱座標 ln tan(45°+lat/2) = ${f(my,6)}　|差|=<span class="${e<1e-9?'ok':'bad'}">${e.toExponential(2)}</span>　`
+     +`Im → arg v_N = θ_ASC = ${f(mod360(lz[1]),4)}°，減 90°+GMST 得上升點地理經度 `
+     +`${f(mod360(lz[1]),4)}−90−${f(S.G,4)} ≡ ${f(S.ascGeo.lon,4)}°`));}
+  L.push("");
+  L.push(K("結果",`<span class="h">λ_ASC=${fu(S.lamASC,4)}° → ${signOf(S.lamASC)}</span>　　<span class="h">λ☉=${fu(S.sun.lam,4)}° → ${signOf(S.sun.lam)}</span>`));
+  L.push(K("",`南北兩投影的 λ_ASC 差 = <span class="${S.dNS<1e-9?'ok':'bad'}">${S.dNS.toExponential(2)}°</span>　　下降點 λ=${fu(N.descLam,4)}° → ${signOf(N.descLam)}　　上升點地理位置 lat=${f(S.ascGeo.lat,4)} lon=${f(S.ascGeo.lon,4)}`));
+  document.getElementById("chain").innerHTML=L.join("\n");
+}
+
+/* ============================================================================
+   8. 七項驗算（純函數 + 固定種子 LCG，開頁即跑，結果可重現）
+   ========================================================================== */
+function lcg(seed){let s=seed>>>0; return ()=>{s=(1664525*s+1013904223)>>>0; return s/4294967296}}
+function gauss(rnd){const u=Math.max(1e-12,rnd()),v=rnd();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+function ascOf(lst,lat,tag){
+  const th=(lst+90)*D2R, ph=(90-lat)*D2R, tp=Math.tan(ph), sg=(tag==="N")?-1:1;
+  const a=C(sg*TE,0), b=cscale(cexp_i(th),sg*tp);
+  const M=meet(a,b);
+  const v = rising(M.v1,th)>0 ? M.v1 : M.v2;
+  const n = (rising(M.v1,th)>0?1:0)+(rising(M.v2,th)>0?1:0);
+  return {lam:lamOf((tag==="N"?piNinv:piSinv)(v)),v:v,n:n,th:th,ph:ph};
+}
+function runTests(){
+  const T=[]; let allok=true;
+  const line=(no,name,got,want,ok,extra)=>{
+    if(!ok)allok=false;
+    T.push(`<span class="${ok?'ok':'bad'}">${ok?"✓":"✗"}</span> ${pad(no,3)}${pad(name,34)}${pad(got,46)}${extra||""}`);};
+  // 1 台北
+  {const S=compute({y:1990,mo:7,d:15,hh:8,mi:30,tz:8,lat:25.05,lon:121.53});
+   const e=[Math.abs(S.sun.lam-112.2907),Math.abs(S.LST-61.6354),Math.abs(S.lamASC-154.4376)];
+   line("1.","台北 1990-07-15 08:30 UTC+8",
+     `λ☉=${S.sun.lam.toFixed(4)} LST=${S.LST.toFixed(4)} ASC=${S.lamASC.toFixed(4)}`,"",
+     Math.max(...e)<5e-5, `目標 112.2907 / 61.6354 / 154.4376　max|差|=${Math.max(...e).toExponential(1)}°`);}
+  // 2 北京
+  {const S=compute({y:1993,mo:3,d:3,hh:20,mi:0,tz:8,lat:39.90,lon:116.41});
+   const eA=Math.abs(S.lamASC-186.143), eS=Math.abs(S.sunNoon.lam-342.592);
+   line("2.","北京 1993-03-03 20:00 UTC+8",
+     `ASC=${S.lamASC.toFixed(4)}  λ☉(正午)=${S.sunNoon.lam.toFixed(4)}`,"",
+     eA<1e-3&&eS<1e-3,
+     `目標 186.143 / 342.592　|差|=${eA.toExponential(1)}° / ${eS.toExponential(1)}°　<span class="k">（瞬刻 λ☉=${S.sun.lam.toFixed(4)}，見頂端註解）</span>`);}
+  // 3 r²−|c|²=1，南北兩投影
+  {const rnd=lcg(20260807); let ea=0,er=0,n=0;
+   for(let k=0;k<2000;k++){
+     let m=[gauss(rnd),gauss(rnd),gauss(rnd)]; const L=Math.hypot(...m); m=m.map(x=>x/L);
+     if(Math.abs(m[2])<1e-3)continue; n++;
+     for(const sg of [-1,1]){
+       const c=cscale(C(m[0],m[1]),sg/m[2]), r=1/Math.abs(m[2]);
+       const d=Math.abs(r*r-cabs2(c)-1); ea=Math.max(ea,d); er=Math.max(er,d/(r*r));}}
+   line("3.","r²−|c|²=1  (N&S, "+n+" 個 m)",
+     `max|絕對|=${ea.toExponential(2)}`,"",er<1e-13,
+     `max|相對 /r²|=${er.toExponential(2)}　<span class="k">絕對值隨 r² 放大，判準看相對</span>`);}
+  // 4 v₁·conj(v₂)=−1
+  {const rnd=lcg(7777); let e=0;
+   for(let k=0;k<2000;k++){
+     const a=C(gauss(rnd),gauss(rnd)), b=C(gauss(rnd),gauss(rnd));
+     if(cabs(csub(a,b))<1e-6)continue;
+     const M=meet(a,b), z=cmul(M.v1,cconj(M.v2));
+     e=Math.max(e,Math.hypot(z[0]+1,z[1]));}
+   line("4.","v₁·conj(v₂)=−1  (2000 對圓心)",`max|差|=${e.toExponential(2)}`,"",e<1e-11,"");}
+  // 5 π_S = 1/conj(π_N)
+  {const rnd=lcg(31415); let e=0,n=0;
+   for(let k=0;k<2000;k++){
+     let q=[gauss(rnd),gauss(rnd),gauss(rnd)]; const L=Math.hypot(...q); q=q.map(x=>x/L);
+     if(Math.abs(1-q[2])<1e-4||Math.abs(1+q[2])<1e-4)continue; n++;
+     e=Math.max(e,cabs(csub(piS(q),cdiv([1,0],cconj(piN(q))))));}
+   line("5.","π_S(q)=1/conj(π_N(q))  ("+n+" 個 q)",`max|差|=${e.toExponential(2)}`,"",e<1e-9,
+     `<span class="k">單位圓反演；近極點處 |π_N|→∞ 故絕對誤差放大</span>`);}
+  // 6 十二宮弧長比
+  {const ds=[]; for(let k=0;k<12;k++)
+     ds.push(cabs(csub(piN(iota((k+1)*30*D2R)),piN(iota(k*30*D2R)))));
+   const R=Math.max(...ds)/Math.min(...ds);
+   line("6.","十二宮相鄰分點弦長比 (ℂ_N)",`max/min=${R.toFixed(4)}`,"",Math.abs(R-2.18)<0.01,
+     `文件 §3.4 記 2.18　min=${Math.min(...ds).toFixed(4)} max=${Math.max(...ds).toFixed(4)}`);}
+  // 7 南北兩投影 λ_ASC 相同
+  {const rnd=lcg(999983); let e=0,bad=0;
+   for(let k=0;k<2000;k++){
+     const lst=rnd()*360, lat=(rnd()*2-1)*89;
+     const A=ascOf(lst,lat,"N"), B=ascOf(lst,lat,"S");
+     if(A.n!==1||B.n!==1)bad++;
+     let d=Math.abs(A.lam-B.lam); d=Math.min(d,360-d); e=Math.max(e,d);}
+   line("7.","λ_ASC(ℂ_N)=λ_ASC(ℂ_S)  (2000 組)",`max|差|=${e.toExponential(2)}°`,"",e<1e-9&&bad===0,
+     `兩交點中恰一個滿足判準的例外數=${bad}`);}
+  // 附 A 南投影判準 vs 球面 ∂_θ⟨q,p⟩
+  {const rnd=lcg(24680); let bad=0;
+   for(let k=0;k<2000;k++){
+     const lst=rnd()*360, lat=(rnd()*2-1)*89;
+     const B=ascOf(lst,lat,"S"), q=piSinv(B.v), h=1e-6;
+     const alt=t=>{const p=[Math.sin(B.ph)*Math.cos(t),Math.sin(B.ph)*Math.sin(t),Math.cos(B.ph)];
+       return dot(q,p)};
+     if(alt(B.th+h)-alt(B.th-h)<=0)bad++;}
+   line("A.","南判準 vs 球面 ∂_θ⟨q,p⟩ 同號",`分歧 ${bad} / 2000`,"",bad===0,
+     `<span class="k">頂端推導 (3) 的數值驗證：判準不是抄北投影的</span>`);}
+  // 附 B 繞數在臨界緯度翻轉
+  {const w=lat=>{let tot=0,prev=null;
+     for(let j=0;j<=4000;j++){
+       const th=(j*360/4000+90)*D2R, tp=Math.tan((90-lat)*D2R);
+       const M=meet(C(-TE,0),cscale(cexp_i(th),-tp));
+       const l=Math.atan2(M.v1[1],M.v1[0]);
+       if(prev!==null){let dd=(l-prev+Math.PI)%(2*Math.PI); if(dd<0)dd+=2*Math.PI; tot+=dd-Math.PI;}
+       prev=l;}
+     return Math.round(tot/(2*Math.PI));};
+   const a=w(66.0), b=w(67.0), c=w(39.9), d=w(80.0);
+   line("B.","wind(v₁)：lat 39.9/66/67/80",`${c} / ${a} / ${b} / ${d}`,"",
+     c===1&&a===1&&b===0&&d===0,`§6 預期 1 / 1 / 0 / 0，臨界 |lat|=${LATC.toFixed(4)}°`);}
+  document.getElementById("tests").innerHTML=
+    `<span class="w">驗算（開頁實跑，固定種子，可重現）</span>　`+
+    (allok?`<span class="ok">全部通過</span>`:`<span class="bad">有項目未通過 ← 停下來查</span>`)+
+    `\n`+T.join("\n");
+  console.log("[globe.html] 驗算："+(allok?"7/7 + 2 附加 全部通過":"有失敗項"));
+  return allok;
+}
+
+/* ============================================================================
+   9. 事件與主迴圈（render 只讀 compute 的回傳，不保存中間狀態）
+   ========================================================================== */
+const $=id=>document.getElementById(id);
+function readInputs(){
+  const d=$("date").value.split("-").map(Number);
+  const t=$("time").value.split(":").map(Number);
+  return {y:d[0],mo:d[1],d:d[2],hh:t[0],mi:t[1],
+          tz:+$("tz").value,lat:+$("lat").value,lon:+$("lon").value};
+}
+function go(){
+  const inp=readInputs();
+  if(!isFinite(inp.lat)||!isFinite(inp.lon)||!isFinite(inp.tz))return;
+  inp.lat=Math.max(-89.999,Math.min(89.999,inp.lat));
+  const S=compute(inp);
+  drawPlane("N",S); drawPlane("S",S); drawMerc(S);
+  resize3D(); render3D(S); renderChain(S);
+  $("sliderv").textContent=String(inp.hh).padStart(2,"0")+":"+String(inp.mi).padStart(2,"0");
+  $("slider").value=inp.hh*60+inp.mi;
+}
+function setTimeFromSlider(){
+  const v=+$("slider").value;
+  $("time").value=String(Math.floor(v/60)).padStart(2,"0")+":"+String(v%60).padStart(2,"0");
+  go();
+}
+// 平面點擊 → 反投影 → 等價於在地球上選了那點
+function planeClick(tag,ev){
+  const el=$("svg"+tag), r=el.getBoundingClientRect(), V=VIEW[tag];
+  const side=Math.min(r.width,r.height);
+  const ox=r.left+r.width/2, oy=r.top+r.height/2;
+  const z=[ (ev.clientX-ox)/(side/2)*V, -(ev.clientY-oy)/(side/2)*V ];
+  const q=(tag==="N"?piNinv:piSinv)(z);
+  const S=compute(readInputs());
+  const g=theoryToGeo(q,S.G);
+  $("lat").value=g.lat.toFixed(4); $("lon").value=g.lon.toFixed(4); go();
+}
+["N","S"].forEach(tag=>{
+  const el=$("svg"+tag);
+  el.addEventListener("click",e=>planeClick(tag,e));
+  el.addEventListener("wheel",e=>{e.preventDefault();
+    VIEW[tag]=Math.max(0.3,Math.min(30,VIEW[tag]*(e.deltaY>0?1.12:1/1.12))); go();},{passive:false});
+});
+// 3D 拖曳 / 點擊
+(function(){
+  const cv=$("globe"); let down=false,mx=0,my=0,moved=0;
+  cv.addEventListener("mousedown",e=>{down=true;moved=0;mx=e.clientX;my=e.clientY;cv.classList.add("drag")});
+  window.addEventListener("mousemove",e=>{
+    if(!down)return; const dx=e.clientX-mx, dy=e.clientY-my; mx=e.clientX;my=e.clientY;
+    moved+=Math.abs(dx)+Math.abs(dy);
+    camTh-=dx*0.006; camPh=Math.max(0.05,Math.min(Math.PI-0.05,camPh-dy*0.006));
+    go();});
+  window.addEventListener("mouseup",e=>{
+    if(!down)return; down=false; cv.classList.remove("drag");
+    if(moved<5)pick3D(e);});
+  cv.addEventListener("wheel",e=>{e.preventDefault();
+    camR=Math.max(1.6,Math.min(16,camR*(e.deltaY>0?1.08:1/1.08))); go();},{passive:false});
+  function pick3D(e){
+    const r=cv.getBoundingClientRect();
+    const nd=new THREE.Vector2(((e.clientX-r.left)/r.width)*2-1,
+                              -((e.clientY-r.top)/r.height)*2+1);
+    const rc=new THREE.Raycaster(); rc.setFromCamera(nd,camera);
+    const hit=rc.intersectObject(sphere);
+    if(!hit.length)return;
+    const P=hit[0].point.clone().normalize();
+    const S=compute(readInputs());
+    const g=theoryToGeo([P.x,P.y,P.z],S.G);
+    $("lat").value=g.lat.toFixed(4); $("lon").value=g.lon.toFixed(4); go();
+  }
+})();
+["date","time","tz","lat","lon"].forEach(id=>{
+  $(id).addEventListener("input",()=>{if(id==="time"){const t=$("time").value.split(":").map(Number);
+    $("slider").value=t[0]*60+t[1];} go();});});
+$("slider").addEventListener("input",setTimeFromSlider);
+$("preset").addEventListener("change",e=>{
+  if(!e.target.value)return; const p=e.target.value.split("|");
+  $("date").value=p[0]; $("time").value=p[1]; $("tz").value=p[2];
+  $("lat").value=p[3]; $("lon").value=p[4]; go();});
+window.addEventListener("resize",go);
+
+$("note").innerHTML=
+`<span class="w">精度界限（哪裡精確、哪裡近似）</span>
+  精確（機器精度）：球極投影、大圓公式 c,r、交點 v₁,v₂、上升判準、繞數——純代數幾何，
+                   誤差即浮點 ulp。畫面上的 r²−|c|²=1 與 v₁·conj(v₂)=−1 就是它的實時證據。
+  近似：λ☉ 用平黃經+中心方程級數 <span class="h">~0.01°</span>；未含章動與光行差 <span class="h">~0.005°</span>；
+       ε 固定 ${EPSDEG}° 未隨時間歲差；GMST 取 UT1≈UTC（ΔUT1&lt;0.9s ≈ 0.004°）。
+  ⟹ 出生落在宮界 ±1′（0.0167°）內時本頁不足以判定，需高精度星曆；幾何框架不變。
+<span class="w">怎麼「不看數字」直接讀出兩個星座</span>
+  黃道被染成十二段並且宮名就寫在弧上。<span class="h">☉</span> 落在哪一段 = 太陽星座；
+  <span class="h">●</span> 落在哪一段 = 上升星座。兩個標記都在黃道上（上升點按定義就是黃道∩地平），
+  所以放大任一視圖直接讀，不必看下面的推導鏈。當前所在的兩宮宮名會轉白。
+<span class="w">地球外觀</span>
+  海岸線 = Natural Earth 110m（公有領域），Douglas–Peucker 簡化 0.4°；洲名與城市是標籤。
+  日照著色與大氣輝光<span class="k">純為好看，不參與任何計算</span>——判準只是 ⟨q, ι(λ☉)⟩ 的符號，
+  晨昏線就是大圓 Γ_{ι(λ☉)}，和地平圈是同一種東西（§1.4）。
+  球上另有：15° 經緯網、赤道、南北回歸線與極圈（±${EPSDEG}°、±${LATC.toFixed(4)}°，由 ε 決定）。
+  太陽畫在遠處的方向 ι(λ☉) 上（<span class="k">距離不按比例，實距 ≈ 23500 地球半徑；有意義的只有方向</span>），
+  射一根線下來：先打在黃道帶上——那一點就是黃經 λ☉，旁邊的宮名即太陽星座——再落到地表的直射點。
+  三者共線是因為它們本來就是同一個方向向量 ι(λ☉)，Mercator 上的 ☉ 就是它的地理座標。
+<span class="w">操作</span>
+  3D：拖曳=轉視角，點擊=選觀測者，滾輪=遠近。　平面：點擊=反投影選同一點，滾輪=縮放。
+  時間滑桿 0–24h（步長 1 分鐘）：中低緯拖一圈，上升點繞黃道整整一圈（繞數 1）；
+  緯度 &gt; ${LATC.toFixed(4)}° 再拖，它只來回擺盪（繞數 0）並且會跳 180°。
+<span class="w">來源</span>  sign-ascendant-pure-math.md §1–§7。南投影 π_S 的兩條公式與判準是本檔自行推導，
+  過程寫在本檔頂端的 HTML 註解裡（檢視原始碼即可讀），數值驗證見上方「驗算」面板 3/5/7/A。`;
+
+/* --- 自轉：動畫只改「時刻」這一個**輸入**，其餘一切照舊由 compute() 重算。
+       沒有增量更新、沒有快取——按暫停後手動填同一個時刻，畫面逐位相同。 --- */
+const TICK_MS=50;                        // 固定牆鐘節拍：速度單位是「模擬分/真實秒」，
+let anim=null, simMin=0;                 // 不隨顯示卡的幀率變動。simMin 只是「時刻」輸入的載體。
+function tick(){
+  simMin=(simMin + (+$("speed").value)*TICK_MS/1000) % 1440;
+  $("slider").value=Math.round(simMin)%1440;   // 顯示與計算都取整分鐘（滑桿步長 1 分鐘）
+  setTimeFromSlider();                   // ← 只改「時刻」這一個輸入，其餘一律由 compute() 重算
+}
+$("play").addEventListener("click",()=>{
+  if(anim){clearInterval(anim);anim=null;$("play").textContent="▶ 自轉";}
+  else{simMin=+$("slider").value;$("play").textContent="⏸ 暫停";anim=setInterval(tick,TICK_MS);}
+});
+window.addEventListener("keydown",e=>{if(e.code==="Space"&&e.target===document.body){
+  e.preventDefault();$("play").click();}});
+
+init3D(); go(); runTests();
+</script>
+</body>
+</html>
