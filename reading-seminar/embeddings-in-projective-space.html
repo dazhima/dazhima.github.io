@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embeddings in projective space — Hartshorne IV.3</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+  :root {
+    --ink: #1c1a17;
+    --sub: #6b625a;
+    --rule: #e4ddd3;
+    --accent: #7a4fae;
+    --accent-soft: #efe7fb;
+    --amber: #b9782f;
+    --amber-soft: #f8ecdd;
+    --bg: #fbf9f6;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 56px 28px 120px;
+  }
+  header {
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+  }
+  .status {
+    display: inline-block;
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--amber);
+    background: var(--amber-soft);
+    border: 1px solid #e8cda3;
+    border-radius: 999px;
+    padding: 3px 11px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  h2 {
+    font-size: 1.18rem;
+    font-weight: 600;
+    margin: 46px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+  }
+  h3 {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin: 34px 0 12px;
+  }
+  .meta {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    color: var(--sub);
+  }
+  .meta a { color: var(--accent); }
+  .preamble {
+    font-style: italic;
+    color: var(--sub);
+    font-size: 0.98rem;
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 16px;
+    margin: 24px 0 36px;
+  }
+  p { margin: 0.9em 0; }
+  ol, ul { padding-left: 1.3em; }
+  ol > li, ul > li { margin: 0.55em 0; padding-left: 0.15em; }
+  li::marker {
+    color: var(--accent);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 0.92em;
+  }
+  ul > li::marker { color: var(--amber); }
+  .stmt {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin: 22px 0;
+  }
+  .stmt > :first-child { margin-top: 0; }
+  .stmt > :last-child { margin-bottom: 0; }
+  .stmt .lbl {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-right: 0.5em;
+  }
+  .proof-line {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0.8em 0 0.4em 0.15em;
+  }
+  .remark {
+    border-left: 3px solid var(--amber);
+    background: var(--amber-soft);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 16px;
+    margin: 22px 0;
+    font-size: 0.96rem;
+  }
+  .remark > :first-child { margin-top: 0; }
+  .remark > :last-child { margin-bottom: 0; }
+  .remark .lbl {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-right: 0.5em;
+  }
+  .example .lbl { color: var(--sub); }
+  .refs dt {
+    font-weight: 600;
+    margin-top: 1.1em;
+  }
+  .refs dd {
+    margin: 0.25em 0 0;
+    color: var(--sub);
+    font-size: 0.96rem;
+  }
+  code { background: var(--accent-soft); border-radius: 3px; padding: 0 3px; }
+  .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+  footer {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    color: var(--sub);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div style="font-family:-apple-system,'Segoe UI',sans-serif;font-size:12px;margin-bottom:10px"><a href="index.html" style="color:var(--sub);text-decoration:none">&larr; Undergraduate reading seminar</a></div>
+  <div class="status">in-progress · lecture note</div>
+  <h1>Embeddings in projective space — Hartshorne IV.3</h1>
+  <div class="meta">source: <code>Hartshorne, Algebraic Geometry, IV.3</code> &nbsp;·&nbsp; prerequisites: <code>IV.1 Riemann–Roch</code>, <code>IV.2 Hurwitz</code></div>
+</header>
+
+<p class="preamble">
+This section studies embeddings of curves in projective space. There are two main results: every curve
+embeds in $\mathbb{P}^3$, and every curve maps birationally into $\mathbb{P}^2$ with at worst nodes as
+singularities. The first is obtained by projecting down one dimension at a time; the second requires
+controlling the singularities that projection creates, and its proof uses Hurwitz's theorem, with an
+extra twist in characteristic $p$.
+</p>
+
+<h2>1. The criterion, curve version</h2>
+
+<p>
+First, notation. An invertible sheaf $\mathscr{L}$ on a curve $X$ is <b>very ample</b> if it is isomorphic
+to the $\mathcal{O}_X(1)$ of some immersion of $X$ into a projective space; it is <b>ample</b> if for every
+coherent sheaf $\mathscr{F}$ the sheaf $\mathscr{F}\otimes\mathscr{L}^n$ is generated by global sections for
+$n\gg0$. The two are related by: $\mathscr{L}$ is ample if and only if some $\mathscr{L}^n$ is very ample.
+A divisor $D$ is called ample or very ample when $\mathscr{L}(D)$ is.
+</p>
+
+<p>
+A linear system $\mathfrak{d}$ is a linear subspace of a complete system $|D|$, and a point $P$ is a
+<b>base point</b> of it if $P\in\operatorname{Supp}D'$ for every $D'\in\mathfrak{d}$; a complete system $|D|$
+is base-point free if and only if $\mathscr{L}(D)$ is generated by global sections.
+</p>
+
+<p>
+The first result of this section restates the criterion of (II, §7) — when does a linear system give a
+closed immersion — for curves, replacing “separates points and separates tangent vectors” by a comparison
+of dimensions.
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 3.1</span> Let $D$ be a divisor on a curve $X$. Then</p>
+<p>(a) the complete linear system $|D|$ is base-point free if and only if for every point $P\in X$,
+$$\dim|D-P|=\dim|D|-1;$$</p>
+<p>(b) $D$ is very ample if and only if for any two points $P,Q\in X$ (including the case $P=Q$),
+$$\dim|D-P-Q|=\dim|D|-2.$$</p>
+</div>
+
+<div class="proof-line">Proof</div>
+
+<p>Start from the exact sequence of sheaves
+$$0\to\mathscr{L}(D-P)\to\mathscr{L}(D)\to k(P)\to 0,$$
+and take global sections:
+$$0\to\Gamma(X,\mathscr{L}(D-P))\to\Gamma(X,\mathscr{L}(D))\to k.$$
+So $\dim|D-P|$ equals either $\dim|D|$ or $\dim|D|-1$, and nothing else. On the other hand, sending a
+divisor $E$ to $E+P$ defines a map
+$$\varphi:|D-P|\to|D|,$$
+which is visibly injective. Hence the two linear systems have equal dimension if and only if $\varphi$ is
+surjective, and $\varphi$ is surjective if and only if $P$ is a base point of $|D|$. This proves (a).</p>
+
+<p>For (b) we may assume $|D|$ is base-point free. If $D$ is very ample this holds automatically;
+conversely, if $D$ satisfies the condition in (b) then $\dim|D-P|=\dim|D|-1$ for every $P$, so $|D|$ is
+base-point free.</p>
+
+<p>Now $|D|$ determines a morphism from $X$ to $\mathbb{P}^n$, and the question is when this morphism is a
+closed immersion. By the criteria (II, 7.3) and (II, 7.8.2) we must ask whether $|D|$ separates points and
+separates tangent vectors. The first condition says that for any two distinct points $P,Q$, the point $Q$
+is not a base point of $|D-P|$; by (a) this is equivalent to
+$$\dim|D-P-Q|=\dim|D|-2.$$
+The second condition says that for each $P$ there is a $D'\in|D|$ in which $P$ occurs with multiplicity
+exactly $1$. Indeed $\dim T_P(X)=1$, while $\dim T_P(D')=0$ when $P$ has multiplicity $1$ in $D'$ and $=1$
+when the multiplicity is higher. But this says precisely that $P$ is not a base point of $|D-P|$, and one
+more application of (a) gives
+$$\dim|D-2P|=\dim|D|-2.$$
+The conclusion now follows from (II, 7.3). $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — how the two conditions divide the labour</span>
+The half with $P\neq Q$ gives separation of points; the half with $P=Q$ gives separation of tangent
+vectors. The latter looks unnatural at first, but unwinds cleanly: the condition “$P$ is not a base point
+of $|D-P|$” says there is a section $s$ which, viewed as a section of $\mathscr{L}(D)$, vanishes at $P$,
+but which, viewed as a section of $\mathscr{L}(D-P)$, does not vanish at $P$ — that is, $s$ vanishes at $P$
+to order exactly $1$. Vanishing to order exactly $1$ is precisely “vanishing to first order but not to
+second”, which is separation of tangent vectors.</p>
+</div>
+
+<h2>2. Large enough degree is good enough</h2>
+
+<p>
+Proposition 3.1 turned embedding into a comparison of dimensions, and dimensions are given exactly by
+Riemann–Roch as soon as the divisor is nonspecial. So once the degree is large enough, the criterion holds
+automatically.
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Corollary 3.2</span> Let $D$ be a divisor on a curve $X$ of genus $g$.</p>
+<p>(a) If $\deg D\geq 2g$, then $|D|$ is base-point free.</p>
+<p>(b) If $\deg D\geq 2g+1$, then $D$ is very ample.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>In (a) both $D$ and $D-P$ have degree exceeding $2g-2$, so both are nonspecial by (1.3.4), and
+Riemann–Roch gives $\dim|D-P|=\dim|D|-1$. In (b) both $D$ and $D-P-Q$ are likewise nonspecial, so
+$\dim|D-P-Q|=\dim|D|-2$. $\blacksquare$</p>
+
+<div class="stmt">
+<p><span class="lbl">Corollary 3.3</span> A divisor $D$ on a curve is ample if and only if $\deg D>0$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>If $D$ is ample, some multiple is very ample, so $nD\sim H$ is the hyperplane section of some projective
+embedding, and $\deg H>0$, whence $\deg D>0$. Conversely, if $\deg D>0$ then $\deg nD\geq 2g+1$ for
+$n\gg0$, so $nD$ is very ample by (3.2), and $D$ is ample. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — where the work went</span>
+The proof of Corollary 3.3 is two lines only because the abstract criterion has already been peeled apart
+layer by layer beforehand: (II, 7.3) gives the criterion for a closed immersion, Proposition 3.1 converts
+it into a dimension condition, Corollary 3.2 converts that into a degree condition, and by this point
+nothing is left but “take a power to make the degree large”. That ample equals positive degree is a
+remarkably clean statement on curves; in higher dimensions it is nothing like this — on a surface one needs
+the Nakai–Moishezon criterion, controlling $D^2$ and $D\cdot C$ simultaneously.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 3.3.1</span> When $g=0$, a divisor $D$ is ample if and only if it is very
+ample if and only if $\deg D>0$, since here $X\cong\mathbb{P}^1$.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 3.3.2</span> If $D$ is very ample, with corresponding closed immersion
+$\varphi:X\to\mathbb{P}^n$, then the degree of the image $\varphi(X)$ as a projective variety equals
+$\deg D$.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 3.3.3</span> On an elliptic curve, every divisor of degree $3$ is very ample.
+Such a divisor is nonspecial, and Riemann–Roch gives $\dim|D|=2$, so every elliptic curve embeds in
+$\mathbb{P}^2$ as a cubic curve. Conversely, every nonsingular plane cubic has genus $1$.</p>
+<p>For $g=1$ the conclusion can be sharpened to: $D$ is very ample if and only if $\deg D\geq 3$. For if
+$\deg D=2$, Riemann–Roch gives $\dim|D|=1$, so $|D|$ defines a morphism from $X$ to $\mathbb{P}^1$, and this
+cannot be a closed immersion: otherwise $X$ would be isomorphic to a closed subscheme of $\mathbb{P}^1$,
+which for curves can only be $\mathbb{P}^1$ itself, and the genus does not match.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 3.3.4</span> When $g=2$, every divisor of degree $5$ is very ample and
+$\dim|D|=3$, so every curve of genus $2$ embeds in $\mathbb{P}^3$ as a curve of degree $5$.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 3.3.5</span> The bound in Corollary 3.2 is not optimal in general. On a plane
+quartic curve $X$, the hyperplane section $D=X\cdot H$ is very ample with $\deg D=4$, whereas $g=3$ and so
+$2g+1=7$.</p>
+</div>
+
+<div class="remark">
+<p><span class="lbl">Remark — why the bound is not tight</span>
+The proof of Corollary 3.2 relies on three divisors being nonspecial simultaneously, and in Example 3.3.5
+we have $\deg D=4=2g-2$, which falls just outside the range where the nonspeciality criterion applies. In
+fact a plane quartic satisfies $\omega_X\cong\mathcal{O}_X(1)$, that is $K\sim D$, so $l(K-D)=1>0$ and $D$ is
+a special divisor. Special divisors can perfectly well be very ample; the method of Corollary 3.2 simply
+cannot see it. This curve is in fact the canonical model of a non-hyperelliptic curve of genus $3$, which
+§5 will treat properly.</p>
+</div>
+
+<h2>3. Projection and dropping the dimension</h2>
+
+<p>
+The next goal is to embed an arbitrary curve in $\mathbb{P}^3$. The tool is projection: take
+$X\subseteq\mathbb{P}^n$ and a point $O\notin X$, project $X$ from $O$ into $\mathbb{P}^{n-1}$, and ask when
+this is still a closed immersion.
+</p>
+
+<p>
+The construction is as follows. Fix a hyperplane $H\cong\mathbb{P}^{n-1}$ with $O\notin H$, and for each
+$P\neq O$ set
+$$\varphi(P)=\overline{OP}\cap H,$$
+a point which exists and is unique because a line and a hyperplane in $\mathbb{P}^n$ always meet and
+$O\notin H$. In coordinates with $O=(0:\cdots:0:1)$ and $H=\{x_n=0\}$ this is just dropping the last
+coordinate. The hypothesis $O\notin X$ guarantees $\varphi$ is defined everywhere on $X$.
+</p>
+
+<p>
+If $P,Q$ are two distinct points of $X$, the line joining them is called a <b>secant</b>; if $P\in X$, the
+unique line $L\subseteq\mathbb{P}^n$ through $P$ whose tangent space coincides with $T_P(X)$ is called the
+<b>tangent line</b> to $X$ at $P$.
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 3.4</span> Let $X$ be a curve in $\mathbb{P}^n$, let $O$ be a point not on
+$X$, and let $\varphi:X\to\mathbb{P}^{n-1}$ be the morphism determined by projection from $O$. Then
+$\varphi$ is a closed immersion if and only if</p>
+<p>(1) $O$ lies on no secant line of $X$, and</p>
+<p>(2) $O$ lies on no tangent line of $X$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>By (II, 7.8.1), the linear system corresponding to $\varphi$ is the one cut out on $X$ by the hyperplanes
+of $\mathbb{P}^n$ containing $O$, so $\varphi$ is a closed immersion if and only if this linear system
+separates points and separates tangent vectors. For two distinct points $P,Q$, separating them requires a
+hyperplane containing $O$ and $P$ but not $Q$, which is possible exactly when $O$ is not on the line $PQ$.
+For a point $P$, separating tangent vectors requires a hyperplane containing $O$ and $P$ and meeting $X$ at
+$P$ with intersection multiplicity $1$, which is possible exactly when $O$ is not on the tangent line at
+$P$. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — the tangent line is a limit of secants</span>
+The two conditions are two faces of one thing. As $Q$ approaches $P$ along $X$, the limiting position of
+the secant $\overline{PQ}$ is the tangent line $T_P(X)$. Condition (1) prevents two points from being
+crushed together by the projection; condition (2) prevents the tangent direction at a single point from
+being crushed.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 3.5</span> If $X$ is a curve in $\mathbb{P}^n$ with $n\geq 4$, then there
+exists a point $O\notin X$ such that projection from $O$ gives a closed immersion of $X$ into
+$\mathbb{P}^{n-1}$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>Write $\operatorname{Sec}X$ for the union of all secant lines, the <b>secant variety</b> of $X$. It is a
+locally closed subset of $\mathbb{P}^n$ of dimension at most $3$: locally at least, it is the image of the
+map
+$$(X\times X-\Delta)\times\mathbb{P}^1\to\mathbb{P}^n$$
+sending $(P,Q,t)$ to the point of the secant with parameter $t$.</p>
+<p>Write $\operatorname{Tan}X$ for the union of all tangent lines, the <b>tangent variety</b>. It is a closed
+subset of $\mathbb{P}^n$ of dimension at most $2$, being locally the image of $X\times\mathbb{P}^1$.</p>
+<p>Since $n\geq 4$ we get $\operatorname{Sec}X\cup\operatorname{Tan}X\neq\mathbb{P}^n$, so there are plenty of
+points $O$ lying on no secant and no tangent. By (3.4), projection from such an $O$ gives the desired closed
+immersion. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — why the dimension count does not involve $n$</span>
+The bound on the dimension of the secant variety is $1+1+1$: two degrees of freedom to choose the two
+points, one to move along the secant. For the tangent variety it is $1+1$. These numbers depend only on the
+dimension of $X$, not on the dimension of the ambient space. So as soon as $n$ exceeds $3$, the bad locus
+cannot fill up $\mathbb{P}^n$.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Corollary 3.6</span> Every curve can be embedded in $\mathbb{P}^3$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>First embed $X$ in some projective space: take a divisor $D$ of degree $d\geq 2g+1$, which is very ample
+by (3.2), and the complete system $|D|$ gives an embedding of $X$ in $\mathbb{P}^n$ with $n=\dim|D|$. If
+$n\leq 3$, regard $\mathbb{P}^n$ as a linear subspace of $\mathbb{P}^3$. If $n\geq 4$, apply (3.5) repeatedly,
+projecting one dimension at a time, until $X$ is embedded in $\mathbb{P}^3$. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — $\mathbb{P}^3$ is the limit</span>
+The argument stops at $n=3$, and this is not a technical shortcoming. The number $\dim\mathbb{P}^3=3$ is
+exactly the upper bound for the dimension of the secant variety, and for a general curve the secant variety
+really does fill $\mathbb{P}^3$; so when projecting from $\mathbb{P}^3$ to $\mathbb{P}^2$ one cannot avoid
+every secant, and the image is necessarily singular. What follows is the study of how to keep those
+singularities as mild as possible.</p>
+</div>
+
+<h2>4. Projecting to the plane: nodes</h2>
+
+<p>
+When a curve in $\mathbb{P}^3$ is projected to $\mathbb{P}^2$, the secant variety generally fills
+$\mathbb{P}^3$, so secants cannot be avoided and the image is singular. But the centre of projection $O$ can
+be chosen so that $\varphi$ is birational onto its image and the image has at worst nodes as singularities.
+</p>
+
+<p>
+Recall that a <b>node</b> of a plane curve is a singular point of multiplicity $2$ with two distinct tangent
+directions. A line in $\mathbb{P}^3$ meeting $X$ in three or more distinct points is called a
+<b>multisecant</b>. A secant joining $P$ and $Q$ is said to have <b>coplanar tangents</b> if the tangent
+lines $L_P$ and $L_Q$ lie in a common plane, equivalently if $L_P$ and $L_Q$ meet.
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 3.7</span> Let $X$ be a curve in $\mathbb{P}^3$, let $O\notin X$, and let
+$\varphi:X\to\mathbb{P}^2$ be the morphism determined by projection from $O$. Then $\varphi$ is birational
+onto its image and $\varphi(X)$ has at worst nodes as singularities if and only if</p>
+<p>(1) $O$ lies on only finitely many secants of $X$,</p>
+<p>(2) $O$ lies on no tangent line of $X$,</p>
+<p>(3) $O$ lies on no multisecant of $X$,</p>
+<p>(4) $O$ lies on no secant with coplanar tangents.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>Return to the proof of (II, 7.3). Condition (1) says that $\varphi$ is one-to-one almost everywhere,
+hence birational. When $O$ does lie on some secant, conditions (2), (3), (4) guarantee that this secant
+meets $X$ in exactly two points $P,Q$, is tangent to $X$ at neither, and that the tangent lines at $P$ and
+$Q$ map to two distinct lines in $\mathbb{P}^2$. So the image $\varphi(X)$ has a node there.
+$\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — what each of the four conditions prevents</span>
+Condition (1) makes the singular points finite in number and gives birationality. Condition (2) prevents a
+tangent direction from being crushed, which would produce a cusp rather than a node. Condition (3) prevents
+three points from being crushed to one, which would produce a triple point. Condition (4) prevents the
+tangent directions of the two branches from coinciding in the image, which again would not be a node. Only
+all four together confine the singularities to the mildest kind.</p>
+</div>
+
+<p>
+To prove that a point $O$ satisfying (1)–(4) exists, one can count dimensions of the bad locus as in (3.5).
+The difficulty lies in the last two conditions: one needs to know that not every secant is a multisecant,
+and that not every secant has coplanar tangents. Over the complex numbers this can be seen by differential
+geometry, but the proof below works in every characteristic, and interestingly uses Hurwitz's theorem.
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 3.8</span> Let $X$ be a curve in $\mathbb{P}^3$ not contained in any plane.
+If either</p>
+<p>(a) every secant of $X$ is a multisecant, or</p>
+<p>(b) for any two points $P,Q\in X$ the tangent lines $L_P,L_Q$ are coplanar,</p>
+<p>then there is a point $A\in\mathbb{P}^3$ lying on every tangent line of $X$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>First we show (a) implies (b). Fix $R\in X$ and consider the morphism $\psi:X-R\to\mathbb{P}^2$ induced by
+projection from $R$. Since every secant is a multisecant, $\psi$ is many-to-one. If $\psi$ is inseparable,
+then for every $P\in X$ the tangent line at $P$ passes through $R$, which immediately gives (b) and the
+conclusion; so we may assume every such $\psi$ is separable. In that case pick a nonsingular point $T$ of
+$\psi(X)$ over which $\psi$ is unramified. If $P,Q\in\psi^{-1}(T)$, then the tangent lines $L_P,L_Q$ project
+onto the tangent line $L_T$ of $\psi(X)$ at $T$, so both $L_P$ and $L_Q$ lie in the plane spanned by $R$ and
+$L_T$, and are therefore coplanar.</p>
+
+<p>This proves: for any $R$, and for almost all $P,Q$ with $P,Q,R$ collinear, the tangent lines $L_P$ and
+$L_Q$ are coplanar. Hence there is an open subset of $X\times X$ on which pairs of points have coplanar
+tangents; and “coplanar tangents” is a closed condition, so it holds for all $P,Q\in X$, which is (b).</p>
+
+<p>Now assume (b). Take two points $P,Q\in X$ with distinct tangent lines and set $A=L_P\cap L_Q$. Since $X$
+is not contained in any plane, if $\pi$ is the plane spanned by $L_P$ and $L_Q$ then $X\cap\pi$ is a finite
+set of points. For any $R\in X-X\cap\pi$, the tangent line $L_R$ must meet both $L_P$ and $L_Q$; but
+$L_R\not\subseteq\pi$, so it must pass through $A$. Thus there is an open subset of $X$ on which points $R$
+satisfy $A\in L_R$; since this is a closed condition, it holds for all $R\in X$. $\blacksquare$</p>
+
+<div class="stmt">
+<p><span class="lbl">Definition</span> A curve $X$ in $\mathbb{P}^n$ is <b>strange</b> if there is a point
+$A$ lying on all the tangent lines of $X$.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 3.8.1</span> $\mathbb{P}^1$ is strange. The tangent line at any point is
+$\mathbb{P}^1$ itself, so any $A\in\mathbb{P}^1$ will do.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 3.8.2</span> Over a field of characteristic $2$, a conic in $\mathbb{P}^2$ is
+strange. Take the conic $y=x^2$; then $dy/dx=2x=0$, so all tangent lines are horizontal and they all pass
+through the point at infinity on the $x$-axis.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Theorem 3.9 (Samuel)</span> The only strange curves in $\mathbb{P}^n$ are the lines
+(3.8.1) and the conics in characteristic $2$ (3.8.2).</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>Projecting down if necessary (3.5), we may assume $X$ lies in $\mathbb{P}^3$. Choose an $\mathbb{A}^3$
+inside $\mathbb{P}^3$ with affine coordinates $x,y,z$ such that</p>
+<ol>
+<li>$A$ is the point at infinity on the $x$-axis;</li>
+<li>if $A\in X$, its tangent line $L_A$ does not lie in the $xz$-plane;</li>
+<li>the $z$-axis does not meet $X$;</li>
+<li>$X$ does not meet the line at infinity of the $xz$-plane, except possibly at $A$.</li>
+</ol>
+
+<p>First project from $A$ to the $yz$-plane. Since $A$ lies on every tangent line of $X$, the corresponding
+morphism from $X$ to $\mathbb{P}^2$ is ramified everywhere. So either the image is a point, in which case
+$X$ is a line, or the morphism is inseparable (2.2). In the latter case the functions $y$ and $z$ restricted
+to $X$ lie in $K(X)^p$, where $\operatorname{char}k=p>0$.</p>
+
+<p>Next project from the $z$-axis to the line at infinity $M$ of the $xy$-plane. That is, for each $P\in X$
+define $\varphi(P)$ to be the intersection with $M$ of the plane spanned by $P$ and the $z$-axis. This gives
+a morphism $\varphi:X\to M$ of degree $d=\deg X$. Note that $\varphi$ is ramified exactly at those points
+where $X$ meets the finite part of the $xz$-plane, and is not ramified at $A$.</p>
+
+<p>Apply Hurwitz's theorem to $\varphi$. For $P\in X\cap xz$-plane, take $u=x-a$ as a local parameter, where
+$a\in k$, $a\neq 0$; on $M$ take $t=y/x$ as a local parameter at $A$. By (2.2) we must compute
+$v_P(dt/du)$. Write $x=u+a$, so $t=y(u+a)^{-1}$. Since $y\in K(X)^p$ we have $dy/du=0$, whence
+$$dt/du=-y(u+a)^{-2}.$$
+Now $u+a$ is a unit in the local ring $\mathcal{O}_P$, so
+$$v_P(dt/du)=v_P(y).$$
+Let $P_1,\dots,P_r$ be all the finite intersections of $X$ with the $xz$-plane. Then Hurwitz's theorem gives
+$$2g-2=-2d+\sum_{i=1}^{r}v_{P_i}(y).$$</p>
+
+<p>There are two cases.</p>
+
+<p><i>Case 1: $A\notin X$.</i> Then the $xz$-plane meets $X$ only at the $P_i$. That plane is defined by
+$y=0$, so the degree of $X$ can be computed by its intersection with it:
+$$d=\sum_{i=1}^{r}v_{P_i}(y).$$
+Substituting gives $2g-2=-d$, which is possible only for $g=0$ and $d=2$. So $X$ is isomorphic as an
+abstract curve to $\mathbb{P}^1$ (1.3.5), its embedding is given by a divisor $D$ of degree $2$, and
+Riemann–Roch gives $\dim|D|=2$, so $X$ is a conic in some plane $\mathbb{P}^2$. For a conic to be strange we
+must have $\operatorname{char}k=2$.</p>
+
+<p><i>Case 2: $A\in X$.</i> By condition (2), the $xz$-plane crosses $X$ transversally at $A$, so likewise
+$$d=\sum_{i=1}^{r}v_{P_i}(y)+1,$$
+and substituting gives $2g-2=-d-1$, which forces $g=0$ and $d=1$, that is, $X$ is a line. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — the hinge of the proof</span>
+The key step is translating a geometric condition into an algebraic one: “$A$ lies on every tangent line”
+becomes “ramified everywhere”, then via (2.2) — a separable morphism has only finitely many ramification
+points — becomes “$y,z\in K(X)^p$”. After that, $dy=0$ leaves only one term in the computation of $dt/du$,
+the order of ramification is computed as the order of vanishing of $y$, and that in turn is counted by an
+intersection number. Finally the signs in Hurwitz's formula trap $d$ in a very small range. This is the same
+kind of argument as the proof that $\mathbb{P}^1$ is simply connected (2.5.3), and as the count of six branch
+points in (2.2)(a). In characteristic $0$ inseparability does not exist, the argument stops at the first
+step, and the only strange curves are the lines.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Theorem 3.10</span> Let $X$ be a curve in $\mathbb{P}^3$. Then there is a point
+$O\notin X$ such that the morphism $\varphi$ determined by projection from $O$ is a birational morphism from
+$X$ onto its image in $\mathbb{P}^2$, and that image has at worst nodes as singularities.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>If $X$ already lies in a plane, take any $O$ off that plane. So assume $X$ is contained in no plane. Then
+$X$ is neither a line nor a conic, so by (3.9) it is not strange, and hence by (3.8) it has a secant which is
+not a multisecant, and also a secant whose tangents are not coplanar. Nearby secants have the same property,
+so there is an open subset of $X\times X$ whose pairs $\langle P,Q\rangle$ determine secants that are neither
+multisecants nor have coplanar tangents. Therefore the pairs whose secant is a multisecant or has coplanar
+tangents form a proper subset of dimension at most $1$, and the corresponding secants sweep out a subset of
+$\mathbb{P}^3$ of dimension at most $2$. Together with the tangent variety, of dimension at most $2$ (3.5),
+this shows there is an open subset of $\mathbb{P}^3$ whose points satisfy (2), (3), (4) of (3.7).</p>
+
+<p>It remains to show that $O$ can be chosen to lie on only finitely many secants. Consider the locally
+defined map
+$$(X\times X-\Delta)\times\mathbb{P}^1\to\mathbb{P}^3$$
+sending $\langle P,Q,t\rangle$ to the point of the secant with parameter $t$. If the image has dimension less
+than $3$, take $O$ off every secant. If the image has dimension exactly $3$, this is a morphism between
+varieties of the same dimension, so by (II, Ex. 3.7) there is an open subset of $\mathbb{P}^3$ over which the
+fibres are finite, and the points there lie on only finitely many secants. $\blacksquare$</p>
+
+<div class="stmt">
+<p><span class="lbl">Corollary 3.11</span> Every curve is birationally equivalent to a plane curve with at
+worst nodes as singularities.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>Combine (3.6) and (3.10). $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — why “birationally” cannot be dropped</span>
+The genus of a smooth plane curve is locked to its degree by $\tfrac12(d-1)(d-2)$, which takes only the
+values $0,1,3,6,10,\dots$; so curves of genus $2$, $4$, $5$ cannot be isomorphic to any smooth plane curve.
+Once nodes are allowed the genus formula becomes $\tfrac12(d-1)(d-2)-r$, and subtracting the number $r$ of
+nodes makes every genus attainable — at the price of asking only for birational equivalence rather than
+isomorphism.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Remark 3.11.1</span> By (3.11), one route to studying all curves is to study the family
+of plane curves of degree $d$ with $r$ nodes. The plane curves of degree $d$ form a linear system of
+dimension $\tfrac12 d(d+3)$, parametrized by the projective space of that dimension. Inside it, the
+irreducible curves with $r$ nodes form a locally closed subset $V_{d,r}$. If $X$ is such a curve, the genus
+of its normalization $\tilde X$ is given by (Ex. 1.8) as
+$$g=\tfrac12(d-1)(d-2)-r,$$
+so $V_{d,r}$ can be nonempty only if
+$$0\leq r\leq\tfrac12(d-1)(d-2).$$
+Both endpoints occur. By Bertini's theorem there are irreducible nonsingular curves of degree $d$ in
+$\mathbb{P}^2$ for every $d$, giving $r=0$; on the other hand, for any $d$ one can embed $\mathbb{P}^1$ in
+$\mathbb{P}^d$ as a curve of degree $d$ (Ex. 3.4) and then project to $\mathbb{P}^2$ using (3.5) and (3.10),
+obtaining a curve of degree $d$ with only nodes and $g(\tilde X)=0$, which gives
+$r=\tfrac12(d-1)(d-2)$.</p>
+<p>The general structure of $V_{d,r}$ is considerably harder. Severi asserted that for every $d,r$
+satisfying the inequality above the algebraic set $V_{d,r}$ is nonempty and irreducible of dimension
+$\tfrac12 d(d+3)-r$, but a complete proof was not given until Joe Harris.</p>
+</div>
+
+<h2>5. Summary of this section</h2>
+
+<p>
+Proposition 3.1 translates the closed-immersion criterion of (II, 7.3) into dimension conditions:
+base-point freeness is $\dim|D-P|=\dim|D|-1$, and very ampleness is $\dim|D-P-Q|=\dim|D|-2$, where $P\neq Q$
+corresponds to separating points and $P=Q$ to separating tangent vectors. Corollary 3.2 then uses
+nonspeciality to reduce these to the degree conditions $\deg D\geq 2g$ and $\deg D\geq 2g+1$, and Corollary
+3.3 concludes that on a curve, ample is equivalent to positive degree.
+</p>
+
+<p>
+The embedding into $\mathbb{P}^3$ comes from projecting one dimension at a time: Proposition 3.4 says
+projection from $O$ is a closed immersion if and only if $O$ lies on no secant and no tangent, while the
+secant variety has dimension at most $3$ and the tangent variety at most $2$; so for $n\geq 4$ the bad locus
+cannot fill $\mathbb{P}^n$, and repeated projection gives Corollary 3.6. $\mathbb{P}^3$ is the limit of this
+method, because the upper bound for the dimension of the secant variety is exactly $3$.
+</p>
+
+<p>
+Projecting further to $\mathbb{P}^2$, one can only ask for birationality with at worst nodes in the image,
+characterized by the four conditions of Proposition 3.7. Proving that such a centre exists requires ruling
+out “every secant is a multisecant” and “any two tangents are coplanar”; Proposition 3.8 shows both of these
+force the curve to be strange, and Theorem 3.9 shows the only strange curves are lines and conics in
+characteristic $2$. Theorem 3.10 and Corollary 3.11 follow.
+</p>
+
+<p>
+Later, §5 returns to the canonical linear system, proves that the canonical map of a non-hyperelliptic curve
+is an embedding, and handles special divisors with Clifford's theorem; §6 uses the results of this section to
+classify curves of low degree in $\mathbb{P}^3$.
+</p>
+
+<footer>Embeddings in projective space · Hartshorne IV.3 · undergraduate reading seminar</footer>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ],
+      throwOnError: false
+    });
+  });
+</script>
+</body>
+</html>

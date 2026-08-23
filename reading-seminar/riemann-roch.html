@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Riemann–Roch theorem — Hartshorne IV.1</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+  :root {
+    --ink: #1c1a17;
+    --sub: #6b625a;
+    --rule: #e4ddd3;
+    --accent: #7a4fae;
+    --accent-soft: #efe7fb;
+    --amber: #b9782f;
+    --amber-soft: #f8ecdd;
+    --bg: #fbf9f6;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 56px 28px 120px;
+  }
+  header {
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+  }
+  .status {
+    display: inline-block;
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--amber);
+    background: var(--amber-soft);
+    border: 1px solid #e8cda3;
+    border-radius: 999px;
+    padding: 3px 11px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  h2 {
+    font-size: 1.18rem;
+    font-weight: 600;
+    margin: 46px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+  }
+  h3 {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin: 34px 0 12px;
+  }
+  .meta {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    color: var(--sub);
+  }
+  .meta a { color: var(--accent); }
+  .preamble {
+    font-style: italic;
+    color: var(--sub);
+    font-size: 0.98rem;
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 16px;
+    margin: 24px 0 36px;
+  }
+  p { margin: 0.9em 0; }
+  ol, ul { padding-left: 1.3em; }
+  ol > li, ul > li { margin: 0.55em 0; padding-left: 0.15em; }
+  li::marker {
+    color: var(--accent);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 0.92em;
+  }
+  ul > li::marker { color: var(--amber); }
+  .stmt {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin: 22px 0;
+  }
+  .stmt > :first-child { margin-top: 0; }
+  .stmt > :last-child { margin-bottom: 0; }
+  .stmt .lbl {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-right: 0.5em;
+  }
+  .proof-line {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0.8em 0 0.4em 0.15em;
+  }
+  .remark {
+    border-left: 3px solid var(--amber);
+    background: var(--amber-soft);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 16px;
+    margin: 22px 0;
+    font-size: 0.96rem;
+  }
+  .remark > :first-child { margin-top: 0; }
+  .remark > :last-child { margin-bottom: 0; }
+  .remark .lbl {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-right: 0.5em;
+  }
+  .example .lbl { color: var(--sub); }
+  .refs dt {
+    font-weight: 600;
+    margin-top: 1.1em;
+  }
+  .refs dd {
+    margin: 0.25em 0 0;
+    color: var(--sub);
+    font-size: 0.96rem;
+  }
+  code { background: var(--accent-soft); border-radius: 3px; padding: 0 3px; }
+  .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+  footer {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    color: var(--sub);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div style="font-family:-apple-system,'Segoe UI',sans-serif;font-size:12px;margin-bottom:10px"><a href="index.html" style="color:var(--sub);text-decoration:none">&larr; Undergraduate reading seminar</a></div>
+  <div class="status">in-progress · lecture note</div>
+  <h1>The Riemann–Roch theorem — Hartshorne IV.1</h1>
+  <div class="meta">source: <code>Hartshorne, Algebraic Geometry, IV.1</code> &nbsp;·&nbsp; used by: <code>IV.2 Hurwitz</code>, <code>IV.3 Embeddings</code></div>
+</header>
+
+<p class="preamble">
+This section first collects the notation and the facts about curves that will be needed, then states and
+proves the Riemann–Roch theorem, and finally uses it to derive a few concrete consequences. Hartshorne
+notes at the start of the chapter that, apart from the proof of Riemann–Roch (1.3) which uses Serre duality,
+almost nothing in the chapter requires the advanced machinery of schemes and cohomology; so a reader
+willing to take the statement of the theorem on faith can read this chapter quite early. A companion
+supplement treats, one by one, the notions that the main text passes over quickly but that tend to block
+you when you actually try to use them.
+</p>
+
+<h2>1. Curves: definition and conventions</h2>
+
+<p>
+Throughout this chapter, a <b>curve</b> means a complete nonsingular curve over an algebraically closed
+field $k$. In the language of (II, §6): a curve is an integral scheme, proper over $k$, of dimension $1$,
+all of whose local rings are regular. Such a curve is necessarily projective (II, 6.7), so the whole
+apparatus of II.7 on projective embeddings is available directly.
+</p>
+
+<p>
+When more general objects are meant, we say “scheme” together with the appropriate qualifiers, for example
+“an integral scheme of dimension $1$ of finite type over $k$”. We also agree that <b>point</b> means closed
+point, unless the generic point is explicitly intended.
+</p>
+
+<h2>2. The genus</h2>
+
+<p>
+The single most important invariant of a curve is its genus. It has several definitions, all equivalent.
+</p>
+
+<p>
+For a curve $X$ in projective space, the <b>arithmetic genus</b> is defined by $p_a(X)=1-P_X(0)$, where
+$P_X$ is the Hilbert polynomial of $X$ (I, Ex. 7.2). On the other hand the <b>geometric genus</b> is
+defined by $p_g(X)=\dim_k\Gamma(X,\omega_X)$, where $\omega_X$ is the canonical sheaf (II, 8.18.2).
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 1.1</span> If $X$ is a curve, then
+$$p_a(X)=p_g(X)=\dim_k H^1(X,\mathcal{O}_X).$$
+We therefore call this number simply the <b>genus</b> of $X$ and write it $g$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>The equality $p_a(X)=\dim H^1(X,\mathcal{O}_X)$ is (III, Ex. 5.3); the equality
+$p_g=\dim H^1(X,\mathcal{O}_X)$ is a consequence of Serre duality (III, 7.12.2). $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark</span>
+The three definitions look at one number from three directions: the Hilbert polynomial comes from the
+combinatorial data of a projective embedding, $p_g$ counts global differential forms, and $H^1$ is a
+cohomological dimension. The statement “the genus is the number of holes” on a compact Riemann surface
+corresponds to the $p_g$ branch, that is, to the dimension of the space of global holomorphic $1$-forms.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Remark 1.1.1</span> Since $g=p_g$, the genus of a curve is always nonnegative.
+Conversely, for every $g\geq0$ there is a curve of genus $g$: on a nonsingular quadric surface take a
+divisor of type $(g+1,2)$; among such divisors there are irreducible nonsingular ones, and these have
+$p_a=g$ (III, Ex. 5.6).</p>
+</div>
+
+<p>
+The nonsingular quadric surface used here is $Q\cong\mathbb{P}^1\times\mathbb{P}^1$, with
+$\operatorname{Pic}Q\cong\mathbb{Z}\oplus\mathbb{Z}$ and divisors classified by their type $(a,b)$. In
+(II, 7.6.2) it was used to illustrate the ampleness criterion; here it becomes the source of curves of
+arbitrary genus.
+</p>
+
+<h2>3. Divisors and linear systems, recalled</h2>
+
+<p>
+A <b>(Weil) divisor</b> on a curve $X$ is an element of the free abelian group generated by the points of
+$X$, written $D=\sum n_iP_i$ with $n_i\in\mathbb{Z}$, and its <b>degree</b> is $\deg D=\sum n_i$. Two
+divisors are <b>linearly equivalent</b> if their difference is the divisor of a rational function; the
+degree of a divisor depends only on its linear equivalence class (II, 6.10).
+</p>
+
+<p>
+Since $X$ is nonsingular, every divisor $D$ has an associated invertible sheaf $\mathscr{L}(D)$, and the
+correspondence $D\mapsto\mathscr{L}(D)$ gives a group isomorphism
+$$\operatorname{Cl}(X)\xrightarrow{\ \sim\ }\operatorname{Pic}X$$
+(II, 6.16).
+</p>
+
+<p>
+A divisor $D=\sum n_iP_i$ is <b>effective</b> if all $n_i\geq0$. The set of effective divisors linearly
+equivalent to a given $D$ is the <b>complete linear system</b> $|D|$ (II, §7). The elements of $|D|$ are in
+bijection with
+$$\big(H^0(X,\mathscr{L}(D))-\{0\}\big)/k^*,$$
+so $|D|$ carries the structure of the set of closed points of a projective space (II, 7.7). Writing
+$l(D)=\dim_k H^0(X,\mathscr{L}(D))$, we have
+$$\dim|D|=l(D)-1.$$
+That $l(D)$ is finite follows from (II, 5.19) or (III, 5.2).
+</p>
+
+<div class="remark">
+<p><span class="lbl">Remark</span>
+The bijection here is exactly the content of (II, 7.7): the divisor of zeros of a section gives an effective
+divisor, and two sections have the same divisor of zeros precisely when they differ by a nonzero constant.
+The “minus one” in $\dim|D|=l(D)-1$ comes from projectivizing a vector space; forgetting it is the single
+most common error when computing with Riemann–Roch later on.</p>
+</div>
+
+<h2>4. A basic lemma</h2>
+
+<div class="stmt">
+<p><span class="lbl">Lemma 1.2</span> Let $D$ be a divisor on a curve $X$. If $l(D)\neq0$, then
+$\deg D\geq0$. If moreover $l(D)\neq0$ and $\deg D=0$, then $D\sim0$, that is
+$\mathscr{L}(D)\cong\mathcal{O}_X$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>If $l(D)\neq0$ then $|D|$ is nonempty, so $D$ is linearly equivalent to an effective divisor. The degree
+depends only on the linear equivalence class, and effective divisors have nonnegative degree, so
+$\deg D\geq0$. If in addition $\deg D=0$, then $D$ is linearly equivalent to an effective divisor of degree
+$0$; the only such divisor is the zero divisor, so $D\sim0$. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark</span>
+In practice the contrapositive is what gets used: $\deg D<0$ implies $l(D)=0$. Every time the term $l(K-D)$
+in Riemann–Roch needs to be killed, this is what does it.</p>
+</div>
+
+<h2>5. The canonical divisor</h2>
+
+<p>
+Write $\Omega_{X/k}$ (abbreviated $\Omega_X$) for the sheaf of relative differentials of $X$ over $k$
+(II, §8). Since $X$ has dimension $1$, $\Omega_X$ is an invertible sheaf on $X$ and therefore coincides with
+the canonical sheaf $\omega_X$. Any divisor in the corresponding linear equivalence class is called a
+<b>canonical divisor</b> and is denoted $K$.
+</p>
+
+<p>
+The letter $K$ is sometimes also used for the function field of $X$, but the context distinguishes them.
+</p>
+
+<div class="remark">
+<p><span class="lbl">Remark</span>
+Dimension $1$ is the crucial point here. In dimension $n$ the sheaf $\Omega_X$ is locally free of rank $n$
+and the canonical sheaf is its top exterior power; on a curve the rank is exactly $1$ and the two coincide.
+So on a curve, differential forms and the canonical line bundle are the same object, and $K$ can be treated
+either as a differential form or as a divisor, to be added, subtracted and given a degree.</p>
+</div>
+
+<h2>6. The Riemann–Roch theorem</h2>
+
+<div class="stmt">
+<p><span class="lbl">Theorem 1.3 (Riemann–Roch)</span> Let $D$ be a divisor on a curve $X$ of genus $g$.
+Then
+$$l(D)-l(K-D)=\deg D+1-g.$$</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>The idea is to use Serre duality to replace the left-hand side by an Euler characteristic, and then
+induct on $D$ one point at a time.</p>
+
+<p>The divisor $K-D$ corresponds to the invertible sheaf $\omega_X\otimes\mathscr{L}(D)^{\vee}$. Since $X$ is
+projective (II, 6.7), Serre duality (III, 7.12.1) applies and says that the vector spaces
+$H^0(X,\omega_X\otimes\mathscr{L}(D)^{\vee})$ and $H^1(X,\mathscr{L}(D))$ are dual. Hence
+$l(K-D)=\dim H^1(X,\mathscr{L}(D))$, and the statement to be proved becomes: for every $D$,
+$$\chi(\mathscr{L}(D))=\deg D+1-g,$$
+where for a coherent sheaf $\mathscr{F}$ on $X$ the Euler characteristic is
+$\chi(\mathscr{F})=\dim H^0(X,\mathscr{F})-\dim H^1(X,\mathscr{F})$.</p>
+
+<p>Take $D=0$ first. Here we must show
+$\dim H^0(X,\mathcal{O}_X)-\dim H^1(X,\mathcal{O}_X)=0+1-g$. This is correct, because on a projective
+variety $H^0(X,\mathcal{O}_X)=k$ (I, 3.4), while $\dim H^1(X,\mathcal{O}_X)=g$ by (1.1).</p>
+
+<p>Next we show that for any divisor $D$ and any point $P$, the formula holds for $D$ if and only if it
+holds for $D+P$. Since any divisor can be reached from $0$ in finitely many steps, adding or subtracting one
+point at a time, this settles all $D$.</p>
+
+<p>Regard $P$ as a closed subscheme of $X$; its structure sheaf is the skyscraper sheaf $k(P)$ at $P$, and
+its ideal sheaf is $\mathscr{L}(-P)$ (II, 6.18). This gives the exact sequence
+$$0\to\mathscr{L}(-P)\to\mathcal{O}_X\to k(P)\to 0.$$
+Tensoring with $\mathscr{L}(D+P)$ gives
+$$0\to\mathscr{L}(D)\to\mathscr{L}(D+P)\to k(P)\to 0.$$
+The third term is unchanged, because $\mathscr{L}(D+P)$ is locally free of rank $1$ and tensoring by it does
+not affect the sheaf $k(P)$. The Euler characteristic is additive on short exact sequences (III, Ex. 5.1),
+and $\chi(k(P))=1$, so
+$$\chi(\mathscr{L}(D+P))=\chi(\mathscr{L}(D))+1.$$
+On the other hand $\deg(D+P)=\deg D+1$. Both sides increase by $1$ together, so the formula holds for $D$ if
+and only if it holds for $D+P$. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark</span>
+The substance of the proof is just two things: Serre duality reinterprets $l(K-D)$ as $\dim H^1$, which turns
+the statement into a linear identity about $\chi$; and the change in $\chi$ when a divisor is modified by one
+point is exactly $1$, matching the change in $\deg$. The genuinely deep part lives inside Serre duality; the
+derivation of Riemann–Roch itself is formal.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Remark 1.3.1</span> If $X$ is a curve of degree $d$ in $\mathbb{P}^n$ and $D$ is a
+hyperplane section $X\cap H$, that is $\mathscr{L}(D)=\mathcal{O}_X(1)$, then the Hilbert polynomial
+(III, Ex. 5.2) gives
+$$\chi(\mathscr{L}(D))=d+1-p_a.$$
+This is a special case of Riemann–Roch.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Remark 1.3.2</span> Riemann–Roch settles the “Riemann–Roch problem” on curves
+(II, Ex. 7.6), namely determining $\dim|nD|$ as a function of $n$. If $\deg D<0$, then $\dim|nD|=-1$ for
+all $n>0$. If $\deg D=0$, then $\dim|nD|$ is $0$ or $-1$ according as $nD\sim0$ or not. If $\deg D>0$, then
+as soon as $n\cdot\deg D>\deg K$ we have $l(K-nD)=0$ by (1.2), so for $n\gg0$
+$$\dim|nD|=n\cdot\deg D-g.$$</p>
+</div>
+
+<h2>7. Immediate consequences</h2>
+
+<div class="stmt example">
+<p><span class="lbl">Example 1.3.3</span> On a curve of genus $g$, the canonical divisor $K$ has degree
+$2g-2$.</p>
+<p>Apply Riemann–Roch with $D=K$. Here $l(K)=p_g=g$ and $l(0)=1$, so
+$$g-1=\deg K+1-g,$$
+that is $\deg K=2g-2$.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 1.3.4</span> A divisor $D$ is called <b>special</b> if $l(K-D)>0$, and
+$l(K-D)$ is its <b>index of speciality</b>; otherwise $D$ is <b>nonspecial</b>. If $\deg D>2g-2$, then
+$\deg(K-D)<0$ by (1.3.3), so $l(K-D)=0$ by (1.2), that is, $D$ is nonspecial.</p>
+</div>
+
+<div class="remark">
+<p><span class="lbl">Remark</span>
+Nonspeciality is a convenient state to be in: there Riemann–Roch gives $l(D)=\deg D+1-g$ outright, and the
+dimension is completely determined by the degree. For special divisors this fails, and $l(D)$ depends on
+more than $\deg D$ — which is exactly the situation Clifford's theorem (5.4) will handle.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 1.3.5</span> A curve $X$ is <b>rational</b> (that is, birational to
+$\mathbb{P}^1$) if and only if $g=0$.</p>
+<p>Since the curves of this chapter are complete and nonsingular, $X$ is rational if and only if
+$X\cong\mathbb{P}^1$ (I, 6.12). We know $p_a(\mathbb{P}^1)=0$ (I, Ex. 7.2), so only the converse needs
+proof. Suppose $X$ has genus $0$, take two distinct points $P,Q$, and apply Riemann–Roch to $D=P-Q$. By
+(1.3.3) we have $\deg(K-D)=-2<0$, so $l(K-D)=0$ and hence $l(D)=\deg D+1-g=1$. But $D$ has degree $0$, so
+(1.2) gives $D\sim0$, that is $P\sim Q$. This implies $X$ is rational (II, 6.10.1).</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 1.3.6</span> A curve of genus $1$ is called an <b>elliptic curve</b>. On an
+elliptic curve the canonical divisor has degree $0$ by (1.3.3); on the other hand $l(K)=p_g=1$, so $K\sim0$
+by (1.2).</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 1.3.7</span> Let $X$ be an elliptic curve, let $P_0\in X$ be a point, and let
+$\operatorname{Pic}^{\circ}X$ denote the subgroup of $\operatorname{Pic}X$ corresponding to divisors of
+degree $0$. Then the map $P\mapsto\mathscr{L}(P-P_0)$ is a bijection between the set of points of $X$ and the
+group $\operatorname{Pic}^{\circ}X$. So the set of points of $X$ acquires a group structure with $P_0$ as
+identity, generalizing (II, 6.10.2).</p>
+<p>To prove this it is enough to show that for every divisor $D$ of degree $0$ there is a unique point
+$P\in X$ with $D\sim P-P_0$. Apply Riemann–Roch to $D+P_0$:
+$$l(D+P_0)-l(K-D-P_0)=1+1-1.$$
+Since $\deg K=0$ we have $\deg(K-D-P_0)=-1$, whence $l(K-D-P_0)=0$. So $l(D+P_0)=1$, that is
+$\dim|D+P_0|=0$, meaning there is exactly one effective divisor linearly equivalent to $D+P_0$. Its degree
+is $1$, so it must be a single point $P$. This gives the unique $P$ with $P\sim D+P_0$, that is
+$D\sim P-P_0$.</p>
+</div>
+
+<div class="remark">
+<p><span class="lbl">Remark</span>
+This argument is the algebraic origin of the group law on an elliptic curve: the group law is not defined by
+three points being collinear in a picture, but is a direct consequence of the fact — supplied by
+Riemann–Roch — that every degree-$0$ class contains exactly one $P-P_0$. §4 will show that after embedding
+$X$ in $\mathbb{P}^2$ by $|3P_0|$, this group law agrees with the geometric description by collinearity.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Remark 1.3.8</span> For other proofs of Riemann–Roch see Serre [7, Ch. II] and
+Fulton [1].</p>
+</div>
+
+<h2>8. Summary of this section</h2>
+
+<p>
+A curve means a complete nonsingular integral scheme of dimension $1$ over an algebraically closed field,
+and is necessarily projective. The genus has three equivalent definitions, all written $g$, and every
+$g\geq0$ is realized. The dictionary between divisors and invertible sheaves,
+$\operatorname{Cl}X\cong\operatorname{Pic}X$, is carried over verbatim from II.6; the complete linear system
+$|D|$ is the projectivization of $H^0(X,\mathscr{L}(D))$, with $\dim|D|=l(D)-1$.
+</p>
+
+<p>
+Lemma 1.2 supplies the most frequently used vanishing tool: negative degree means no global sections.
+Riemann–Roch itself relates $l(D)-l(K-D)$ to $\deg D+1-g$; via Serre duality the proof reduces to an
+identity about $\chi$, then to a point-by-point induction. Immediate consequences are $\deg K=2g-2$, the
+nonspeciality of divisors of degree exceeding $2g-2$, the equivalence of rationality with $g=0$, and on an
+elliptic curve both $K\sim0$ and the group structure on the set of points.
+</p>
+
+<p>
+Everything in the following sections is built on these computations: §2 compares the canonical divisors of
+two curves using $\deg K=2g-2$ to obtain Hurwitz's formula; §3 uses Riemann–Roch to turn the embedding
+criterion of (II, 7.3) into a dimension condition; §5 uses it to discuss the canonical embedding and
+Clifford's theorem.
+</p>
+
+<h2>Appendix: external results cited in this section</h2>
+
+<p>
+This section quotes results from the first three chapters extensively. Below, each citation is spelled out,
+with a note on what it does here. A reader who has not read the relevant chapter can treat these as black
+boxes.
+</p>
+
+<h3>From Chapter I (varieties)</h3>
+
+<dl class="refs">
+<dt>(I, 3.4)</dt>
+<dd>A projective variety $Y$ over an algebraically closed field satisfies $\Gamma(Y,\mathcal{O}_Y)=k$: the
+only global regular functions are the constants. This is the algebraic version of the statement that a
+global holomorphic function on a compact Riemann surface is constant. In the proof of Riemann–Roch it
+supplies $\dim H^0(X,\mathcal{O}_X)=1$ in the case $D=0$; it is also used in the proof of (II, 7.7) to show
+that a rational function without zeros or poles is constant.</dd>
+
+<dt>(I, Ex. 7.2)</dt>
+<dd>Computation of Hilbert polynomials and arithmetic genus. Two facts are used: $p_a(\mathbb{P}^1)=0$, and
+a nonsingular plane curve of degree $d$ in $\mathbb{P}^2$ satisfies $p_a=\tfrac12(d-1)(d-2)$. The first is
+used in Example 1.3.5; the second recurs throughout §3 when computing the genus of a plane curve.</dd>
+
+<dt>(I, Ex. 6.1)</dt>
+<dd>A curve is called <b>rational</b> if it is birationally equivalent to $\mathbb{P}^1$. This is the
+definition of “rational” used in Example 1.3.5.</dd>
+
+<dt>(I, 6.12)</dt>
+<dd>A complete nonsingular curve is determined up to isomorphism by its function field: two complete
+nonsingular curves are birationally equivalent if and only if they are isomorphic. Hence in Example 1.3.5,
+“rational” can be upgraded directly to “isomorphic to $\mathbb{P}^1$”. The corresponding statement in the
+Stacks Project is the equivalence between the category of curves and the category of field extensions of
+transcendence degree $1$ (tag 0BY1).</dd>
+</dl>
+
+<h3>From Chapter II (schemes)</h3>
+
+<dl class="refs">
+<dt>(II, §6)</dt>
+<dd>The chapter on divisors: Weil divisors, Cartier divisors, the divisor class group
+$\operatorname{Cl}X$ and $\operatorname{Pic}X$.</dd>
+
+<dt>(II, 6.7)</dt>
+<dd>A complete nonsingular curve is necessarily projective. This is what makes the tools of II.7 on
+projective embeddings, and Serre duality (which requires projectivity), directly applicable to the curves of
+this chapter. The general version in the Stacks Project: a proper scheme of dimension at most $1$ over a
+field is projective (Varieties, Lemma 33.43.4, in the section with tag 0A22).</dd>
+
+<dt>(II, 6.10)</dt>
+<dd>On a complete nonsingular curve a principal divisor has degree $0$, so the degree of a divisor depends
+only on its linear equivalence class. Used in both Lemma 1.2 and Example 1.3.5.</dd>
+
+<dt>(II, 6.10.1)</dt>
+<dd>If a curve $X$ has two distinct points $P\neq Q$ with $P\sim Q$, then $X\cong\mathbb{P}^1$. This is the
+last step of Example 1.3.5.</dd>
+
+<dt>(II, 6.10.2)</dt>
+<dd>The group structure on a plane cubic defined geometrically, by collinearity of three points. Example
+1.3.7 re-derives this group structure from Riemann–Roch and extends it to an arbitrary elliptic curve.</dd>
+
+<dt>(II, 6.16)</dt>
+<dd>For an integral, separated, noetherian, locally factorial scheme (a nonsingular variety satisfies these
+conditions) there is a group isomorphism $\operatorname{Cl}X\cong\operatorname{Pic}X$ given by
+$D\mapsto\mathscr{L}(D)$. This is the dictionary between the language of divisors and the language of
+invertible sheaves.</dd>
+
+<dt>(II, 6.18)</dt>
+<dd>If $D$ is an effective divisor and $Y$ is the corresponding closed subscheme, then the ideal sheaf of
+$Y$ is $\mathscr{L}(-D)$; that is, there is an exact sequence
+$0\to\mathscr{L}(-D)\to\mathcal{O}_X\to\mathcal{O}_Y\to0$. The exact sequence used in the proof of
+Riemann–Roch, with $D=P$ a single point and $\mathcal{O}_Y=k(P)$, is the special case.</dd>
+
+<dt>(II, §7)</dt>
+<dd>The chapter on projective morphisms: linear systems, base-point freeness, ample and very ample.</dd>
+
+<dt>(II, 5.19)</dt>
+<dd>On a projective scheme over a noetherian ring, the space of global sections of a coherent sheaf is a
+finitely generated module, in particular a finite-dimensional vector space over a field. This guarantees
+$l(D)<\infty$.</dd>
+
+<dt>(II, 7.3)</dt>
+<dd>The criterion for a closed immersion: the morphism given by a linear system is a closed immersion if and
+only if the system separates points and separates tangent vectors. This section does not use it directly,
+but Proposition 3.1 of §3 is precisely the translation of this criterion into a dimension condition such as
+$\dim|D-P-Q|=\dim|D|-2$.</dd>
+
+<dt>(II, 7.7)</dt>
+<dd>Let $D_0$ be a divisor and $\mathscr{L}\cong\mathscr{L}(D_0)$. Then the divisor of zeros of every nonzero
+section is effective and linearly equivalent to $D_0$; every effective divisor linearly equivalent to $D_0$
+arises this way; and two sections have the same divisor of zeros if and only if they differ by a
+$\lambda\in k^*$. Hence $|D_0|$ is in bijection with
+$(H^0(X,\mathscr{L}(D_0))-\{0\})/k^*$, carries a projective space structure, and satisfies
+$\dim|D|=l(D)-1$.</dd>
+
+<dt>(II, Ex. 7.6)</dt>
+<dd>The Riemann–Roch problem: for a divisor $D$, determine $\dim|nD|$ as a function of $n$, particularly for
+large $n$. Remark 1.3.2 gives the complete answer in the case of curves.</dd>
+
+<dt>(II, 8.18.2)</dt>
+<dd>The canonical sheaf and the geometric genus. On a nonsingular variety
+$\omega_X=\wedge^n\Omega_{X/k}$ with $n=\dim X$, and the geometric genus is
+$p_g=\dim_k\Gamma(X,\omega_X)$. On a curve $n=1$, so $\omega_X=\Omega_X$.</dd>
+
+<dt>(II, 7.6.2)</dt>
+<dd>On a nonsingular quadric surface $Q\cong\mathbb{P}^1\times\mathbb{P}^1$, an invertible sheaf of type
+$(a,b)$ is ample if and only if it is very ample if and only if $a,b>0$. This is not cited in the body of
+the section; it is listed here to point out that the quadric surface appearing in Remark 1.1.1 is exactly
+the object studied there.</dd>
+</dl>
+
+<h3>From Chapter III (cohomology)</h3>
+
+<dl class="refs">
+<dt>(III, 5.2)</dt>
+<dd>For a coherent sheaf on a projective scheme over a noetherian ring, all cohomology groups are finitely
+generated modules, hence finite-dimensional over a field. This is another source of the finiteness of
+$l(D)$, and also guarantees that $\chi(\mathscr{F})$ is defined.</dd>
+
+<dt>(III, Ex. 5.1)</dt>
+<dd>The Euler characteristic $\chi(\mathscr{F})=\sum_i(-1)^i\dim H^i(X,\mathscr{F})$ is additive on short
+exact sequences of coherent sheaves: if $0\to\mathscr{F}'\to\mathscr{F}\to\mathscr{F}''\to0$ is exact, then
+$\chi(\mathscr{F})=\chi(\mathscr{F}')+\chi(\mathscr{F}'')$. This is the engine of the inductive step in
+Riemann–Roch.</dd>
+
+<dt>(III, Ex. 5.2)</dt>
+<dd>The Hilbert polynomial of a projective scheme $X\subseteq\mathbb{P}^n$ satisfies
+$P_X(n)=\chi(\mathcal{O}_X(n))$: the Hilbert polynomial is the Euler characteristic after twisting. Remark
+1.3.1 uses it to recognize the hyperplane-section case as a special case of Riemann–Roch.</dd>
+
+<dt>(III, Ex. 5.3)</dt>
+<dd>For a projective scheme of dimension $r$, $p_a(X)=(-1)^r(\chi(\mathcal{O}_X)-1)$. In the curve case
+$r=1$, substituting $\chi(\mathcal{O}_X)=1-\dim H^1(X,\mathcal{O}_X)$ gives
+$p_a=\dim H^1(X,\mathcal{O}_X)$, which is the first equality of Proposition 1.1.</dd>
+
+<dt>(III, Ex. 5.6)</dt>
+<dd>Cohomology of curves of type $(a,b)$ on a nonsingular quadric surface, in particular
+$p_a=ab-a-b+1$. Taking $(a,b)=(g+1,2)$ gives $p_a=2(g+1)-(g+1)-2+1=g$, which is the source of the claim in
+Remark 1.1.1 that every genus is realized.</dd>
+
+<dt>(III, 7.12.1)</dt>
+<dd>Serre duality for curves: if $X$ is a projective curve and $\mathscr{L}$ an invertible sheaf, then
+$H^0(X,\omega_X\otimes\mathscr{L}^{\vee})$ and $H^1(X,\mathscr{L})$ are dual vector spaces, so
+$\dim H^1(X,\mathscr{L})=\dim H^0(X,\omega_X\otimes\mathscr{L}^\vee)$. This is the only substantive input to
+the proof of Riemann–Roch: it reinterprets $l(K-D)$ as $\dim H^1(X,\mathscr{L}(D))$.</dd>
+
+<dt>(III, 7.12.2)</dt>
+<dd>The consequence of Serre duality that $p_g=\dim H^1(X,\mathcal{O}_X)$, which is the second equality of
+Proposition 1.1. Taking $\mathscr{L}=\mathcal{O}_X$ makes $H^0(X,\omega_X)$ dual to
+$H^1(X,\mathcal{O}_X)$, and the dimension of the former is $p_g$.</dd>
+</dl>
+
+<h3>References</h3>
+
+<dl class="refs">
+<dt>Serre [7]</dt>
+<dd><i>Groupes algébriques et corps de classes.</i> Chapter II gives another proof of Riemann–Roch.</dd>
+
+<dt>Fulton [1]</dt>
+<dd><i>Algebraic Curves.</i> Proves Riemann–Roch by elementary methods, without cohomology.</dd>
+</dl>
+
+<h3>Internal cross-references within this chapter</h3>
+
+<p>
+(1.1) the equivalence of the three definitions of genus; (1.2) negative degree implies no global sections;
+(1.3) Riemann–Roch; (1.3.3) $\deg K=2g-2$; (1.3.4) special and nonspecial divisors; (1.3.5) rational if and
+only if $g=0$; (1.3.7) the group structure on an elliptic curve. The main places where these are used later:
+Hurwitz's formula (2.4) in §2 uses $\deg K=2g-2$ to convert a comparison of canonical divisors into a
+comparison of genera; Proposition 3.1 and Corollary 3.2 in §3 use Riemann–Roch to turn the embedding
+criterion into a degree condition; Clifford's theorem (5.4) in §5 handles the special divisors of (1.3.4).
+</p>
+
+<footer>The Riemann–Roch theorem · Hartshorne IV.1 · undergraduate reading seminar</footer>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ],
+      throwOnError: false
+    });
+  });
+</script>
+</body>
+</html>
