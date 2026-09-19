@@ -96,6 +96,12 @@
   .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
   .idea{margin:1.4rem 0 .4rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
   .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .discuss{margin:1.2rem 0 .4rem; padding:.9rem 1rem 1rem; background:var(--wine-soft); border:1px solid #e3c3ca; border-left:3px solid var(--wine); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.87rem; line-height:1.8; color:#5c2a35}
+  .discuss h3{margin:.1rem 0 .6rem; font-size:.92rem; color:#4a1f28}
+  .discuss ol{margin:0; padding-left:1.3rem}
+  .discuss li{margin:.55rem 0}
+  .hide-discuss .discuss{display:none}
   .history{margin:0 0 1.3rem; padding:.7rem 1rem; background:var(--brown-soft); border:1px solid #ddc9a3; border-left:3px solid var(--brown); border-radius:8px;
     font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.84rem; line-height:1.8; color:#4a3a20}
   .history summary{cursor:pointer; font-size:.88rem; font-weight:700; color:#3d2f18; padding:.15rem 0; list-style:revert}
@@ -132,6 +138,7 @@
   <button class="btn" id="t-rem">注释</button>
   <button class="btn" id="t-hist">背景</button>
   <button class="btn" id="t-art">名画</button>
+  <button class="btn" id="t-disc">查经问题</button>
 </div>
 
 <main id="reader">
@@ -221,6 +228,13 @@
   <div class="idea">
     <h3>释义 (Idea) — 待读时填写</h3>
     彼拉多说「我查不出这人有什么罪来」，却还是一步步走到了定案——这中间他做了什么、没做什么？23:2的控告和20:20-26的真实对话正好相反，路加把这个矛盾摆在这里，是要读者自己发现，还是默认没人会去查？
+  </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>23:2的三项控告，其中「禁止纳税给该撒」和20:20-26耶稣真实说过的话正好相反——路加把这个矛盾摆在这里，是要读者自己发现，还是默认没人会去查？</li>
+    <li>彼拉多说「我查不出这人有什么罪来」，后面还要再重复两次同样的宣告(23:14、23:22)，而不是当场放人——如果你是当时在场的百姓，这种「一直说无罪却一直不放人」的犹豫，你会怎么解读？</li>
+    </ol>
   </div>
 </section>
 
@@ -324,6 +338,13 @@
     <h3>释义 (Idea) — 待读时填写</h3>
     希律「很欢喜」，是这整段受难叙事里少见的正面情绪词——但他欢喜的理由(看神迹)和耶稣的沉默形成对照，这份欢喜说明了什么？「彼此有仇……成了朋友」，是两个政客的权宜之计，还是经文想让人看见更大的图景？
   </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>希律早就「想要见他」(9:9)，见到面却只是想看一场「神迹」当余兴——这份期待和后来的沉默、戏弄，落差有多大？</li>
+    <li>彼拉多与希律「从前彼此有仇……在那一天就成了朋友」——是什么样的敌意，会因为同一个人而暂时放下？</li>
+    </ol>
+  </div>
 </section>
 
 <section id="beat3">
@@ -377,6 +398,12 @@
   <div class="idea">
     <h3>释义 (Idea) — 待读时填写</h3>
     彼拉多两次说「查不出罪来」，提出的解决方案却是「责打他，把他释放了」——查无罪证却还要「责打」，这个矛盾要怎么读？
+  </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>彼拉多当众召集祭司长、官府、百姓三方，第二次宣告查无罪证，提出的处置却是「责打他，把他释放了」——查无罪证却还要责打，这个矛盾要怎么读？</li>
+    </ol>
   </div>
 </section>
 
@@ -465,6 +492,13 @@
     <h3>释义 (Idea) — 待读时填写</h3>
     「释放巴拉巴」这个名字如果真是「……的儿子」的意思，会不会让这个选择显得更尖锐？彼拉多「愿意释放耶稣」，却在群众的声浪前退让——这场审判里，谁的意思才是真正「得了胜」的？
   </div>
+  <div class="discuss">
+    <h3>带查经问题(小组讨论用)</h3>
+    <ol>
+    <li>群众选择释放巴拉巴、钉死耶稣——如果「巴拉巴」这名字真的是「……的儿子」的意思，这个选择会不会显得更尖锐？</li>
+    <li>「他们的声音就得了胜」——彼拉多明明「愿意释放耶稣」，最终却让步了。胜的到底是谁的意思？彼拉多算不算也要负一部分责任？</li>
+    </ol>
+  </div>
 </section>
 </main>
 
@@ -481,7 +515,7 @@
 
 <script>
   const body=document.body;
-  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art'};
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art','t-disc':'hide-discuss'};
   for(const id in toggleMap){const btn=document.getElementById(id);
     btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
 </script>
