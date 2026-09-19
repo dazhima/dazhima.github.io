@@ -105,12 +105,21 @@
   .history-body p:first-child{margin-top:0}
   .history-body p:last-child{margin-bottom:0}
   .hide-history .history{display:none}
-  .discuss{margin:1.2rem 0 .4rem; padding:.9rem 1rem 1rem; background:var(--wine-soft); border:1px solid #e3c3ca; border-left:3px solid var(--wine); border-radius:8px;
-    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.87rem; line-height:1.8; color:#5c2a35}
-  .discuss h3{margin:.1rem 0 .6rem; font-size:.92rem; color:#4a1f28}
-  .discuss ol{margin:0; padding-left:1.3rem}
-  .discuss li{margin:.55rem 0}
-  .hide-discuss .discuss{display:none}
+  .cite-group{margin-top:.7rem; padding-top:.6rem; border-top:1px dashed #ddc9a3}
+  .cite-group-label{font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.04em;
+    color:#8b6a3f; text-transform:uppercase; margin-bottom:.4rem}
+  details.cite{margin:.3rem 0; padding:.35rem .6rem; background:#fffdf7; border:1px solid #e6d9bc; border-radius:6px}
+  details.cite summary{cursor:pointer; font-size:.78rem; font-weight:600; color:#7a5620; list-style:revert; padding:0}
+  details.cite summary::marker{color:#b07d2b}
+  details.cite .cite-body{margin-top:.4rem}
+  .cite-zh{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif; font-size:.92rem; line-height:1.7; margin:.2rem 0; color:var(--ink)}
+  .cite-gr{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-size:.82rem; line-height:1.6; margin:.3rem 0; color:var(--greek); display:flex; gap:.5rem}
+  .cite-note{font-family:system-ui,sans-serif; font-size:.72rem; color:var(--muted); margin:.2rem 0 0}
+  .painting{margin:0 0 1.3rem; text-align:center}
+  .painting img{max-width:100%; max-height:420px; border-radius:6px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .painting-cap{margin-top:.5rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.76rem; color:var(--muted)}
+  .painting-note{margin:.3rem auto 0; max-width:520px; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; color:var(--muted); line-height:1.6}
+  .hide-art .painting{display:none}
 </style>
 </head>
 <body class="hide-gr">
@@ -122,7 +131,7 @@
   <button class="btn" id="t-enotes">英语讲解</button>
   <button class="btn" id="t-rem">注释</button>
   <button class="btn" id="t-hist">背景</button>
-  <button class="btn" id="t-disc">查经问题</button>
+  <button class="btn" id="t-art">名画</button>
 </div>
 
 <main id="reader">
@@ -153,6 +162,27 @@
     <p><b>地理：</b>这段话是耶稣从耶利哥再往上走去耶路撒冷途中说的——耶利哥在海平面以下约250米，耶路撒冷在海拔约750米，两地相距20多公里，要爬升1000米左右，「上耶路撒冷」(ἀναβαίνομεν)首先是字面意义上的爬坡，不只是比喻。这条从加利利经比利亚、耶利哥上耶路撒冷的路线，是当时犹太人为避开撒玛利亚而走的常规朝圣路线(约瑟夫斯《犹太古史》20.118)。</p>
 <p><b>私下告知：</b>耶稣只把这个预言告诉「十二个门徒」，不是对众人说——这符合旧约先知「私下领受启示」的模式(参阿摩司书3:7：「主耶和华若不将奥秘指示他的仆人众先知，就不做什么」)。</p>
 <p><b>受难方式的细节：</b>「鞭打」和「交给外邦人」具体指向罗马式的处决程序——鞭刑是罗马钉十字架前的标准步骤(参约瑟夫斯《犹太战记》2.306, 5.449)，不是犹太律法对亵渎罪的刑罚(用石头打死，参约8:59；徒7:58 司提反被石头打死)。耶稣在这里预言的，具体是罗马人的死法。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>阿摩司书3:7 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">主耶和華若不將奧秘指示他的僕人眾先知, 就一無所行.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>约翰福音8:59 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">於是他們拿石頭要打他．耶穌卻躲藏, 從殿裡出去了.</p><p class="cite-gr"><span class="lbl">GR</span><span>ἦραν οὖν λίθους ἵνα βάλωσιν ἐπ’αὐτόν·Ἰησοῦς δὲ ἐκρύβη καὶ ἐξῆλθεν ἐκ τοῦ ἱεροῦ.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>使徒行传7:58 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">把他推到城外, 用石頭打他．作見證的人, 把衣裳放在一個少年人名叫掃羅的腳前.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἐκβαλόντες ἔξω τῆς πόλεως ἐλιθοβόλουν.καὶ οἱ μάρτυρες ἀπέθεντο τὰ ἱμάτια αὐτῶν παρὰ τοὺς πόδας νεανίου καλουμένου Σαύλου.</span></p>
+    </div>
+  </details>
+    </div>
     </div>
   </details>
   <div class="unit para-start" id="v18-31">
@@ -200,13 +230,6 @@
     <h3>释义 (Idea) — 待读时填写</h3>
     这段用「应验」(τελεσθήσεται)而不是「必须」(δεῖ，参路9:22)——这个动词选择在强调什么，跟9:22比有什么不一样？ 「被交给外邦人」用被动语态，没指明是谁交的——这个模糊想造成什么效果？ 门徒「不懂」「隐藏」「不知道」连用三次，紧接着下一段主角是个瞎子——这个先后顺序，你会怎么读？
   </div>
-  <div class="discuss">
-    <h3>带查经问题(小组讨论用)</h3>
-    <ol>
-    <li>18:34「他们不懂得」(συνῆκαν)和24:45「他打开他们的心窍，使他们能明白」(διήνοιξεν...τοῦ συνιέναι)用的是同一个希腊词根(συνίημι)——路加把这个「懂/不懂」的问题一路拖到复活之后才收尾，而且解决方式不是耶稣讲得更清楚，是他「打开」了门徒的心窍(24:45)，也打开了以马忤斯路上两个人的眼睛(24:31，διανοίγω)，甚至直接骂他们「无知的人哪，心里迟钝」(24:25)。如果理解不是靠更耐心的解释，而是要等事情真发生、耶稣亲自「打开」才行——这对「信心」和「理解」谁先谁后，说明了什么？</li>
-    <li>这段预言紧接着后面是瞎子得医治、撒该悔改、十锭银子的比喻——一连串跟财富、身份、掌权有关的故事。路加为什么把「受苦的人子」放在这一串故事的开头？</li>
-    </ol>
-  </div>
 </section>
 
 <section id="beat2">
@@ -220,8 +243,52 @@
 <p><b>头衔与「求看见」的内在逻辑：</b>以赛亚书35:5-6、61:1把「瞎子的眼必打开」列为弥赛亚时代来临的标志性预兆。路加福音7:22耶稣回答施洗约翰的问题时，几乎逐条对应这份清单：「瞎子看见(τυφλοὶ ἀναβλέπουσιν)、瘸子行走、长大痲疯的洁净……」——这里的「看见」正是ἀναβλέπω，跟18:41-42瞎子求的「看见」(ἀναβλέψω / Ἀνάβλεψον)是同一个动词。这个瞎子喊「大卫的子孙」不是乱喊：如果耶稣是那位要来的大卫子孙，治好他的眼睛正是那份清单上的标志性动作，头衔和他求的东西在以赛亚书的框架里本来就绑在一起。</p>
 <p><b>补充/存疑：</b>也有学者(如Dennis Duling)提出，「大卫的子孙」在民间用法里可能叠加了「所罗门」(大卫之子)作为驱邪治病能手的传说色彩(约瑟夫斯《犹太古史》8.45-49记载所罗门的驱魔术)，可以部分解释这个头衔为何总是聚集在福音书的治病、赶鬼场景。这层不算确凿共识，标注供参考，不作定论。</p>
 <p><b>失明的现实背景：</b>眼疾(如沙眼)在古代近东因苍蝇、灰尘、卫生条件而相当普遍，失明者若无家人扶养，讨饭几乎是唯一的生存方式——这是当时地中海世界普遍的社会现实。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>马可福音10:46 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">到了耶利哥．耶穌同門徒並許多人出耶利哥的時候, 有一個討飯的瞎子, 是底買的兒子巴底買, 坐在路旁.</p><p class="cite-gr"><span class="lbl">GR</span><span>Καὶ ἔρχονται εἰς Ἰερειχώ.Καὶ ἐκπορευομένου αὐτοῦ ἀπὸ Ἰερειχὼ καὶ τῶν μαθητῶν αὐτοῦ καὶ ὄχλου ἱκανοῦ ὁ υἱὸς Τιμαίου Βαρτιμαῖος,τυφλὸς προσαίτης,ἐκάθητο παρὰ τὴν ὁδόν.</span></p>
     </div>
   </details>
+<details class="cite">
+    <summary>撒母耳记下7:12-16 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">你壽數滿足, 與你列祖同睡的時候, 我必使你的後裔接續你的位, 我也必堅定他的國. 他必為我的名建造殿宇, 我必堅定他的國位, 直到永遠. 我要作他的父, 他要作我的子, 他若犯了罪, 我必用人的杖責打他, 用人的鞭責罰他. 但我的慈愛仍不離開他, 像離開在你面前所廢棄的掃羅一樣. 你的家和你的國, 必在我〔原文作你〕面前永遠堅立．你的國位也必堅定, 直到永遠.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以赛亚书9:6-7 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">因有一嬰孩為我們而生, 有一子賜給我們．政權必擔在他的肩頭上．他名稱為奇妙, 策士, 全能的 神, 永在的父, 和平的君. 他的政權與平安必加增無窮．他必在大衛的寶座上, 治理他的國, 以公平公義使國堅定穩固, 從今直到永遠.萬軍之耶和華的熱心, 必成就這事.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以赛亚书11:1-10 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">從耶西的本〔原文作𢃼〕必發一條, 從他根生的枝子必結果實. 耶和華的靈必住在他身上, 就是使他有智慧和聰明的靈, 謀略和能力的靈, 知識和敬畏耶和華的靈. 他必以敬畏耶和華為樂．行審判不憑眼見, 斷是非也不憑耳聞． 卻要以公義審判貧窮人, 以正直判斷世上的謙卑人．以口中的杖擊打世界．以嘴裡的氣殺戮惡人. 公義必當他的腰帶, 信實必當他脅下的帶子. 豺狼必與綿羊羔同居, 豹子與山羊羔同臥．少壯獅子, 與牛犢, 並肥畜同群．小孩子要牽引他們. 牛必與熊同食．牛犢必與小熊同臥．獅子必喫草與牛一樣. 喫奶的孩子必玩耍在虺蛇的洞口, 斷奶的嬰兒必按手在毒蛇的穴上. 在我聖山的遍處, 這一切都不傷人, 不害物．因為認識耶和華的知識要充滿遍地, 好像水充滿洋海一般. 到那日, 耶西的根立作萬民的大旗．外邦人必尋求他．他安息之所大有榮耀.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>耶利米书23:5-6 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶和華說, 日子將到, 我要給大衛興起一個公義的苗裔, 他必掌王權, 行事有智慧, 在地上施行公平, 和公義. 在他的日子, 猶大必得救, 以色列也安然居住．他的名必稱為耶和華我們的義.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音7:22 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌回答說, 你們去把所看見所聽見的事告訴約翰．就是瞎子看見, 瘸子行走, 長大痲瘋的潔淨, 聾子聽見, 死人復活, 窮人有福音傳給他們.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἀποκριθεὶς εἶπεν αὐτοῖς Πορευθέντες ἀπαγγείλατε Ἰωάνει ἃ εἴδετε καὶ ἠκούσατε·τυφλοὶ ἀναβλέπουσιν,χωλοὶ περιπατοῦσιν,λεπροὶ καθαρίζονται,καὶ κωφοὶ ἀκούουσιν,νεκροὶ ἐγείρονται,πτωχοὶ εὐαγγελίζονται·</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Les_Aveugles_de_J%C3%A9richo_-_1650_-_Nicolas_Poussin_-_Louvre_-_INV_7281_%3B_MR_2320.jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Les_Aveugles_de_J%C3%A9richo_-_1650_-_Nicolas_Poussin_-_Louvre_-_INV_7281_%3B_MR_2320.jpg" alt="《耶利哥的瞎子》" loading="lazy"></a>
+    <div class="painting-cap">尼古拉·普桑 (Nicolas Poussin) · 《耶利哥的瞎子》(<i>Les Aveugles de Jéricho</i>) · 1650 · 卢浮宫。图片：Wikimedia Commons，公有领域。</div>
+    
+  </div>
   <div class="unit para-start" id="v18-35">
     <p class="sent"><span class="zh-body"><span class="n">18:35</span>耶穌將近耶利哥的時候, 有一個瞎子坐在路旁討飯.</span></p>
     <div class="refs">
@@ -307,14 +374,6 @@
     <h3>释义 (Idea) — 待读时填写</h3>
     瞎子喊耶稣「大卫的子孙」，耶稣自己刚用「人子」称呼自己(18:31)——这两个称呼分别在强调什么？ 「你的信救了你」——是信让神迹发生，还是神迹反过来证明了信？ ἀναβλέπω字面「重新看见」，但新约里不论对方是否曾经能看见都这么用——这个词源细节要不要影响你怎么理解这个瞎子？
   </div>
-  <div class="discuss">
-    <h3>带查经问题(小组讨论用)</h3>
-    <ol>
-    <li>瞎子喊「大卫的子孙，可怜我吧」——这是一个带政治意味的弥赛亚称号，在靠近耶路撒冷的人群里公开喊出来其实有风险，也是众人想让他闭嘴的原因之一。他不但没闭嘴反而「越发喊叫」——这份坚持，会不会才是这个故事真正的重点，而不是后面的医治本身？</li>
-    <li>耶稣没有摸他，没有任何仪式动作，只是问：「你要我为你做什么？」然后说「你的信救了你了」。让一个瞎子自己说出他的需要，而不是替他假设——这个提问方式，神学上在讲什么？</li>
-    <li>瞎子得看见以后立刻「跟随耶稣」(18:43)——跟随耶稣走向刚刚才预言的那场苦难。门徒身份在这里是不是被定义成「愿意走向同一个结局」？这个人从瞎眼讨饭到跟随耶稣，实际上失去了什么、又得到了什么？</li>
-    </ol>
-  </div>
 </section>
 
 <section id="beat3">
@@ -330,8 +389,70 @@
 <p><b>动词时态之争(19:8)——最关键的一处：</b>撒该说的「我给」(δίδωμι)、「我还」(ἀποδίδωμι)在希腊文里都是现在时，不是将来时。传统读法当「将来性现在时」，理解成撒该当场宣布悔改的新决心；但也有学者(如费兹迈尔Fitzmyer《路加福音注释》)主张这是「习惯性现在时」——撒该在陈述自己一贯的做法，等于是在众人指控他「是个罪人」时的自辩。两种读法会把整个故事读成完全不同的样子：前者是「悔改带来救恩」，后者是「一个一直被职业偏见误判的人被公开正名」。</p>
 <p><b>「亚伯拉罕的子孙」：身份还是行为？</b>19:9耶稣给「今天救恩到了这家」的理由是「因为他也是亚伯拉罕的子孙」——讲的是身份(与生俱来)，不是行为(临时悔改)，这点支持「习惯性现在时」的读法。但路加福音3:8施洗约翰警告过「不要自己心里说，有亚伯拉罕为我们的祖……神能从这些石头中给亚伯拉罕兴起子孙来」——暗示光靠血统不构成安全网，「亚伯拉罕的子孙」这个称号某种程度上也要靠行为配得上。撒该迎接耶稣的动作("你快下来"/"他就急忙下来"，σπεύσας)，跟七十士译本创世记18:6亚伯拉罕接待三位天使访客时的用词几乎一样("亚伯拉罕急忙(ἔσπευσεν)进帐棚……说，你速速(σπεῦσον)拿细面调和作饼")——撒该此刻的行为，本身就在重演亚伯拉罕当年接待客旅的样子。</p>
 <p><b>但19:10留了一条不肯合作的尾巴：</b>耶稣自己把整件事总结为「人子来，为要寻找、拯救失丧的人」(τὸ ἀπολωλός)——这个词明确把撒该(或他这类人)归类为「失丧的」，需要被寻找、拯救，这跟「他本来就没问题，只是被冤枉」的读法并不完全兼容。v8现在时、v9的身份理由、v10的「失丧的」，三条线索互相拉扯，经文很可能没打算给出干净的答案。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>出埃及记22:1 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">人若偷牛, 或羊, 無論是宰了, 是賣了, 他就要以五牛賠一牛, 四羊賠一羊.</p>
     </div>
   </details>
+<details class="cite">
+    <summary>以斯拉记2:9 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">薩改的子孫, 七百六十名．</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>尼希米记7:14 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">薩改的子孫, 七百六十名.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音9:22 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">又說, 人子必須受許多的苦, 被長老, 祭司長和文士棄絕, 並且被殺, 第三日復活.</p><p class="cite-gr"><span class="lbl">GR</span><span>εἰπὼν ὅτι Δεῖ τὸν Υἱὸν τοῦ ἀνθρώπου πολλὰ παθεῖν καὶ ἀποδοκιμασθῆναι ἀπὸ τῶν πρεσβυτέρων καὶ ἀρχιερέων καὶ γραμματέων καὶ ἀποκτανθῆναι καὶ τῇ τρίτῃ ἡμέρᾳ ἐγερθῆναι.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音3:8 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">你們要結出果子來, 與悔改的心相稱, 不要自己心裡說, 有亞伯拉罕為我們的祖宗．我告訴你們, 神能從這些石頭中, 給亞伯拉罕興起子孫來.</p><p class="cite-gr"><span class="lbl">GR</span><span>ποιήσατε οὖν καρποὺς ἀξίους τῆς μετανοίας·καὶ μὴ ἄρξησθε λέγειν ἐν ἑαυτοῖς Πατέρα ἔχομεν τὸν Ἀβραάμ·λέγω γὰρ ὑμῖν ὅτι δύναται ὁ Θεὸς ἐκ τῶν λίθων τούτων ἐγεῖραι τέκνα τῷ Ἀβραάμ.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>创世记18:6 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">亞伯拉罕急忙進帳棚見撒拉說, 你速速拿三細亞細麵調和作餅.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἔσπευσεν Αβρααμ ἐπὶ τὴν σκηνὴν πρὸς Σαρραν καὶ εἶπεν αὐτῇ σπεῦσον καὶ φύρασον τρία μέτρα σεμιδάλεως καὶ ποίησον ἐγκρυφίας [七十士译本, 非本地NT语料库, 经web核对]</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音24:45 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">於是耶穌開他們的心竅, 使他們能明白聖經．</p><p class="cite-gr"><span class="lbl">GR</span><span>τότε διήνοιξεν αὐτῶν τὸν νοῦν τοῦ συνιέναι τὰς γραφάς·καὶ εἶπεν αὐτοῖς</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音24:31 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他們的眼睛明亮了, 這纔認出他來．忽然耶穌不見了.</p><p class="cite-gr"><span class="lbl">GR</span><span>αὐτῶν δὲ διηνοίχθησαν οἱ ὀφθαλμοὶ,καὶ ἐπέγνωσαν αὐτόν·καὶ αὐτὸς ἄφαντος ἐγένετο ἀπ’αὐτῶν.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音24:25 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌對他們說, 無知的人哪．先知所說的一切話, 你們的心, 信得太遲鈍了.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ αὐτὸς εἶπεν πρὸς αὐτούς Ὦ ἀνόητοι καὶ βραδεῖς τῇ καρδίᾳ τοῦ πιστεύειν ἐπὶ πᾶσιν οἷς ἐλάλησαν οἱ προφῆται·</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Brooklyn_Museum_-_Zacchaeus_in_the_Sycamore_Awaiting_the_Passage_of_Jesus_(Zach%C3%A9e_sur_le_sycomore_attendant_le_passage_de_J%C3%A9sus)_-_James_Tissot.jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brooklyn_Museum_-_Zacchaeus_in_the_Sycamore_Awaiting_the_Passage_of_Jesus_%28Zach%C3%A9e_sur_le_sycomore_attendant_le_passage_de_J%C3%A9sus%29_-_James_Tissot.jpg" alt="《撒该在桑树上等耶稣经过》" loading="lazy"></a>
+    <div class="painting-cap">詹姆斯·迪索 (James Tissot) · 《撒该在桑树上等耶稣经过》(<i>Zacchaeus in the Sycamore Awaiting the Passage of Jesus</i>) · 约1886-1894 · 布鲁克林博物馆。图片：Wikimedia Commons，公有领域。</div>
+    
+  </div>
   <div class="unit para-start" id="v19-1">
     <p class="sent"><span class="zh-body"><span class="n">19:1</span>耶穌進了耶利哥, 正經過的時候,</span></p>
     <div class="refs">
@@ -440,14 +561,6 @@
     <h3>释义 (Idea) — 待读时填写</h3>
     撒该没被要求做什么，却主动认罪悔改；耶稣宣告「今天救恩到了这家」是在他表态之前还是之后？这个顺序重要吗？ 「因为他也是亚伯拉罕的子孙」——这句是在回应众人「他到罪人家里去」的议论吗？ 税吏长(ἀρχιτελώνης)全新约仅此一见，我们其实说不准这职位具体管什么——这层不确定要不要紧？
   </div>
-  <div class="discuss">
-    <h3>带查经问题(小组讨论用)</h3>
-    <ol>
-    <li>19:8撒该说的「我给」「我还」都是希腊文现在时——可能是他当场宣布的新决心(悔改读法)，也可能是他描述一贯的做法(自辩读法，费兹迈尔等学者主张)。但19:10耶稣自己把整件事总结成「寻找拯救失丧的人」，明确把撒该算作「失丧的」。如果撒该本来就在做这些好事，耶稣为什么还说他是「失丧的」？如果他不是「本来就好」，19:9「因为他也是亚伯拉罕的子孙」这个讲身份、不讲行为的理由又怎么解释？经文好像故意不让你把撒该定成「好人」或「坏人」——这个不确定本身，是不是才是这段真正的重点？</li>
-    <li>众人「私下议论」耶稣去罪人家住宿——这个词跟旧约以色列人在旷野「发怨言」是同一个词根。这段故事里真正被考验的，是撒该，还是众人对「谁配称为亚伯拉罕的子孙」的定义？</li>
-    <li>撒该同时被讨厌、被矮化、被富有——经济上的怨恨、身高上的矮小、道德上的鄙视，三种贬低同时压在他身上。这段经文最关心翻转哪一种，又放过了哪一种？</li>
-    </ol>
-  </div>
 </section>
 
 <section id="beat4">
@@ -458,8 +571,34 @@
     <div class="history-body">
     <p><b>历史背景——亚基老求王位：</b>不少注释者认为这个比喻直接呼应了听众记忆犹新的真实历史：主前4年希律大王死后，儿子亚基老前往罗马向奥古斯都请求确认王位继承，同时一队犹太/撒玛利亚代表团(约瑟夫斯记载约50人)随后赶到罗马，控诉亚基老、请求罗马不要让他统治他们；奥古斯都最终只封他为「分封王」(ethnarch)而非「王」(约瑟夫斯《犹太古史》17.299-320；《犹太战记》2.80-100)。这个比喻是耶稣在耶利哥讲的——而耶利哥正是希律家族冬宫与工程建设的所在地(亚基老后来还重修过火灾受损的耶利哥王宫，见《犹太古史》17.340)，对当地听众而言，这个「贵胄往远方去要得国回来，本国百姓却打发人去反对」的情节可能相当具体、不是泛泛的譬喻。</p>
 <p><b>弥拿与他连得的换算：</b>1弥拿(mna)=100得拉克马，大约相当于普通工人三、四个月的工资(以马太福音20:2一天一个银钱的工价估算)。马太福音25:14-30平行的「才干的比喻」用的是他连得(talanton)，1他连得=60弥拿——是两个不同版本/场合的比喻，不是同一个故事的两种记法。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>马太福音20:2 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">和工人講定, 一天一錢銀子, 就打發他們進葡萄園去.</p><p class="cite-gr"><span class="lbl">GR</span><span>συμφωνήσας δὲ μετὰ τῶν ἐργατῶν ἐκ δηναρίου τὴν ἡμέραν ἀπέστειλεν αὐτοὺς εἰς τὸν ἀμπελῶνα αὐτοῦ.</span></p>
     </div>
   </details>
+<details class="cite">
+    <summary>马太福音25:15 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">按著各人的才幹, 給他們銀子．一個給了五千, 一個給了二千, 一個給了一千．就往外國去了.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ᾧ μὲν ἔδωκεν πέντε τάλαντα,ᾧ δὲ δύο,ᾧ δὲ ἕν,ἑκάστῳ κατὰ τὴν ἰδίαν δύναμιν,καὶ ἀπεδήμησεν.Εὐθέως</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>马太福音25:29 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">因為凡有的, 還要加給他, 叫他有餘．沒有的, 連他所有的, 也要奪過來.</p><p class="cite-gr"><span class="lbl">GR</span><span>τῷ γὰρ ἔχοντι παντὶ δοθήσεται καὶ περισσευθήσεται·τοῦ δὲ μὴ ἔχοντος καὶ ὃ ἔχει ἀρθήσεται ἀπ’αὐτοῦ.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Willem_de_Poorter's_The_Parable_of_The_Talents_or_Minas.png" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Willem_de_Poorter's_The_Parable_of_The_Talents_or_Minas.png" alt="《十锭银子(他连得)的比喻》" loading="lazy"></a>
+    <div class="painting-cap">威廉·德·波尔特 (Willem de Poorter) · 《十锭银子(他连得)的比喻》(<i>The Parable of the Talents or Minas</i>) · 17世纪 · 布拉格国家美术馆。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">这幅画不算美术史上顶级名作，但是少数明确以「弥拿/他连得的比喻」为题的作品——大部分同题画作画的是马太福音的「他连得」版本，这幅画名本身就把两个版本并列了。</p>
+  </div>
   <div class="unit para-start" id="v19-11">
     <p class="sent"><span class="zh-body"><span class="n">19:11</span>眾人正在聽見這些話的時候, 耶穌因為將近耶路撒冷, 又因他們以為 神的國快要顯出來, 就另設一個比喻說,</span></p>
     <div class="refs">
@@ -604,15 +743,6 @@
     <h3>释义 (Idea) — 待读时填写</h3>
     如果贵胄求国的故事背景真的是亚基老求封王位那段历史，比喻里的「贵胄」形象会不会比表面看起来更负面？ 第三个仆人原样奉还银子，理由是「你是严厉的人」——这是真的理解主人，还是误解？比喻到底在奖励什么？ 比喻结尾「把敌人拉来杀了」紧接着19:28「往耶路撒冷去」——两句放在一起读，你怎么理解耶稣即将面对的耶路撒冷？
   </div>
-  <div class="discuss">
-    <h3>带查经问题(小组讨论用)</h3>
-    <ol>
-    <li>如果比喻里的「贵胄」真的让人想起亚基老这个恶名昭彰、被百姓公开反对的统治者，耶稣是在直接把神/自己比作这个角色，还是故意用这个令人不舒服的比喻来颠覆什么？如果是后者，前两个仆人被称「良善忠心」要怎么读？</li>
-    <li>第三个仆人形容主人「是严厉的人」，主人自己并没有否认，反而用仆人自己的话定他的罪。这个仆人到底是因为懒惰被罚，还是因为害怕，还是因为他准确说出了主人的真面目？</li>
-    <li>「凡有的还要加给他，没有的连他所有的也要夺过来」——放在一个贫富极度不均的社会里听，这是在讲神的国怎么运作的硬道理，还是在警告某种不义的人间经济秩序正冒充「神的国」？</li>
-    <li>比喻以「把不肯让我做王的敌人拉来杀了」收尾，紧接着耶稣「继续往耶路撒冷去」，去经历18:31-34预言的受难。听完这个以王者胜利告终的比喻，再看耶稣自己即将面对的结局，你会怎么读这个并置？</li>
-    </ol>
-  </div>
 </section>
 
 <section id="beat5">
@@ -622,6 +752,21 @@
     <summary>历史与人物背景</summary>
     <div class="history-body">
     <p><b>地理收尾：</b>耶利哥在死海附近，海拔约负250米，是世界上最低的有人居住城市之一；耶路撒冷海拔约750米，两地相距不到30公里却要爬升1000米左右。这条路自古以来因治安不靖闻名，也是路加福音10:30-37「好撒玛利亚人」比喻的路（「从耶路撒冷下耶利哥的路上」），约书亚记15:7称这一带的坡道为「亚都冥」(Adummim)。19:28这句看似平淡的过渡句，标记着耶稣从这条著名而危险的下坡路，转身向着受难开始向上爬。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音10:30 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌回答說, 有一個人從耶路撒冷下耶利哥去, 落在強盜手中, 他們剝去他的衣裳, 把他打個半死, 就丟下他走了.</p><p class="cite-gr"><span class="lbl">GR</span><span>ὑπολαβὼν ὁ Ἰησοῦς εἶπεν Ἄνθρωπός τις κατέβαινεν ἀπὸ Ἱερουσαλὴμ εἰς Ἱερειχώ,καὶ λῃσταῖς περιέπεσεν,οἳ καὶ ἐκδύσαντες αὐτὸν καὶ πληγὰς ἐπιθέντες ἀπῆλθον ἀφέντες ἡμιθανῆ.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>约书亚记15:7 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">從亞割谷往北, 上到底璧, 直向河南亞都冥坡對面的吉甲．又接連到隱示麥泉, 直通到隱羅結,</p>
+    </div>
+  </details>
+    </div>
     </div>
   </details>
   <div class="unit para-start" id="v19-28">
@@ -637,12 +782,6 @@
   <div class="idea">
     <h3>释义 (Idea) — 待读时填写</h3>
     18:31用Ἱερουσαλήμ，这里用Ἱεροσόλυμα——如果这个拼写差异真的有意义，它会标出什么？还是应该完全看作文体上的随意变化？
-  </div>
-  <div class="discuss">
-    <h3>带查经问题(小组讨论用)</h3>
-    <ol>
-    <li>这一节是整段故事滑向受难周之前，最后一个平静、近乎无声的过渡句。已经知道18:31-34预言了什么，耶稣这时候只是「往前走」——路加为什么选择用这么克制、不渲染的一句话来标记这个转折点？</li>
-    </ol>
   </div>
 </section>
 </main>
@@ -660,7 +799,7 @@
 
 <script>
   const body=document.body;
-  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-disc':'hide-discuss'};
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art'};
   for(const id in toggleMap){const btn=document.getElementById(id);
     btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
 </script>

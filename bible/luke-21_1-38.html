@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路加福音 21:1–38 · 三语共读</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+    --blue:#3d6d99; --blue-soft:#dde8f2;
+    --brown:#8b6a3f; --brown-soft:#efe3cd;
+    --wine:#8c3d4f; --wine-soft:#f3e0e3;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:1.4rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  header.doc .kjv-note{margin-top:.7rem; padding:.7rem .9rem; background:var(--blue-soft);
+    border:1px solid #c7d9e8; border-left:3px solid var(--blue); border-radius:6px;
+    font-family:system-ui,sans-serif; font-size:.82rem; line-height:1.8; color:#2c4a63}
+  header.doc .kjv-note b{color:#1f3a50}
+  .mapbox{margin:1.2rem 0; padding:1rem 1rem .8rem; background:#fdfbf5; border:1px solid var(--line); border-radius:8px}
+  #geomap{width:100%; height:380px; border-radius:8px; border:1px solid var(--line)}
+  .leaflet-tooltip.map-region-label{background:transparent; border:none; box-shadow:none;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-weight:700; font-size:.85rem;
+    color:#5c2a35; text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff}
+  .map-cap{margin-top:.6rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; line-height:1.7; color:var(--muted); text-align:center}
+  .toc{font-family:system-ui,"PingFang SC",sans-serif; font-size:.8rem; color:var(--muted); margin-bottom:2rem; line-height:1.9}
+  .toc a{color:var(--amber); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid var(--line)}
+  section h2{font-size:1.25rem; margin:0 0 .5rem; font-family:"Iowan Old Style",Georgia,serif}
+  .ref-tag{display:inline-block; font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700;
+    letter-spacing:.03em; color:var(--amber); background:var(--amber-soft); border-radius:5px;
+    padding:.08rem .4rem; margin-right:.5rem; vertical-align:.15em}
+  .beat-lead{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.85rem;
+    color:var(--muted); margin-bottom:1.1rem; line-height:1.7}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:.6rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.15rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.4em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby .zh-ruby rt{display:none}
+  .hide-ruby .zh-ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  ruby.eng-ruby rt{font-family:system-ui,sans-serif; font-style:normal; font-size:.52em; color:var(--blue); font-weight:600}
+  .hide-en-notes .eng-ruby rt{display:none}
+  .hide-en-notes .eng-ruby{ -webkit-text-decoration:underline dotted #b9cfe0; text-decoration:underline dotted #b9cfe0}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.88rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks,.en-notes{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .en-notes{background:#f4f8fb; border-left-color:var(--blue)}
+  .hide-remarks .remarks{display:none}
+  .hide-en-notes .en-notes{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .t-en{background:var(--blue-soft); color:var(--blue)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin:1.4rem 0 .4rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .history{margin:0 0 1.3rem; padding:.7rem 1rem; background:var(--brown-soft); border:1px solid #ddc9a3; border-left:3px solid var(--brown); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.84rem; line-height:1.8; color:#4a3a20}
+  .history summary{cursor:pointer; font-size:.88rem; font-weight:700; color:#3d2f18; padding:.15rem 0; list-style:revert}
+  .history summary::marker{color:var(--brown)}
+  .history[open] summary{margin-bottom:.5rem}
+  .history-body p{margin:.5rem 0}
+  .history-body p:first-child{margin-top:0}
+  .history-body p:last-child{margin-bottom:0}
+  .hide-history .history{display:none}
+  .painting{margin:0 0 1.3rem; text-align:center}
+  .painting img{max-width:100%; max-height:420px; border-radius:6px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .painting-cap{margin-top:.5rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.76rem; color:var(--muted)}
+  .painting-note{margin:.3rem auto 0; max-width:520px; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; color:var(--muted); line-height:1.6}
+  .hide-art .painting{display:none}
+  .cite-group{margin-top:.7rem; padding-top:.6rem; border-top:1px dashed #ddc9a3}
+  .cite-group-label{font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.04em;
+    color:#8b6a3f; text-transform:uppercase; margin-bottom:.4rem}
+  details.cite{margin:.3rem 0; padding:.35rem .6rem; background:#fffdf7; border:1px solid #e6d9bc; border-radius:6px}
+  details.cite summary{cursor:pointer; font-size:.78rem; font-weight:600; color:#7a5620; list-style:revert; padding:0}
+  details.cite summary::marker{color:#b07d2b}
+  details.cite .cite-body{margin-top:.4rem}
+  .cite-zh{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif; font-size:.92rem; line-height:1.7; margin:.2rem 0; color:var(--ink)}
+  .cite-gr{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-size:.82rem; line-height:1.6; margin:.3rem 0; color:var(--greek); display:flex; gap:.5rem}
+  .cite-note{font-family:system-ui,sans-serif; font-size:.72rem; color:var(--muted); margin:.2rem 0 0}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">查经</a> &rsaquo; 路加福音 &rsaquo; <b>21:1–38</b> &nbsp;·&nbsp; 三语共读</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">KJV</button>
+  <button class="btn" id="t-enotes">英语讲解</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-hist">背景</button>
+  <button class="btn" id="t-art">名画</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>路加福音 21:1–38</h1>
+    <div class="sub">和合本(中文, 阅读对象) · Nestle 1904(希腊原文, 锚点) · KJV(英译, 平行参照 — 也可直接读)</div>
+    <div class="lead">
+      延续前几周的方法：和合本是既有译本，直接作为阅读对象；希腊文只作锚点，标出个别值得注意的词；KJV平行对照，分歧处标出来(对照)。<b>释义</b>留白，现场一起填。本周读完整个21章：穷寡妇 → 圣殿要被拆毁 → 逼迫与作见证 → 耶路撒冷被围 → 人子降临 → 儆醒收尾。开头那个寡妇是上周20:47「侵吞寡妇家产」的<b>紧接下一句</b>，末尾21:37又与19:47首尾呼应——本周正好把圣殿里这一整段教导合上。
+    </div>
+    <div class="kjv-note">
+      <b>怎么读KJV(1611年英语)的几个常见古体：</b> thou/thee/thy/thine = 单数「你/你的」；ye = 复数「你们」；
+      动词词尾 <b>-est/-eth</b> 表第二/第三人称单数现在时(wilt=will、doth=does、hast=have、goeth=goes、saith=says、spake=spoke)；
+      unto = to。这些很常见，就不逐一标注了；下面只标真正会让人卡住的<b>词汇/古今异义词</b>，点「英语讲解」可以单独关/开。
+    </div>
+    <div class="mapbox">
+      <div id="geomap"></div>
+      <div class="map-cap">底图为 OpenStreetMap 实景地图(需要联网加载)。本周仍以圣殿为中心，但<b>末尾两节把地点挪了一下</b>：21:37说耶稣「每日在殿里教训人，每夜出城…在橄榄山住宿」——所以这周橄榄山不再只是定位参照，而是经文里真实的一头一尾。21:21「应当逃到山上」指的则是犹大地的山区，不是橄榄山。</div>
+    </div>
+    <div class="toc"><a href="#beat1">21:1–4 穷寡妇的两个小钱</a> · <a href="#beat2">21:5–11 圣殿要被拆毁 · 不要受迷惑</a> · <a href="#beat3">21:12–19 逼迫与作见证</a> · <a href="#beat4">21:20–24 耶路撒冷被围困</a> · <a href="#beat5">21:25–33 人子降临 · 无花果树</a> · <a href="#beat6">21:34–38 儆醒 · 圣殿教导的收尾</a></div>
+  </header>
+
+<section id="beat1">
+  <h2><span class="ref-tag">21:1–4</span> 穷寡妇的两个小钱</h2>
+  <div class="beat-lead">紧接着20:47「侵吞寡妇的家产」，一个寡妇把维生的全部投进了银库。中间没有换场景。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>这一段是接着上一句读的：</b>20:47刚说完文士「侵吞寡妇的家产」，21:1-4立刻出现一个把「一切养生的」都投进去的寡妇。中间没有换场景、没有换听众。路加把这两段并排放，本身就是一种编排。</p>
+<p><b>「两个小钱」是多小：</b>λεπτόν是当时流通的最小铜币。经文特意说是<b>两</b>枚——也就是说，她本来可以留下一枚。马可12:42在这里补了一句换算(「就是一个大钱」)，路加没有补。</p>
+<p><b>这段话是称赞还是哀叹，注释者有分歧：</b>传统读法是耶稣称赞她的奉献(「所投的比众人还多」)。另有一派(如Addison Wright等)主张要连着20:47读：这是耶稣在举例说明那个吞吃寡妇家产的体制——一个连维生之资都被榨干的人，正是前一句控诉的受害者；紧接着21:5-6他就宣告这座圣殿要被拆得一块石头都不剩。两种读法都能在文本里立住，此处并列，不代为选定。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音20:47(上一句) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他們侵吞寡婦的家產, 假意作很長的禱告．這些人要受更重的刑罰.</p><p class="cite-gr"><span class="lbl">GR</span><span>οἳ κατεσθίουσιν τὰς οἰκίας τῶν χηρῶν καὶ προφάσει μακρὰ προσεύχονται·οὗτοι λήμψονται περισσότερον κρίμα.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>马可福音12:42(补了换算) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">有一個窮寡婦來, 往裡投了兩個小錢, 就是一個大錢.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἐλθοῦσα μία χήρα πτωχὴ ἔβαλεν λεπτὰ δύο,ὅ ἐστιν κοδράντης.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v21-1">
+    <p class="sent"><span class="zh-body"><span class="n">21:1</span>耶穌抬頭觀看, 見財主把捐項投在庫裡.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἀναβλέψας δὲ εἶδεν τοὺς βάλλοντας εἰς τὸ γαζοφυλάκιον τὰ δῶρα αὐτῶν πλουσίους.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he looked up, and saw the rich men casting their gifts into <ruby class="eng-ruby">the treasury<rt>the temple offering chests</rt></ruby>.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「treasury」指圣殿院内收奉献的银库/奉献箱(希腊文γαζοφυλάκιον)，不是现代的「国库、财政部」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-2">
+    <p class="sent"><span class="zh-body"><span class="n">21:2</span>又見一個<ruby class="zh-ruby">窮寡婦<rt>chēran penichran</rt></ruby>, 投了<ruby class="zh-ruby">兩個小錢<rt>lepta dyo</rt></ruby>．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἶδεν δέ τινα χήραν πενιχρὰν βάλλουσαν ἐκεῖ λεπτὰ δύο,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he saw also a certain poor widow casting in thither <ruby class="eng-ruby">two mites<rt>two small copper coins</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>χήραν πενιχράν</b> <span class='zh'>「穷寡妇」——πενιχρός(贫穷)在本地语料库里仅此一见。她投的<b class='gk'>λεπτὰ δύο</b>(两个小钱)是当时流通的最小面额铜币，两枚合起来仍是最小的可分割单位——也就是说，她本可以留下一枚。经文特意说是「两个」，不是「一个」。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「mite」是KJV借用的一种极小面额的佛兰德旧铜币名，用来译希腊文λεπτόν(当时最小的铜币)。跟现代英语「a mite」(一点点)同源，也跟「mighty」无关。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-3">
+    <p class="sent"><span class="zh-body"><span class="n">21:3</span>就說, 我實在告訴你們．這窮寡婦, 所投的比眾人還多．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ εἶπεν Ἀληθῶς λέγω ὑμῖν ὅτι ἡ χήρα αὕτη ἡ πτωχὴ πλεῖον πάντων ἔβαλεν·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said, Of a truth I say unto you, that this poor widow hath cast in more than they all:</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-4">
+    <p class="sent"><span class="zh-body"><span class="n">21:4</span>因為眾人都是自己有餘, 拿出來投在捐項裡．但這寡婦是自己不足, 把他<ruby class="zh-ruby">一切養生的<rt>panta ton bion</rt></ruby>都投上了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πάντες γὰρ οὗτοι ἐκ τοῦ περισσεύοντος αὐτοῖς ἔβαλον εἰς τὰ δῶρα,αὕτη δὲ ἐκ τοῦ ὑστερήματος αὐτῆς πάντα τὸν βίον ὃν εἶχεν ἔβαλεν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For all these have <ruby class="eng-ruby">of their abundance<rt>out of their surplus</rt></ruby> cast in unto the offerings of God: but she of her penury hath cast in <ruby class="eng-ruby">all the living that she had<rt>everything she had to live on</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>πάντα τὸν βίον</b> <span class='zh'>「一切养生的」——用的是<b class='gk'>βίος</b>(生计、维生之资)，不是<b class='gk'>ζωή</b>(生命本身)。两个词中文都可以译成「生命」，但βίος指的是「靠什么活下去」。和合本「养生的」译得很准。紧接上一段20:47「侵吞寡妇的家产」——文士吞掉的正是这一类人的这一类东西。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「of their abundance」= 出于他们的富余；「all the living that she had」里的 living 是名词「生计、赖以维生的资财」(对应希腊文βίος)，不是「活着」。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    这段紧接在「侵吞寡妇的家产」后面——耶稣是在称赞她，还是在举例说明那个体制？两种读法会让下一段(圣殿要被拆毁)听起来完全不同吗？她投了「两个」，本可以留一个——这个细节要不要读重？
+  </div>
+</section>
+
+<section id="beat2">
+  <h2><span class="ref-tag">21:5–11</span> 圣殿要被拆毁 · 不要受迷惑</h2>
+  <div class="beat-lead">有人赞叹圣殿的美石与供物，耶稣却说没有一块石头会留在石头上；门徒问兆头，他先要他们别把动乱误当末期。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>他们在谈论什么：</b>希律扩建的第二圣殿是当时地中海世界最壮观的建筑之一。约瑟夫斯记载殿门上悬挂着金葡萄藤等大量还愿奉献(ἀνάθημα)，《犹太战记》5.210-212、《犹太古史》15.395有详细描述；他也记下当时的说法：「没有见过耶路撒冷圣殿的人，就不知道什么叫美」(《犹太战记》5.184以下的整段建筑描写)。门徒谈论的正是这座建筑最令人炫目的部分。</p>
+<p><b>「一块石头也不留」这话是第二次说：</b>19:44耶稣为耶路撒冷哀哭时已经说过一次。两处的希腊文语法并不相同(19:44主动态、21:6被动态并多一从句)——同一个意象，两次措辞不同。这两句一前一后，把整个圣殿场景框了起来。</p>
+<p><b>「必须先有」不是「立刻就到」：</b>21:9说战争动乱「必须先有，只是末期不能立时就到」。整段讲论的基调不是催促人算日子，而是拦阻人误判——21:8开头第一句就是「不要受迷惑」，因为将有人冒他的名说「我是」、说「时候近了」。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音19:44(第一次说这句) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">並要掃滅你, 和你裡頭的兒女, 連一塊石頭也不留在石頭上．因你不知道眷顧你的時候.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἐδαφιοῦσίν σε καὶ τὰ τέκνα σου ἐν σοί,καὶ οὐκ ἀφήσουσιν λίθον ἐπὶ λίθον ἐν σοί,ἀνθ’ὧν οὐκ ἔγνως τὸν καιρὸν τῆς ἐπισκοπῆς σου.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v21-5">
+    <p class="sent"><span class="zh-body"><span class="n">21:5</span>有人談論聖殿, 是用美石和<ruby class="zh-ruby">供物<rt>anathēmasin</rt></ruby>妝飾的．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καί τινων λεγόντων περὶ τοῦ ἱεροῦ,ὅτι λίθοις καλοῖς καὶ ἀναθήμασιν κεκόσμηται,εἶπεν</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And as some spake of the temple, how it was adorned with <ruby class="eng-ruby">goodly stones and gifts<rt>fine stonework and votive offerings</rt></ruby>, he said,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἀναθήμασιν</b> · anathēmasin <span class='zh'>「供物」——本地语料库仅此一见，指还愿奉献、悬挂陈列在圣殿中的贵重礼物(不是献祭用的祭牲)。约瑟夫斯记载希律圣殿门楣上有金葡萄藤等大量此类奉献(《犹太战记》5.210-212、《犹太古史》15.395)。人们谈论的是这座建筑最耀眼的部分。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「goodly」= 美好的、精美的(古体形容词)。「gifts」在这里指还愿奉献的贵重陈设物(votive offerings)，不是一般礼物。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-6">
+    <p class="sent"><span class="zh-body"><span class="n">21:6</span>耶穌就說, 論到你們所看見的這一切, 將來日子到了, 在這裡<ruby class="zh-ruby">沒有一塊石頭留在石頭上<rt>ou... lithos epi lithō</rt></ruby>, 不被拆毀了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ταῦτα ἃ θεωρεῖτε,ἐλεύσονται ἡμέραι ἐν αἷς οὐκ ἀφεθήσεται λίθος ἐπὶ λίθῳ ὃς οὐ καταλυθήσεται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>As for these things which ye behold, the days will come, in the which there shall not be left one stone upon another, that shall not be thrown down.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>这句话19:44已经出现过一次(耶稣为耶路撒冷哀哭时)，现在第二次出现——但两处语法确实不同：19:44是主动态「<b class='gk'>οὐκ ἀφήσουσιν λίθον ἐπὶ λίθον</b>」(他们必不留)，这里21:6是被动态「<b class='gk'>οὐκ ἀφεθήσεται λίθος ἐπὶ λίθῳ</b>」(必没有一块石头被留下)，而且多了一个从句「<b class='gk'>ὃς οὐ καταλυθήσεται</b>」(不被拆毁的)。同一个意象，两次说法不同——路加不是逐字复制自己。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-7">
+    <p class="sent"><span class="zh-body"><span class="n">21:7</span>他們問他說, 夫子, 甚麼時候有這事呢．這事將到的時候, 有甚麼預兆呢.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐπηρώτησαν δὲ αὐτὸν λέγοντες Διδάσκαλε,πότε οὖν ταῦτα ἔσται,καὶ τί τὸ σημεῖον ὅταν μέλλῃ ταῦτα γίνεσθαι;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they asked him, saying, Master, but when shall these things be? and what sign will there be when these things shall come to pass?</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-8">
+    <p class="sent"><span class="zh-body"><span class="n">21:8</span>耶穌說, 你們要謹慎, 不要受迷惑．因為將來有好些人冒我的名來, 說, 我是基督．又說, 時候近了．你們不要跟從他們.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ εἶπεν Βλέπετε μὴ πλανηθῆτε·πολλοὶ γὰρ ἐλεύσονται ἐπὶ τῷ ὀνόματί μου λέγοντες Ἐγώ εἰμι,καί Ὁ καιρὸς ἤγγικεν·μὴ πορευθῆτε ὀπίσω αὐτῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said, Take heed that ye be not deceived: for many shall come in my name, saying, I am Christ; and the time draweth near: go ye not therefore after them.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-9">
+    <p class="sent"><span class="zh-body"><span class="n">21:9</span>你們聽見打仗和擾亂的事, 不要驚惶．因為這些事必須先有．只是末期不能立時就到.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅταν δὲ ἀκούσητε πολέμους καὶ ἀκαταστασίας,μὴ πτοηθῆτε·δεῖ γὰρ ταῦτα γενέσθαι πρῶτον,ἀλλ’οὐκ εὐθέως τὸ τέλος.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But when ye shall hear of wars and <ruby class="eng-ruby">commotions<rt>uprisings</rt></ruby>, <ruby class="eng-ruby">be not terrified<rt>do not be alarmed</rt></ruby>: for these things must first come to pass; but the end is not by and by.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「末期不能立时就到」(<b class='gk'>οὐκ εὐθέως τὸ τέλος</b>)——这一句是整段末世讲论的刹车。听见战争动乱就以为末日到了，正是耶稣要拦下的反应；他把「兆头」和「末期」明确拆开。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「commotions」= 动乱、骚乱。「be not terrified」= 不要惊惶——KJV 用 be + 过去分词表被动/状态，是古体句式。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-10">
+    <p class="sent"><span class="zh-body"><span class="n">21:10</span>當時耶穌對他們說, 民要攻打民, 國要攻打國．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Τότε ἔλεγεν αὐτοῖς Ἐγερθήσεται ἔθνος ἐπ’ἔθνος καὶ βασιλεία ἐπὶ βασιλείαν,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then said he unto them, Nation shall rise against nation, and kingdom against kingdom:</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-11">
+    <p class="sent"><span class="zh-body"><span class="n">21:11</span>地要大大震動, 多處必有饑荒瘟疫．又有可怕的異象, 和大神蹟, 從天上顯現.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>σεισμοί τε μεγάλοι καὶ κατὰ τόπους λοιμοὶ καὶ λιμοὶ ἔσονται,φόβητρά τε καὶ ἀπ’οὐρανοῦ σημεῖα μεγάλα ἔσται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And great earthquakes shall be in divers places, and famines, and pestilences; and <ruby class="eng-ruby">fearful sights<rt>terrifying sights</rt></ruby> and great signs shall there be from heaven.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「fearful sights」= 可怕的景象(fearful 在此是「令人害怕的」，不是「胆怯的」)。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    门徒在赞叹建筑，耶稣却直接说它会被拆光——他回应的是他们的话，还是他们没说出口的东西？「不要受迷惑」被放在整段讲论的第一句，这个开头透露了这番话的目的是什么？
+  </div>
+</section>
+
+<section id="beat3">
+  <h2><span class="ref-tag">21:12–19</span> 逼迫与作见证</h2>
+  <div class="beat-lead">「这一切的事以先」——先到的不是天象，是会堂、监牢、公堂，和自己家里人的告发。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>次序值得注意：</b>21:12开头是「但这一切的事<b>以先</b>」——耶稣把对门徒的逼迫排在前面那些宇宙灾象<b>之前</b>。门徒会先遇到的不是天象，而是会堂、监牢、君王诸侯的公堂，以及自己家里人的告发(21:16)。这一段讲的是最近的事。</p>
+<p><b>「作见证」的双关：</b>21:13「这些事终必为你们的见证」用的是<b>μαρτύριον</b>——法庭上的「证词」。同一词根后来在教会史上衍生出「殉道者」(martyr)一词。在这段紧接着讲被交官、被害死的话里，这个词的两层意思正好都在场。</p>
+<p><b>路加此处与马太马可不同：</b>平行的马太10:19-20、马可13:11 说的是<b>圣灵</b>要指教你们当说的话；路加21:15却说「<b>我</b>必赐你们口才智慧」。路加福音全书对圣灵着墨极多，这一处反而归到耶稣自己身上，是个可查证的差异。</p>
+<p><b>21:16与21:18并排时的张力：</b>「你们也有被他们害死的」与「你们连一根头发也必不损坏」紧挨着。通常的处理是把18节读作终极意义上的保全(与19节「保全灵魂/必得生命」连读)，而非肉身不受损。经文没有自己解释，此处只标出。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>马可福音13:11(平行处作『圣灵』) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">人把你們拉去交官的時候, 不要預先思慮說甚麼．到那時候, 賜給你們甚麼話, 你們就說甚麼, 因為說話的不是你們, 乃是聖靈.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ὅταν ἄγωσιν ὑμᾶς παραδιδόντες,μὴ προμεριμνᾶτε τί λαλήσητε,ἀλλ’ὃ ἐὰν δοθῇ ὑμῖν ἐν ἐκείνῃ τῇ ὥρᾳ,τοῦτο λαλεῖτε·οὐ γάρ ἐστε ὑμεῖς οἱ λαλοῦντες ἀλλὰ τὸ Πνεῦμα τὸ Ἅγιον.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>马太福音10:19-20(同上) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">你們被交的時候, 不要思慮怎樣說話, 或說甚麼話．到那時候, 必賜給你們當說的話. 因為不是你們自己說的, 乃是你們父的靈在你們裡頭說的.</p><p class="cite-gr"><span class="lbl">GR</span><span>ὅταν δὲ παραδῶσιν ὑμᾶς,μὴ μεριμνήσητε πῶς ἢ τί λαλήσητε·δοθήσεται γὰρ ὑμῖν ἐν ἐκείνῃ τῇ ὥρᾳ τί λαλήσητε· οὐ γὰρ ὑμεῖς ἐστε οἱ λαλοῦντες ἀλλὰ τὸ Πνεῦμα τοῦ Πατρὸς ὑμῶν τὸ λαλοῦν ἐν ὑμῖν.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v21-12">
+    <p class="sent"><span class="zh-body"><span class="n">21:12</span>但這一切的事以先, 人要下手拿住你們, 逼迫你們, 把你們交給會堂, 並且收在監裡, 又為我的名拉你們到君王諸侯面前.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πρὸ δὲ τούτων πάντων ἐπιβαλοῦσιν ἐφ’ὑμᾶς τὰς χεῖρας αὐτῶν καὶ διώξουσιν,παραδιδόντες εἰς τὰς συναγωγὰς καὶ φυλακάς,ἀπαγομένους ἐπὶ βασιλεῖς καὶ ἡγεμόνας ἕνεκεν τοῦ ὀνόματός μου·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But before all these, they shall lay their hands on you, and persecute you, delivering you up to the synagogues, and into prisons, being brought before kings and rulers for my name’s sake.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「但这一切的事<b>以先</b>」——耶稣把逼迫放在前面那些宇宙性灾象<b>之前</b>，也就是说：门徒会先经历的不是天象异变，而是被抓、被审、被自己家里人告发。叙事顺序上，21:12-19讲的是最近的事，不是最远的事。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-13">
+    <p class="sent"><span class="zh-body"><span class="n">21:13</span>但這些事終必為你們的見證.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀποβήσεται ὑμῖν εἰς μαρτύριον.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And it shall turn to you for a testimony.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-14">
+    <p class="sent"><span class="zh-body"><span class="n">21:14</span>所以你們當立定心意, 不要預先思想怎樣分訴．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>θέτε οὖν ἐν ταῖς καρδίαις ὑμῶν μὴ προμελετᾶν ἀπολογηθῆναι·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span><ruby class="eng-ruby">Settle it therefore in your hearts<rt>make up your minds</rt></ruby>, not to meditate before <ruby class="eng-ruby">what ye shall answer<rt>how to defend yourselves</rt></ruby>:</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「Settle it in your hearts」= 打定主意；「answer」在此是法律语境的「答辩、申辩」(对应希腊文ἀπολογηθῆναι，即 apology 的本义「申辩」)。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-15">
+    <p class="sent"><span class="zh-body"><span class="n">21:15</span>因為我必賜你們口才智慧, 是你們一切敵人所敵不住, 駁不倒的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐγὼ γὰρ δώσω ὑμῖν στόμα καὶ σοφίαν,ᾗ οὐ δυνήσονται ἀντιστῆναι ἢ ἀντειπεῖν ἅπαντες οἱ ἀντικείμενοι ὑμῖν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For I will give you a mouth and wisdom, which all your adversaries shall not be able to gainsay nor resist.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「我必赐你们口才智慧」——马太10:19-20、马可13:11 平行处说的是「圣灵」要指教你们当说的话，路加这里却说「<b>我</b>必赐你们口才」(ἐγὼ...δώσω)。路加福音在别处很强调圣灵，这一处反而归到耶稣自己身上。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-16">
+    <p class="sent"><span class="zh-body"><span class="n">21:16</span>連你們的父母, 弟兄, 親族, 朋友, 也要把你們交官．你們也有被他們害死的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>παραδοθήσεσθε δὲ καὶ ὑπὸ γονέων καὶ ἀδελφῶν καὶ συγγενῶν καὶ φίλων,καὶ θανατώσουσιν ἐξ ὑμῶν,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And ye shall be betrayed both by parents, and brethren, and kinsfolks, and friends; and some of you shall they cause to be put to death.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-17">
+    <p class="sent"><span class="zh-body"><span class="n">21:17</span>你們要為我的名, 被眾人恨惡．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἔσεσθε μισούμενοι ὑπὸ πάντων διὰ τὸ ὄνομά μου.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And ye shall be hated of all men for my name’s sake.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-18">
+    <p class="sent"><span class="zh-body"><span class="n">21:18</span>然而你們連一根頭髮, 也必不損壞.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ θρὶξ ἐκ τῆς κεφαλῆς ὑμῶν οὐ μὴ ἀπόληται·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But there shall not an hair of your head perish.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b>紧挨着的两句看起来矛盾：</b>21:16「你们也有被他们害死的」，21:18「你们连一根头发也必不损坏」。常见的处理是把18节读作指向终极的保全(与19节「保全灵魂」连读)，而非肉身不受伤害；也有人读作反讽或惯用语。经文本身没有解释这个张力，此处只标出，不代为消解。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-19">
+    <p class="sent"><span class="zh-body"><span class="n">21:19</span>你們常存忍耐, 就必<ruby class="zh-ruby">保全靈魂<rt>ktēsesthe tas psychas</rt></ruby>.〔或作必得生命〕</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐν τῇ ὑπομονῇ ὑμῶν κτήσεσθε τὰς ψυχὰς ὑμῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span><ruby class="eng-ruby">In your patience possess ye your souls<rt>by your endurance you will gain your lives</rt></ruby>.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「possess ye your souls」= 你们必得着/保全自己的性命——possess 在KJV里有「获得、掌握」义，不只是「拥有」；souls(ψυχάς)在此更接近「性命」而非现代所说的「灵魂」。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    耶稣把「被自己家人交官」放在灾难清单里，位置还很靠前——为什么？「这些事终必为你们的见证」：被审判的场合怎么会变成作见证的场合？21:16说有人会被害死，21:18却说一根头发也不损坏，你怎么把这两句放在一起读？
+  </div>
+</section>
+
+<section id="beat4">
+  <h2><span class="ref-tag">21:20–24</span> 耶路撒冷被围困</h2>
+  <div class="beat-lead">路加在这里把马可的但以理式暗语换成了一句直白的军事描述——本周最值得对照的一处改写。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>本周最值得看的一处改写：</b>在这个位置上，马可福音13:14写的是「你们看见那<b>行毁坏可憎的</b>站在不当站的地方(<b>读这经的人须要会意</b>)」——「行毁坏可憎的」(τὸ βδέλυγμα τῆς ἐρημώσεως)是但以理书9:27、11:31、12:11的隐语，历史上曾用来指主前167年安提阿古四世在圣殿设立异教祭坛一事；「读这经的人须要会意」是明示读者这里有暗语要破解。路加把整句换成了「你们看见耶路撒冷<b>被兵围困</b>」——一句谁都听得懂的军事描述，并且删去了「须要会意」那句提示。他保留了但以理那个「荒凉」的词根(ἐρήμωσις，「成荒场」)，只拿掉了谜语的外壳。</p>
+<p><b>为什么改，没有共识：</b>一派认为路加是为不熟悉但以理书的外邦读者把暗语译成明话；另一派认为这反映成书时主后70年的围城已经发生、细节已知(与19:43-44同属一个讨论)。两种立场都有严肃学者持守，这里并列陈述。</p>
+<p><b>「逃到山上」在历史上有过对应：</b>教会史家优西比乌记载，耶路撒冷战事之前，当地基督徒得了警示，迁往约旦河东的佩拉(Pella)避难(《教会史》3.5.3)。这条记载的可靠性近代有学者质疑，不能当作确证，仅作背景参考。</p>
+<p><b>「外邦人的日期」：</b>καιροὶ ἐθνῶν 这个表述全圣经仅此一处，究竟指什么(外邦统治耶路撒冷的时段？外邦人得福音的时段？)历来争论不休，没有定论。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>马可福音13:14(『行毁坏可憎的』) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">你們看見那行毀壞可憎的, 站在不當站的地方．（讀這經的人, 須要會意）那時在猶太的, 應當逃到山上．</p><p class="cite-gr"><span class="lbl">GR</span><span>Ὅταν δὲ ἴδητε τὸ βδέλυγμα τῆς ἐρημώσεως ἑστηκότα ὅπου οὐ δεῖ,ὁ ἀναγινώσκων νοείτω,τότε οἱ ἐν τῇ Ἰουδαίᾳ φευγέτωσαν εἰς τὰ ὄρη,</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>但以理书9:27 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">一七之內, 他必與許多人堅定盟約, 一七之半, 他必使祭祀與供獻止息．那行毀壞可憎的〔或作使地荒涼的〕如飛而來, 並且有忿怒傾在那行毀壞的身上, 〔或作傾在那荒涼之地〕直到所定的結局.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>但以理书11:31 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他必興兵, 這兵必褻瀆聖地, 就是保障, 除掉常獻的燔祭, 設立那行毀壞可憎的.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音19:43-44(同一预言) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">因為日子將到, 你的仇敵必築起土壘, 周圍環繞你, 四面困住你, 並要掃滅你, 和你裡頭的兒女, 連一塊石頭也不留在石頭上．因你不知道眷顧你的時候.</p><p class="cite-gr"><span class="lbl">GR</span><span>ὅτι ἥξουσιν ἡμέραι ἐπὶ σὲ καὶ παρεμβαλοῦσιν οἱ ἐχθροί σου χάρακά σοι καὶ περικυκλώσουσίν σε καὶ συνέξουσίν σε πάντοθεν, καὶ ἐδαφιοῦσίν σε καὶ τὰ τέκνα σου ἐν σοί,καὶ οὐκ ἀφήσουσιν λίθον ἐπὶ λίθον ἐν σοί,ἀνθ’ὧν οὐκ ἔγνως τὸν καιρὸν τῆς ἐπισκοπῆς σου.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Francesco_Hayez_017.jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Francesco_Hayez_017.jpg" alt="《耶路撒冷圣殿的毁灭》" loading="lazy"></a>
+    <div class="painting-cap">弗朗切斯科·海耶兹 (Francesco Hayez) · 《耶路撒冷圣殿的毁灭》(<i>La distruzione del Tempio di Gerusalemme</i>) · 1867 · 威尼斯学院美术馆。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">画的是主后70年罗马军攻陷耶路撒冷、圣殿被毁的一刻——也就是21:20-24所描述的那件事。海耶兹从1860年画到1867年，历时七年。</p>
+  </div>
+  <div class="unit para-start" id="v21-20">
+    <p class="sent"><span class="zh-body"><span class="n">21:20</span>你們看見耶路撒冷<ruby class="zh-ruby">被兵圍困<rt>kykloumenēn hypo stratopedōn</rt></ruby>, 就可知道他．<ruby class="zh-ruby">成荒場<rt>erēmōsis</rt></ruby>的日子近了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ὅταν δὲ ἴδητε κυκλουμένην ὑπὸ στρατοπέδων Ἱερουσαλήμ,τότε γνῶτε ὅτι ἤγγικεν ἡ ἐρήμωσις αὐτῆς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when ye shall see Jerusalem <ruby class="eng-ruby">compassed with armies<rt>surrounded by armies</rt></ruby>, then know that <ruby class="eng-ruby">the desolation thereof<rt>its desolation</rt></ruby> is nigh.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b>本段最重要的一处对照。</b>马可福音13:14在这个位置写的是「你们看见那<b>行毁坏可憎的</b>(<b class='gk'>τὸ βδέλυγμα τῆς ἐρημώσεως</b>，但以理书9:27等处的隐语)，站在不当站的地方(读这经的人须要会意)」——一句需要读者自己破解的暗语。路加把它换成了<b class='gk'>κυκλουμένην ὑπὸ στρατοπέδων</b>「被军队围困」，一句直白的军事描述，而且删掉了「读这经的人须要会意」。他保留了但以理书那个「荒凉」(ἐρήμωσις)的词根，却拿掉了谜语的外壳。为什么改，学者意见分歧(有认为是为外邦读者解码，也有认为反映成书时已知70年围城实情)，此处只列出事实与两种解释。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「compassed with armies」= 被军队团团围住(compass 作动词是「环绕」)。「desolation」= 荒凉、成为废墟。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-21">
+    <p class="sent"><span class="zh-body"><span class="n">21:21</span>那時, 在猶太的, 應當逃到山上．在城裡的, 應當出來．在鄉下的, 不要進城.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>τότε οἱ ἐν τῇ Ἰουδαίᾳ φευγέτωσαν εἰς τὰ ὄρη,καὶ οἱ ἐν μέσῳ αὐτῆς ἐκχωρείτωσαν,καὶ οἱ ἐν ταῖς χώραις μὴ εἰσερχέσθωσαν εἰς αὐτήν,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then let them which are in Judaea flee to the mountains; and let them which are in the midst of it depart out; and let not them that are in the countries enter thereinto.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-22">
+    <p class="sent"><span class="zh-body"><span class="n">21:22</span>因為這是報應的日子, 使經上所寫的都得應驗.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅτι ἡμέραι ἐκδικήσεως αὗταί εἰσιν τοῦ πλησθῆναι πάντα τὰ γεγραμμένα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For these be the days of vengeance, that all things which are written may be fulfilled.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-23">
+    <p class="sent"><span class="zh-body"><span class="n">21:23</span>當那些日子, 懷孕的和奶孩子的有禍了．因為將有大災難降在這地方, 也有震怒臨到這百姓.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οὐαὶ ταῖς ἐν γαστρὶ ἐχούσαις καὶ ταῖς θηλαζούσαις ἐν ἐκείναις ταῖς ἡμέραις·ἔσται γὰρ ἀνάγκη μεγάλη ἐπὶ τῆς γῆς καὶ ὀργὴ τῷ λαῷ τούτῳ,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But woe unto them that are with child, and to them that give suck, in those days! for there shall be great distress in the land, and wrath upon this people.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-24">
+    <p class="sent"><span class="zh-body"><span class="n">21:24</span>他們要倒在刀下, 又被擄到各國去．耶路撒冷要被外邦人踐踏, 直到<ruby class="zh-ruby">外邦人的日期<rt>kairoi ethnōn</rt></ruby>滿了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ πεσοῦνται στόματι μαχαίρης καὶ αἰχμαλωτισθήσονται εἰς τὰ ἔθνη πάντα,καὶ Ἱερουσαλὴμ ἔσται πατουμένη ὑπὸ ἐθνῶν,ἄχρι οὗ πληρωθῶσιν καιροὶ ἐθνῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they shall fall by the edge of the sword, and shall be led away captive into all nations: and Jerusalem shall be trodden down of the Gentiles, until the times of the Gentiles be fulfilled.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>καιροὶ ἐθνῶν</b> <span class='zh'>「外邦人的日期」——字面「外邦人的诸时候」。这个说法在圣经中仅此一处，含义历来争论极大(指外邦人统治耶路撒冷的时段？指外邦人得福音的时段？)，没有共识。这里只标出它是个独特且未定的表述。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    马可写的是需要破解的暗语，路加换成了直白的军事描述并删掉「须要会意」——这个改写让这段话变得更清楚了，还是更小了？「逃到山上」是给谁的指示？如果这段是写给已经经历过或即将经历这件事的人，读起来会不会不一样？
+  </div>
+</section>
+
+<section id="beat5">
+  <h2><span class="ref-tag">21:25–33</span> 人子降临 · 无花果树</h2>
+  <div class="beat-lead">天象、列国惶恐、人子驾云；世人吓得魂不附体，门徒却要挺身昂首。以无花果树的比喻和「这世代」的难题收束。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>这些天象语言是旧约现成的套语：</b>日月星辰变色、天势震动，在旧约里是宣告某个国家或政权倾覆时的固定修辞——以赛亚书13:10(论巴比伦)、以赛亚书34:4(论以东)、以西结书32:7-8(论埃及)都用同一类语言描述已经在历史中发生过的事件。因此这类描写究竟指宇宙终结，还是以传统语汇宣告一个时代的终结，本身就是解经上的老问题。</p>
+<p><b>「人子驾云降临」来自但以理书7:13：</b>「见有一位像人子的，驾着天云而来，被领到亘古常在者面前」。值得注意的是，但以理书那一幕里，人子是<b>朝着神</b>去受权柄的，不是朝着地面下降的。这个方向问题在解经中一直有讨论。</p>
+<p><b>两种姿势的对照：</b>21:26说世人「嚇得魂不附体」(字面「因惧怕而气绝」)，21:28却叫门徒「挺身昂首」(直起身、抬起头)。同一批事件，两种相反的身体姿态——这是本段的修辞核心。</p>
+<p><b>「这世代」(ἡ γενεὰ αὕτη)：</b>新约中最有争议的短语之一。主要读法：(1)指当时那一代人，「这些事」主要指主后70年的陷落；(2)γενεά取「族类」义，指某个群体存续到末了；(3)指末世征兆开始后的那一代。三说各有支持者与难处，此处并列不作定论。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>以赛亚书13:10(论巴比伦) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">天上的眾星群宿, 都不發光．日頭一出, 就變黑暗, 月亮也不放光.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以赛亚书34:4(论以东) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">天上的萬象都要消沒, 天被捲起, 好像書卷．其上的萬象要殘敗, 像葡萄樹的葉子殘敗, 又像無花果樹的葉子殘敗一樣.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以西结书32:7-8(论埃及) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">我將你撲滅的時候, 要把天遮蔽, 使眾星昏暗, 以密雲遮掩太陽, 月亮也不放光. 我必使天上的亮光都在你以上變為昏暗, 使你的地上黑暗．這是主耶和華說的.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>但以理书7:13-14(人子驾云) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">我在夜間的異象中觀看, 見有一位像人子的, 駕著天雲而來, 被領到亙古常在者面前, 得了權柄, 榮耀, 國度, 使各方各國各族的人都事奉他．他的權柄是永遠的, 不能廢去, 他的國必不敗壞.</p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v21-25">
+    <p class="sent"><span class="zh-body"><span class="n">21:25</span>日月星辰要顯出異兆．地上的邦國也有困苦．因海中波浪的響聲, 就慌慌不定．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ἔσονται σημεῖα ἐν ἡλίῳ καὶ σελήνῃ καὶ ἄστροις,καὶ ἐπὶ τῆς γῆς συνοχὴ ἐθνῶν ἐν ἀπορίᾳ ἤχους θαλάσσης καὶ σάλου,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And there shall be signs in the sun, and in the moon, and in the stars; and upon the earth <ruby class="eng-ruby">distress of nations, with perplexity<rt>anguish of nations, in bewilderment</rt></ruby>; the sea and the waves roaring;</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「perplexity」= 困惑无措。整句描写列国在异象面前的惶然。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-26">
+    <p class="sent"><span class="zh-body"><span class="n">21:26</span>天勢都要震動．人想起那將要臨到世界的事, 就都嚇得魂不附體.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀποψυχόντων ἀνθρώπων ἀπὸ φόβου καὶ προσδοκίας τῶν ἐπερχομένων τῇ οἰκουμένῃ·αἱ γὰρ δυνάμεις τῶν οὐρανῶν σαλευθήσονται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Men’s hearts <ruby class="eng-ruby">failing them for fear<rt>fainting from fear</rt></ruby>, and for looking after those things which are coming on the earth: for the powers of heaven shall be shaken.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「men's hearts failing them for fear」= 人因惧怕而心力衰竭——KJV 的这个说法在英语里已成固定表达。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-27">
+    <p class="sent"><span class="zh-body"><span class="n">21:27</span>那時, 他們要看見人子, 有能力, 有大榮耀, 駕雲降臨.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ τότε ὄψονται τὸν Υἱὸν τοῦ ἀνθρώπου ἐρχόμενον ἐν νεφέλῃ μετὰ δυνάμεως καὶ δόξης πολλῆς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And then shall they see the Son of man coming in a cloud with power and great glory.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-28">
+    <p class="sent"><span class="zh-body"><span class="n">21:28</span>一有這些事, 你們就當挺身昂首．因為你們<ruby class="zh-ruby">得贖<rt>apolytrōsis</rt></ruby>的日子近了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀρχομένων δὲ τούτων γίνεσθαι ἀνακύψατε καὶ ἐπάρατε τὰς κεφαλὰς ὑμῶν,διότι ἐγγίζει ἡ ἀπολύτρωσις ὑμῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when these things begin to come to pass, then <ruby class="eng-ruby">look up, and lift up your heads<rt>stand up straight and raise your heads</rt></ruby>; for your redemption draweth nigh.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἀπολύτρωσις</b> · apolytrōsis <span class='zh'>「得赎」——本地语料库(四福音+使徒行传)仅此一见，却是保罗书信的核心词之一(罗3:24、弗1:7等)。本义是付赎价把人赎回(尤指赎买战俘或奴隶)。前一节刚说「嚇得魂不附体」，这一节却叫门徒「挺身昂首」——同样的事件，两种截然相反的姿势。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「look up, and lift up your heads」= 抬头挺胸——原文是两个动作(直起身、举起头)，与上一节「吓得魂不附体」正好相反。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-29">
+    <p class="sent"><span class="zh-body"><span class="n">21:29</span>耶穌又設比喻對他們說, 你們看無花果樹, 和各樣的樹．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ εἶπεν παραβολὴν αὐτοῖς Ἴδετε τὴν συκῆν καὶ πάντα τὰ δένδρα·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he spake to them a parable; Behold the fig tree, and all the trees;</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-30">
+    <p class="sent"><span class="zh-body"><span class="n">21:30</span>他發芽的時候, 你們一看見自然曉得夏天近了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅταν προβάλωσιν ἤδη,βλέποντες ἀφ’ἑαυτῶν γινώσκετε ὅτι ἤδη ἐγγὺς τὸ θέρος ἐστίν·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>When they now shoot forth, ye see and know of your own selves that summer is now nigh at hand.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-31">
+    <p class="sent"><span class="zh-body"><span class="n">21:31</span>這樣, 你們看見這些事漸漸的成就, 也該曉得 神的國近了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οὕτως καὶ ὑμεῖς,ὅταν ἴδητε ταῦτα γινόμενα,γινώσκετε ὅτι ἐγγύς ἐστιν ἡ βασιλεία τοῦ Θεοῦ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>So likewise ye, when ye see these things come to pass, know ye that the kingdom of God is nigh at hand.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-32">
+    <p class="sent"><span class="zh-body"><span class="n">21:32</span>我實在告訴你們, <ruby class="zh-ruby">這世代<rt>hē genea hautē</rt></ruby>還沒有過去, 這些事都要成就.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀμὴν λέγω ὑμῖν ὅτι οὐ μὴ παρέλθῃ ἡ γενεὰ αὕτη ἕως ἂν πάντα γένηται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Verily I say unto you, This generation shall not pass away, till all be fulfilled.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「这世代还没有过去，这些事都要成就」——<b class='gk'>ἡ γενεὰ αὕτη</b>(这世代)是新约里最有争议的短语之一。主要读法有三：(1)指当时那一代人，所指的「这些事」主要是主后70年耶路撒冷的陷落；(2)γενεά取「族类」义，指犹太民族或不信的世代将存留到末了；(3)指末世征兆开始出现后的那一代。三种读法各有支持者，也各有难处，此处并列不作定论。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-33">
+    <p class="sent"><span class="zh-body"><span class="n">21:33</span>天地要廢去, 我的話卻不能廢去.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ οὐρανὸς καὶ ἡ γῆ παρελεύσονται,οἱ δὲ λόγοι μου οὐ μὴ παρελεύσονται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Heaven and earth shall pass away: but my words shall not pass away.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    日月星辰的语言在旧约里常用来宣告某个国家的倾覆——那这里说的是世界的终结，还是一个时代的终结？世人吓得魂不附体，门徒却要挺身昂首，同一件事为什么有两种姿势？「这世代还没有过去」——你倾向哪种读法，那种读法的难处是什么？
+  </div>
+</section>
+
+<section id="beat6">
+  <h2><span class="ref-tag">21:34–38</span> 儆醒 · 圣殿教导的收尾</h2>
+  <div class="beat-lead">放纵与忧虑被并列为同一类危险；末了两节与19:47首尾呼应，把圣殿教导这一段合上。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>三样危险被并列：</b>21:34把「贪食」(κραιπάλη，古典希腊文里特指宿醉、酒后昏沉)、「醉酒」与「今生的思虑」放在同一句里。前两样是放纵，第三样是忧虑——耶稣把它们当成同一类东西：都会让心「累住」(βαρηθῶσιν，字面「被压沉」)而失去警觉。</p>
+<p><b>首尾呼应：</b>21:37「每日在殿里教训人」与19:47「耶稣天天在殿里教训人」几乎是同一句式(ἦν διδάσκων…ἐν τῷ ἱερῷ)，一头一尾把20-21两章的圣殿教导期整个夹住。差别在下半句：19:47后面接的是「祭司长和文士…想要杀他」，21:38接的却是「众百姓清早上圣殿…要听他讲道」。同一个地点、同一段日子，两种人。</p>
+<p><b>夜宿橄榄山：</b>21:37说他每夜出城住在橄榄山。逾越节期间耶路撒冷城内人满为患，城外露宿本是常见做法；但对读者而言，这也说明了后来客西马尼那一夜为什么犹大「知道那地方」(参约18:2)。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音19:47(首尾呼应) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌天天在殿裡教訓人.祭司長, 和文士, 與百姓的尊長, 都想要殺他．</p><p class="cite-gr"><span class="lbl">GR</span><span>Καὶ ἦν διδάσκων τὸ καθ’ἡμέραν ἐν τῷ ἱερῷ·οἱ δὲ ἀρχιερεῖς καὶ οἱ γραμματεῖς ἐζήτουν αὐτὸν ἀπολέσαι καὶ οἱ πρῶτοι τοῦ λαοῦ,</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>约翰福音18:2(犹大知道那地方) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">賣耶穌的猶大也知道那地方．因為耶穌和門徒屢次上那裡去聚集.</p><p class="cite-gr"><span class="lbl">GR</span><span>ᾔδει δὲ καὶ Ἰούδας ὁ παραδιδοὺς αὐτὸν τὸν τόπον,ὅτι πολλάκις συνήχθη Ἰησοῦς ἐκεῖ μετὰ τῶν μαθητῶν αὐτοῦ.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v21-34">
+    <p class="sent"><span class="zh-body"><span class="n">21:34</span>你們要謹慎, 恐怕因<ruby class="zh-ruby">貪食<rt>kraipalē</rt></ruby>醉酒並今生的思慮, 累住你們的心, 那日子就如同網羅忽然臨到你們．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Προσέχετε δὲ ἑαυτοῖς μή ποτε βαρηθῶσιν ὑμῶν αἱ καρδίαι ἐν κραιπάλῃ καὶ μέθῃ καὶ μερίμναις βιωτικαῖς,καὶ ἐπιστῇ ἐφ’ὑμᾶς αἰφνίδιος ἡ ἡμέρα ἐκείνη</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And take heed to yourselves, lest at any time your hearts be overcharged with <ruby class="eng-ruby">surfeiting<rt>carousing / hangover</rt></ruby>, and drunkenness, and <ruby class="eng-ruby">cares of this life<rt>the worries of daily life</rt></ruby>, and so that day come upon you <ruby class="eng-ruby">unawares<rt>suddenly</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>κραιπάλη</b> · kraipalē <span class='zh'>「贪食」——本地语料库仅此一见，古典希腊文里特指<b>宿醉</b>、酒后头昏脑胀的状态。和合本「贪食」略轻；原文与紧随其后的「醉酒」(μέθῃ)本是一组，说的是宴饮过度之后那种迟钝麻木。值得注意的是第三样并列的是「今生的思虑」(μερίμναις βιωτικαῖς)——放纵与忧虑被并列为同一类危险。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「surfeiting」= 饮食过度、宿醉后的昏沉(对应希腊文κραιπάλη)，是KJV里一个现代人几乎不再使用的词。「unawares」= 冷不防地。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-35">
+    <p class="sent"><span class="zh-body"><span class="n">21:35</span>因為那日子要這樣臨到全地上一切居住的人.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὡς παγίς·ἐπεισελεύσεται γὰρ ἐπὶ πάντας τοὺς καθημένους ἐπὶ πρόσωπον πάσης τῆς γῆς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For as a snare shall it come on all them that dwell on the face of the whole earth.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v21-36">
+    <p class="sent"><span class="zh-body"><span class="n">21:36</span>你們要時時儆醒, 常常祈求, 使你們能逃避這一切要來的事, 得以站立在人子面前.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀγρυπνεῖτε δὲ ἐν παντὶ καιρῷ δεόμενοι ἵνα κατισχύσητε ἐκφυγεῖν ταῦτα πάντα τὰ μέλλοντα γίνεσθαι,καὶ σταθῆναι ἔμπροσθεν τοῦ Υἱοῦ τοῦ ἀνθρώπου.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span><ruby class="eng-ruby">Watch ye therefore<rt>stay alert then</rt></ruby>, and pray always, that ye may be accounted worthy to escape all these things that shall come to pass, and to stand before the Son of man.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「Watch ye」= 你们要警醒(watch 在KJV里常指「保持清醒、守夜」，不是「观看」)。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-37">
+    <p class="sent"><span class="zh-body"><span class="n">21:37</span>耶穌每日在殿裡教訓人．每夜出城在一座山, 名叫橄欖山住宿.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἦν δὲ τὰς ἡμέρας ἐν τῷ ἱερῷ διδάσκων,τὰς δὲ νύκτας ἐξερχόμενος ηὐλίζετο εἰς τὸ ὄρος τὸ καλούμενον Ἐλαιῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And in the day time he was teaching in the temple; and at night he went out, and abode in the mount that is called the mount of Olives.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「每日在殿里教训人」——与19:47「耶稣天天在殿里教训人」几乎同一句式(ἦν διδάσκων...ἐν τῷ ἱερῷ)，一头一尾把20-21两章整个圣殿教导期夹在中间。19:47那句后面接的是「祭司长和文士想要杀他」，21:37-38接的却是「众百姓清早上圣殿要听他讲道」——同一个场景，两种人。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v21-38">
+    <p class="sent"><span class="zh-body"><span class="n">21:38</span>眾百姓清早上聖殿, 到耶穌那裡, 要聽他講道.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ πᾶς ὁ λαὸς ὤρθριζεν πρὸς αὐτὸν ἐν τῷ ἱερῷ ἀκούειν αὐτοῦ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And all the people came early in the morning to him in the temple, for to hear him.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    「贪食醉酒」和「今生的思虑」被放在同一句里，它们的共同点是什么？「时时儆醒、常常祈求」是一种情绪状态还是一种习惯？19:47和21:37几乎是同一句话，但后面接的人完全不同——路加用这个首尾呼应想说什么？
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-cf">对照</span>希腊/中/英三方比较</span>
+    <span><span class="tag t-zhu">注</span>背景说明</span>
+    <span><span class="tag t-en">英</span>KJV 语言点</span>
+  </div>
+  希腊原文：Nestle 1904 (MACULA Greek, lowfat treebank)。中文：和合本(Chinese Union Version, Big5 数字化本)。英译：King James Version (1611/1769)。三者均为公共领域文本。标点保留原始数字化文本所用的半形符号。
+  <p style="margin-top:.8rem">历史背景部分引用：约瑟夫斯《犹太战记》5.184以下、5.210-212，《犹太古史》15.395；优西比乌《教会史》3.5.3(佩拉避难的记载，其可靠性近代有学者质疑，已在注中标明)；旧约经文(但9:27、11:31、7:13-14；赛13:10、34:4；结32:7-8)；新约对照(路19:44、19:47、20:47、可12:42、13:11、13:14、太10:19-20、约18:2)。πενιχρός、ἀνάθημα、ἀπολύτρωσις、κραιπάλη「本地语料库仅此一见」诸项，系以马太/马可/路加/约翰/使徒行传(Nestle 1904)程序化核对得出，范围仅限这五卷。21:1-4是称赞还是控诉、21:20路加改写马可的原因、21:32「这世代」的所指、「外邦人的日期」的含义，均属学界无共识的问题，注中并列诸说，不作定论。</p>
+</footer>
+
+<script>
+  const body=document.body;
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art'};
+  for(const id in toggleMap){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+  const geoMap = L.map('geomap', {scrollWheelZoom:false}).setView([31.7780,35.2354], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(geoMap);
+
+  L.marker([31.7780,35.2354]).addTo(geoMap)
+    .bindPopup('<b>圣殿山 / 圣殿外院</b><br>21:1-36 白天在这里教导；21:38「众百姓清早上圣殿」听他讲道');
+  L.circle([31.7780,35.2354], {radius:180, color:'#b07d2b', weight:2, fillOpacity:0.10})
+    .addTo(geoMap);
+
+  L.marker([31.7784,35.2422]).addTo(geoMap)
+    .bindPopup('<b>橄榄山</b><br>21:37「每夜出城…在橄榄山住宿」——本周经文明确提到');
+
+  geoMap.fitBounds(L.latLngBounds([[31.7735,35.2300],[31.7825,35.2450]]));
+</script>
+
+</body>
+</html>

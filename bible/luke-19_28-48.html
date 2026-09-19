@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路加福音 19:28–48 · 三语共读</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+    --blue:#3d6d99; --blue-soft:#dde8f2;
+    --brown:#8b6a3f; --brown-soft:#efe3cd;
+    --wine:#8c3d4f; --wine-soft:#f3e0e3;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:1.4rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  header.doc .kjv-note{margin-top:.7rem; padding:.7rem .9rem; background:var(--blue-soft);
+    border:1px solid #c7d9e8; border-left:3px solid var(--blue); border-radius:6px;
+    font-family:system-ui,sans-serif; font-size:.82rem; line-height:1.8; color:#2c4a63}
+  header.doc .kjv-note b{color:#1f3a50}
+  .mapbox{margin:1.2rem 0; padding:1rem 1rem .8rem; background:#fdfbf5; border:1px solid var(--line); border-radius:8px}
+  #geomap{width:100%; height:380px; border-radius:8px; border:1px solid var(--line)}
+  .leaflet-tooltip.map-region-label{background:transparent; border:none; box-shadow:none;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-weight:700; font-size:.85rem;
+    color:#5c2a35; text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff}
+  .map-cap{margin-top:.6rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; line-height:1.7; color:var(--muted); text-align:center}
+  .toc{font-family:system-ui,"PingFang SC",sans-serif; font-size:.8rem; color:var(--muted); margin-bottom:2rem; line-height:1.9}
+  .toc a{color:var(--amber); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid var(--line)}
+  section h2{font-size:1.25rem; margin:0 0 .5rem; font-family:"Iowan Old Style",Georgia,serif}
+  .ref-tag{display:inline-block; font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700;
+    letter-spacing:.03em; color:var(--amber); background:var(--amber-soft); border-radius:5px;
+    padding:.08rem .4rem; margin-right:.5rem; vertical-align:.15em}
+  .beat-lead{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.85rem;
+    color:var(--muted); margin-bottom:1.1rem; line-height:1.7}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:.6rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.15rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.4em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby .zh-ruby rt{display:none}
+  .hide-ruby .zh-ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  ruby.eng-ruby rt{font-family:system-ui,sans-serif; font-style:normal; font-size:.52em; color:var(--blue); font-weight:600}
+  .hide-en-notes .eng-ruby rt{display:none}
+  .hide-en-notes .eng-ruby{ -webkit-text-decoration:underline dotted #b9cfe0; text-decoration:underline dotted #b9cfe0}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.88rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks,.en-notes{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .en-notes{background:#f4f8fb; border-left-color:var(--blue)}
+  .hide-remarks .remarks{display:none}
+  .hide-en-notes .en-notes{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .t-en{background:var(--blue-soft); color:var(--blue)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin:1.4rem 0 .4rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .history{margin:0 0 1.3rem; padding:.7rem 1rem; background:var(--brown-soft); border:1px solid #ddc9a3; border-left:3px solid var(--brown); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.84rem; line-height:1.8; color:#4a3a20}
+  .history summary{cursor:pointer; font-size:.88rem; font-weight:700; color:#3d2f18; padding:.15rem 0; list-style:revert}
+  .history summary::marker{color:var(--brown)}
+  .history[open] summary{margin-bottom:.5rem}
+  .history-body p{margin:.5rem 0}
+  .history-body p:first-child{margin-top:0}
+  .history-body p:last-child{margin-bottom:0}
+  .hide-history .history{display:none}
+  .painting{margin:0 0 1.3rem; text-align:center}
+  .painting img{max-width:100%; max-height:420px; border-radius:6px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .painting-cap{margin-top:.5rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.76rem; color:var(--muted)}
+  .painting-note{margin:.3rem auto 0; max-width:520px; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; color:var(--muted); line-height:1.6}
+  .hide-art .painting{display:none}
+  .cite-group{margin-top:.7rem; padding-top:.6rem; border-top:1px dashed #ddc9a3}
+  .cite-group-label{font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.04em;
+    color:#8b6a3f; text-transform:uppercase; margin-bottom:.4rem}
+  details.cite{margin:.3rem 0; padding:.35rem .6rem; background:#fffdf7; border:1px solid #e6d9bc; border-radius:6px}
+  details.cite summary{cursor:pointer; font-size:.78rem; font-weight:600; color:#7a5620; list-style:revert; padding:0}
+  details.cite summary::marker{color:#b07d2b}
+  details.cite .cite-body{margin-top:.4rem}
+  .cite-zh{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif; font-size:.92rem; line-height:1.7; margin:.2rem 0; color:var(--ink)}
+  .cite-gr{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-size:.82rem; line-height:1.6; margin:.3rem 0; color:var(--greek); display:flex; gap:.5rem}
+  .cite-note{font-family:system-ui,sans-serif; font-size:.72rem; color:var(--muted); margin:.2rem 0 0}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">查经</a> &rsaquo; 路加福音 &rsaquo; <b>19:28–48</b> &nbsp;·&nbsp; 三语共读</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">KJV</button>
+  <button class="btn" id="t-enotes">英语讲解</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-hist">背景</button>
+  <button class="btn" id="t-art">名画</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>路加福音 19:28–48</h1>
+    <div class="sub">和合本(中文, 阅读对象) · Nestle 1904(希腊原文, 锚点) · KJV(英译, 平行参照 — 也可直接读)</div>
+    <div class="lead">
+      延续上周(18:31-19:28)的方法：和合本是既有译本，直接作为阅读对象；希腊文只作锚点，标出个别值得注意的词；KJV平行对照，分歧处标出来(对照)。<b>释义</b>留白，现场一起填。本周段落：骑驴进城 → 为耶路撒冷哀哭 → 洁净圣殿。
+    </div>
+    <div class="kjv-note">
+      <b>怎么读KJV(1611年英语)的几个常见古体：</b> thou/thee/thy/thine = 单数「你/你的」；ye = 复数「你们」；
+      动词词尾 <b>-est/-eth</b> 表第二/第三人称单数现在时(wilt=will、doth=does、hast=have、goeth=goes、saith=says、spake=spoke)；
+      unto = to。这些很常见，就不逐一标注了；下面只标真正会让人卡住的<b>词汇/古今异义词</b>，点「英语讲解」可以单独关/开。
+    </div>
+    <div class="mapbox">
+      <div id="geomap"></div>
+      <div class="map-cap">底图为 OpenStreetMap 实景地图(需要联网加载)。标记了耶路撒冷城、圣殿、橄榄山、伯大尼、伯法其(约略位置)，橙色线是19:28-40进城的大致路线。点标记可点击查看说明。</div>
+    </div>
+    <div class="toc"><a href="#beat1">19:28–40 骑驴进城</a> · <a href="#beat2">19:41–44 为耶路撒冷哀哭</a> · <a href="#beat3">19:45–48 洁净圣殿</a></div>
+  </header>
+
+<section id="beat1">
+  <h2><span class="ref-tag">19:28–40</span> 骑驴进城</h2>
+  <div class="beat-lead">耶稣离开耶利哥继续上耶路撒冷，在橄榄山打发两个门徒去牵驴驹，骑着进城；众门徒欢呼，法利赛人抗议。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>骑驴，不骑马：</b>撒迦利亚书9:9「锡安的民哪，应当大大喜乐……看哪，你的王来到你这里……是谦谦和和地骑着驴，就是骑着驴的驹子」——这是「骑驴进城」最直接的旧约背景：驴驹标志的是谦卑、和平的王，不是骑战马入城的征服者。马太福音21:4-5明确引用了这处经文(「这事成就是要应验先知的话说……」)，路加这里却没有加这句引用公式，只是让读者自己认出这个画面——这是三卷福音书处理同一件事时明显的差异。</p>
+<p><b>「从来没有人骑过的驴驹」：</b>旧约里凡是要挪作圣用的牲畜，常常特别强调「未曾负轭」：民数记19:2(红母牛)、撒母耳记上6:7(抬约柜的牛)、申命记21:3(赎罪的母牛犊)都是同一套逻辑——未经使用、专供圣用。</p>
+<p><b>铺衣服在路上：</b>19:35-36众人把衣服搭在驴驹上、铺在路上，直接呼应列王纪下9:13——耶户被拥立为王时，众人「各自急忙把衣服铺在露天的台阶上，在他以下，吹角说，耶户作王了」。铺衣服是旧约现成的「拥立新王」仪式动作，听众一看就懂。</p>
+<p><b>众人的欢呼词，跟诗篇118篇很像，又不完全一样：</b>19:38「奉主名来的王，是应当称颂的」，化用诗篇118:26(「奉耶和华名来的，是应当称颂的」)——这篇诗是逾越节等节期唱颂的「哈利尔诗篇」之一。路加这里加了「王」(ὁ Βασιλεύς)这个词，诗篇118篇原文并没有；也没有像马太、马可、约翰那样加上「和散那」。更值得注意的是「在天上有和平，在至高之处有荣光」这句，几乎是路加福音2:14天使报佳音「至高之处荣耀归神，地上平安归向他所喜悦的人」的镜像倒转——「和平」从「地上」挪到了「天上」。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>撒迦利亚书9:9 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">錫安的民哪, 應當大大喜樂．耶路撒冷的民哪, 應當歡呼．看哪, 你的王來到你這裡．他是公義的, 並且施行拯救, 謙謙和和的騎著驢, 就是騎著驢的駒子.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>马太福音21:4-5 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">這事成就, 是要應驗先知的話, 說, 『要對錫安的居民〔原文作女子〕說, 看哪, 你的王來到你這裡, 是溫柔的, 又騎著驢, 就是騎著驢駒子.』</p><p class="cite-gr"><span class="lbl">GR</span><span>Τοῦτο δὲ γέγονεν ἵνα πληρωθῇ τὸ ῥηθὲν διὰ τοῦ προφήτου λέγοντος Εἴπατε τῇ θυγατρὶ Σιών Ἰδοὺ ὁ Βασιλεύς σου ἔρχεταί σοι πραῢς καὶ ἐπιβεβηκὼς ἐπὶ ὄνον καὶ ἐπὶ πῶλον υἱὸν ὑποζυγίου.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>民数记19:2 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶和華命定律法中的一條律例, 乃是這樣說, 你要吩咐以色列人, 把一隻沒有殘疾, 未曾負軛, 純紅的母牛, 牽到你這裡來.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>撒母耳记上6:7 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">現在你們應當造一輛新車, 將兩隻未曾負軛有乳的母牛, 套在車上, 使牛犢回家去離開母牛.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>申命记21:3 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">看那城離被殺的人最近, 那城的長老就要從牛群中取一隻未曾耕地, 未曾負軛的母牛犢,</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>列王纪下9:13 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他們就急忙, 各將自己的衣服鋪在上層台階, 使耶戶坐在其上．他們吹角, 說, 耶戶作王了.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>诗篇118:26 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">奉耶和華名來的, 是應當稱頌的．我們從耶和華的殿中, 為你們祝福.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音2:14 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">在至高之處榮耀歸與 神, 在地上平安歸與他所喜悅的人.〔有古卷作喜悅歸與人〕</p><p class="cite-gr"><span class="lbl">GR</span><span>Δόξα ἐν ὑψίστοις Θεῷ καὶ ἐπὶ γῆς εἰρήνη ἐν ἀνθρώποις εὐδοκίας.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>哈巴谷书2:11 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">牆裡的石頭必呼叫, 房內的棟梁必應聲.</p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Giotto_di_Bondone_-_No._26_Scenes_from_the_Life_of_Christ_-_10._Entry_into_Jerusalem_-_WGA09206.jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Giotto_di_Bondone_-_No._26_Scenes_from_the_Life_of_Christ_-_10._Entry_into_Jerusalem_-_WGA09206.jpg" alt="《荣进圣城》" loading="lazy"></a>
+    <div class="painting-cap">乔托 (Giotto di Bondone) · 《荣进圣城》(<i>Entry into Jerusalem</i>) · 约1305 · 斯克罗维尼礼拜堂(帕多瓦)。图片：Wikimedia Commons，公有领域。</div>
+    
+  </div>
+  <div class="unit para-start" id="v19-28">
+    <p class="sent"><span class="zh-body"><span class="n">19:28</span>耶穌說完了這話, 就在前面走, 上耶路撒冷去.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ εἰπὼν ταῦτα ἐπορεύετο ἔμπροσθεν ἀναβαίνων εἰς Ἱεροσόλυμα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when he had thus spoken, he went before, ascending up to Jerusalem.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-29">
+    <p class="sent"><span class="zh-body"><span class="n">19:29</span>將近伯法其和伯大尼, 在一座山名叫橄欖山那裡．就打發兩個門徒, 說,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ἐγένετο ὡς ἤγγισεν εἰς Βηθφαγὴ καὶ Βηθανίαν πρὸς τὸ ὄρος τὸ καλούμενον Ἐλαιῶν,ἀπέστειλεν δύο τῶν μαθητῶν</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And it came to pass, when he was come <ruby class="eng-ruby">nigh to<rt>near</rt></ruby> Bethphage and Bethany, at the mount called the mount of Olives, he sent two of his disciples,</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「nigh to」= 靠近，古体介词短语，等于现代的 near/close to。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-30">
+    <p class="sent"><span class="zh-body"><span class="n">19:30</span>你們往對面村子裡去．進去的時候, 必看見一匹<ruby class="zh-ruby">驢駒<rt>pōlon</rt></ruby>拴在那裡, 是從來沒有人騎過的．可以解開牽來.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγων Ὑπάγετε εἰς τὴν κατέναντι κώμην,ἐν ᾗ εἰσπορευόμενοι εὑρήσετε πῶλον δεδεμένον,ἐφ’ὃν οὐδεὶς πώποτε ἀνθρώπων ἐκάθισεν,καὶ λύσαντες αὐτὸν ἀγάγετε.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Saying, Go ye into the village over against you; in the which at your entering ye shall find a colt tied, <ruby class="eng-ruby">whereon yet never man sat<rt>which no one has ever ridden</rt></ruby>: loose him, and bring him hither.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「从来没有人骑过的驴驹」——旧约里凡挪作圣用的牲畜常特别强调「未曾负轭」：民数记19:2(红母牛)、撒母耳记上6:7(抬约柜的牛)、申命记21:3(赎罪母牛犊)都是同一套逻辑：未经使用、专供圣用。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「whereon yet never man sat」直译「从未有人坐过的」，古体倒装语序，等于现代的 which no one has ever sat on。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-31">
+    <p class="sent"><span class="zh-body"><span class="n">19:31</span>若有人問為甚麼解牠, 你們就說, <ruby class="zh-ruby">主要用他<rt>ho Kyrios autou chreian echei</rt></ruby>.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐάν τις ὑμᾶς ἐρωτᾷ Διὰ τί λύετε;οὕτως ἐρεῖτε ὅτι Ὁ Κύριος αὐτοῦ χρείαν ἔχει.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And if any man ask you, Why do ye loose him? thus shall ye say unto him, Because the Lord hath need of him.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>Ὁ Κύριος αὐτοῦ χρείαν ἔχει</b> <span class='zh'>「主要用它」——Κύριος(主/主人)本身有歧义，既可以只是「驴驹的主人」这种日常用法，也可以是耶稣自称「主」的宣告。路加福音里两种用法常故意叠在一起。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-32">
+    <p class="sent"><span class="zh-body"><span class="n">19:32</span>打發的人去了, 所遇見的, 正如耶穌所說的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀπελθόντες δὲ οἱ ἀπεσταλμένοι εὗρον καθὼς εἶπεν αὐτοῖς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they that were sent went their way, and found even as he had said unto them.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-33">
+    <p class="sent"><span class="zh-body"><span class="n">19:33</span>他們解驢駒的時候, 主人問他們說, 解驢駒作甚麼.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λυόντων δὲ αὐτῶν τὸν πῶλον εἶπαν οἱ κύριοι αὐτοῦ πρὸς αὐτούς Τί λύετε τὸν πῶλον;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And as they were loosing the colt, <ruby class="eng-ruby">the owners thereof<rt>its owners</rt></ruby> said unto them, Why loose ye the colt?</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「the owners thereof」= 它的主人们，thereof 是古体的 of it/of that。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-34">
+    <p class="sent"><span class="zh-body"><span class="n">19:34</span>他們說, <ruby class="zh-ruby">主要用他<rt>ho Kyrios autou chreian echei</rt></ruby>.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ εἶπαν ὅτι Ὁ Κύριος αὐτοῦ χρείαν ἔχει.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they said, The Lord hath need of him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-35">
+    <p class="sent"><span class="zh-body"><span class="n">19:35</span>他們牽到耶穌那裡, 把自己的衣服搭在上面, 扶著耶穌騎上.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἤγαγον αὐτὸν πρὸς τὸν Ἰησοῦν,καὶ ἐπιρίψαντες αὐτῶν τὰ ἱμάτια ἐπὶ τὸν πῶλον ἐπεβίβασαν τὸν Ἰησοῦν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they brought him to Jesus: and they cast their garments upon the colt, and they set Jesus thereon.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-36">
+    <p class="sent"><span class="zh-body"><span class="n">19:36</span>走的時候, 眾人把<ruby class="zh-ruby">衣服鋪在路上<rt>himatia... en tē hodō</rt></ruby>.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πορευομένου δὲ αὐτοῦ ὑπεστρώννυον τὰ ἱμάτια ἑαυτῶν ἐν τῇ ὁδῷ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And as he went, they spread their clothes in the way.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>众人把衣服铺在路上，直接呼应列王纪下9:13——耶户被拥立为王时，众人「各自急忙把衣服铺在露天的台阶上……吹角说，耶户作王了」。铺衣服是旧约现成的「拥立新王」动作，听众一看就懂。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-37">
+    <p class="sent"><span class="zh-body"><span class="n">19:37</span>將近耶路撒冷, 正下橄欖山的時候, 眾門徒因所見過的一切異能, 都歡樂起來, 大聲讚美 神,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐγγίζοντος δὲ αὐτοῦ ἤδη πρὸς τῇ καταβάσει τοῦ ὄρους τῶν Ἐλαιῶν ἤρξαντο ἅπαν τὸ πλῆθος τῶν μαθητῶν χαίροντες αἰνεῖν τὸν Θεὸν φωνῇ μεγάλῃ περὶ πασῶν ὧν εἶδον δυνάμεων,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when he was come nigh, even now at the descent of the mount of Olives, the whole multitude of the disciples began to rejoice and praise God with a loud voice for all the mighty works that they had seen;</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-38">
+    <p class="sent"><span class="zh-body"><span class="n">19:38</span>說, 奉主名來的王, 是應當稱頌的．在天上有<ruby class="zh-ruby">和平<rt>eirēnē</rt></ruby>, 在至高之處有榮光.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγοντες Εὐλογημένος ὁ ἐρχόμενος,ὁ Βασιλεὺς ἐν ὀνόματι Κυρίου·ἐν οὐρανῷ εἰρήνη καὶ δόξα ἐν ὑψίστοις.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Saying, Blessed be the King that cometh in the name of the Lord: peace in heaven, and glory in the highest.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「在天上有和平」(ἐν οὐρανῷ εἰρήνη)几乎是路加福音2:14天使报佳音「地上平安归与他所喜悦的人」(ἐπὶ γῆς εἰρήνη)的镜像倒转——和平从「地上」挪到了「天上」。紧接着下一段(19:41-44)耶稣就为耶路撒冷不知道「关系你平安的事」而哭。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-39">
+    <p class="sent"><span class="zh-body"><span class="n">19:39</span>眾人中有幾個法利賽人對耶穌說, 夫子, 責備你的門徒罷.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καί τινες τῶν Φαρισαίων ἀπὸ τοῦ ὄχλου εἶπαν πρὸς αὐτόν Διδάσκαλε,ἐπιτίμησον τοῖς μαθηταῖς σου.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And some of the Pharisees from among the multitude said unto him, <ruby class="eng-ruby">Master<rt>Teacher</rt></ruby>, rebuke thy disciples.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「Master」在KJV里常用来翻译「拉比/夫子」(Teacher)，不是现代英语「主人、大师」的意思。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-40">
+    <p class="sent"><span class="zh-body"><span class="n">19:40</span>耶穌說, 我告訴你們, 若是他們閉口不說, 這些<ruby class="zh-ruby">石頭必要呼叫<rt>hoi lithoi kraxousin</rt></ruby>起來.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἀποκριθεὶς εἶπεν Λέγω ὑμῖν ἐὰν οὗτοι σιωπήσουσιν,οἱ λίθοι κράξουσιν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he answered and said unto them, I tell you that, if these should <ruby class="eng-ruby">hold their peace<rt>stay silent</rt></ruby>, the stones would immediately cry out.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「石头必要呼叫」有学者认为遥遥呼应哈巴谷书2:11「墙里的石头必呼叫」(对不义之财的审判宣告)，但这不是直接引文，只是可能的意象呼应，标注供参考。中文语境里最接近「石头回应真理」这个意象的典故是「顽石点头」(竺道生在虎丘对石说法，石为之点头)，但侧重点不同——那个典故讲的是「道理有说服力」，这里讲的是「真相压不住，人不说石头也会说」，更接近「纸包不住火」「若要人不知，除非己莫为」这类讲真相无法掩盖的说法。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「hold their peace」= 保持安静，固定短语，前面18:39已经出现过。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    为什么骑驴，不骑马？铺衣服在路上，你会想到什么旧约画面？法利赛人要耶稣「责备门徒」，耶稣的回答到底是在同意还是在回避？
+  </div>
+</section>
+
+<section id="beat2">
+  <h2><span class="ref-tag">19:41–44</span> 为耶路撒冷哀哭</h2>
+  <div class="beat-lead">耶稣看见城，放声痛哭，预言她将来的被毁——四福音书中少见的、明确写出耶稣公开哭泣的一幕。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>「哭」用的是哪个词：</b>19:41「就为他哀哭」用的动词是κλαίω(ἔκλαυσεν)——放声痛哭、哀恸，比约翰福音11:35「耶稣哭了」(拉撒路墓前，用δακρύω，只是流泪)力度大得多。这不是安静落泪，是公开的哀恸。</p>
+<p><b>预言的军事细节，精确得惊人：</b>19:43-44「你的仇敌必筑起土垒(χάρακα，围城用的栅栏/壁垒)，周围环绕你，四面困住你……连一块石头也不留在石头上」——这几乎是主后70年提多围攻耶路撒冷、圣殿被毁的战役实录，约瑟夫斯《犹太战记》5.508-511、6.150以下详细记载了罗马人筑起环城壁垒、最终把圣殿夷为平地的过程。这段描述与真实历史的吻合程度，是学者讨论路加福音成书年代的一个重要论据——有人认为这说明路加成书在主后70年之后、已经知道结局(事后预言)，也有人认为这仍是耶稣本人真实的预言，援用旧约里现成的围城审判套语，不必然要求事后知情。这是至今没有共识的学术争议，两种立场都有严肃学者持守。</p>
+<p><b>「不留一块石头在石头上」：</b>这句话路加福音21:6(橄榄山谈话，耶稣预言圣殿被毁)几乎一字不差地重复了一次——路加显然把这当作要紧的话，前后呼应着讲了两次。</p>
+<p><b>「眷顾的时候」(ἐπισκοπή)：</b>这个词(教会「主教」episcopal一词的词根)在旧约里常指神决定性介入的时刻——可以是拯救性的(创世记50:24)，也可以是审判性的(耶利米书6:15、以赛亚书10:3「追讨的日子」)。耶路撒冷没有认出这个眷顾的时刻，反而要承受它审判的一面。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>约翰福音11:35 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌哭了.</p><p class="cite-gr"><span class="lbl">GR</span><span>ἐδάκρυσεν ὁ Ἰησοῦς.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音21:6 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌就說, 論到你們所看見的這一切, 將來日子到了, 在這裡沒有一塊石頭留在石頭上, 不被拆毀了.</p><p class="cite-gr"><span class="lbl">GR</span><span>Ταῦτα ἃ θεωρεῖτε,ἐλεύσονται ἡμέραι ἐν αἷς οὐκ ἀφεθήσεται λίθος ἐπὶ λίθῳ ὃς οὐ καταλυθήσεται.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>创世记50:24 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">約瑟對他弟兄們說, 我要死了, 但 神必定看顧你們, 領你們從這地上去, 到他起誓所應許給亞伯拉罕, 以撒, 雅各之地.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>耶利米书6:15 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他們行可憎的事, 知道慚愧麼．不然, 他們毫不慚愧, 也不知羞恥．因此, 他們必在仆倒的人中仆倒．我向他們討罪的時候, 他們必致跌倒．這是耶和華說的.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以赛亚书10:3 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">到降罰的日子, 有災禍從遠方臨到, 那時, 你們怎樣行呢, 你們向誰逃奔求救呢, 你們的榮耀〔或作財寶〕存留何處呢.</p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Enrique_Simonet_-_Flevit_super_illam_1892.jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Enrique_Simonet_-_Flevit_super_illam_1892.jpg" alt="《他为她哀哭》" loading="lazy"></a>
+    <div class="painting-cap">恩里克·西蒙内特 (Enrique Simonet) · 《他为她哀哭》(<i>Flevit super illam</i>) · 1892 · 普拉多博物馆。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">画名取自拉丁文「Videns Jesus civitatem flevit super illam」(耶稣看见城，就为她哀哭)，直接对应19:41。作者曾专程到圣地写生取景，画幅巨大(305×555cm)。</p>
+  </div>
+  <div class="unit para-start" id="v19-41">
+    <p class="sent"><span class="zh-body"><span class="n">19:41</span>耶穌快到耶路撒冷看見城, 就為他<ruby class="zh-ruby">哀哭<rt>eklausen</rt></ruby>,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ὡς ἤγγισεν,ἰδὼν τὴν πόλιν ἔκλαυσεν ἐπ’αὐτήν,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when he was come near, he beheld the city, and wept over it,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἔκλαυσεν</b> · eklausen (κλαίω) <span class='zh'>放声痛哭、哀恸，比约翰福音11:35「耶稣哭了」(拉撒路墓前，用δακρύω，只是流泪)力度大得多。这不是安静落泪，是公开的哀恸。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-42">
+    <p class="sent"><span class="zh-body"><span class="n">19:42</span>說, 巴不得你在這日子, 知道關係你平安的事．無奈這事現在是隱藏的, 叫你的眼看不出來.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγων ὅτι Εἰ ἔγνως ἐν τῇ ἡμέρᾳ ταύτῃ καὶ σὺ τὰ πρὸς εἰρήνην·νῦν δὲ ἐκρύβη ἀπὸ ὀφθαλμῶν σου.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Saying, <ruby class="eng-ruby">If thou hadst known<rt>if only you had known</rt></ruby>, even thou, at least in this thy day, the things which belong unto thy peace! but now they are hid from thine eyes.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「If thou hadst known」= 「你若知道就好了」，是一个未能实现的假设句(与过去事实相反)，带着惋惜的语气。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-43">
+    <p class="sent"><span class="zh-body"><span class="n">19:43</span>因為日子將到, 你的仇敵必築起土壘, 周圍環繞你, 四面困住你,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅτι ἥξουσιν ἡμέραι ἐπὶ σὲ καὶ παρεμβαλοῦσιν οἱ ἐχθροί σου χάρακά σοι καὶ περικυκλώσουσίν σε καὶ συνέξουσίν σε πάντοθεν,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For the days shall come upon thee, that thine enemies shall <ruby class="eng-ruby">cast a trench about thee<rt>build a siege wall around you</rt></ruby>, and compass thee round, and keep thee in on every side,</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「cast a trench about thee」= 在你四围筑起围城的壕沟/壁垒，trench 在这里指古代攻城用的围城工事，不是现代战壕。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-44">
+    <p class="sent"><span class="zh-body"><span class="n">19:44</span>並要掃滅你, 和你裡頭的兒女, 連一塊石頭也不留在石頭上．因你不知道<ruby class="zh-ruby">眷顧<rt>episkopēs</rt></ruby>你的時候.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐδαφιοῦσίν σε καὶ τὰ τέκνα σου ἐν σοί,καὶ οὐκ ἀφήσουσιν λίθον ἐπὶ λίθον ἐν σοί,ἀνθ’ὧν οὐκ ἔγνως τὸν καιρὸν τῆς ἐπισκοπῆς σου.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And shall <ruby class="eng-ruby">lay thee even with the ground<rt>level you to the ground</rt></ruby>, and thy children within thee; and they shall not leave in thee one stone upon another; because thou knewest not the time of thy visitation.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἐπισκοπή</b> · episkopē <span class='zh'>「眷顾、视察」(教会「主教」episcopal一词的词根)——旧约里常指神决定性介入的时刻，可以是拯救性的(创50:24)，也可以是审判性的(耶6:15，赛10:3「追讨的日子」)。</span></div>
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「不留一块石头在石头上」这个意象路加福音21:6(橄榄山谈话)又讲了一次——但核对原文后发现语法并不是「一字不差」：19:44是主动态「ἀφήσουσιν」(他们将不留)，21:6换成被动态「ἀφεθήσεται」(将不被留下)，还多了一个从句「ὃς οὐ καταλυθήσεται」(不被拆毁的)。核心意象相同，具体措辞不同——路加显然看重这句话，但不是逐字复制。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「lay thee even with the ground」= 把你夷为平地，固定短语。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    耶稣哭的理由，是耶路撒冷做错了什么，还是耶路撒冷「不知道」？「眷顾的时候」如果被认出来，事情会不一样吗？
+  </div>
+</section>
+
+<section id="beat3">
+  <h2><span class="ref-tag">19:45–48</span> 洁净圣殿</h2>
+  <div class="beat-lead">耶稣进圣殿，赶出做买卖的人，引先知的话指责圣殿变成贼窝；祭司长、文士想杀他，却因百姓爱听他的道而找不到下手的机会。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>路加这段写得特别简短：</b>跟马可福音11:15-17(「不许人拿着器具从殿里经过」)、约翰福音2:13-22(耶稣做绳鞭，赶出牛羊，倒钱商的钱)相比，路加这里只用了两节经文，几乎一笔带过，没有渲染动作细节，很快就转到耶稣「天天在殿里教训人」和祭司长文士的敌意上——路加对这一幕的兴趣明显不在戏剧性的清场动作本身。</p>
+<p><b>两句旧约引文，缝在一起：</b>「我的殿必称为祷告的殿」出自以赛亚书56:7——这节经文完整的上下文其实是讲圣殿要「归万民祷告」，马可福音11:17明确保留了「给万民」这几个字，路加(和马太)这里都省掉了，只留「祷告的殿」。「你们倒使他成为贼窝了」直接引自耶利米书7:11，是耶利米著名的「圣殿讲章」(耶7:1-15)里的一句——耶利米当年站在圣殿门口，斥责百姓一边欺压寄居的、孤儿寡妇、流无辜人的血，一边把圣殿当成犯罪之后的「安全屋」，并明确警告神要像毁灭示罗(耶7:12-14)一样毁掉这座圣殿。耶稣在刚刚为耶路撒冷的毁灭痛哭之后(19:41-44)，紧接着在圣殿门口重演耶利米的这篇讲章，几乎是把耶利米的警告原样搬了过来。</p>
+<p><b>「贼窝」(σπήλαιον λῃστῶν)：</b>λῃστής更准确的意思是「强盗、匪徒」(带武力，常见于政治动乱语境，约瑟夫斯常用这个词形容犹太起义军)，不是单纯的小偷。耶稣的指控可能不只是「你们在这里做买卖太贪财」，更接近「你们把这里当成了(政治/暴力)强盗躲藏的窝点」。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>马可福音11:15-17 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他們來到耶路撒冷, 耶穌進入聖殿, 趕出殿裡作買賣的人, 推倒兌換銀錢之人的桌子, 和賣鴿子之人的凳子． 也不許人拿著器具從殿裡經過. 便教訓他們說, 經上不是記著說, 『我的殿必稱為萬國禱告的殿』麼．你們倒使他成為賊窩了.</p><p class="cite-gr"><span class="lbl">GR</span><span>Καὶ ἔρχονται εἰς Ἱεροσόλυμα.Καὶ εἰσελθὼν εἰς τὸ ἱερὸν ἤρξατο ἐκβάλλειν τοὺς πωλοῦντας καὶ τοὺς ἀγοράζοντας ἐν τῷ ἱερῷ,καὶ τὰς τραπέζας τῶν κολλυβιστῶν καὶ τὰς καθέδρας τῶν πωλούντων τὰς περιστερὰς κατέστρεψεν, καὶ οὐκ ἤφιεν ἵνα τις διενέγκῃ σκεῦος διὰ τοῦ ἱεροῦ, καὶ ἐδίδασκεν καὶ ἔλεγεν αὐτοῖς Οὐ γέγραπται ὅτι Ὁ οἶκός μου οἶκος προσευχῆς κληθήσεται πᾶσιν τοῖς ἔθνεσιν;ὑμεῖς δὲ πεποιήκατε αὐτὸν σπήλαιον λῃστῶν.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以赛亚书56:7 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">我必領他們到我的聖山, 使他們在禱告我的殿中喜樂．他們的燔祭, 和平安祭, 在我壇上必蒙悅納．因我的殿必稱為萬民禱告的殿.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>耶利米书7:11 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">這稱為我名下的殿, 在你們眼中, 豈可看為賊窩麼．我都看見了．這是耶和華說的.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>耶利米书7:12-14 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">你們且往示羅去, 就是我先前立為我名的居所, 察看我因這百姓以色列的罪惡, 向那地所行的如何. 耶和華說, 現在因你們行了這一切的事, 我也從早起來警戒你們, 你們卻不聽從, 呼喚你們, 你們卻不答應． 所以我要向這稱我為名下, 你們所倚靠的殿, 與我所賜給你們和你們列祖的地施行, 照我從前向示羅所行的一樣.</p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:El_Greco_Christ_Driving_the_Money_Changers_from_the_Temple.jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/El_Greco_Christ_Driving_the_Money_Changers_from_the_Temple.jpg" alt="《洁净圣殿》" loading="lazy"></a>
+    <div class="painting-cap">埃尔·格列柯 (El Greco) · 《洁净圣殿》(<i>Christ Driving the Money Changers from the Temple</i>) · 约1600 · 弗里克收藏馆(纽约)。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">格列柯一生画过多个版本的这个主题(纽约、华盛顿、伦敦、明尼阿波利斯都有藏本)，这题材显然让他反复着迷。</p>
+  </div>
+  <div class="unit para-start" id="v19-45">
+    <p class="sent"><span class="zh-body"><span class="n">19:45</span>耶穌進了殿, 趕出裡頭作買賣的人,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ εἰσελθὼν εἰς τὸ ἱερὸν ἤρξατο ἐκβάλλειν τοὺς πωλοῦντας,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he went into the temple, and began to cast out them that sold therein, and them that bought;</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v19-46">
+    <p class="sent"><span class="zh-body"><span class="n">19:46</span>對他們說, 經上說, 『我的殿, 必作<ruby class="zh-ruby">禱告的殿<rt>oikos proseuchēs</rt></ruby>.』你們倒使他成為<ruby class="zh-ruby">賊窩<rt>spēlaion lēstōn</rt></ruby>了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγων αὐτοῖς Γέγραπται Καὶ ἔσται ὁ οἶκός μου οἶκος προσευχῆς·ὑμεῖς δὲ αὐτὸν ἐποιήσατε σπήλαιον λῃστῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Saying unto them, It is written, My house is the house of prayer: but ye have made it <ruby class="eng-ruby">a den of thieves<rt>a hideout for bandits</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「祷告的殿」引自以赛亚书56:7，完整上下文其实是「归万民祷告的殿」——马可福音11:17保留了「给万民」，路加(和马太)这里都省掉了，只留「祷告的殿」。</span></div>
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>σπήλαιον λῃστῶν</b> <span class='zh'>直接引自耶利米书7:11。λῃστής更准确的意思是「强盗、匪徒」(带武力，约瑟夫斯常用这个词形容犹太起义军)，不是单纯的小偷——指控可能不只是「贪财」，更接近「把这里当成了武装分子的窝点」。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「a den of thieves」= 贼窝、盗匪的巢穴，比喻这地方被用来掩护不正当的勾当。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-47">
+    <p class="sent"><span class="zh-body"><span class="n">19:47</span>耶穌天天在殿裡教訓人.祭司長, 和文士, 與百姓的尊長, 都想要殺他．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ἦν διδάσκων τὸ καθ’ἡμέραν ἐν τῷ ἱερῷ·οἱ δὲ ἀρχιερεῖς καὶ οἱ γραμματεῖς ἐζήτουν αὐτὸν ἀπολέσαι καὶ οἱ πρῶτοι τοῦ λαοῦ,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he taught daily in the temple. But the chief priests and the scribes and the chief of the people <ruby class="eng-ruby">sought to destroy him<rt>were seeking to kill him</rt></ruby>,</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「sought to destroy him」= 想方设法要除掉他，destroy 在这里指「杀死」，不是「摧毁物品」的意思。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v19-48">
+    <p class="sent"><span class="zh-body"><span class="n">19:48</span>但尋不出法子來, 因為百姓都側耳聽他.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ οὐχ εὕρισκον τὸ τί ποιήσωσιν·ὁ λαὸς γὰρ ἅπας ἐξεκρέμετο αὐτοῦ ἀκούων.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And could not find what they might do: for all the people <ruby class="eng-ruby">were very attentive to hear him<rt>hung on his every word</rt></ruby>.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「were very attentive to hear him」= 聚精会神地听他讲——attentive 是「专注、留心」的意思。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    耶稣为什么偏偏引耶利米书7章那段话？「贼窝」具体在骂什么？祭司长文士和百姓的反应为什么不一样？
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-cf">对照</span>希腊/中/英三方比较</span>
+    <span><span class="tag t-zhu">注</span>背景说明</span>
+    <span><span class="tag t-en">英</span>KJV 语言点</span>
+  </div>
+  希腊原文：Nestle 1904 (MACULA Greek, lowfat treebank)。中文：和合本(Chinese Union Version, Big5 数字化本)。英译：King James Version (1611/1769)。三者均为公共领域文本。标点保留原始数字化文本所用的半形符号。
+  <p style="margin-top:.8rem">历史背景部分引用：约瑟夫斯《犹太战记》(Jewish War)；旧约经文(撒迦利亚书、民数记、撒母耳记上下、申命记、列王纪下、诗篇、以赛亚书、耶利米书、哈巴谷书等)。围城细节与主后70年历史的对应关系，路加成书年代等属学界仍有争议的问题，背景框已注明两种立场并存，不作定论。</p>
+</footer>
+
+<script>
+  const body=document.body;
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art'};
+  for(const id in toggleMap){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+  const geoMap = L.map('geomap', {scrollWheelZoom:false}).setView([31.79,35.28], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 16
+  }).addTo(geoMap);
+
+  L.marker([31.7683,35.2137]).addTo(geoMap).bindPopup('<b>耶路撒冷城</b>');
+  L.marker([31.7780,35.2354]).addTo(geoMap).bindPopup('<b>圣殿</b><br>19:45-48 洁净圣殿');
+  L.marker([31.7784,35.2422]).addTo(geoMap).bindPopup('<b>橄榄山</b><br>19:29,37');
+  L.marker([31.7719,35.2554]).addTo(geoMap).bindPopup('<b>伯大尼</b><br>19:29');
+  L.marker([31.7770,35.2470]).addTo(geoMap).bindPopup('<b>伯法其</b>(约略位置)<br>19:29');
+
+  L.polyline([[31.7719,35.2554],[31.7784,35.2422],[31.7780,35.2354],[31.7683,35.2137]],
+    {color:'#b07d2b', weight:3.5})
+    .addTo(geoMap).bindPopup('19:28-40 从伯大尼/橄榄山骑驴进城，到圣殿');
+
+  geoMap.fitBounds(L.latLngBounds([[31.758,35.20],[31.79,35.27]]));
+</script>
+
+</body>
+</html>

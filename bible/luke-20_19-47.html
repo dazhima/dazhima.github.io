@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路加福音 20:19–47 · 三语共读</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+    --blue:#3d6d99; --blue-soft:#dde8f2;
+    --brown:#8b6a3f; --brown-soft:#efe3cd;
+    --wine:#8c3d4f; --wine-soft:#f3e0e3;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:1.4rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  header.doc .kjv-note{margin-top:.7rem; padding:.7rem .9rem; background:var(--blue-soft);
+    border:1px solid #c7d9e8; border-left:3px solid var(--blue); border-radius:6px;
+    font-family:system-ui,sans-serif; font-size:.82rem; line-height:1.8; color:#2c4a63}
+  header.doc .kjv-note b{color:#1f3a50}
+  .mapbox{margin:1.2rem 0; padding:1rem 1rem .8rem; background:#fdfbf5; border:1px solid var(--line); border-radius:8px}
+  #geomap{width:100%; height:380px; border-radius:8px; border:1px solid var(--line)}
+  .leaflet-tooltip.map-region-label{background:transparent; border:none; box-shadow:none;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-weight:700; font-size:.85rem;
+    color:#5c2a35; text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff}
+  .map-cap{margin-top:.6rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; line-height:1.7; color:var(--muted); text-align:center}
+  .toc{font-family:system-ui,"PingFang SC",sans-serif; font-size:.8rem; color:var(--muted); margin-bottom:2rem; line-height:1.9}
+  .toc a{color:var(--amber); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid var(--line)}
+  section h2{font-size:1.25rem; margin:0 0 .5rem; font-family:"Iowan Old Style",Georgia,serif}
+  .ref-tag{display:inline-block; font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700;
+    letter-spacing:.03em; color:var(--amber); background:var(--amber-soft); border-radius:5px;
+    padding:.08rem .4rem; margin-right:.5rem; vertical-align:.15em}
+  .beat-lead{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.85rem;
+    color:var(--muted); margin-bottom:1.1rem; line-height:1.7}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:.6rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.15rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.4em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby .zh-ruby rt{display:none}
+  .hide-ruby .zh-ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  ruby.eng-ruby rt{font-family:system-ui,sans-serif; font-style:normal; font-size:.52em; color:var(--blue); font-weight:600}
+  .hide-en-notes .eng-ruby rt{display:none}
+  .hide-en-notes .eng-ruby{ -webkit-text-decoration:underline dotted #b9cfe0; text-decoration:underline dotted #b9cfe0}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.88rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks,.en-notes{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .en-notes{background:#f4f8fb; border-left-color:var(--blue)}
+  .hide-remarks .remarks{display:none}
+  .hide-en-notes .en-notes{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .t-en{background:var(--blue-soft); color:var(--blue)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin:1.4rem 0 .4rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .history{margin:0 0 1.3rem; padding:.7rem 1rem; background:var(--brown-soft); border:1px solid #ddc9a3; border-left:3px solid var(--brown); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.84rem; line-height:1.8; color:#4a3a20}
+  .history summary{cursor:pointer; font-size:.88rem; font-weight:700; color:#3d2f18; padding:.15rem 0; list-style:revert}
+  .history summary::marker{color:var(--brown)}
+  .history[open] summary{margin-bottom:.5rem}
+  .history-body p{margin:.5rem 0}
+  .history-body p:first-child{margin-top:0}
+  .history-body p:last-child{margin-bottom:0}
+  .hide-history .history{display:none}
+  .painting{margin:0 0 1.3rem; text-align:center}
+  .painting img{max-width:100%; max-height:420px; border-radius:6px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .painting-cap{margin-top:.5rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.76rem; color:var(--muted)}
+  .painting-note{margin:.3rem auto 0; max-width:520px; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; color:var(--muted); line-height:1.6}
+  .hide-art .painting{display:none}
+  .cite-group{margin-top:.7rem; padding-top:.6rem; border-top:1px dashed #ddc9a3}
+  .cite-group-label{font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.04em;
+    color:#8b6a3f; text-transform:uppercase; margin-bottom:.4rem}
+  details.cite{margin:.3rem 0; padding:.35rem .6rem; background:#fffdf7; border:1px solid #e6d9bc; border-radius:6px}
+  details.cite summary{cursor:pointer; font-size:.78rem; font-weight:600; color:#7a5620; list-style:revert; padding:0}
+  details.cite summary::marker{color:#b07d2b}
+  details.cite .cite-body{margin-top:.4rem}
+  .cite-zh{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif; font-size:.92rem; line-height:1.7; margin:.2rem 0; color:var(--ink)}
+  .cite-gr{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-size:.82rem; line-height:1.6; margin:.3rem 0; color:var(--greek); display:flex; gap:.5rem}
+  .cite-note{font-family:system-ui,sans-serif; font-size:.72rem; color:var(--muted); margin:.2rem 0 0}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">查经</a> &rsaquo; 路加福音 &rsaquo; <b>20:19–47</b> &nbsp;·&nbsp; 三语共读</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">KJV</button>
+  <button class="btn" id="t-enotes">英语讲解</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-hist">背景</button>
+  <button class="btn" id="t-art">名画</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>路加福音 20:19–47</h1>
+    <div class="sub">和合本(中文, 阅读对象) · Nestle 1904(希腊原文, 锚点) · KJV(英译, 平行参照 — 也可直接读)</div>
+    <div class="lead">
+      延续前几周的方法：和合本是既有译本，直接作为阅读对象；希腊文只作锚点，标出个别值得注意的词；KJV平行对照，分歧处标出来(对照)。<b>释义</b>留白，现场一起填。本周段落：纳税给该撒 → 撒都该人问复活 → 大卫的子孙 → 防备文士。仍在圣殿里、仍是上周那场对话的<b>继续</b>：对方连着来了三轮问难(权柄、纳税、复活)，到20:40「不敢再问」，然后20:41换成耶稣发问——本周正好读到攻守易位的那个转折。
+    </div>
+    <div class="kjv-note">
+      <b>怎么读KJV(1611年英语)的几个常见古体：</b> thou/thee/thy/thine = 单数「你/你的」；ye = 复数「你们」；
+      动词词尾 <b>-est/-eth</b> 表第二/第三人称单数现在时(wilt=will、doth=does、hast=have、goeth=goes、saith=says、spake=spoke)；
+      unto = to。这些很常见，就不逐一标注了；下面只标真正会让人卡住的<b>词汇/古今异义词</b>，点「英语讲解」可以单独关/开。
+    </div>
+    <div class="mapbox">
+      <div id="geomap"></div>
+      <div class="map-cap">底图为 OpenStreetMap 实景地图(需要联网加载)。<b>本周经文同样没有移动</b>——29节仍全部发生在圣殿范围内，接着上周那场对话往下走。地图只作定位用；真正值得看的「地理」这周在别处：20:20要把耶稣交给的「巡抚」驻节在该撒利亚，逾越节期间才上耶路撒冷坐镇。</div>
+    </div>
+    <div class="toc"><a href="#beat1">20:19–26 纳税给该撒</a> · <a href="#beat2">20:27–40 撒都该人问复活</a> · <a href="#beat3">20:41–44 大卫的子孙</a> · <a href="#beat4">20:45–47 防备文士</a></div>
+  </header>
+
+<section id="beat1">
+  <h2><span class="ref-tag">20:19–26</span> 纳税给该撒</h2>
+  <div class="beat-lead">领袖们看出比喻在说自己，改用奸细设局：用罗马人头税这个政治敏感问题诱他失言，好把他交给巡抚。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>为什么这个问题是个圈套：</b>问的是罗马<b>人头税</b>(φόρος)——不是关税或殿税，而是行省居民按人头直接缴给罗马国库的税，是被征服者身分最直接的标记。主后6年罗马把犹大地划为行省、举行人口登记以便征税时，加利利人犹大就是以「纳税给凯撒等于承认凯撒是主、背叛神的主权」为由发动起义的(约瑟夫斯《犹太古史》18.1-10、23-25)。所以这个问题在当时不是理论探讨：答「可以」，当场得罪深恨罗马的百姓；答「不可以」，就等于自认是奋锐党一路的煽动者，正好可以「交在巡抚的政权之下」(20:20)。</p>
+<p><b>他们真正想要的是把他交给彼拉多：</b>20:20说得很直白——目的是「好将他交在巡抚的政权之下」。公会有宗教审判权，但没有死刑执行权；要杀耶稣，必须把宗教争议转成罗马会管的政治罪名。后来在彼拉多面前，他们的控告果然是「我们见这人诱惑国民，禁止纳税给该撒」(路23:2)——正是这次没能得逞的圈套，后来被直接当成了指控。</p>
+<p><b>那枚银钱上究竟写着什么：</b>提比略时期的第纳里乌斯银币，正面是提比略戴桂冠的头像，环绕铭文<b>TI CAESAR DIVI AVG F AVGVSTVS</b>——「提比略·凯撒，<b>神圣奥古斯都之子</b>，奥古斯都」；背面铭文<b>PONTIF MAXIM</b>，即「大祭司」(Pontifex Maximus)。也就是说，这枚钱币在一个犹太人手里，本身就是一份宣称皇帝有神性、且身兼最高祭司的声明。耶稣叫他们「拿一个银钱来给我看」，而这些在圣殿里质问他的人当场就掏出了一枚。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音23:2(后来的控告) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">就告他說, 我們見這人誘惑國民, 禁止納稅給該撒, 並說自己是基督, 是王.</p><p class="cite-gr"><span class="lbl">GR</span><span>ἤρξαντο δὲ κατηγορεῖν αὐτοῦ λέγοντες Τοῦτον εὕραμεν διαστρέφοντα τὸ ἔθνος ἡμῶν καὶ κωλύοντα φόρους Καίσαρι διδόναι,καὶ λέγοντα ἑαυτὸν Χριστὸν βασιλέα εἶναι.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>创世记1:27(神的形像) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">神就照著自己的形像造人, 乃是照著他的形像造男造女.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音19:8(撒该·同一动词) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">撒該站著, 對主說, 主阿, 我把所有的一半給窮人．我若訛詐了誰, 就還他四倍.</p><p class="cite-gr"><span class="lbl">GR</span><span>σταθεὶς δὲ Ζακχαῖος εἶπεν πρὸς τὸν Κύριον Ἰδοὺ τὰ ἡμίσειά μου τῶν ὑπαρχόντων,Κύριε,τοῖς πτωχοῖς δίδωμι,καὶ εἴ τινός τι ἐσυκοφάντησα ἀποδίδωμι τετραπλοῦν.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Titian_-_The_Tribute_Money_-_Google_Art_Project_(715452).jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Titian_-_The_Tribute_Money_-_Google_Art_Project_(715452).jpg" alt="《纳税银》" loading="lazy"></a>
+    <div class="painting-cap">提香 (Titian) · 《纳税银》(<i>The Tribute Money</i>) · 1516 · 德累斯顿历代大师画廊。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">一般认为是这个题材最早的重要作品之一。提香把画面压缩到两个人、一枚钱币的近距离对峙，靠两张脸的对比来讲整件事。二战后曾被运往莫斯科并因受潮严重受损，经修复于1955年归还德累斯顿。</p>
+  </div>
+  <div class="unit para-start" id="v20-19">
+    <p class="sent"><span class="zh-body"><span class="n">20:19</span>文士和祭司長, 看出這比喻是指著他們說的, 當時就想要下手拿他．只是懼怕百姓.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ἐζήτησαν οἱ γραμματεῖς καὶ οἱ ἀρχιερεῖς ἐπιβαλεῖν ἐπ’αὐτὸν τὰς χεῖρας ἐν αὐτῇ τῇ ὥρᾳ,καὶ ἐφοβήθησαν τὸν λαόν·ἔγνωσαν γὰρ ὅτι πρὸς αὐτοὺς εἶπεν τὴν παραβολὴν ταύτην.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the chief priests and the scribes the same hour <ruby class="eng-ruby">sought to lay hands on him<rt>tried to arrest him</rt></ruby>; and they feared the people: for they perceived that he had spoken this parable against them.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「lay hands on him」= 动手抓他(逮捕)，不是「按手祝福」。KJV里同一短语按上下文可褒可贬。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-20">
+    <p class="sent"><span class="zh-body"><span class="n">20:20</span>於是窺探耶穌, 打發<ruby class="zh-ruby">奸細<rt>enkathetous</rt></ruby>裝作好人, 要在他的話上得把柄, 好將他交在巡撫的政權之下.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ παρατηρήσαντες ἀπέστειλαν ἐνκαθέτους ὑποκρινομένους ἑαυτοὺς δικαίους εἶναι,ἵνα ἐπιλάβωνται αὐτοῦ λόγου,ὥστε παραδοῦναι αὐτὸν τῇ ἀρχῇ καὶ τῇ ἐξουσίᾳ τοῦ ἡγεμόνος.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they watched him, and sent forth spies, which should <ruby class="eng-ruby">feign themselves just men<rt>pretend to be sincere</rt></ruby>, that they might <ruby class="eng-ruby">take hold of his words<rt>catch him in what he said</rt></ruby>, that so they might deliver him unto the power and authority of the governor.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἐνκαθέτους</b> · enkathetous <span class='zh'>「奸细」——新约仅此一见(本地语料库Mt/Mk/Lk/Jhn/Act核对)。字面是「被安插进去的人」，专指收买来潜伏、诱人失言的密探。和合本「奸细装作好人」把两层都译出来了：既是安插的，又在演戏(ὑποκρινομένους，与「假冒为善」同词根)。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「feign」= 假装；「just men」= 义人、正直人。「take hold of his words」= 抓住他话里的把柄。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-21">
+    <p class="sent"><span class="zh-body"><span class="n">20:21</span>奸細就問耶穌說, 夫子, 我們曉得你所講所傳都是正道, 也不取人的外貌, 乃是誠誠實實傳 神的道.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐπηρώτησαν αὐτὸν λέγοντες Διδάσκαλε,οἴδαμεν ὅτι ὀρθῶς λέγεις καὶ διδάσκεις καὶ οὐ λαμβάνεις πρόσωπον,ἀλλ’ἐπ’ἀληθείας τὴν ὁδὸν τοῦ Θεοῦ διδάσκεις·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they asked him, saying, Master, we know that thou sayest and teachest rightly, <ruby class="eng-ruby">neither acceptest thou the person of any<rt>you show no partiality</rt></ruby>, but teachest the way of God truly:</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「不取人的外貌」希腊文<b class='gk'>οὐ λαμβάνεις πρόσωπον</b>，字面「不接受(某人的)脸面」——这是七十士译本里译希伯来成语「抬举人的脸」的固定说法，意思是不看人下菜碟、不偏袒权贵。奸细这段恭维话句句是真的，正因为句句是真，才更像圈套。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「acceptest thou the person of any」= 你偏袒任何人——accept the person 是KJV固定短语，直译希腊文「接受某人的脸面」，意思是看人情面、偏心。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-22">
+    <p class="sent"><span class="zh-body"><span class="n">20:22</span>我們納稅給該撒, 可以不可以.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἔξεστιν ἡμᾶς Καίσαρι φόρον δοῦναι ἢ οὔ;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span><ruby class="eng-ruby">Is it lawful<rt>is it permitted</rt></ruby> for us to give <ruby class="eng-ruby">tribute<rt>tax</rt></ruby> unto Caesar, or no?</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「tribute」在KJV里指进贡、赋税(此处即人头税)，不是现代英语常见的「致敬、悼词」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-23">
+    <p class="sent"><span class="zh-body"><span class="n">20:23</span>耶穌看出他們的<ruby class="zh-ruby">詭詐<rt>panourgian</rt></ruby>, 就對他們說,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>κατανοήσας δὲ αὐτῶν τὴν πανουργίαν εἶπεν πρὸς αὐτούς</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But he perceived their craftiness, and said unto them, Why tempt ye me?</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>πανουργία</b> · panourgia <span class='zh'>「诡诈」——同样是新约里仅出现于此(本地语料库核对)。字面「什么都做得出来」，指不择手段的机巧。路加连用两个罕见词(20:20 ἐνκάθετος、20:23 πανουργία)来描写这场设局，用词密度明显高于平常叙述。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-24">
+    <p class="sent"><span class="zh-body"><span class="n">20:24</span>拿一個銀錢來給我看．<ruby class="zh-ruby">這像和這號<rt>eikona kai epigraphēn</rt></ruby>是誰的．他們說, 是該撒的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Δείξατέ μοι δηνάριον·τίνος ἔχει εἰκόνα καὶ ἐπιγραφήν;οἱ δὲ εἶπαν Καίσαρος.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span><ruby class="eng-ruby">Shew me a penny<rt>show me a denarius</rt></ruby>. Whose image and <ruby class="eng-ruby">superscription<rt>inscription</rt></ruby> hath it? They answered and said, Caesar’s.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>εἰκόνα καὶ ἐπιγραφήν</b> <span class='zh'>「像」与「号(铭文)」。εἰκών 正是七十士译本创世记1:27「神照着自己的<b>形像</b>造人」所用的词。教父传统常据此读出一层对仗：钱币上盖着该撒的像，就归该撒；人身上盖着神的像，就当归神。这是一层广受采用的读法，但要说明：耶稣本人并没有把这层意思说出来，是读者补上的。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「penny」是KJV用来翻译denarius(得拉克马级的罗马银币)的英国旧币名，不是现代的「便士」——币值差得很远，是一天的工价。「superscription」= 铭刻在钱币上的字。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-25">
+    <p class="sent"><span class="zh-body"><span class="n">20:25</span>耶穌說, 這樣, 該撒的物<ruby class="zh-ruby">當歸給<rt>apodote</rt></ruby>該撒, 神的物當歸給 神.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ εἶπεν πρὸς αὐτούς Τοίνυν ἀπόδοτε τὰ Καίσαρος Καίσαρι καὶ τὰ τοῦ Θεοῦ τῷ Θεῷ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto them, <ruby class="eng-ruby">Render<rt>pay back what is owed</rt></ruby> therefore unto Caesar the things which be Caesar’s, and unto God the things which be God’s.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἀπόδοτε</b> · apodote (ἀποδίδωμι) <span class='zh'>「当归给」——不是单纯的「给」(δίδωμι)，而是「<b>归还、偿付本来就欠的</b>」。奸细问的是「可以不可以<b>给</b>(δοῦναι)」，耶稣答的却是「<b>归还</b>(ἀπόδοτε)」——一个字就把问题的性质换掉了：不是「要不要施舍给凯撒」，而是「本来欠谁的就还谁」。同一个动词上周撒该也用过：19:8「我若讹诈了谁，就<b>还</b>他四倍」(ἀποδίδωμι)。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「Render」在这里是「偿还、缴付应缴的」，不是现代英语「呈现、渲染」的意思——对应希腊文ἀπόδοτε(归还)。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-26">
+    <p class="sent"><span class="zh-body"><span class="n">20:26</span>他們當著百姓, 在這話上得不著把柄．又希奇他的應對, 就閉口無言了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ οὐκ ἴσχυσαν ἐπιλαβέσθαι αὐτοῦ ῥήματος ἐναντίον τοῦ λαοῦ,καὶ θαυμάσαντες ἐπὶ τῇ ἀποκρίσει αὐτοῦ ἐσίγησαν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they could not take hold of his words before the people: and they marvelled at his answer, and held their peace.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    奸细开口那段恭维话(「不取人的外貌，诚诚实实传神的道」)每一句都是真的——这让圈套更有效还是更无效？耶稣把「给」换成「归还」，这一个字改变了什么？钱币上盖着凯撒的像，那么「神的物」指什么？
+  </div>
+</section>
+
+<section id="beat2">
+  <h2><span class="ref-tag">20:27–40</span> 撒都该人问复活</h2>
+  <div class="beat-lead">不信复活的撒都该人用七兄弟娶同一妇人的极端案例设难；耶稣只从他们承认的摩西五经里取证作答。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>撒都该人是谁：</b>圣殿祭司贵族阶层，与罗马当局关系较近，神学上只承认摩西五经的权威，不接受法利赛人的口传律法传统，也不信复活、天使与灵魂——使徒行传23:8把这几点并列记下来：「撒都该人说，没有复活，也没有天使，和鬼魂」。约瑟夫斯也记载他们否认灵魂不灭与死后赏罚(《犹太古史》18.16、《犹太战记》2.165)。</p>
+<p><b>他们的难题为什么只引摩西：</b>因为他们只承认摩西五经。所设的案例出自申命记25:5-6的「弟兄本分」(levirate)律法：兄弟死而无子，其兄弟当娶寡嫂，为死者立后。这条律法的用意是保住死者的名与产业——恰恰预设了「延续」是靠子嗣完成的，也就顺势预设了没有复活。七兄弟的极端案例是要把复活的观念推成荒谬。</p>
+<p><b>耶稣的回答同样只用摩西：</b>他不去引以赛亚书26:19或但以理书12:2那些明说复活的经文(撒都该人不认)，而是回到出埃及记3:6荆棘中的自我启示：「我<b>是</b>亚伯拉罕的神、以撒的神、雅各的神」。论证的支点是<b>时态</b>——族长早已死去，神却仍以现在时自称他们的神。这是在对方承认的地盘上取胜，也是20:39几个文士(多半是法利赛派)会说「你说得好」的原因。</p>
+<p><b>「和天使一样」是有针对性的：</b>20:36的<b>ἰσάγγελοι</b>(与天使同等)是新约仅此一见的词。撒都该人既不信复活、<b>也不信天使</b>——耶稣的回答一次否掉了他们两项立场。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>申命记25:5-6(弟兄本分) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">弟兄同居, 若死了一個沒有兒子, 死人的妻不可出嫁外人, 他丈夫的兄弟當盡弟兄的本分娶他為妻, 與他同房. 婦人生的長子必歸死兄的名下, 免得他的名在以色列中塗抹了.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>出埃及记3:6(荆棘篇) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">又說, 我是你父親的 神, 是亞伯拉罕的 神, 以撒的 神, 雅各的 神.摩西蒙上臉, 因為怕看 神.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>使徒行传23:8(撒都该人的立场) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">因為撒都該人說, 沒有復活, 也沒有天使, 和鬼魂．法利賽人卻說, 兩樣都有.</p><p class="cite-gr"><span class="lbl">GR</span><span>Σαδδουκαῖοι γὰρ λέγουσιν μὴ εἶναι ἀνάστασιν μήτε ἄγγελον μήτε πνεῦμα,Φαρισαῖοι δὲ ὁμολογοῦσιν τὰ ἀμφότερα.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v20-27">
+    <p class="sent"><span class="zh-body"><span class="n">20:27</span><ruby class="zh-ruby">撒都該人<rt>Saddoukaiōn</rt></ruby>常說沒有復活的事．有幾個來問耶穌說,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Προσελθόντες δέ τινες τῶν Σαδδουκαίων,οἱ ἀντιλέγοντες ἀνάστασιν μὴ εἶναι,ἐπηρώτησαν αὐτὸν</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then came to him certain of the Sadducees, which deny that there is any resurrection; and they asked him,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>撒都该人是圣殿祭司贵族阶层，只承认摩西五经的权威，不接受法利赛人的口传律法，也不信复活、天使、灵魂(徒23:8明确记载：「撒都该人说，没有复活，也没有天使，和鬼魂」)。所以他们的难题特意只用摩西的律法(申25:5-6)来设，而耶稣后面的回答(20:37)也特意只从摩西书里举证——这是按对方承认的权威范围来辩论。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-28">
+    <p class="sent"><span class="zh-body"><span class="n">20:28</span>夫子, 摩西為我們寫著說, 人若有妻無子就死了, 他兄弟當娶他的妻, 為哥哥生子立後.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγοντες Διδάσκαλε,Μωϋσῆς ἔγραψεν ἡμῖν,ἐάν τινος ἀδελφὸς ἀποθάνῃ ἔχων γυναῖκα,καὶ οὗτος ἄτεκνος ᾖ,ἵνα λάβῃ ὁ ἀδελφὸς αὐτοῦ τὴν γυναῖκα καὶ ἐξαναστήσῃ σπέρμα τῷ ἀδελφῷ αὐτοῦ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Saying, Master, Moses wrote unto us, If any man’s brother die, having a wife, and he die without children, that his brother should take his wife, and raise up seed unto his brother.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-29">
+    <p class="sent"><span class="zh-body"><span class="n">20:29</span>有弟兄七人．第一個娶了妻, 沒有孩子死了．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἑπτὰ οὖν ἀδελφοὶ ἦσαν·καὶ ὁ πρῶτος λαβὼν γυναῖκα ἀπέθανεν ἄτεκνος·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>There were therefore seven brethren: and the first took a wife, and died without children.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-30">
+    <p class="sent"><span class="zh-body"><span class="n">20:30</span>第二個, 第三個, 也娶過他．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ὁ δεύτερος</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the second took her to wife, and he died childless.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b>抄本差异，这一节看得最清楚：</b>希腊文(Nestle 1904，据早期抄本)这一节只有三个词「καὶ ὁ δεύτερος」(第二个也是)，而KJV(据较晚的公认经文Textus Receptus)作「And the second took her to wife, and he died childless.」，多出一整句。和合本「第二个，第三个，也娶过他」介于两者之间。把上面三行并排看，就能直接看见不同抄本传统的差别——这一节是全段最方便举例说明的地方。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-31">
+    <p class="sent"><span class="zh-body"><span class="n">20:31</span>那七個人, 都娶過他, 沒有留下孩子就死了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ὁ τρίτος ἔλαβεν αὐτήν,ὡσαύτως δὲ καὶ οἱ ἑπτὰ οὐ κατέλιπον τέκνα καὶ ἀπέθανον.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the third took her; and in like manner the seven also: and they left no children, and died.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-32">
+    <p class="sent"><span class="zh-body"><span class="n">20:32</span>後來婦人也死了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὕστερον καὶ ἡ γυνὴ ἀπέθανεν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Last of all the woman died also.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-33">
+    <p class="sent"><span class="zh-body"><span class="n">20:33</span>這樣, 當復活的時候, 他是那一個的妻子呢．因為他們七個人都娶過他.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἡ γυνὴ οὖν ἐν τῇ ἀναστάσει τίνος αὐτῶν γίνεται γυνή;οἱ γὰρ ἑπτὰ ἔσχον αὐτὴν γυναῖκα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Therefore in the resurrection whose wife of them is she? for seven had her to wife.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-34">
+    <p class="sent"><span class="zh-body"><span class="n">20:34</span>耶穌說, 這世界的人, 有娶有嫁．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ εἶπεν αὐτοῖς ὁ Ἰησοῦς Οἱ υἱοὶ τοῦ αἰῶνος τούτου γαμοῦσιν καὶ γαμίσκονται,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Jesus answering said unto them, <ruby class="eng-ruby">The children of this world<rt>the people of this age</rt></ruby> marry, and are given in marriage:</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「the children of this world」= 今世的人(希伯来式表达，「…之子」＝「属…的人」)，不是字面的「孩子」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-35">
+    <p class="sent"><span class="zh-body"><span class="n">20:35</span>惟有算為配得那世界, 與從死裡復活的人, 也不娶也不嫁．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ καταξιωθέντες τοῦ αἰῶνος ἐκείνου τυχεῖν καὶ τῆς ἀναστάσεως τῆς ἐκ νεκρῶν οὔτε γαμοῦσιν οὔτε γαμίζονται·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But they which shall be accounted worthy to obtain that world, and the resurrection from the dead, neither marry, nor are given in marriage:</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-36">
+    <p class="sent"><span class="zh-body"><span class="n">20:36</span>因為他們不能再死．<ruby class="zh-ruby">和天使一樣<rt>isangeloi</rt></ruby>．既是復活的人, 就為 神的兒子.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οὐδὲ γὰρ ἀποθανεῖν ἔτι δύνανται,ἰσάγγελοι γάρ εἰσιν,καὶ υἱοί εἰσιν Θεοῦ τῆς ἀναστάσεως υἱοὶ ὄντες.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Neither can they die any more: for they are <ruby class="eng-ruby">equal unto the angels<rt>like the angels</rt></ruby>; and are the children of God, being the children of the resurrection.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἰσάγγελοι</b> · isangeloi <span class='zh'>「和天使一样」——又一个新约仅此一见的词(本地语料库核对)，字面「与天使同等」。这个回答的针对性很强：撒都该人<b>连天使也不信</b>(徒23:8)。耶稣不但肯定了复活，还顺带用他们否认的另一样东西作比方。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「equal unto the angels」= 与天使同等/相仿，对应希腊文一个单字ἰσάγγελοι。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-37">
+    <p class="sent"><span class="zh-body"><span class="n">20:37</span>至於死人復活, 摩西在<ruby class="zh-ruby">荊棘篇上<rt>epi tēs Batou</rt></ruby>, 稱主是亞伯拉罕的 神, 以撒的 神, 雅各的 神, 就指示明白了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅτι δὲ ἐγείρονται οἱ νεκροὶ,καὶ Μωϋσῆς ἐμήνυσεν ἐπὶ τῆς Βάτου,ὡς λέγει Κύριον τὸν Θεὸν Ἀβραὰμ καὶ Θεὸν Ἰσαὰκ καὶ Θεὸν Ἰακώβ·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Now that the dead are raised, even Moses shewed at the bush, when he calleth the Lord the God of Abraham, and the God of Isaac, and the God of Jacob.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「摩西在<b>荆棘篇</b>上」——希腊文<b class='gk'>ἐπὶ τῆς Βάτου</b>，字面「在『荆棘』那段」。当时经卷没有章节编号，引用旧约的通行办法就是报出那段的标志性内容(「荆棘那段」＝出埃及记3章)。和合本译作「荆棘篇」，很准确地保留了这种古代引用方式。</span></div>
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>耶稣的论证落在<b>时态</b>上：神在荆棘中对摩西说「我<b>是</b>亚伯拉罕的神」(出3:6)，而不是「我曾是」。族长早已去世多年，神却仍用现在时自称他们的神——所以在神那里他们并非不存在。整个论证只用了摩西五经一句话，正好落在撒都该人承认的范围之内。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-38">
+    <p class="sent"><span class="zh-body"><span class="n">20:38</span>神原不是死人的 神, 乃是活人的 神．因為在他那裡, 人都是活的.〔那裡或作看來〕</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Θεὸς δὲ οὐκ ἔστιν νεκρῶν ἀλλὰ ζώντων·πάντες γὰρ αὐτῷ ζῶσιν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For he is not a God of the dead, but of the living: for all live unto him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-39">
+    <p class="sent"><span class="zh-body"><span class="n">20:39</span>有幾個文士說, 夫子, 你說得好.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀποκριθέντες δέ τινες τῶν γραμματέων εἶπαν Διδάσκαλε,καλῶς εἶπας.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then certain of the scribes answering said, Master, thou hast well said.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-40">
+    <p class="sent"><span class="zh-body"><span class="n">20:40</span>以後他們不敢再問他甚麼.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οὐκέτι γὰρ ἐτόλμων ἐπερωτᾶν αὐτὸν οὐδέν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And after that <ruby class="eng-ruby">they durst not<rt>they did not dare</rt></ruby> ask him any question at all.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「durst」= dare 的古体过去式，「不敢」。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    撒都该人的难题预设了「延续靠子嗣」——耶稣的回答有没有正面回应这个预设？他只用出埃及记一句话、只抓一个时态就作了论证，这种辩法有说服力吗？为什么不引以赛亚或但以理那些明说复活的经文？
+  </div>
+</section>
+
+<section id="beat3">
+  <h2><span class="ref-tag">20:41–44</span> 大卫的子孙</h2>
+  <div class="beat-lead">没人再敢问他，于是耶稣主动发问：引诗篇110:1，指出「大卫的子孙」这个称号说不尽弥赛亚的身分。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>这次换耶稣发问：</b>前面三轮都是别人来问他(20:2权柄、20:22纳税、20:33复活)，20:40说「以后他们不敢再问他什么」，紧接着20:41耶稣主动提问。整章的攻守在这一节掉了个方向。</p>
+<p><b>引的是新约最常被引用的旧约经文：</b>诗篇110:1「耶和华对我主说，你坐在我的右边，等我使你仇敌作你的脚凳」。按当时通行的看法，这篇诗的作者是大卫本人——耶稣的论证正建立在这个共识上：如果作者大卫称这位将来者为「我主」，那么「大卫的子孙」这个称号就不足以说明他的身分，因为父辈不会称后代为主。</p>
+<p><b>他不是在否认「大卫的子孙」：</b>这个称号在本书里出现过，而且耶稣接受了它——耶利哥城外的瞎子正是喊着「大卫的子孙耶稣阿，可怜我罢」(18:38-39)得医治的。这里的说法不是「我不是大卫的子孙」，而是「只说这一层不够」。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>诗篇110:1 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">〔大衛的詩.〕耶和華對我主說, 你坐在我的右邊, 等我使你仇敵作你的腳凳.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音18:38-39(瞎子喊大卫的子孙) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他就呼叫說, 大衛的子孫耶穌阿, 可憐我罷. 在前頭走的人, 就責備他, 不許他作聲．他卻越發喊叫說, 大衛的子孫, 可憐我罷.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἐβόησεν λέγων Ἰησοῦ υἱὲ Δαυείδ,ἐλέησόν με. καὶ οἱ προάγοντες ἐπετίμων αὐτῷ ἵνα σιγήσῃ·αὐτὸς δὲ πολλῷ μᾶλλον ἔκραζεν Υἱὲ Δαυείδ,ἐλέησόν με.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v20-41">
+    <p class="sent"><span class="zh-body"><span class="n">20:41</span>耶穌對他們說, 人怎麼說基督是<ruby class="zh-ruby">大衛的子孫<rt>Dauid huion</rt></ruby>呢.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Εἶπεν δὲ πρὸς αὐτούς Πῶς λέγουσιν τὸν Χριστὸν εἶναι Δαυεὶδ υἱόν;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto them, How say they that Christ is David’s son?</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「大卫的子孙」(<b class='gk'>Δαυεὶδ υἱόν</b>)——这正是耶利哥城外的瞎子喊他的那个称号(18:38-39「大卫的子孙耶稣阿，可怜我罢」，υἱὲ Δαυείδ)。当时耶稣接受了这个称呼；现在他自己把这个称号提出来当问题问：如果弥赛亚是大卫的后代，大卫怎么会称他为「主」？他没有否认这个头衔，是说这个头衔<b>不够用</b>。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-42">
+    <p class="sent"><span class="zh-body"><span class="n">20:42</span>詩篇上, 大衛自己說, 『主對我主說, 你坐在我的右邊,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>αὐτὸς γὰρ Δαυεὶδ λέγει ἐν βίβλῳ ψαλμῶν Εἶπεν Κύριος τῷ Κυρίῳ μου Κάθου ἐκ δεξιῶν μου</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And David himself saith in the book of Psalms, The LORD said unto my Lord, Sit thou on my right hand,</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>引自诗篇110:1，是新约引用次数最多的旧约经文。中文对照时有个可留意处：诗篇110:1和合本作「<b>耶和华</b>对我主说」，路加20:42引用同一句却作「<b>主</b>对我主说」——希腊文两处都是Κύριος(七十士译本用Κύριος译神名)，中译在诗篇里还原成「耶和华」，在福音书里则保留「主」，于是「主对我主」这个双关在中文里只在路加这边看得见。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-43">
+    <p class="sent"><span class="zh-body"><span class="n">20:43</span>等我使你仇敵作你的腳凳.』</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἕως ἂν θῶ τοὺς ἐχθρούς σου ὑποπόδιον τῶν ποδῶν σου.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Till I make thine enemies thy footstool.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-44">
+    <p class="sent"><span class="zh-body"><span class="n">20:44</span>大衛既稱他為主, 他怎麼又是大衛的子孫呢.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Δαυεὶδ οὖν αὐτὸν Κύριον καλεῖ,καὶ πῶς αὐτοῦ υἱός ἐστιν;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>David therefore calleth him Lord, how is he then his son?</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    耶稣自己提出「大卫的子孙」这个问题，是要否认这个称号，还是要说它不够？瞎子当初这样喊他，他接受了(18:38-39)——同一个称号在两处的分量一样吗？
+  </div>
+</section>
+
+<section id="beat4">
+  <h2><span class="ref-tag">20:45–47</span> 防备文士</h2>
+  <div class="beat-lead">当着众人对门徒说的一段警告，收束整章：指出对可见敬意的贪恋，以及「侵吞寡妇家产」与长篇祷告并存的反差。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>说给谁听：</b>20:45特意点明「众百姓听的时候，耶稣对<b>门徒</b>说」——话是对门徒说的，却当着所有人说。这既是给门徒的警告，也是当众的评断。</p>
+<p><b>列举的四样都属于「可见的敬意」：</b>长衣(στολή，及地礼袍)、街市上的问安、会堂里的高位、筵席上的首座。这些本身在当时的社会里都是正当的敬师之礼——被指责的不是这些礼节，而是「好」和「喜爱」(θελόντων / φιλούντων)，即把这些当成追求的目标。</p>
+<p><b>「侵吞寡妇的家产」具体指什么，经文没说：</b>κατεσθίω字面是「吃掉、吞噬」。学者提出过几种可能(受托代管寡妇产业而中饱私囊、以宗教劝募的名义索取、收取过高的诉讼或代祷费用等)，但路加没有说明，无法在经文内部确定，此处只列出可能而不选定。</p>
+<p><b>本周停在这里，但下一句是那个寡妇：</b>紧接着20:47的，是21:1-4耶稣看见穷寡妇把「一切养生的都投上了」。「侵吞寡妇家产」与「寡妇投上全部」两段之间没有换场景。这个并置是路加自己安排的，下一次读21章时值得回头看这一句。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音21:1-4(下一段·穷寡妇) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌抬頭觀看, 見財主把捐項投在庫裡. 又見一個窮寡婦, 投了兩個小錢． 就說, 我實在告訴你們．這窮寡婦, 所投的比眾人還多． 因為眾人都是自己有餘, 拿出來投在捐項裡．但這寡婦是自己不足, 把他一切養生的都投上了.</p><p class="cite-gr"><span class="lbl">GR</span><span>Ἀναβλέψας δὲ εἶδεν τοὺς βάλλοντας εἰς τὸ γαζοφυλάκιον τὰ δῶρα αὐτῶν πλουσίους. εἶδεν δέ τινα χήραν πενιχρὰν βάλλουσαν ἐκεῖ λεπτὰ δύο, καὶ εἶπεν Ἀληθῶς λέγω ὑμῖν ὅτι ἡ χήρα αὕτη ἡ πτωχὴ πλεῖον πάντων ἔβαλεν· πάντες γὰρ οὗτοι ἐκ τοῦ περισσεύοντος αὐτοῖς ἔβαλον εἰς τὰ δῶρα,αὕτη δὲ ἐκ τοῦ ὑστερήματος αὐτῆς πάντα τὸν βίον ὃν εἶχεν ἔβαλεν.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Brooklyn_Museum_-_The_Widow's_Mite_(Le_denier_de_la_veuve)_-_James_Tissot.jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brooklyn_Museum_-_The_Widow's_Mite_(Le_denier_de_la_veuve)_-_James_Tissot.jpg" alt="《寡妇的两个小钱》" loading="lazy"></a>
+    <div class="painting-cap">詹姆斯·迪索 (James Tissot) · 《寡妇的两个小钱》(<i>The Widow's Mite</i>) · 约1886-1894 · 布鲁克林博物馆。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">画的其实是下一段(21:1-4)的场景，放在这里是因为它同时画出了这一段：画面右侧那两个神情不善的人一般认为是文士——也就是20:47刚说「侵吞寡妇家产」的那些人。迪索把相邻的两段并在同一个画面里了。</p>
+  </div>
+  <div class="unit para-start" id="v20-45">
+    <p class="sent"><span class="zh-body"><span class="n">20:45</span>眾百姓聽的時候, 耶穌對門徒說,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἀκούοντος δὲ παντὸς τοῦ λαοῦ εἶπεν τοῖς μαθηταῖς</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then in the audience of all the people he said unto his disciples,</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-46">
+    <p class="sent"><span class="zh-body"><span class="n">20:46</span>你們要防備文士．他們好穿<ruby class="zh-ruby">長衣<rt>stolais</rt></ruby>遊行, 喜愛人在街市上問他們安, 又喜愛會堂裡的高位, 筵席上的首座．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Προσέχετε ἀπὸ τῶν γραμματέων τῶν θελόντων περιπατεῖν ἐν στολαῖς καὶ φιλούντων ἀσπασμοὺς ἐν ταῖς ἀγοραῖς καὶ πρωτοκαθεδρίας ἐν ταῖς συναγωγαῖς καὶ πρωτοκλισίας ἐν τοῖς δείπνοις,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Beware of the scribes, which desire to walk in long robes, and love greetings in the markets, and the highest seats in the synagogues, and <ruby class="eng-ruby">the chief rooms at feasts<rt>the places of honour at banquets</rt></ruby>;</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>στολαῖς</b> · stolais <span class='zh'>「长衣」——不是日常外袍，而是及地的礼服长袍，标志身分与尊荣。后面三样(街市问安、会堂高位、筵席首座)都是同一类东西：可见的社会敬意。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「chief rooms at feasts」里的 room 是古义「位置、座位」(不是「房间」)——即筵席上的首座。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-47">
+    <p class="sent"><span class="zh-body"><span class="n">20:47</span>他們<ruby class="zh-ruby">侵吞寡婦的家產<rt>katesthiousin tas oikias tōn chērōn</rt></ruby>, 假意作很長的禱告．這些人要受更重的刑罰.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἳ κατεσθίουσιν τὰς οἰκίας τῶν χηρῶν καὶ προφάσει μακρὰ προσεύχονται·οὗτοι λήμψονται περισσότερον κρίμα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Which devour widows’ houses, and <ruby class="eng-ruby">for a shew<rt>for appearance's sake</rt></ruby> make long prayers: the same shall receive <ruby class="eng-ruby">greater damnation<rt>a heavier judgement</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>κατεσθίουσιν</b> <span class='zh'>「侵吞」字面是「吃掉、吞噬」(κατά+ἐσθίω，加强语气的『吃』)。具体所指学者有几种推测(受托管理寡妇产业而中饱、以宗教名义索取奉献、收取过高讼费等)，经文本身没有说明是哪一种，宜按「无法核实的细节」处理，不必替它选定。</span></div>
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>紧接着这句「侵吞寡妇的家产」，下一段(21:1-4)就是那个把「一切养生的都投上了」的穷寡妇。路加把这两段放在一起，中间没有换场景——本周经文停在20:47，但读的时候不妨知道下一句是什么。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「for a shew」= 为了做样子、装门面(shew 是 show 的古拼法)。「damnation」在1611年英语里泛指「定罪、判决」，不必然是后世神学化的「永罚」——原文κρίμα即「判决」。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    被指责的是长衣、高位、首座这些东西本身，还是「喜爱」它们？「侵吞寡妇的家产」和「作很长的祷告」为什么被放在同一句里？话是对门徒说的，却当着众人——这个安排有什么用意？
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-cf">对照</span>希腊/中/英三方比较</span>
+    <span><span class="tag t-zhu">注</span>背景说明</span>
+    <span><span class="tag t-en">英</span>KJV 语言点</span>
+  </div>
+  希腊原文：Nestle 1904 (MACULA Greek, lowfat treebank)。中文：和合本(Chinese Union Version, Big5 数字化本)。英译：King James Version (1611/1769)。三者均为公共领域文本。标点保留原始数字化文本所用的半形符号。
+  <p style="margin-top:.8rem">历史背景部分引用：约瑟夫斯《犹太古史》18.1-10、18.16、23-25，《犹太战记》2.165；旧约经文(申25:5-6、出3:6、诗110:1、创1:27)；新约对照(路18:38-39、19:8、21:1-4、23:2、徒23:8)。提比略第纳里乌斯银币的正背面铭文(TI CAESAR DIVI AVG F AVGVSTVS / PONTIF MAXIM)经检索钱币学资料核对。ἐνκάθετος、πανουργία、ἰσάγγελοι「新约仅此一见」三项，系以本地语料库(马太/马可/路加/约翰/使徒行传, Nestle 1904)程序化核对得出，范围仅限这五卷。20:47「侵吞寡妇家产」的具体所指、以及创1:27「形像」一层是否为耶稣本意，均属无法在经文内确定的问题，注中已标明。</p>
+</footer>
+
+<script>
+  const body=document.body;
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art'};
+  for(const id in toggleMap){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+  const geoMap = L.map('geomap', {scrollWheelZoom:false}).setView([31.7780,35.2354], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(geoMap);
+
+  L.marker([31.7780,35.2354]).addTo(geoMap)
+    .bindPopup('<b>圣殿山 / 圣殿外院</b><br>本周全部29节仍发生在这里，接着20:1「在殿里教训百姓」往下');
+  L.circle([31.7780,35.2354], {radius:180, color:'#b07d2b', weight:2, fillOpacity:0.10})
+    .addTo(geoMap);
+
+  L.marker([31.7784,35.2422]).addTo(geoMap)
+    .bindPopup('<b>橄榄山</b><br>19:29,37 —— 供定位参照，本周经文不涉及');
+
+  geoMap.fitBounds(L.latLngBounds([[31.7735,35.2300],[31.7825,35.2450]]));
+</script>
+
+</body>
+</html>

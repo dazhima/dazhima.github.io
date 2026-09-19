@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路加福音 20:1–18 · 三语共读</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+    --blue:#3d6d99; --blue-soft:#dde8f2;
+    --brown:#8b6a3f; --brown-soft:#efe3cd;
+    --wine:#8c3d4f; --wine-soft:#f3e0e3;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:1.4rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  header.doc .kjv-note{margin-top:.7rem; padding:.7rem .9rem; background:var(--blue-soft);
+    border:1px solid #c7d9e8; border-left:3px solid var(--blue); border-radius:6px;
+    font-family:system-ui,sans-serif; font-size:.82rem; line-height:1.8; color:#2c4a63}
+  header.doc .kjv-note b{color:#1f3a50}
+  .mapbox{margin:1.2rem 0; padding:1rem 1rem .8rem; background:#fdfbf5; border:1px solid var(--line); border-radius:8px}
+  #geomap{width:100%; height:380px; border-radius:8px; border:1px solid var(--line)}
+  .leaflet-tooltip.map-region-label{background:transparent; border:none; box-shadow:none;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-weight:700; font-size:.85rem;
+    color:#5c2a35; text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff}
+  .map-cap{margin-top:.6rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; line-height:1.7; color:var(--muted); text-align:center}
+  .toc{font-family:system-ui,"PingFang SC",sans-serif; font-size:.8rem; color:var(--muted); margin-bottom:2rem; line-height:1.9}
+  .toc a{color:var(--amber); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid var(--line)}
+  section h2{font-size:1.25rem; margin:0 0 .5rem; font-family:"Iowan Old Style",Georgia,serif}
+  .ref-tag{display:inline-block; font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700;
+    letter-spacing:.03em; color:var(--amber); background:var(--amber-soft); border-radius:5px;
+    padding:.08rem .4rem; margin-right:.5rem; vertical-align:.15em}
+  .beat-lead{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.85rem;
+    color:var(--muted); margin-bottom:1.1rem; line-height:1.7}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:.6rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.15rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.4em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby .zh-ruby rt{display:none}
+  .hide-ruby .zh-ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  ruby.eng-ruby rt{font-family:system-ui,sans-serif; font-style:normal; font-size:.52em; color:var(--blue); font-weight:600}
+  .hide-en-notes .eng-ruby rt{display:none}
+  .hide-en-notes .eng-ruby{ -webkit-text-decoration:underline dotted #b9cfe0; text-decoration:underline dotted #b9cfe0}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.88rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks,.en-notes{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .en-notes{background:#f4f8fb; border-left-color:var(--blue)}
+  .hide-remarks .remarks{display:none}
+  .hide-en-notes .en-notes{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .t-en{background:var(--blue-soft); color:var(--blue)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin:1.4rem 0 .4rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .history{margin:0 0 1.3rem; padding:.7rem 1rem; background:var(--brown-soft); border:1px solid #ddc9a3; border-left:3px solid var(--brown); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.84rem; line-height:1.8; color:#4a3a20}
+  .history summary{cursor:pointer; font-size:.88rem; font-weight:700; color:#3d2f18; padding:.15rem 0; list-style:revert}
+  .history summary::marker{color:var(--brown)}
+  .history[open] summary{margin-bottom:.5rem}
+  .history-body p{margin:.5rem 0}
+  .history-body p:first-child{margin-top:0}
+  .history-body p:last-child{margin-bottom:0}
+  .hide-history .history{display:none}
+  .painting{margin:0 0 1.3rem; text-align:center}
+  .painting img{max-width:100%; max-height:420px; border-radius:6px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .painting-cap{margin-top:.5rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.76rem; color:var(--muted)}
+  .painting-note{margin:.3rem auto 0; max-width:520px; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; color:var(--muted); line-height:1.6}
+  .hide-art .painting{display:none}
+  .cite-group{margin-top:.7rem; padding-top:.6rem; border-top:1px dashed #ddc9a3}
+  .cite-group-label{font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.04em;
+    color:#8b6a3f; text-transform:uppercase; margin-bottom:.4rem}
+  details.cite{margin:.3rem 0; padding:.35rem .6rem; background:#fffdf7; border:1px solid #e6d9bc; border-radius:6px}
+  details.cite summary{cursor:pointer; font-size:.78rem; font-weight:600; color:#7a5620; list-style:revert; padding:0}
+  details.cite summary::marker{color:#b07d2b}
+  details.cite .cite-body{margin-top:.4rem}
+  .cite-zh{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif; font-size:.92rem; line-height:1.7; margin:.2rem 0; color:var(--ink)}
+  .cite-gr{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-size:.82rem; line-height:1.6; margin:.3rem 0; color:var(--greek); display:flex; gap:.5rem}
+  .cite-note{font-family:system-ui,sans-serif; font-size:.72rem; color:var(--muted); margin:.2rem 0 0}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">查经</a> &rsaquo; 路加福音 &rsaquo; <b>20:1–18</b> &nbsp;·&nbsp; 三语共读</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">KJV</button>
+  <button class="btn" id="t-enotes">英语讲解</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-hist">背景</button>
+  <button class="btn" id="t-art">名画</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>路加福音 20:1–18</h1>
+    <div class="sub">和合本(中文, 阅读对象) · Nestle 1904(希腊原文, 锚点) · KJV(英译, 平行参照 — 也可直接读)</div>
+    <div class="lead">
+      延续前两周的方法：和合本是既有译本，直接作为阅读对象；希腊文只作锚点，标出个别值得注意的词；KJV平行对照，分歧处标出来(对照)。<b>释义</b>留白，现场一起填。本周段落：质问权柄 → 凶恶园户的比喻 → 房角的头块石头。三段是<b>一场连续的对话</b>，中间没有换场景也没有换听众，读的时候注意它们是一口气下来的。
+    </div>
+    <div class="kjv-note">
+      <b>怎么读KJV(1611年英语)的几个常见古体：</b> thou/thee/thy/thine = 单数「你/你的」；ye = 复数「你们」；
+      动词词尾 <b>-est/-eth</b> 表第二/第三人称单数现在时(wilt=will、doth=does、hast=have、goeth=goes、saith=says、spake=spoke)；
+      unto = to。这些很常见，就不逐一标注了；下面只标真正会让人卡住的<b>词汇/古今异义词</b>，点「英语讲解」可以单独关/开。
+    </div>
+    <div class="mapbox">
+      <div id="geomap"></div>
+      <div class="map-cap">底图为 OpenStreetMap 实景地图(需要联网加载)。<b>本周经文没有移动</b>——18节全部发生在圣殿外院同一个地方(20:1「在殿里教训百姓」)，所以地图只标出圣殿山，另附上周的橄榄山作定位参照。前两周那种「路线图」这周用不上。</div>
+    </div>
+    <div class="toc"><a href="#beat1">20:1–8 质问权柄</a> · <a href="#beat2">20:9–16 凶恶园户的比喻</a> · <a href="#beat3">20:17–18 房角的头块石头</a></div>
+  </header>
+
+<section id="beat1">
+  <h2><span class="ref-tag">20:1–8</span> 质问权柄</h2>
+  <div class="beat-lead">公会的代表团(祭司长、文士、长老)在圣殿里当众质问耶稣凭什么权柄行事；耶稣用施洗约翰的洗礼反问，把问题原样递回去。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>来的是谁：</b>「祭司长和文士并长老」这三类人合在一起，基本就是公会(Sanhedrin)的三个组成部分——不是几个好奇的路人，而是当时犹太最高宗教与司法机构的正式代表团。他们上前发难，等于是官方在质询耶稣的资格。上一段19:47刚说过这几类人「都想要杀他」，只是「寻不出法子来」，这次质问就是接着那个未遂的动机来的。</p>
+<p><b>问题的性质：</b>他们问的是「你仗着<b>什么权柄</b>(ἐξουσία)作这些事」以及「<b>给你这权柄的是谁</b>」——争的是授权来源，不是内容真假。在一个讲究师承与按立的体系里，这是最要害的一击：耶稣没有受过公认的拉比训练，也没有圣殿方面的授权，却在圣殿里教训人、还刚刚清了场(19:45)。「这些事」大概率直接指洁净圣殿那件事。</p>
+<p><b>反问不是逃避，是同构：</b>耶稣用施洗约翰的洗礼反问，是把同一个问题原样递回去——约翰同样没有官方授权，同样被百姓当作先知(20:6)，公会同样没有承认过他。所以答案「从天上来」或「从人间来」，都会把他们自己套住。这种以问答问的方式在拉比辩论传统里是正当手法，不算耍赖。</p>
+<p><b>他们的顾虑很实在：</b>20:6「百姓都要用石头打死我们」——不是夸张的修辞。石刑是当时对亵渎、亵慢先知一类罪的处置方式(参约8:59、徒7:58百姓真的动手拿石头)。他们的推理完全是政治算计：不是「哪个答案是真的」，而是「哪个答案代价小」。20:7「不知道」是个明显的托辞，等于当众承认自己在这个问题上无法作出判断——而这正是宗教权威最不能承认的事。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音19:47-48(上文) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌天天在殿裡教訓人.祭司長, 和文士, 與百姓的尊長, 都想要殺他． 但尋不出法子來, 因為百姓都側耳聽他.</p><p class="cite-gr"><span class="lbl">GR</span><span>Καὶ ἦν διδάσκων τὸ καθ’ἡμέραν ἐν τῷ ἱερῷ·οἱ δὲ ἀρχιερεῖς καὶ οἱ γραμματεῖς ἐζήτουν αὐτὸν ἀπολέσαι καὶ οἱ πρῶτοι τοῦ λαοῦ, καὶ οὐχ εὕρισκον τὸ τί ποιήσωσιν·ὁ λαὸς γὰρ ἅπας ἐξεκρέμετο αὐτοῦ ἀκούων.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>约翰福音8:59 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">於是他們拿石頭要打他．耶穌卻躲藏, 從殿裡出去了.</p><p class="cite-gr"><span class="lbl">GR</span><span>ἦραν οὖν λίθους ἵνα βάλωσιν ἐπ’αὐτόν·Ἰησοῦς δὲ ἐκρύβη καὶ ἐξῆλθεν ἐκ τοῦ ἱεροῦ.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>使徒行传7:58 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">把他推到城外, 用石頭打他．作見證的人, 把衣裳放在一個少年人名叫掃羅的腳前.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἐκβαλόντες ἔξω τῆς πόλεως ἐλιθοβόλουν.καὶ οἱ μάρτυρες ἀπέθεντο τὰ ἱμάτια αὐτῶν παρὰ τοὺς πόδας νεανίου καλουμένου Σαύλου.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Brooklyn_Museum_-_The_Chief_Priests_Ask_Jesus_by_What_Right_Does_He_Act_in_This_Way_-_James_Tissot.jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Brooklyn_Museum_-_The_Chief_Priests_Ask_Jesus_by_What_Right_Does_He_Act_in_This_Way_-_James_Tissot.jpg" alt="《祭司长质问耶稣凭什么权柄行事》" loading="lazy"></a>
+    <div class="painting-cap">詹姆斯·迪索 (James Tissot) · 《祭司长质问耶稣凭什么权柄行事》(<i>The Chief Priests Ask Jesus by What Right Does He Act in This Way</i>) · 约1886-1894 · 布鲁克林博物馆。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">迪索为《我主耶稣基督的一生》系列所作，与上周撒该那幅同属一套。这个场景本身画作不多，迪索这幅是少数正面处理「质问权柄」这一幕的作品。</p>
+  </div>
+  <div class="unit para-start" id="v20-1">
+    <p class="sent"><span class="zh-body"><span class="n">20:1</span>有一天耶穌在殿裡教訓百姓, 講福音的時候, 祭司長和文士並長老上前來,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ἐγένετο ἐν μιᾷ τῶν ἡμερῶν διδάσκοντος αὐτοῦ τὸν λαὸν ἐν τῷ ἱερῷ καὶ εὐαγγελιζομένου ἐπέστησαν οἱ ἀρχιερεῖς καὶ οἱ γραμματεῖς σὺν τοῖς πρεσβυτέροις,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And it came to pass, that on one of those days, as he taught the people in the temple, and preached the gospel, the chief priests and the scribes <ruby class="eng-ruby">came upon him<rt>confronted him</rt></ruby> with the elders,</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「came upon him」在这里不是「偶然遇见」，而是带有突然逼近、当众发难的意味(希腊文ἐπέστησαν，「站到跟前」)——是来兴师问罪的，不是来请教的。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-2">
+    <p class="sent"><span class="zh-body"><span class="n">20:2</span>問他說, 你告訴我們, 你仗著甚麼<ruby class="zh-ruby">權柄<rt>exousia</rt></ruby>作這些事, 給你這權柄的是誰呢.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ εἶπαν λέγοντες πρὸς αὐτόν Εἰπὸν ἡμῖν ἐν ποίᾳ ἐξουσίᾳ ταῦτα ποιεῖς,ἢ τίς ἐστιν ὁ δούς σοι τὴν ἐξουσίαν ταύτην;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And spake unto him, saying, Tell us, by what authority <ruby class="eng-ruby">doest thou<rt>do you do</rt></ruby> these things? or who is he that gave thee this authority?</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>ἐξουσία</b> · exousia <span class='zh'>「权柄」——这个词在本段是全部争论的焦点，20:2问了两次(「仗着什么权柄」「给你这权柄的是谁」)，20:8耶稣用同一个词把问题原样退回去。注意他们问的不是「你说的对不对」，而是「谁授权你的」——争的是授权来源，不是内容真假。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「doest thou」= do you do，-est 是古体第二人称单数词尾；整句「by what authority doest thou these things」= 你凭什么权柄做这些事。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-3">
+    <p class="sent"><span class="zh-body"><span class="n">20:3</span>耶穌回答說, 我也要問你們一句話．你們且告訴我．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀποκριθεὶς δὲ εἶπεν πρὸς αὐτούς Ἐρωτήσω ὑμᾶς κἀγὼ λόγον,καὶ εἴπατέ μοι</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he answered and said unto them, I will also ask you one thing; and answer me:</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-4">
+    <p class="sent"><span class="zh-body"><span class="n">20:4</span>約翰的洗禮, 是從天上來的, 是從人間來的呢.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Τὸ βάπτισμα Ἰωάνου ἐξ οὐρανοῦ ἦν ἢ ἐξ ἀνθρώπων;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>The baptism of John, was it from heaven, or of men?</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-5">
+    <p class="sent"><span class="zh-body"><span class="n">20:5</span>他們彼此商議說, 我們若說從天上來, 他必說你們為甚麼不信他呢．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ συνελογίσαντο πρὸς ἑαυτοὺς λέγοντες ὅτι Ἐὰν εἴπωμεν Ἐξ οὐρανοῦ,ἐρεῖ Διὰ τί οὐκ ἐπιστεύσατε αὐτῷ;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And <ruby class="eng-ruby">they reasoned with themselves<rt>they discussed among themselves</rt></ruby>, saying, If we shall say, From heaven; he will say, Why then believed ye him not?</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「reasoned with themselves」= 彼此商议、盘算(不是「自言自语」)。with themselves 在KJV里指「在他们之间」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-6">
+    <p class="sent"><span class="zh-body"><span class="n">20:6</span>若說從人間來, 百姓都要<ruby class="zh-ruby">用石頭打死<rt>katalithasei</rt></ruby>我們．因為他們信約翰是先知.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐὰν δὲ εἴπωμεν Ἐξ ἀνθρώπων,ὁ λαὸς ἅπας καταλιθάσει ἡμᾶς·πεπεισμένος γάρ ἐστιν Ἰωάνην προφήτην εἶναι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But and if we say, Of men; all the people will stone us: for <ruby class="eng-ruby">they be persuaded<rt>they are convinced</rt></ruby> that John was a prophet.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b class='gk'>καταλιθάσει</b>(用石头打死)——这是路加19-20章里「石头」(λίθ-)这条线索的中间一环：19:40「石头必要呼叫」、19:44「不留一块石头在石头上」、20:6「用石头打死我们」、20:17-18「房角的头块石头/砸得稀烂」。同一个词根，五次出现，语气一次比一次重。这条线索是原文才看得见的，中文各处译法不同(呼叫/石头/打死/房角石)，串不起来。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「they be persuaded」= they are persuaded，be 作现在时复数系动词是古体用法；「被说服了」即「认定、深信」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-7">
+    <p class="sent"><span class="zh-body"><span class="n">20:7</span>於是回答說, 不知道是從那裡來的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἀπεκρίθησαν μὴ εἰδέναι πόθεν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they answered, that they could not tell <ruby class="eng-ruby">whence it was<rt>where it came from</rt></ruby>.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「whence」= 从哪里来，古体疑问副词(from where)。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-8">
+    <p class="sent"><span class="zh-body"><span class="n">20:8</span>耶穌說, 我也不告訴你們, 我仗著甚麼<ruby class="zh-ruby">權柄<rt>exousia</rt></ruby>作這些事.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ὁ Ἰησοῦς εἶπεν αὐτοῖς Οὐδὲ ἐγὼ λέγω ὑμῖν ἐν ποίᾳ ἐξουσίᾳ ταῦτα ποιῶ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Jesus said unto them, Neither tell I you by what authority I do these things.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    他们问的是「谁给你这权柄」，不是「你说得对不对」——这个提问方式本身透露了什么？耶稣用反问回应，是正当的辩论手法，还是回避？他们最后说「不知道」，是真不知道，还是不敢说？
+  </div>
+</section>
+
+<section id="beat2">
+  <h2><span class="ref-tag">20:9–16</span> 凶恶园户的比喻</h2>
+  <div class="beat-lead">紧接着质问，耶稣对百姓讲了葡萄园与园户的比喻：主人一再打发仆人去收果子，都被打发空手回去，最后打发爱子，园户却把他推出园外杀了。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>一听「葡萄园」就懂了：</b>以赛亚书5:1-7是著名的「葡萄园之歌」，先知在那首歌的末尾自己揭了谜底：「万军之耶和华的葡萄园，就是以色列家」(赛5:7)。所以耶稣一开口说「有人栽了一个葡萄园」，听众不需要任何解释就知道这个比喻在讲谁——这也是为什么20:19(本段之后)记载他们「看出这比喻是指着他们说的」。</p>
+<p><b>租佃制度是当时的现实：</b>加利利与犹大地确有大量不在地地主(absentee landlord)把田产租给佃农、按季收取实物地租的安排，佃农与地主代理人之间的暴力冲突并非罕见。比喻的情节在当时听众耳中是完全写实的社会场景，不是奇幻设定——这也是它有效的原因：直到「打发爱子去」那一步之前，一切都还在常理之内。</p>
+<p><b>「我的爱子」：</b>20:13用的措辞是<b>τὸν υἱόν μου τὸν ἀγαπητόν</b>，跟路加福音3:22耶稣受洗时天上声音说的「你是我的爱子」一字不差。比喻里的「爱子」指谁，对读过前面的读者不构成悬念。(顺带一提，9:35登山变像时路加改用了ἐκλελεγμένος「我所拣选的」，不是ἀγαπητός——路加这两处并不是随手同义替换。)</p>
+<p><b>先推出去、再杀：</b>20:15的次序是「把他推出葡萄园外杀了」，马可福音12:8的次序则相反(先杀，再抛出园外)。路加(和马太)的次序，跟耶稣实际在城门外被处死的情形一致(参希伯来书13:12「耶稣……也就在城门外受苦」)。这个次序差异是否有意为之，学者看法不一，此处只标出事实。</p>
+<p><b>「万不可的」是句重话：</b>希腊文<b>Μὴ γένοιτο</b>是固定的强烈否定语(字面「但愿不要发生」)。经核对本地语料库(马太/马可/路加/约翰/使徒行传)，这个固定说法在四福音书里<b>仅出现于此处</b>。它其实是保罗书信的招牌用语(罗马书、加拉太书共出现十余次，和合本多译作「断乎不是」)。中文「这是万不可的」语气偏温和，原文更接近一声惊呼。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>以赛亚书5:1-7(葡萄园之歌) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">我要為我所親愛的唱歌, 是我所愛者的歌, 論他葡萄園的事.我所親愛的有葡萄園, 在肥美的山岡上． 他刨挖園子, 撿去石頭, 栽種上等的葡萄樹, 在園中蓋了一座樓, 又鑿出壓酒池．指望結好葡萄, 反倒結了野葡萄. 耶路撒冷的居民, 和猶大人哪, 請你們現今在我與我的葡萄園中, 斷定是非. 我為我葡萄園所作之外, 還有甚麼可作的呢．我指望結好葡萄, 怎麼倒結了野葡萄呢. 現在我告訴你們, 我要向我葡萄園怎樣行．我必撤去籬笆, 使他被吞滅, 拆毀牆垣, 使他被踐踏． 我必使他荒廢, 不再修理, 不再鋤刨．荊棘蒺藜倒要生長．我也必命雲不降雨在其上. 萬軍之耶和華的葡萄園, 就是以色列家, 他所喜愛的樹, 就是猶大人．他指望的是公平, 誰知倒有暴虐．〔或作倒流人血〕指望的是公義, 誰知倒有冤聲.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音3:22(受洗·爱子) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">聖靈降臨在他身上, 形狀彷彿鴿子, 又有聲音從天上來, 說, 你是我的愛子, 我喜悅你.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ καταβῆναι τὸ Πνεῦμα τὸ Ἅγιον σωματικῷ εἴδει ὡς περιστερὰν ἐπ’αὐτόν,καὶ φωνὴν ἐξ οὐρανοῦ γενέσθαι Σὺ εἶ ὁ Υἱός μου ὁ ἀγαπητός,ἐν σοὶ εὐδόκησα.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音9:35(变像·所拣选的) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">有聲音從雲彩裡出來, 說, 這是我的兒子, 我所揀選的, 〔有古卷作這是我的愛子〕你們要聽他.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ φωνὴ ἐγένετο ἐκ τῆς νεφέλης λέγουσα Οὗτός ἐστιν ὁ Υἱός μου ὁ ἐκλελεγμένος,αὐτοῦ ἀκούετε.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音19:12(上周·主人远行) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">有一個貴冑往遠方去, 要得國回來.</p><p class="cite-gr"><span class="lbl">GR</span><span>εἶπεν οὖν Ἄνθρωπός τις εὐγενὴς ἐπορεύθη εἰς χώραν μακρὰν λαβεῖν ἑαυτῷ βασιλείαν καὶ ὑποστρέψαι.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>马可福音12:8(次序相反) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">於是拿住他, 殺了他, 把他丟在園外.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ λαβόντες ἀπέκτειναν αὐτόν,καὶ ἐξέβαλον αὐτὸν ἔξω τοῦ ἀμπελῶνος.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>希伯来书13:12 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">所以耶穌, 要用自己的血叫百姓成聖, 也就在城門外受苦.</p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Marten_van_Valckenborch_-_Parable_of_the_wicked_husbandmen_(October).jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Marten_van_Valckenborch_-_Parable_of_the_wicked_husbandmen_(October).jpg" alt="《凶恶园户的比喻(十月)》" loading="lazy"></a>
+    <div class="painting-cap">马腾·范·瓦尔肯博赫 (Marten van Valckenborch) · 《凶恶园户的比喻(十月)》(<i>Parable of the Wicked Husbandmen (October)</i>) · 16世纪末 · Wikimedia Commons。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">属于尼德兰传统的「月令图」系列，把比喻放进十月葡萄收成的农事场景里——这恰好让比喻的写实底色(租佃、收租季节)显出来，而不是画成抽象的宗教寓意。</p>
+  </div>
+  <div class="unit para-start" id="v20-9">
+    <p class="sent"><span class="zh-body"><span class="n">20:9</span>耶穌就設比喻, 對百姓說, 有人栽了一個<ruby class="zh-ruby">葡萄園<rt>ampelōna</rt></ruby>, 租給<ruby class="zh-ruby">園戶<rt>geōrgois</rt></ruby>, 就往外國去住了許久.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἤρξατο δὲ πρὸς τὸν λαὸν λέγειν τὴν παραβολὴν ταύτην.ἄνθρωπος ἐφύτευσεν ἀμπελῶνα,καὶ ἐξέδετο αὐτὸν γεωργοῖς,καὶ ἀπεδήμησεν χρόνους ἱκανούς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then began he to speak to the people this parable; A certain man planted a vineyard, and <ruby class="eng-ruby">let it forth to husbandmen<rt>leased it to tenant farmers</rt></ruby>, and went into a far country for a long time.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>「栽了一个葡萄园」直接搬用以赛亚书5:1-7「葡萄园之歌」的场景——那首歌里神自己说明了谜底：「万军之耶和华的葡萄园，就是以色列家」(赛5:7)。所以听众一听见「葡萄园」三个字，就知道这个比喻在说谁，不需要耶稣点破。</span></div>
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「往外国去住了许久」——跟上周19:12那个「贵冑往远方去要得国」的比喻共用「主人不在场」的结构，但用词不同(19:12是ἐπορεύθη εἰς χώραν μακράν，这里是ἀπεδήμησεν)。两个比喻挨得很近，都在问：主人不在的时候，你怎么对待托付给你的东西。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「husbandmen」= 佃农、耕种的人，不是现代英语的「丈夫们」——husbandry 至今仍指农牧业。「let it forth」= 出租(let 作「出租」义，跟今天 to let 招租牌同源)。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-10">
+    <p class="sent"><span class="zh-body"><span class="n">20:10</span>到了時候, 打發一個僕人到園戶那裡去, 叫他們把園中當納的果子交給他．園戶竟打了他, 叫他空手回去.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ καιρῷ ἀπέστειλεν πρὸς τοὺς γεωργοὺς δοῦλον,ἵνα ἀπὸ τοῦ καρποῦ τοῦ ἀμπελῶνος δώσουσιν αὐτῷ·οἱ δὲ γεωργοὶ ἐξαπέστειλαν αὐτὸν δείραντες κενόν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And at the season he sent a servant to the husbandmen, that they should give him of the fruit of the vineyard: but the husbandmen beat him, and <ruby class="eng-ruby">sent him away empty<rt>sent him off empty-handed</rt></ruby>.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「empty」在这里作副词用，「空手地」，等于现代的 empty-handed。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-11">
+    <p class="sent"><span class="zh-body"><span class="n">20:11</span>又打發一個僕人去．他們也打了他, 並且凌辱他, 叫他空手回去.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ προσέθετο ἕτερον πέμψαι δοῦλον·οἱ δὲ κἀκεῖνον δείραντες καὶ ἀτιμάσαντες ἐξαπέστειλαν κενόν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And again he sent another servant: and they beat him also, and <ruby class="eng-ruby">entreated him shamefully<rt>treated him shamefully</rt></ruby>, and sent him away empty.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「entreated him shamefully」= 羞辱地对待他——entreat 在KJV里是「对待」的古义(参18:32同一用法)，不是「恳求」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-12">
+    <p class="sent"><span class="zh-body"><span class="n">20:12</span>又打發第三個僕人去．他們也打傷了他, 把他推出去了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ προσέθετο τρίτον πέμψαι·οἱ δὲ καὶ τοῦτον τραυματίσαντες ἐξέβαλον.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And again he sent a third: and they wounded him also, and cast him out.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-13">
+    <p class="sent"><span class="zh-body"><span class="n">20:13</span>園主說, 我怎麼辦呢．我要打發我的<ruby class="zh-ruby">愛子<rt>huion... agapēton</rt></ruby>去．或者他們尊敬他.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἶπεν δὲ ὁ κύριος τοῦ ἀμπελῶνος Τί ποιήσω;πέμψω τὸν υἱόν μου τὸν ἀγαπητόν·ἴσως τοῦτον ἐντραπήσονται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then said the lord of the vineyard, What shall I do? I will send my beloved son: it may be they will <ruby class="eng-ruby">reverence him<rt>show him respect</rt></ruby> when they see him.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>τὸν υἱόν μου τὸν ἀγαπητόν</b> <span class='zh'>「我的爱子」——路加福音3:22耶稣受洗时，天上的声音说的正是「你是我的爱子」(ὁ Υἱός μου ὁ ἀγαπητός)，一模一样的措辞。比喻里这个「爱子」是谁，对读过第3章的人来说没有悬念。(注意9:35登山变像时路加换了词，用的是ἐκλελεγμένος「所拣选的」，不是ἀγαπητός。)</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「reverence」作动词= 尊敬、敬重。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-14">
+    <p class="sent"><span class="zh-body"><span class="n">20:14</span>不料, 園戶看見他, 就彼此商量說, 這是<ruby class="zh-ruby">承受產業的<rt>klēronomos</rt></ruby>．我們殺他罷, 使產業歸於我們.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἰδόντες δὲ αὐτὸν οἱ γεωργοὶ διελογίζοντο πρὸς ἀλλήλους λέγοντες Οὗτός ἐστιν ὁ κληρονόμος·ἀποκτείνωμεν αὐτόν,ἵνα ἡμῶν γένηται ἡ κληρονομία.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But when the husbandmen saw him, they reasoned among themselves, saying, This is the heir: come, let us kill him, that the inheritance may be ours.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v20-15">
+    <p class="sent"><span class="zh-body"><span class="n">20:15</span>於是把他推出葡萄園外殺了.這樣, 葡萄園的主人, 要怎樣處治他們呢.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐκβαλόντες αὐτὸν ἔξω τοῦ ἀμπελῶνος ἀπέκτειναν.τί οὖν ποιήσει αὐτοῖς ὁ κύριος τοῦ ἀμπελῶνος;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>So they cast him out of the vineyard, and killed him. What therefore shall the lord of the vineyard do unto them?</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「把他推出葡萄园外杀了」——先赶出去、再杀，这个次序马可福音12:8是反的(先杀、再抛出园外)。路加(和马太)的次序，跟耶稣实际被带到城门外钉死的情形一致(参来13:12「耶稣...受苦在城门外」)。这个改动是否有意为之，学者看法不一，标注供参考。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-16">
+    <p class="sent"><span class="zh-body"><span class="n">20:16</span>他要來除滅這些園戶, 將葡萄園轉給別人．聽見的人說, 這是<ruby class="zh-ruby">萬不可的<rt>mē genoito</rt></ruby>.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐλεύσεται καὶ ἀπολέσει τοὺς γεωργοὺς τούτους,καὶ δώσει τὸν ἀμπελῶνα ἄλλοις.ἀκούσαντες δὲ εἶπαν Μὴ γένοιτο.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>He shall come and destroy these husbandmen, and shall give the vineyard to others. And when they heard it, they said, <ruby class="eng-ruby">God forbid<rt>may it never be!</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>Μὴ γένοιτο</b> <span class='zh'>「万不可的」——这是希腊文一个固定的强烈否定语，字面「但愿不要发生」。这个固定说法在四福音书里<b>只出现这一次</b>(本地语料库Mt/Mk/Lk/Jn/Acts核对确认；徒5:24虽有γένοιτο但是另一种句式)。它其实是保罗书信的招牌用语(罗马书、加拉太书里出现十多次，和合本多译作「断乎不是」)。听众这一声惊呼的分量，中文「万不可的」传达得比较轻。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「God forbid」是KJV用来翻译希腊文Μὴ γένοιτο的固定译法，字面并没有「God」这个词，原文只是「但愿不要发生」。保罗书信里同一句KJV也译作God forbid(和合本作「断乎不是」)。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    听众一听「葡萄园」就知道在说谁(赛5:7)——那耶稣为什么还要用比喻，不直说？园主一次次打发仆人去、最后打发爱子，这个「一再重来」在讲什么？听见的人喊「万不可的」，他们反对的到底是哪一句？
+  </div>
+</section>
+
+<section id="beat3">
+  <h2><span class="ref-tag">20:17–18</span> 房角的头块石头</h2>
+  <div class="beat-lead">耶稣不解释比喻，只看着他们引了诗篇118:22，再补上两句关于那块石头的警告——两节经文收束整段。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>同一篇诗篇，两次引用，四节之隔：</b>20:17引的是诗篇118:22「匠人所弃的石头，已成了房角的头块石头」。而上周19:38众人欢迎耶稣进城时喊的「奉主名来的是应当称颂的」，出自<b>同一篇</b>诗篇的118:26。群众用这篇诗迎接他，耶稣现在用同一篇诗回答他们的领袖——只是他挑的那一节讲的是「被匠人弃掉」。诗篇118是逾越节等节期唱颂的「哈利尔诗篇」之一，在场的人对整篇都不陌生。</p>
+<p><b>和合本一处未统一的译法：</b>诗篇118:22本身译作「已<b>成</b>了房角的头块石头」，路加20:17引用同一句时却译作「已<b>作</b>了房角的头块石头」——中译者没有把两处统一。用中文对照阅读时可以留意，这类细节正是查经现场大家自己能发现的。</p>
+<p><b>「房角的头块石头」到底指哪块：</b>希腊文<b>κεφαλὴν γωνίας</b>字面是「角的头」。这既可以指墙基转角处那块定位承重的基石(cornerstone)，也可以指拱门顶端那块合拢用的楔石(keystone/顶石)。两种理解都有古代文献支持，学界至今没有定论——差别在于这块石头是在最底下托住整座建筑，还是在最顶上锁住整座建筑。两种画面对「被弃的石头成了关键」这个意思都成立。</p>
+<p><b>20:18的两重旧约意象：</b>这一节通常认为叠合了以赛亚书8:14-15(神成为「绊脚的石头、跌人的磐石」，许多人在其上绊脚跌碎)与但以理书2:34-35、44-45(非人手凿出的石头砸碎列国的像，碎屑「成如夏天禾场上的糠秕，被风吹散」)。有意思的是，20:18后半用的动词λικμάω本义正是「簸扬谷物」——把糠秕扬到风里——跟但以理书那个画面对得上。这是意象叠合，不是逐字引用。</p>
+<p><b>贯穿两周的「石头」线索：</b>λίθ-这个词根在19-20章密集出现，且一次比一次重：19:40「这些石头必要呼叫起来」、19:44「不留一块石头在石头上」、20:6「百姓都要用石头打死我们」、20:17「房角的头块石头」、20:18「跌碎/砸得稀烂」。这条线索在原文里一眼可见，中文各处译法不同(呼叫的石头/拆毁的石头/行刑的石头/房角石)，串不起来——是希腊文才看得见的编排。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>诗篇118:22 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">匠人所棄的石頭, 已成了房角的頭塊石頭.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>诗篇118:26(上周19:38所引) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">奉耶和華名來的, 是應當稱頌的．我們從耶和華的殿中, 為你們祝福.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以赛亚书8:14-15 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他必作為聖所．卻向以色列兩家作絆腳的石頭, 跌人的磐石．向耶路撒冷的居民, 作為圈套和網羅. 許多人必在其上絆腳跌倒, 而且跌碎, 並陷入網羅, 被纏住.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>但以理书2:34-35 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">你觀看, 見有一塊非人手鑿出來的石頭, 打在這像半鐵半泥的腳上, 把腳砸碎, 於是金, 銀, 銅, 鐵, 泥, 都一同砸得粉碎, 成如夏天禾場上的糠秕, 被風吹散, 無處可尋．打碎這像的石頭, 變成一座大山, 充滿天下.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>但以理书2:44-45 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">當那列王在位的時候, 天上的 神必另立一國, 永不敗壞, 也不歸別國的人, 卻要打碎滅絕那一切國, 這國必存到永遠. 你既看見非人手鑿出來的一塊石頭, 從山而出, 打碎金, 銀, 銅, 鐵, 泥, 那就是至大的 神把後來必有的事給王指明．這夢準是這樣, 這講解也是確實的.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音19:40(石头必要呼叫) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌說, 我告訴你們, 若是他們閉口不說, 這些石頭必要呼叫起來.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἀποκριθεὶς εἶπεν Λέγω ὑμῖν ἐὰν οὗτοι σιωπήσουσιν,οἱ λίθοι κράξουσιν.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音19:44(不留一块石头) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">並要掃滅你, 和你裡頭的兒女, 連一塊石頭也不留在石頭上．因你不知道眷顧你的時候.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ ἐδαφιοῦσίν σε καὶ τὰ τέκνα σου ἐν σοί,καὶ οὐκ ἀφήσουσιν λίθον ἐπὶ λίθον ἐν σοί,ἀνθ’ὧν οὐκ ἔγνως τὸν καιρὸν τῆς ἐπισκοπῆς σου.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v20-17">
+    <p class="sent"><span class="zh-body"><span class="n">20:17</span>耶穌看著他們說, 經上記著, 『匠人所棄的石頭, 已作了<ruby class="zh-ruby">房角的頭塊石頭<rt>kephalēn gōnias</rt></ruby>.』這是甚麼意思呢.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ ἐμβλέψας αὐτοῖς εἶπεν Τί οὖν ἐστιν τὸ γεγραμμένον τοῦτο Λίθον ὃν ἀπεδοκίμασαν οἱ οἰκοδομοῦντες,οὗτος ἐγενήθη εἰς κεφαλὴν γωνίας;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he beheld them, and said, What is this then that is written, The stone which the builders rejected, the same is become <ruby class="eng-ruby">the head of the corner<rt>the cornerstone</rt></ruby>?</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>引自诗篇118:22。值得注意的是：上周19:38众人欢迎耶稣进城时喊的「奉主名来的是应当称颂的」出自<b>同一篇诗篇</b>的118:26——相隔四节。群众用这篇诗迎接他，耶稣现在用同一篇诗回应他们的领袖，指向的却是「被匠人弃掉」。</span></div>
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>和合本一个小细节：诗篇118:22本身译作「已<b>成</b>了房角的头块石头」，而路加20:17引用同一句时译作「已<b>作</b>了房角的头块石头」——译者没有把两处统一。对照着读中文时可以留意一下。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「the head of the corner」= 房角石、基石(cornerstone)，建筑用语，指转角处那块定位承重的关键石头。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v20-18">
+    <p class="sent"><span class="zh-body"><span class="n">20:18</span>凡掉在那石頭上的, 必要<ruby class="zh-ruby">跌碎<rt>synthlasthēsetai</rt></ruby>．那石頭掉在誰的身上, 就要把誰<ruby class="zh-ruby">砸得稀爛<rt>likmēsei</rt></ruby>.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πᾶς ὁ πεσὼν ἐπ’ἐκεῖνον τὸν λίθον συνθλασθήσεται·ἐφ’ὃν δ’ἂν πέσῃ,λικμήσει αὐτόν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Whosoever shall fall upon that stone shall be broken; but on whomsoever it shall fall, it will <ruby class="eng-ruby">grind him to powder<rt>crush him to dust</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>συνθλασθήσεται / λικμήσει</b> <span class='zh'>「跌碎」/「砸得稀烂」——两个动词力度不同：前者是摔碎、压碎；后者λικμάω本义是「簸扬(谷物)」，把打谷场上的糠秕扬到风里吹散，引申为彻底扬弃、碾成粉末。和合本「砸得稀烂」抓住了力度，但丢掉了「簸扬如糠秕」这个农事画面。</span></div>
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>这一节的意象通常认为叠合了两处旧约：以赛亚书8:14-15(绊脚的石头、跌碎)与但以理书2:34-35、44-45(非人手凿出的石头，把列国砸得粉碎，如「夏天禾场上的糠秕，被风吹散」)。但以理那句「禾场上的糠秕被风吹散」正好呼应λικμάω的簸扬本义。这是意象叠合，不是逐字引用，标注供参考。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「grind him to powder」= 把他碾成粉末，力度极强的说法。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    耶稣不解释比喻，只反问一句「这是什么意思呢」，然后引一句诗篇——为什么用引经文代替解释？「被匠人弃掉」和「房角的头块石头」是同一块石头，这个转折靠什么完成？20:18那两句(掉在石头上/石头掉在人身上)是同一件事的两面，还是两件不同的事？
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-cf">对照</span>希腊/中/英三方比较</span>
+    <span><span class="tag t-zhu">注</span>背景说明</span>
+    <span><span class="tag t-en">英</span>KJV 语言点</span>
+  </div>
+  希腊原文：Nestle 1904 (MACULA Greek, lowfat treebank)。中文：和合本(Chinese Union Version, Big5 数字化本)。英译：King James Version (1611/1769)。三者均为公共领域文本。标点保留原始数字化文本所用的半形符号。
+  <p style="margin-top:.8rem">历史背景部分引用：旧约经文(诗篇118、以赛亚书5与8、但以理书2等)；新约对照(路3:22、9:35、19:12、19:40、19:44、可12:8、来13:12)。「房角石」究竟指基石还是拱顶楔石、20:15次序与马可相反是否有意为之，都属学界无定论的问题，背景框已注明并存立场，不作定论。「Μὴ γένοιτο 在四福音书仅此一见」一项，系以本地语料库(马太/马可/路加/约翰/使徒行传, Nestle 1904)程序化核对得出。</p>
+</footer>
+
+<script>
+  const body=document.body;
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art'};
+  for(const id in toggleMap){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+  const geoMap = L.map('geomap', {scrollWheelZoom:false}).setView([31.7780,35.2354], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(geoMap);
+
+  L.marker([31.7780,35.2354]).addTo(geoMap)
+    .bindPopup('<b>圣殿山 / 圣殿外院</b><br>本周全部18节都发生在这里(20:1「在殿里教训百姓」)');
+  L.circle([31.7780,35.2354], {radius:180, color:'#b07d2b', weight:2, fillOpacity:0.10})
+    .addTo(geoMap);
+
+  L.marker([31.7784,35.2422]).addTo(geoMap)
+    .bindPopup('<b>橄榄山</b><br>上周19:29,37 —— 供定位参照，本周经文不涉及');
+
+  geoMap.fitBounds(L.latLngBounds([[31.7735,35.2300],[31.7825,35.2450]]));
+</script>
+
+</body>
+</html>

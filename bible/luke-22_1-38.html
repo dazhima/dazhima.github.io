@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路加福音 22:1–38 · 三语共读</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+    --blue:#3d6d99; --blue-soft:#dde8f2;
+    --brown:#8b6a3f; --brown-soft:#efe3cd;
+    --wine:#8c3d4f; --wine-soft:#f3e0e3;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:1.4rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  header.doc .kjv-note{margin-top:.7rem; padding:.7rem .9rem; background:var(--blue-soft);
+    border:1px solid #c7d9e8; border-left:3px solid var(--blue); border-radius:6px;
+    font-family:system-ui,sans-serif; font-size:.82rem; line-height:1.8; color:#2c4a63}
+  header.doc .kjv-note b{color:#1f3a50}
+  .mapbox{margin:1.2rem 0; padding:1rem 1rem .8rem; background:#fdfbf5; border:1px solid var(--line); border-radius:8px}
+  #geomap{width:100%; height:380px; border-radius:8px; border:1px solid var(--line)}
+  .leaflet-tooltip.map-region-label{background:transparent; border:none; box-shadow:none;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-weight:700; font-size:.85rem;
+    color:#5c2a35; text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff}
+  .map-cap{margin-top:.6rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; line-height:1.7; color:var(--muted); text-align:center}
+  .toc{font-family:system-ui,"PingFang SC",sans-serif; font-size:.8rem; color:var(--muted); margin-bottom:2rem; line-height:1.9}
+  .toc a{color:var(--amber); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid var(--line)}
+  section h2{font-size:1.25rem; margin:0 0 .5rem; font-family:"Iowan Old Style",Georgia,serif}
+  .ref-tag{display:inline-block; font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700;
+    letter-spacing:.03em; color:var(--amber); background:var(--amber-soft); border-radius:5px;
+    padding:.08rem .4rem; margin-right:.5rem; vertical-align:.15em}
+  .beat-lead{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.85rem;
+    color:var(--muted); margin-bottom:1.1rem; line-height:1.7}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:.6rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.15rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.4em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby .zh-ruby rt{display:none}
+  .hide-ruby .zh-ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  ruby.eng-ruby rt{font-family:system-ui,sans-serif; font-style:normal; font-size:.52em; color:var(--blue); font-weight:600}
+  .hide-en-notes .eng-ruby rt{display:none}
+  .hide-en-notes .eng-ruby{ -webkit-text-decoration:underline dotted #b9cfe0; text-decoration:underline dotted #b9cfe0}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.88rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks,.en-notes{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .en-notes{background:#f4f8fb; border-left-color:var(--blue)}
+  .hide-remarks .remarks{display:none}
+  .hide-en-notes .en-notes{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .t-en{background:var(--blue-soft); color:var(--blue)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin:1.4rem 0 .4rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .history{margin:0 0 1.3rem; padding:.7rem 1rem; background:var(--brown-soft); border:1px solid #ddc9a3; border-left:3px solid var(--brown); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.84rem; line-height:1.8; color:#4a3a20}
+  .history summary{cursor:pointer; font-size:.88rem; font-weight:700; color:#3d2f18; padding:.15rem 0; list-style:revert}
+  .history summary::marker{color:var(--brown)}
+  .history[open] summary{margin-bottom:.5rem}
+  .history-body p{margin:.5rem 0}
+  .history-body p:first-child{margin-top:0}
+  .history-body p:last-child{margin-bottom:0}
+  .hide-history .history{display:none}
+  .painting{margin:0 0 1.3rem; text-align:center}
+  .painting img{max-width:100%; max-height:420px; border-radius:6px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .painting-cap{margin-top:.5rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.76rem; color:var(--muted)}
+  .painting-note{margin:.3rem auto 0; max-width:520px; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; color:var(--muted); line-height:1.6}
+  .hide-art .painting{display:none}
+  .cite-group{margin-top:.7rem; padding-top:.6rem; border-top:1px dashed #ddc9a3}
+  .cite-group-label{font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.04em;
+    color:#8b6a3f; text-transform:uppercase; margin-bottom:.4rem}
+  details.cite{margin:.3rem 0; padding:.35rem .6rem; background:#fffdf7; border:1px solid #e6d9bc; border-radius:6px}
+  details.cite summary{cursor:pointer; font-size:.78rem; font-weight:600; color:#7a5620; list-style:revert; padding:0}
+  details.cite summary::marker{color:#b07d2b}
+  details.cite .cite-body{margin-top:.4rem}
+  .cite-zh{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif; font-size:.92rem; line-height:1.7; margin:.2rem 0; color:var(--ink)}
+  .cite-gr{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-size:.82rem; line-height:1.6; margin:.3rem 0; color:var(--greek); display:flex; gap:.5rem}
+  .cite-note{font-family:system-ui,sans-serif; font-size:.72rem; color:var(--muted); margin:.2rem 0 0}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">查经</a> &rsaquo; 路加福音 &rsaquo; <b>22:1–38</b> &nbsp;·&nbsp; 三语共读</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">KJV</button>
+  <button class="btn" id="t-enotes">英语讲解</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-hist">背景</button>
+  <button class="btn" id="t-art">名画</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>路加福音 22:1–38</h1>
+    <div class="sub">和合本(中文, 阅读对象) · Nestle 1904(希腊原文, 锚点) · KJV(英译, 平行参照 — 也可直接读)</div>
+    <div class="lead">
+      延续前几周的方法：和合本是既有译本，直接作为阅读对象；希腊文只作锚点，标出个别值得注意的词；KJV平行对照，分歧处标出来(对照)。<b>释义</b>留白，现场一起填。<b>受难叙事从本周开始。</b>场景第一次离开圣殿：先是犹大的交易，然后进城预备、上楼坐席，一直到22:38「够了」为止——下一节22:39他就出城往橄榄山去了。本周段落全部发生在<b>同一个晚上、同一张桌子前后</b>：撒但入犹大的心 → 预备筵席 → 最后的晚餐 → 争谁为大 → 西门我为你祈求 → 两把刀。
+    </div>
+    <div class="kjv-note">
+      <b>怎么读KJV(1611年英语)的几个常见古体：</b> thou/thee/thy/thine = 单数「你/你的」；ye = 复数「你们」；
+      动词词尾 <b>-est/-eth</b> 表第二/第三人称单数现在时(wilt=will、doth=does、hast=have、goeth=goes、saith=says、spake=spoke)；
+      unto = to。这些很常见，就不逐一标注了；下面只标真正会让人卡住的<b>词汇/古今异义词</b>，点「英语讲解」可以单独关/开。
+    </div>
+    <div class="mapbox">
+      <div id="geomap"></div>
+      <div class="map-cap">底图为 OpenStreetMap 实景地图(需要联网加载)。<b>本周场景离开了圣殿</b>：22:10「你们进了城」——门徒是从城外(橄榄山一带的夜宿处)进城去预备的；晚餐在城内一间「楼上的大房间」举行，传统上认为在西南角的上城区(即今日所称「马可楼」一带，但确切位置无从考证，地图上的标记仅为传统说法)。22:39之后耶稣才又出城回橄榄山。</div>
+    </div>
+    <div class="toc"><a href="#beat1">22:1–6 撒但入了犹大的心</a> · <a href="#beat2">22:7–13 预备逾越节的筵席</a> · <a href="#beat3">22:14–23 最后的晚餐</a> · <a href="#beat4">22:24–30 谁可算为大</a> · <a href="#beat5">22:31–34 西门，我已经为你祈求</a> · <a href="#beat6">22:35–38 钱囊、口袋、两把刀</a></div>
+  </header>
+
+<section id="beat1">
+  <h2><span class="ref-tag">22:1–6</span> 撒但入了犹大的心</h2>
+  <div class="beat-lead">逾越节临近，领袖们苦于「惧怕百姓」下不了手；隔了十七章没有出场的撒但，此刻回来了。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>撒但隔了十七章回来：</b>路加福音4:13(旷野受试探的收尾)说魔鬼「用完了各样的试探，就暂时离开耶稣」——希腊文<b>ἄχρι καιροῦ</b>，字面是「<b>直到某个时机</b>」，是一句留了伏笔的话(和合本「暂时」把这层意思译轻了)。此后路加福音再没有让撒但正面出场，直到22:3「撒但入了那称为加略人犹大的心」。受难叙事的开场，就是那个被搁置的时机到了。</p>
+<p><b>为什么要「趁众人不在跟前」：</b>22:2说领袖们「惧怕百姓」——这跟19:47-48、20:19、20:26、21:38是同一条线：整个圣殿教导期间，拦住他们下手的一直是民意。犹大提供的正是他们缺的那一样东西：一个避开人群、在夜里动手的机会(22:6 εὐκαιρίαν，「合适的时机」)。</p>
+<p><b>「守殿官」是谁：</b>στρατηγοί指圣殿卫队的长官(由利未人组成的圣殿警卫)，不是罗马军官。也就是说，逮捕的第一步是由圣殿自己的武力来执行的。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音4:13(撒但『暂时离开』) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">魔鬼用完了各樣的試探, 就暫時離開耶穌.</p><p class="cite-gr"><span class="lbl">GR</span><span>Καὶ συντελέσας πάντα πειρασμὸν ὁ διάβολος ἀπέστη ἀπ’αὐτοῦ ἄχρι καιροῦ.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音19:47-48(懼怕百姓) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌天天在殿裡教訓人.祭司長, 和文士, 與百姓的尊長, 都想要殺他． 但尋不出法子來, 因為百姓都側耳聽他.</p><p class="cite-gr"><span class="lbl">GR</span><span>Καὶ ἦν διδάσκων τὸ καθ’ἡμέραν ἐν τῷ ἱερῷ·οἱ δὲ ἀρχιερεῖς καὶ οἱ γραμματεῖς ἐζήτουν αὐτὸν ἀπολέσαι καὶ οἱ πρῶτοι τοῦ λαοῦ, καὶ οὐχ εὕρισκον τὸ τί ποιήσωσιν·ὁ λαὸς γὰρ ἅπας ἐξεκρέμετο αὐτοῦ ἀκούων.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v22-1">
+    <p class="sent"><span class="zh-body"><span class="n">22:1</span>除酵節, 又名逾越節, 近了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἤγγιζεν δὲ ἡ ἑορτὴ τῶν ἀζύμων ἡ λεγομένη Πάσχα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Now the feast of unleavened bread <ruby class="eng-ruby">drew nigh<rt>drew near</rt></ruby>, which is called the Passover.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「drew nigh」= 临近了，古体说法(nigh = near)，前面19:29也出现过。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-2">
+    <p class="sent"><span class="zh-body"><span class="n">22:2</span>祭司長和文士, 想法子怎麼纔能殺害耶穌．是因他們懼怕百姓.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐζήτουν οἱ ἀρχιερεῖς καὶ οἱ γραμματεῖς τὸ πῶς ἀνέλωσιν αὐτόν·ἐφοβοῦντο γὰρ τὸν λαόν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the chief priests and scribes sought how they might kill him; for they feared the people.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-3">
+    <p class="sent"><span class="zh-body"><span class="n">22:3</span>這時, <ruby class="zh-ruby">撒但入了<rt>eisēlthen Satanas</rt></ruby>那稱為加略人猶大的心, 他本是十二門徒裡的一個.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Εἰσῆλθεν δὲ Σατανᾶς εἰς Ἰούδαν τὸν καλούμενον Ἰσκαριώτην,ὄντα ἐκ τοῦ ἀριθμοῦ τῶν δώδεκα·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then entered Satan into Judas <ruby class="eng-ruby">surnamed Iscariot<rt>called Iscariot</rt></ruby>, being of the number of the twelve.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b>这一句接的是很远的一句话。</b>路加福音4:13(旷野受试探的结尾)说「魔鬼用完了各样的试探，就<b>暂时</b>离开耶稣」——希腊文是<b class='gk'>ἄχρι καιροῦ</b>，字面「<b>直到(某个)时机</b>」。和合本「暂时离开」把这层「在等一个时候」的意思译轻了。从4:13到22:3，路加福音里撒但整整消失了十七章，此刻回来了：<b class='gk'>Εἰσῆλθεν δὲ Σατανᾶς</b>「撒但入了…」。那个καιρός(时机)就是现在。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「surnamed」= 别号为、被称为，不是现代户籍意义上的「姓」。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-4">
+    <p class="sent"><span class="zh-body"><span class="n">22:4</span>他去和祭司長並守殿官商量, 怎麼可以把耶穌交給他們.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἀπελθὼν συνελάλησεν τοῖς ἀρχιερεῦσιν καὶ στρατηγοῖς τὸ πῶς αὐτοῖς παραδῷ αὐτόν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he went his way, and <ruby class="eng-ruby">communed with<rt>conferred with</rt></ruby> the chief priests and <ruby class="eng-ruby">captains<rt>temple officers</rt></ruby>, how he might betray him unto them.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「communed with」= 与…商议(commune 在KJV里是「交谈、商量」)。「captains」指圣殿的守卫长官(希腊文στρατηγοί)，不是军队将领。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-5">
+    <p class="sent"><span class="zh-body"><span class="n">22:5</span>他們歡喜, 就約定給他銀子.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐχάρησαν,καὶ συνέθεντο αὐτῷ ἀργύριον δοῦναι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they were glad, and <ruby class="eng-ruby">covenanted<rt>agreed</rt></ruby> to give him money.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「covenanted」= 约定、议定——在这里是普通的「谈妥」，跟22:20那个神学意义的「约」(testament)是两回事，英文却用了同源词，读时留意。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-6">
+    <p class="sent"><span class="zh-body"><span class="n">22:6</span>他應允了, 就找機會要趁眾人不在跟前的時候, 把耶穌交給他們.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐξωμολόγησεν,καὶ ἐζήτει εὐκαιρίαν τοῦ παραδοῦναι αὐτὸν ἄτερ ὄχλου αὐτοῖς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he promised, and sought opportunity to betray him unto them in the absence of the multitude.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    撒但从4:13「等一个时机」到22:3才回来——路加把中间十七章都留白，这个安排在说什么？领袖们缺的其实只是「机会」，犹大提供的也正是机会——那么犹大在这件事里的位置是什么？
+  </div>
+</section>
+
+<section id="beat2">
+  <h2><span class="ref-tag">22:7–13</span> 预备逾越节的筵席</h2>
+  <div class="beat-lead">耶稣打发彼得约翰进城，凭一个拿水瓶的男人找到楼房——与19:30牵驴驹如出一辙的叙事。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>拿水瓶的男人是个记号：</b>在当时的社会分工里，到井边打水、用陶瓶搬水通常是妇女的工作，一个男人抱着水瓶穿街而过是显眼的。这个安排既像是事先约定的暗号，也让人想起19:30那次「必看见一匹驴驹拴在那里」——同样的叙事模式：先说会看见什么，然后「所遇见的，正如耶稣所说的」(22:13/19:32)。</p>
+<p><b>「一间大楼」：</b>ἀνάγαιον指房屋上层的房间，耶路撒冷较讲究的宅第会有这样一间可供聚餐的楼上厅。ἐστρωμένον(和合本「摆设整齐」，KJV「furnished」)本义是「铺设好了的」——指坐席用的垫褥已经铺妥。</p>
+<p><b>逾越节的宰羊：</b>22:7说「须宰逾越羊羔的那一天到了」。按当时的做法，羊羔要在圣殿宰杀，然后带回城内各家在夜间同吃。约瑟夫斯对节期人数有夸张的记载(《犹太战记》6.423-427)，具体数字不可尽信，但可以确定的是逾越节期间耶路撒冷人口暴增——这也是21:37「每夜出城…在橄榄山住宿」的现实背景之一。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音19:30-32(同样的『必看见』) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">你們往對面村子裡去．進去的時候, 必看見一匹驢駒拴在那裡, 是從來沒有人騎過的．可以解開牽來. 若有人問為甚麼解牠, 你們就說, 主要用他. 打發的人去了, 所遇見的, 正如耶穌所說的.</p><p class="cite-gr"><span class="lbl">GR</span><span>λέγων Ὑπάγετε εἰς τὴν κατέναντι κώμην,ἐν ᾗ εἰσπορευόμενοι εὑρήσετε πῶλον δεδεμένον,ἐφ’ὃν οὐδεὶς πώποτε ἀνθρώπων ἐκάθισεν,καὶ λύσαντες αὐτὸν ἀγάγετε. καὶ ἐάν τις ὑμᾶς ἐρωτᾷ Διὰ τί λύετε;οὕτως ἐρεῖτε ὅτι Ὁ Κύριος αὐτοῦ χρείαν ἔχει. ἀπελθόντες δὲ οἱ ἀπεσταλμένοι εὗρον καθὼς εἶπεν αὐτοῖς.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v22-7">
+    <p class="sent"><span class="zh-body"><span class="n">22:7</span>除酵節, 須宰逾越羊羔的那一天到了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἦλθεν δὲ ἡ ἡμέρα τῶν ἀζύμων,ᾗ ἔδει θύεσθαι τὸ πάσχα·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then came the day of unleavened bread, when the passover must be killed.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-8">
+    <p class="sent"><span class="zh-body"><span class="n">22:8</span>耶穌打發彼得, 約翰, 說, 你們去為我們預備逾越節的筵席, 好叫我們喫.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἀπέστειλεν Πέτρον καὶ Ἰωάνην εἰπών Πορευθέντες ἑτοιμάσατε ἡμῖν τὸ πάσχα,ἵνα φάγωμεν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he sent Peter and John, saying, Go and prepare us the passover, that we may eat.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-9">
+    <p class="sent"><span class="zh-body"><span class="n">22:9</span>他們問他說, 要我們在那裡預備.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ εἶπαν αὐτῷ Ποῦ θέλεις ἑτοιμάσωμεν;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they said unto him, Where wilt thou that we prepare?</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-10">
+    <p class="sent"><span class="zh-body"><span class="n">22:10</span>耶穌說, 你們進了城, 必有人拿著一瓶水迎面而來．你們就跟著他, 到他所進的房子裡去．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ εἶπεν αὐτοῖς Ἰδοὺ εἰσελθόντων ὑμῶν εἰς τὴν πόλιν συναντήσει ὑμῖν ἄνθρωπος κεράμιον ὕδατος βαστάζων·ἀκολουθήσατε αὐτῷ εἰς τὴν οἰκίαν εἰς ἣν εἰσπορεύεται·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto them, Behold, when ye are entered into the city, there shall a man meet you, bearing a pitcher of water; follow him into the house where he entereth in.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-11">
+    <p class="sent"><span class="zh-body"><span class="n">22:11</span>對那家的主人說, 夫子說, 客房在那裡, 我與門徒好在那裡喫逾越節的筵席.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐρεῖτε τῷ οἰκοδεσπότῃ τῆς οἰκίας Λέγει σοι ὁ Διδάσκαλος Ποῦ ἐστιν τὸ κατάλυμα ὅπου τὸ πάσχα μετὰ τῶν μαθητῶν μου φάγω;</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And ye shall say unto <ruby class="eng-ruby">the goodman of the house<rt>the master of the house</rt></ruby>, The Master saith unto thee, Where is the <ruby class="eng-ruby">guestchamber<rt>guest room</rt></ruby>, where I shall eat the passover with my disciples?</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「goodman of the house」= 一家之主(goodman 是古英语对户主的称呼，与「好人」无关)。「guestchamber」= 客房。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-12">
+    <p class="sent"><span class="zh-body"><span class="n">22:12</span>他必指給你們擺設整齊的一間大樓, 你們就在那裡預備.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>κἀκεῖνος ὑμῖν δείξει ἀνάγαιον μέγα ἐστρωμένον·ἐκεῖ ἑτοιμάσατε.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he shall shew you a large upper room <ruby class="eng-ruby">furnished<rt>already laid out</rt></ruby>: there make ready.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「furnished」在这里指「已经铺设妥当」(希腊文ἐστρωμένον，铺好坐席)，不是现代「配有家具」的意思。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-13">
+    <p class="sent"><span class="zh-body"><span class="n">22:13</span>他們去了, 所遇見的, 正如耶穌所說的．他們就預備了逾越節的筵席.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀπελθόντες δὲ εὗρον καθὼς εἰρήκει αὐτοῖς,καὶ ἡτοίμασαν τὸ πάσχα.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they went, and found as he had said unto them: and they made ready the passover.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    耶稣事先知道会遇见拿水瓶的人，和19:30那匹驴驹是同一种叙事——这两处放在一起，路加想让读者看见什么？「照他所说的」这句话在受难叙事的开头重复出现，有什么效果？
+  </div>
+</section>
+
+<section id="beat3">
+  <h2><span class="ref-tag">22:14–23</span> 最后的晚餐</h2>
+  <div class="beat-lead">加倍的「渴望」、两个杯、设立圣餐，然后是那句「卖我之人的手与我同在桌子上」——路加把它放在圣餐之后。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>「我很愿意」原文重得多：</b>22:15的<b>Ἐπιθυμίᾳ ἐπεθύμησα</b>是名词加同源动词的强调结构，来自希伯来文的「不定式绝对形」，经七十士译本进入新约希腊文。KJV原样直译成「With desire I have desired」；和合本「我很愿意」通顺，但那种加倍的、近乎执拗的语气不见了。</p>
+<p><b>路加这里有两个杯：</b>22:17一个杯(分着喝)，22:20饭后又一个杯(新约的杯)。这个双杯结构是路加独有的，马太马可都只有一个。较常见的解释是路加保留了逾越节筵席本身多次举杯的仪式结构，把设立圣餐的那一杯放在其中。</p>
+<p><b>最著名的抄本争议就在这里：</b>19节下半至20节，在少数西方系抄本(Codex Bezae 及若干古拉丁译本)中<b>整段缺失</b>。这一处被称为「西方非插入」，是路加福音校勘学上最出名的案例。本页所据的Nestle 1904与KJV都收录长文，因此上面三行看不出差异——这一点与20:30那处不同(那里希腊文与KJV的长短差别直接摆在眼前)。多数现代校勘本采长文。</p>
+<p><b>紧接着圣餐的是一句指控：</b>22:21「那卖我之人的手，与我一同在桌子上」。路加把这句放在设立圣餐<b>之后</b>(马太马可放在之前)。也就是说，在路加的叙述里，犹大是领了饼和杯之后才被点出来的。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音22:21-22(圣餐之后的指控) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">看哪, 那賣我之人的手, 與我一同在桌子上. 人子固然要照所預定的去世．但賣人子的人有禍了.</p><p class="cite-gr"><span class="lbl">GR</span><span>πλὴν ἰδοὺ ἡ χεὶρ τοῦ παραδιδόντος με μετ’ἐμοῦ ἐπὶ τῆς τραπέζης. ὅτι ὁ Υἱὸς μὲν τοῦ ἀνθρώπου κατὰ τὸ ὡρισμένον πορεύεται,πλὴν οὐαὶ τῷ ἀνθρώπῳ ἐκείνῳ δι’οὗ παραδίδοται.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>马可福音14:22-25(平行·只有一个杯) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他們喫的時候, 耶穌拿起餅來, 祝了福, 就擘開遞給他們說, 你們拿著喫．這是我的身體. 又拿起杯來, 祝謝了, 遞給他們．他們都喝了. 耶穌說, 這是我立約的血, 為多人流出來的. 我實在告訴你們, 我不再喝這葡萄汁, 直到我在 神的國裡, 喝新的那日子.</p><p class="cite-gr"><span class="lbl">GR</span><span>Καὶ ἐσθιόντων αὐτῶν λαβὼν ἄρτον εὐλογήσας ἔκλασεν καὶ ἔδωκεν αὐτοῖς καὶ εἶπεν Λάβετε·τοῦτό ἐστιν τὸ σῶμά μου. καὶ λαβὼν ποτήριον εὐχαριστήσας ἔδωκεν αὐτοῖς,καὶ ἔπιον ἐξ αὐτοῦ πάντες. καὶ εἶπεν αὐτοῖς Τοῦτό ἐστιν τὸ αἷμά μου τῆς διαθήκης τὸ ἐκχυννόμενον ὑπὲρ πολλῶν. ἀμὴν λέγω ὑμῖν ὅτι οὐκέτι οὐ μὴ πίω ἐκ τοῦ γενήματος τῆς ἀμπέλου ἕως τῆς ἡμέρας ἐκείνης ὅταν αὐτὸ πίνω καινὸν ἐν τῇ βασιλείᾳ τοῦ Θεοῦ.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Leonardo_da_Vinci_(1452-1519)_-_The_Last_Supper_(1495-1498).jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Leonardo_da_Vinci_(1452-1519)_-_The_Last_Supper_(1495-1498).jpg" alt="《最后的晚餐》" loading="lazy"></a>
+    <div class="painting-cap">列奥纳多·达·芬奇 (Leonardo da Vinci) · 《最后的晚餐》(<i>Il Cenacolo / The Last Supper</i>) · 1495-1498 · 米兰圣母恩宠教堂食堂。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">画的是「你们中间有一个人要卖我」话音刚落的那一瞬——十二个人各自的反应扩散开来。要注意的是：达·芬奇依据的是约翰福音13:21以下的叙述，那里这句话说在饼和杯之前；而路加的次序相反(22:21在圣餐之后)。同一张桌子，两卷福音书的时间点并不一样。</p>
+  </div>
+  <div class="unit para-start" id="v22-14">
+    <p class="sent"><span class="zh-body"><span class="n">22:14</span>時候到了, 耶穌坐席, 使徒也和他同坐.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ὅτε ἐγένετο ἡ ὥρα,ἀνέπεσεν,καὶ οἱ ἀπόστολοι σὺν αὐτῷ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when the hour was come, he sat down, and the twelve apostles with him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-15">
+    <p class="sent"><span class="zh-body"><span class="n">22:15</span>耶穌對他們說, <ruby class="zh-ruby">我很願意<rt>epithymia epethymēsa</rt></ruby>在受害以先, 和你們喫這逾越節的筵席.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ εἶπεν πρὸς αὐτούς Ἐπιθυμίᾳ ἐπεθύμησα τοῦτο τὸ πάσχα φαγεῖν μεθ’ὑμῶν πρὸ τοῦ με παθεῖν·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto them, <ruby class="eng-ruby">With desire I have desired<rt>I have earnestly longed</rt></ruby> to eat this passover with you before I suffer:</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>Ἐπιθυμίᾳ ἐπεθύμησα</b> <span class='zh'>字面是「我以渴望渴望了」——名词加同源动词，这是希伯来文「不定式绝对形」的强调句式，经七十士译本带进新约希腊文，用来把语气推到最重。KJV直译作「With desire I have desired」，把这个闪族语法原样保留了；和合本「我很愿意」是通顺的中文，但强度和异样感都磨平了。三行对照着看，这一节最能看出三种译法各自的取舍。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「With desire I have desired」是把希腊文的希伯来式强调句式(名词+同源动词)原样直译过来，英文读着别扭正是忠实之处——和合本「我很愿意」则改成了通顺的中文。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-16">
+    <p class="sent"><span class="zh-body"><span class="n">22:16</span>我告訴你們, 我不再喫這筵席, 直到成就在 神的國裡.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγω γὰρ ὑμῖν ὅτι οὐκέτι οὐ μὴ φάγω αὐτὸ ἕως ὅτου πληρωθῇ ἐν τῇ βασιλείᾳ τοῦ Θεοῦ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For I say unto you, I will not any more eat thereof, until it be fulfilled in the kingdom of God.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-17">
+    <p class="sent"><span class="zh-body"><span class="n">22:17</span>耶穌接過杯來, 祝謝了, 說, 你們拿這個, 大家分著喝.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ δεξάμενος ποτήριον εὐχαριστήσας εἶπεν Λάβετε τοῦτο καὶ διαμερίσατε εἰς ἑαυτούς·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he took the cup, and gave thanks, and said, Take this, and divide it among yourselves:</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-18">
+    <p class="sent"><span class="zh-body"><span class="n">22:18</span>我告訴你們, 從今以後, 我不再喝這葡萄汁, 直等 神的國來到.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγω γὰρ ὑμῖν,οὐ μὴ πίω ἀπὸ τοῦ νῦν ἀπὸ τοῦ γενήματος τῆς ἀμπέλου ἕως οὗ ἡ βασιλεία τοῦ Θεοῦ ἔλθῃ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For I say unto you, I will not drink of the fruit of the vine, until the kingdom of God shall come.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-19">
+    <p class="sent"><span class="zh-body"><span class="n">22:19</span>又拿起餅來祝謝了, 就擘開遞給他們, 說, 這是我的身體, 為你們捨的．你們也應當如此行, 為的是<ruby class="zh-ruby">記念<rt>anamnēsin</rt></ruby>我.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ λαβὼν ἄρτον εὐχαριστήσας ἔκλασεν καὶ ἔδωκεν αὐτοῖς λέγων Τοῦτό ἐστιν τὸ σῶμά μου τὸ ὑπὲρ ὑμῶν διδόμενον·τοῦτο ποιεῖτε εἰς τὴν ἐμὴν ἀνάμνησιν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he took bread, and gave thanks, and brake it, and gave unto them, saying, This is my body which is given for you: this do in remembrance of me.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'><b>抄本问题(此处看不见，但值得知道)：</b>19节下半到20节(「为你们舍的…这杯是用我血所立的新约，是为你们流出来的」)在少数西方系抄本(以Codex Bezae为代表及部分古拉丁译本)里是<b>没有的</b>。这被称为「西方非插入」问题，是路加福音里最著名的经文校勘争议。本页所用的Nestle 1904与KJV都收了长文，所以上面三行看不出差别——不像20:30那处可以直接对照。多数现代校勘本采长文，此处仅作说明。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-20">
+    <p class="sent"><span class="zh-body"><span class="n">22:20</span>飯後也照樣拿起杯來, 說, 這杯是用我血所立的<ruby class="zh-ruby">新約<rt>kainē diathēkē</rt></ruby>, 是為你們流出來的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ τὸ ποτήριον ὡσαύτως μετὰ τὸ δειπνῆσαι,λέγων Τοῦτο τὸ ποτήριον ἡ καινὴ διαθήκη ἐν τῷ αἵματί μου,τὸ ὑπὲρ ὑμῶν ἐκχυννόμενον.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Likewise also the cup after supper, saying, This cup is the new testament in my blood, which is shed for you.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b class='gk'>διαθήκη</b>(约)——留意它九节之后又以动词形式出现：22:29「我<b>将国赐给</b>你们」希腊文是<b class='gk'>διατίθεμαι</b>，与「新约」的διαθήκη同一词根，意思是「立约、订立处置」。杯是立约，国也是立约，两处用同一个字根扣在一起；中文「新约」与「赐给」看不出这层联系。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-21">
+    <p class="sent"><span class="zh-body"><span class="n">22:21</span>看哪, 那賣我之人的手, 與我一同在桌子上.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πλὴν ἰδοὺ ἡ χεὶρ τοῦ παραδιδόντος με μετ’ἐμοῦ ἐπὶ τῆς τραπέζης.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But, behold, the hand of him that betrayeth me is with me on the table.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-22">
+    <p class="sent"><span class="zh-body"><span class="n">22:22</span>人子固然要照所預定的去世．但賣人子的人有禍了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅτι ὁ Υἱὸς μὲν τοῦ ἀνθρώπου κατὰ τὸ ὡρισμένον πορεύεται,πλὴν οὐαὶ τῷ ἀνθρώπῳ ἐκείνῳ δι’οὗ παραδίδοται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And truly the Son of man goeth, as it was determined: but woe unto that man by whom he is betrayed!</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-23">
+    <p class="sent"><span class="zh-body"><span class="n">22:23</span>他們就彼此對問, 是那一個要作這事.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ αὐτοὶ ἤρξαντο συνζητεῖν πρὸς ἑαυτοὺς τὸ τίς ἄρα εἴη ἐξ αὐτῶν ὁ τοῦτο μέλλων πράσσειν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they began to enquire among themselves, which of them it was that should do this thing.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    路加把「卖我之人的手与我同在桌子上」放在圣餐<b>之后</b>(马太马可放在之前)——次序不同会改变什么？22:15那句加倍的「渴望」，耶稣渴望的到底是这顿饭，还是别的？他说「我不再吃/不再喝，直到神的国」——这是告别，还是约定？
+  </div>
+</section>
+
+<section id="beat4">
+  <h2><span class="ref-tag">22:24–30</span> 谁可算为大</h2>
+  <div class="beat-lead">同一张桌子上随即起了争大的争论；耶稣以「恩主」这个真实的君王尊号作对照，并把杯与国用同一个词根扣在一起。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>争大的位置很扎眼：</b>φιλονεικία(好胜之争，本地语料库仅此一见)出现在圣餐与「卖我之人的手与我同在桌子上」<b>之后</b>——同一顿饭、同一张桌子。路加不加评论地把这两件事排在一起。</p>
+<p><b>「恩主」是真实存在的尊号：</b>εὐεργέτης(Euergetes，「施恩者」)在希腊化世界是君王实际使用的荣衔，托勒密王朝就有以此为号的君主。耶稣的话因此不只是泛论权力：外邦君王一面「辖制」人，一面被称作「恩主」——统治自带一套体面的说法。</p>
+<p><b>用同一个词根把杯和国扣在一起：</b>22:29「我将国赐给你们」用的动词是<b>διατίθεμαι</b>，与22:20「新<b>约</b>」(διαθήκη)同一词根，意思是「立约、作出处置」。九节之内，杯是立约，国也是立约。中文「新约」与「赐给」之间看不出这层关系。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音22:20(新约的杯·同词根) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">飯後也照樣拿起杯來, 說, 這杯是用我血所立的新約, 是為你們流出來的.</p><p class="cite-gr"><span class="lbl">GR</span><span>καὶ τὸ ποτήριον ὡσαύτως μετὰ τὸ δειπνῆσαι,λέγων Τοῦτο τὸ ποτήριον ἡ καινὴ διαθήκη ἐν τῷ αἵματί μου,τὸ ὑπὲρ ὑμῶν ἐκχυννόμενον.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v22-24">
+    <p class="sent"><span class="zh-body"><span class="n">22:24</span>門徒起了<ruby class="zh-ruby">爭論<rt>philoneikia</rt></ruby>, 他們中間那一個可算為大.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Ἐγένετο δὲ καὶ φιλονεικία ἐν αὐτοῖς,τὸ τίς αὐτῶν δοκεῖ εἶναι μείζων.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And there was also a strife among them, which of them should be accounted the greatest.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>φιλονεικία</b> · philoneikia <span class='zh'>「争论」——本地语料库仅此一见。字面「爱争胜」(φίλος爱 + νεῖκος争斗)，不是普通的意见分歧，而是好胜之心。注意它出现的位置：紧接在圣餐与「卖我之人的手与我同在桌子上」后面，同一张桌子上。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-25">
+    <p class="sent"><span class="zh-body"><span class="n">22:25</span>耶穌說, 外邦人有君王為主治理他們．那掌權管他們的稱為<ruby class="zh-ruby">恩主<rt>euergetai</rt></ruby>．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ εἶπεν αὐτοῖς Οἱ βασιλεῖς τῶν ἐθνῶν κυριεύουσιν αὐτῶν,καὶ οἱ ἐξουσιάζοντες αὐτῶν εὐεργέται καλοῦνται.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto them, The kings of the Gentiles <ruby class="eng-ruby">exercise lordship over<rt>rule over</rt></ruby> them; and they that exercise authority upon them are called <ruby class="eng-ruby">benefactors<rt>Benefactors (a royal honorific)</rt></ruby>.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>εὐεργέται</b> · euergetai <span class='zh'>「恩主」——本地语料库仅此一见。这不是泛称，而是希腊化世界一个<b>真实的官方尊号</b>(Euergetes，「施恩者」)，托勒密王朝就有君主以此为号。耶稣是在说：外邦君王一面辖制人，一面还要人称他们「恩主」——权力自带一套美称。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「exercise lordship over」= 以主人的身分辖制。「benefactors」(施恩者)是希腊化时代君王真实使用过的尊号，此处带反讽。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-26">
+    <p class="sent"><span class="zh-body"><span class="n">22:26</span>但你們不可這樣．你們裡頭為大的, 倒要像年幼的．為首領的, 倒要像服事人的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὑμεῖς δὲ οὐχ οὕτως,ἀλλ’ὁ μείζων ἐν ὑμῖν γινέσθω ὡς ὁ νεώτερος,καὶ ὁ ἡγούμενος ὡς ὁ διακονῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But ye shall not be so: but <ruby class="eng-ruby">he that is greatest<rt>the greatest one</rt></ruby> among you, let him be as the younger; and he that is chief, as he that doth serve.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-27">
+    <p class="sent"><span class="zh-body"><span class="n">22:27</span>是誰為大, 是坐席的呢, 是<ruby class="zh-ruby">服事人的<rt>ho diakonōn</rt></ruby>呢．不是坐席的大麼．然而我在你們中間, 如同服事人的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>τίς γὰρ μείζων,ὁ ἀνακείμενος ἢ ὁ διακονῶν;οὐχὶ ὁ ἀνακείμενος;ἐγὼ δὲ ἐν μέσῳ ὑμῶν εἰμι ὡς ὁ διακονῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For whether is greater, he that sitteth at meat, or he that serveth? is not he that sitteth at meat? but I am among you as he that serveth.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-28">
+    <p class="sent"><span class="zh-body"><span class="n">22:28</span>我在磨煉之中, 常和我同在的就是你們．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὑμεῖς δέ ἐστε οἱ διαμεμενηκότες μετ’ἐμοῦ ἐν τοῖς πειρασμοῖς μου·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Ye are they which have continued with me in my temptations.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-29">
+    <p class="sent"><span class="zh-body"><span class="n">22:29</span><ruby class="zh-ruby">我將國賜給你們<rt>diatithemai hymin</rt></ruby>, 正如我父賜給我一樣.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>κἀγὼ διατίθεμαι ὑμῖν,καθὼς διέθετό μοι ὁ Πατήρ μου βασιλείαν,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And I appoint unto you a kingdom, as my Father hath appointed unto me;</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-30">
+    <p class="sent"><span class="zh-body"><span class="n">22:30</span>叫你們在我國裡, 坐在我的席上喫喝．並且坐在寶座上, 審判以色列十二個支派.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἵνα ἔσθητε καὶ πίνητε ἐπὶ τῆς τραπέζης μου ἐν τῇ βασιλείᾳ μου,καὶ καθήσεσθε ἐπὶ θρόνων τὰς δώδεκα φυλὰς κρίνοντες τοῦ Ἰσραήλ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>That ye may eat and drink at my table in my kingdom, and sit on thrones judging the twelve tribes of Israel.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    争谁为大的争论紧接在圣餐后面发生，路加没有加任何评论——这个不加评论本身算不算一种评论？外邦君王被称为「恩主」，那么权力和「施恩」的名分之间是什么关系？「立约」这个词同时用在杯和国上，为什么？
+  </div>
+</section>
+
+<section id="beat5">
+  <h2><span class="ref-tag">22:31–34</span> 西门，我已经为你祈求</h2>
+  <div class="beat-lead">撒但要筛的是「你们」(复数)，耶稣为之祈求的是「你」(单数)——并且预先安排了跌倒之后的任务。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>单复数的切换是这一段的关键：</b>22:31「撒但想要得着<b>你们</b>」用的是复数ὑμᾶς——要筛的是全体门徒；22:32「但我已经为<b>你</b>祈求」用的是单数σοῦ——只为西门一人。和合本用「你们/你」如实译出；KJV因为保留了古体代词，区分得更清楚(you 复数 / thee-thy-thou 单数)，这正是页首那份代词小抄派上用场的地方。</p>
+<p><b>耶稣祈求的内容值得注意：</b>他没有求撒但不要筛，也没有求彼得不跌倒——他求的是「叫你不至于<b>失了信心</b>」，并且预先给了跌倒<b>之后</b>的任务：「你回头以后，要坚固你的弟兄」。也就是说，在预言失败的同一句话里，已经安排好了失败之后的位置。</p>
+<p><b>「筛」：</b>σινιάζω(本地语料库仅此一见)是把谷物剧烈摇动、令糠秕分离的动作——过程本身就是猛烈的。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音22:54-62(后来真的应验) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他們拿住耶穌, 把他帶到大祭司的宅裡．彼得遠遠的跟著. 他們在院子裡生了火, 一同坐著．彼得也坐在他們中間. 有一個使女, 看見彼得坐在火光裡, 就定睛看他, 說, 這個人素來也是同那人一夥的. 彼得卻不承認, 說, 女子, 我不認得他. 過了不多的時候, 又有一個人看見他, 說, 你也是他們一黨的．彼得說, 你這個人, 我不是. 約過了一小時, 又有一個人極力的說, 他實在是同那人一夥的．因為他也是加利利人. 彼得說, 你這個人, 我不曉得你說的是甚麼．正說話之間, 雞就叫了. 主轉過身來, 看彼得.彼得便想起主對他所說的話, 今日雞叫以先, 你要三次不認我. 他就出去痛哭.</p><p class="cite-gr"><span class="lbl">GR</span><span>Συλλαβόντες δὲ αὐτὸν ἤγαγον καὶ εἰσήγαγον εἰς τὴν οἰκίαν τοῦ ἀρχιερέως·ὁ δὲ Πέτρος ἠκολούθει μακρόθεν. περιαψάντων δὲ πῦρ ἐν μέσῳ τῆς αὐλῆς καὶ συνκαθισάντων ἐκάθητο ὁ Πέτρος μέσος αὐτῶν. ἰδοῦσα δὲ αὐτὸν παιδίσκη τις καθήμενον πρὸς τὸ φῶς καὶ ἀτενίσασα αὐτῷ εἶπεν Καὶ οὗτος σὺν αὐτῷ ἦν. ὁ δὲ ἠρνήσατο λέγων Οὐκ οἶδα αὐτόν,γύναι. καὶ μετὰ βραχὺ ἕτερος ἰδὼν αὐτὸν ἔφη Καὶ σὺ ἐξ αὐτῶν εἶ.ὁ δὲ Πέτρος ἔφη Ἄνθρωπε,οὐκ εἰμί. καὶ διαστάσης ὡσεὶ ὥρας μιᾶς ἄλλος τις διϊσχυρίζετο λέγων Ἐπ’ἀληθείας καὶ οὗτος μετ’αὐτοῦ ἦν,καὶ γὰρ Γαλιλαῖός ἐστιν. εἶπεν δὲ ὁ Πέτρος Ἄνθρωπε,οὐκ οἶδα ὃ λέγεις.καὶ παραχρῆμα ἔτι λαλοῦντος αὐτοῦ ἐφώνησεν ἀλέκτωρ. καὶ στραφεὶς ὁ Κύριος ἐνέβλεψεν τῷ Πέτρῳ,καὶ ὑπεμνήσθη ὁ Πέτρος τοῦ λόγου τοῦ Κυρίου,ὡς εἶπεν αὐτῷ ὅτι Πρὶν ἀλέκτορα φωνῆσαι σήμερον ἀπαρνήσῃ με τρίς. καὶ ἐξελθὼν ἔξω ἔκλαυσεν πικρῶς.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v22-31">
+    <p class="sent"><span class="zh-body"><span class="n">22:31</span>主又說, 西門, 西門, 撒但想要得著你們, 好<ruby class="zh-ruby">篩你們<rt>siniasai hymas</rt></ruby>, 像篩麥子一樣．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Σίμων Σίμων,ἰδοὺ ὁ Σατανᾶς ἐξῃτήσατο ὑμᾶς τοῦ σινιάσαι ὡς τὸν σῖτον·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the Lord said, Simon, Simon, behold, Satan <ruby class="eng-ruby">hath desired to have you<rt>has demanded to have you all</rt></ruby>, that he may sift you as wheat:</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'><b>这里有一个单复数的切换，中英文都看得见，值得当场指出来。</b>「撒但想要得着<b>你们</b>」——<b class='gk'>ὑμᾶς</b>是<b>复数</b>，指全体门徒；「但我已经为<b>你</b>祈求」——<b class='gk'>περὶ σοῦ</b>是<b>单数</b>，只指西门一人。和合本用「你们/你」译出了这个区别；KJV更明显：v31用you(复数)，v32用thee/thy/thou(单数)——这正是页首那份古体代词小抄的用处。撒但要筛的是所有人，耶稣特别为其中一个祈求，而这一个的任务是「回头以后，要坚固你的弟兄」。</span></div>
+      <div class="remark"><span class="tag t-ci">词</span><b class='gk'>σινιάσαι</b> · siniasai <span class='zh'>「筛」——本地语料库仅此一见。筛麦子是把麦子剧烈摇动、使糠秕分离的动作。耶稣没有说他会拦住这场筛，他说他祈求的是「叫你不至于失了信心」。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">留意代词：本节的「you」是<b>复数</b>(撒但要筛的是全体门徒)，下一节的「thee/thy/thou」是<b>单数</b>(耶稣单为西门祈求)。现代英语已经分不出来了，KJV的古体代词在这里反而比现代译本准确。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-32">
+    <p class="sent"><span class="zh-body"><span class="n">22:32</span>但我已經為你祈求, 叫你不至於失了信心．你回頭以後, 要堅固你的弟兄.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐγὼ δὲ ἐδεήθην περὶ σοῦ ἵνα μὴ ἐκλίπῃ ἡ πίστις σου·καὶ σύ ποτε ἐπιστρέψας στήρισον τοὺς ἀδελφούς σου.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But I have prayed for thee, that thy faith fail not: and <ruby class="eng-ruby">when thou art converted<rt>once you have turned back</rt></ruby>, strengthen thy brethren.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「when thou art converted」= 等你回转过来之后——convert 在此是「转回、回头」，不是现代「改信宗教」的意思(彼得本来就是门徒)。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-33">
+    <p class="sent"><span class="zh-body"><span class="n">22:33</span>彼得說, 主阿．我就是同你下監, 同你受死, 也是甘心.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ εἶπεν αὐτῷ Κύριε,μετὰ σοῦ ἕτοιμός εἰμι καὶ εἰς φυλακὴν καὶ εἰς θάνατον πορεύεσθαι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto him, Lord, I am ready to go with thee, both into prison, and to death.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-34">
+    <p class="sent"><span class="zh-body"><span class="n">22:34</span>耶穌說, 彼得, 我告訴你, 今日雞還沒有叫, 你要三次說不認得我.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ εἶπεν Λέγω σοι,Πέτρε,οὐ φωνήσει σήμερον ἀλέκτωρ ἕως τρίς με ἀπαρνήσῃ μὴ εἰδέναι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said, I tell thee, Peter, the cock shall not crow this day, before that thou shalt thrice deny that thou knowest me.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    撒但要筛的是「你们」，耶稣只为「你」祈求——为什么是这样分配？他求的不是不跌倒，而是「不至于失了信心」，这两者差别在哪里？「你回头以后要坚固弟兄」——这个任务是给跌倒之前的彼得，还是跌倒之后的彼得？
+  </div>
+</section>
+
+<section id="beat6">
+  <h2><span class="ref-tag">22:35–38</span> 钱囊、口袋、两把刀</h2>
+  <div class="beat-lead">回指10:4那次无需自备的差遣，宣告情势反转；唯一一次直接引用以赛亚书53章，收在一句难解的「够了」。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>这段话回指的是九章以前：</b>22:35「我差你们出去的时候，没有钱囊，没有口袋，没有鞋」——指的是10:4差遣七十人时的吩咐(「不要带钱囊，不要带口袋，不要带鞋」)。那时无需自备，因为处处有人接待；现在情势反转了。</p>
+<p><b>唯一一次直接引以赛亚书53章：</b>22:37引「他也被列在罪犯之中」(赛53:12)。这是四福音书中耶稣<b>唯一一次</b>明确把以赛亚书53章的「受苦的仆人」直接引用到自己身上。ἄνομος字面是「不法之徒」——重点是被<b>归类</b>到那一群人里去。</p>
+<p><b>「够了」怎么读，没有定论：</b>两把刀显然应付不了任何真实的冲突。多数注释者认为Ἱκανόν ἐστιν是结束话题的用语(「别说了」)，理由是若把22:36的「买刀」按字面执行，就与22:51(耶稣当场制止动刀、并医好被砍掉的耳朵)直接冲突；也有人主张按字面理解。两说并列，此处不作定论。</p>
+<p><b>本周停在这里，下一节就出城了：</b>22:39「耶稣出来，<b>照常</b>往橄榄山去」——「照常」正是21:37刚刚交代过的习惯(每夜出城住在橄榄山)。这也顺带解释了犹大为什么知道上哪儿找他(参约18:2)。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音10:4(那次差遣的吩咐) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">不要帶錢囊, 不要帶口袋, 不要帶鞋．在路上也不要問人的安.</p><p class="cite-gr"><span class="lbl">GR</span><span>μὴ βαστάζετε βαλλάντιον,μὴ πήραν,μὴ ὑποδήματα·καὶ μηδένα κατὰ τὴν ὁδὸν ἀσπάσησθε.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以赛亚书53:12 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">所以我要使他與位大的同分, 與強盛的均分擄物．因為他將命傾倒, 以致於死．他也被列在罪犯之中．他卻擔當多人的罪, 又為罪犯代求.</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音22:49-51(随后就制止动刀) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">左右的人見光景不好, 就說, 主阿, 我們拿刀砍可以不可以. 內中有一個人, 把大祭司的僕人砍了一刀, 削掉了他的右耳. 耶穌說, 到了這個地步, 由他們罷．就摸那人的耳朵, 把他治好了.</p><p class="cite-gr"><span class="lbl">GR</span><span>ἰδόντες δὲ οἱ περὶ αὐτὸν τὸ ἐσόμενον εἶπαν Κύριε,εἰ πατάξομεν ἐν μαχαίρῃ; καὶ ἐπάταξεν εἷς τις ἐξ αὐτῶν τοῦ ἀρχιερέως τὸν δοῦλον καὶ ἀφεῖλεν τὸ οὖς αὐτοῦ τὸ δεξιόν. ἀποκριθεὶς δὲ ὁ Ἰησοῦς εἶπεν Ἐᾶτε ἕως τούτου·καὶ ἁψάμενος τοῦ ὠτίου ἰάσατο αὐτόν.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音21:37(『照常』的由来) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">耶穌每日在殿裡教訓人．每夜出城在一座山, 名叫橄欖山住宿.</p><p class="cite-gr"><span class="lbl">GR</span><span>Ἦν δὲ τὰς ἡμέρας ἐν τῷ ἱερῷ διδάσκων,τὰς δὲ νύκτας ἐξερχόμενος ηὐλίζετο εἰς τὸ ὄρος τὸ καλούμενον Ἐλαιῶν.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v22-35">
+    <p class="sent"><span class="zh-body"><span class="n">22:35</span>耶穌又對他們說, 我差你們出去的時候, 沒有錢囊, 沒有口袋, 沒有鞋, 你們缺少甚麼沒有．他們說, 沒有.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ εἶπεν αὐτοῖς Ὅτε ἀπέστειλα ὑμᾶς ἄτερ βαλλαντίου καὶ πήρας καὶ ὑποδημάτων,μή τινος ὑστερήσατε;οἱ δὲ εἶπαν Οὐθενός.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto them, When I sent you without purse, and scrip, and shoes, lacked ye any thing? And they said, Nothing.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v22-36">
+    <p class="sent"><span class="zh-body"><span class="n">22:36</span>耶穌說, 但如今有錢囊的可以帶著, 有口袋的也可以帶著．沒有刀的要賣衣服買刀.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἶπεν δὲ αὐτοῖς Ἀλλὰ νῦν ὁ ἔχων βαλλάντιον ἀράτω,ὁμοίως καὶ πήραν,καὶ ὁ μὴ ἔχων πωλησάτω τὸ ἱμάτιον αὐτοῦ καὶ ἀγορασάτω μάχαιραν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then said he unto them, But now, he that hath a purse, let him take it, and likewise his <ruby class="eng-ruby">scrip<rt>traveller's bag</rt></ruby>: and he that hath no sword, let him sell his garment, and buy one.</span></p>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「scrip」= 旅行者的干粮袋，与现代英语的「script(脚本)」无关。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-37">
+    <p class="sent"><span class="zh-body"><span class="n">22:37</span>我告訴你們, 經上寫著說, 『他<ruby class="zh-ruby">被列在罪犯之中<rt>meta anomōn elogisthē</rt></ruby>.』這話必應驗在我身上, 因為那關係我的事, 必然成就.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>λέγω γὰρ ὑμῖν ὅτι τοῦτο τὸ γεγραμμένον δεῖ τελεσθῆναι ἐν ἐμοί,τό Καὶ μετὰ ἀνόμων ἐλογίσθη·καὶ γὰρ τὸ περὶ ἐμοῦ τέλος ἔχει.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>For I say unto you, that this that is written must yet be accomplished in me, And he <ruby class="eng-ruby">was reckoned among the transgressors<rt>was counted among the lawless</rt></ruby>: for the things concerning me have an end.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span><span class='zh'>引自以赛亚书53:12「他也被列在罪犯之中」(<b class='gk'>μετὰ ἀνόμων ἐλογίσθη</b>)。这是耶稣在福音书中<b>唯一一次</b>明确把以赛亚书53章的「受苦仆人」直接引到自己身上。ἄνομος字面是「无律法者、不法之徒」——被归到这一类里去。</span></div>
+    </div>
+    <div class="en-notes">
+      <div class="remark"><span class="tag t-en">英</span><span class="zh">「reckoned」= 被算作、被归入(对应希腊文ἐλογίσθη)。「transgressors」= 违法的人。</span></div>
+    </div>
+  </div>
+  <div class="unit" id="v22-38">
+    <p class="sent"><span class="zh-body"><span class="n">22:38</span>他們說, 主阿, 請看, 這裡有兩把刀．耶穌說, <ruby class="zh-ruby">夠了<rt>hikanon estin</rt></ruby>.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ εἶπαν Κύριε,ἰδοὺ μάχαιραι ὧδε δύο.ὁ δὲ εἶπεν αὐτοῖς Ἱκανόν ἐστιν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they said, Lord, behold, here are two swords. And he said unto them, It is enough.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span><span class='zh'>「够了」(<b class='gk'>Ἱκανόν ἐστιν</b>)——两把刀显然不足以应付任何真实的武装冲突，所以这句回应历来有两种读法：一是耶稣在结束这个话题(「别说了」)，认为门徒完全会错了意；二是照字面理解为够用。多数注释者取前者，理由是22:36那句「卖衣服买刀」若按字面执行，与22:51(耶稣随即制止动刀、医好被砍的耳朵)直接冲突。此处并列两说，不作定论。</span></div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    同一位耶稣，先前说「不要带钱囊口袋鞋」，现在说「没有刀的要卖衣服买刀」——是处境变了，还是要求变了？如果「够了」是「别说了」的意思，门徒在这一刻误解了什么？他唯一一次直接把赛53章引到自己身上，选在这个时刻，为什么？
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-cf">对照</span>希腊/中/英三方比较</span>
+    <span><span class="tag t-zhu">注</span>背景说明</span>
+    <span><span class="tag t-en">英</span>KJV 语言点</span>
+  </div>
+  希腊原文：Nestle 1904 (MACULA Greek, lowfat treebank)。中文：和合本(Chinese Union Version, Big5 数字化本)。英译：King James Version (1611/1769)。三者均为公共领域文本。标点保留原始数字化文本所用的半形符号。
+  <p style="margin-top:.8rem">历史背景部分引用：约瑟夫斯《犹太战记》6.423-427(节期人数的记载，数字本身学界认为有夸大，已在注中标明)；旧约经文(赛53:12)；新约对照(路4:13、10:4、19:30-32、19:47-48、21:37、22:49-51、22:54-62、可14:22-25、约13:21、18:2)。φιλονεικία、εὐεργέτης、σινιάζω「本地语料库仅此一见」诸项，系以马太/马可/路加/约翰/使徒行传(Nestle 1904)程序化核对得出，范围仅限这五卷。22:19下-20的「西方非插入」抄本争议、22:38「够了」的读法，均属无定论的问题，注中并列诸说。马可楼的具体位置为传统说法，无从考证，地图注中已标明。</p>
+</footer>
+
+<script>
+  const body=document.body;
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art'};
+  for(const id in toggleMap){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+  const geoMap = L.map('geomap', {scrollWheelZoom:false}).setView([31.7780,35.2354], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(geoMap);
+
+  L.marker([31.7780,35.2354]).addTo(geoMap)
+    .bindPopup('<b>圣殿山</b><br>上周的场景；本周22:1-38不在这里发生');
+  L.circle([31.7780,35.2354], {radius:180, color:'#b07d2b', weight:2, fillOpacity:0.10})
+    .addTo(geoMap);
+
+  L.marker([31.7784,35.2422]).addTo(geoMap)
+    .bindPopup('<b>橄榄山</b><br>21:37的夜宿处；22:39晚餐后耶稣「照常」回到这里');
+
+  L.marker([31.7717,35.2292]).addTo(geoMap)
+    .bindPopup('<b>「马可楼」(传统地点)</b><br>22:12「摆设整齐的一间大楼」<br><i>注：此为后世传统认定的位置，确切地点无从考证</i>');
+
+  L.polyline([[31.7784,35.2422],[31.7717,35.2292]], {color:'#b07d2b', weight:3, dashArray:'6 5'})
+    .addTo(geoMap).bindPopup('22:10「你们进了城」——门徒从城外进城预备筵席(路线为示意，非实际考证)');
+
+  geoMap.fitBounds(L.latLngBounds([[31.7690,35.2250],[31.7820,35.2450]]));
+</script>
+
+</body>
+</html>
