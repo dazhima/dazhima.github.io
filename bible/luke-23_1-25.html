@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>路加福音 23:1–25 · 三语共读</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --paper:#f7f3ea; --ink:#2b2620; --muted:#8a7f6e; --line:#e3dccb;
+    --amber:#b07d2b; --amber-soft:#f0e4c8; --purple:#6b4e8c; --purple-soft:#ece4f3;
+    --teal:#3f7a6d; --teal-soft:#e0efea; --rose:#a8546a; --rose-soft:#f3e1e6;
+    --greek:#5a4a36; --greek-soft:#efe7d6;
+    --blue:#3d6d99; --blue-soft:#dde8f2;
+    --brown:#8b6a3f; --brown-soft:#efe3cd;
+    --wine:#8c3d4f; --wine-soft:#f3e0e3;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif; line-height:1.85;}
+  .bar{position:sticky; top:0; z-index:10; background:rgba(247,243,234,.92);
+    backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    padding:.55rem clamp(1rem,4vw,2rem); font-family:system-ui,sans-serif; font-size:.8rem;}
+  .bar .crumb{color:var(--muted); margin-right:auto}
+  .bar .crumb b{color:var(--ink); font-weight:600}
+  .btn{border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:.3rem .7rem; font:inherit; font-size:.78rem; cursor:pointer; transition:.15s;}
+  .btn:hover{border-color:var(--amber)}
+  .btn.off{opacity:.45; text-decoration:line-through}
+  main{max-width:760px; margin:0 auto; padding:2.4rem clamp(1rem,5vw,2rem) 6rem}
+  header.doc{margin-bottom:1.4rem}
+  header.doc h1{font-size:1.6rem; line-height:1.25; margin:0 0 .3rem}
+  header.doc .sub{font-family:system-ui,sans-serif; font-size:.85rem; color:var(--muted)}
+  header.doc .lead{margin-top:1rem; padding:.7rem .9rem; background:#fcf9f2;
+    border:1px solid var(--line); border-left:3px solid var(--purple); border-radius:6px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  header.doc .kjv-note{margin-top:.7rem; padding:.7rem .9rem; background:var(--blue-soft);
+    border:1px solid #c7d9e8; border-left:3px solid var(--blue); border-radius:6px;
+    font-family:system-ui,sans-serif; font-size:.82rem; line-height:1.8; color:#2c4a63}
+  header.doc .kjv-note b{color:#1f3a50}
+  .mapbox{margin:1.2rem 0; padding:1rem 1rem .8rem; background:#fdfbf5; border:1px solid var(--line); border-radius:8px}
+  #geomap{width:100%; height:380px; border-radius:8px; border:1px solid var(--line)}
+  .leaflet-tooltip.map-region-label{background:transparent; border:none; box-shadow:none;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-weight:700; font-size:.85rem;
+    color:#5c2a35; text-shadow:0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff}
+  .map-cap{margin-top:.6rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; line-height:1.7; color:var(--muted); text-align:center}
+  .toc{font-family:system-ui,"PingFang SC",sans-serif; font-size:.8rem; color:var(--muted); margin-bottom:2rem; line-height:1.9}
+  .toc a{color:var(--amber); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{margin-top:2.6rem; padding-top:1.6rem; border-top:1px solid var(--line)}
+  section h2{font-size:1.25rem; margin:0 0 .5rem; font-family:"Iowan Old Style",Georgia,serif}
+  .ref-tag{display:inline-block; font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700;
+    letter-spacing:.03em; color:var(--amber); background:var(--amber-soft); border-radius:5px;
+    padding:.08rem .4rem; margin-right:.5rem; vertical-align:.15em}
+  .beat-lead{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.85rem;
+    color:var(--muted); margin-bottom:1.1rem; line-height:1.7}
+  .unit{margin:0; padding:.5rem 0 .5rem .9rem; border-left:2px solid transparent; transition:.15s}
+  .unit:hover{border-left-color:var(--amber-soft); background:#fcf9f2}
+  .para-start{margin-top:.6rem}
+  .zh-body{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Iowan Old Style",Georgia,serif; font-size:1.15rem; line-height:1.95}
+  .n{font-family:system-ui,sans-serif; font-size:.62rem; color:var(--muted); vertical-align:.45em; margin-right:.4em; user-select:none}
+  ruby{ruby-position:over}
+  rt{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-style:italic; font-size:.5em; color:var(--amber); font-weight:500; letter-spacing:.01em; opacity:.95; line-height:1}
+  .hide-ruby .zh-ruby rt{display:none}
+  .hide-ruby .zh-ruby{ -webkit-text-decoration:underline dotted var(--line); text-decoration:underline dotted var(--line)}
+  ruby.eng-ruby rt{font-family:system-ui,sans-serif; font-style:normal; font-size:.52em; color:var(--blue); font-weight:600}
+  .hide-en-notes .eng-ruby rt{display:none}
+  .hide-en-notes .eng-ruby{ -webkit-text-decoration:underline dotted #b9cfe0; text-decoration:underline dotted #b9cfe0}
+  .refs{margin:.35rem 0 .1rem}
+  .gr,.en{margin:.25rem 0; font-size:.88rem; line-height:1.6; display:flex; gap:.55rem}
+  .gr{color:var(--greek); font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif}
+  .en{color:var(--muted); font-family:"Iowan Old Style",Charter,Georgia,serif; font-style:italic}
+  .lbl{flex:none; font-family:system-ui,sans-serif; font-style:normal; font-weight:700; font-size:.6rem; letter-spacing:.05em; padding:.08rem .34rem; border-radius:4px; height:fit-content; margin-top:.18rem}
+  .gr .lbl{background:var(--greek-soft); color:var(--greek)}
+  .en .lbl{background:#eee9dd; color:var(--muted)}
+  .hide-gr .gr{display:none}
+  .hide-en .en{display:none}
+  .remarks,.en-notes{margin:.5rem 0 .2rem; padding:.55rem .8rem; background:#fcf9f2; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; font-family:system-ui,sans-serif; font-size:.84rem; line-height:1.62}
+  .en-notes{background:#f4f8fb; border-left-color:var(--blue)}
+  .hide-remarks .remarks{display:none}
+  .hide-en-notes .en-notes{display:none}
+  .remark{margin:.18rem 0}
+  .remark + .remark{border-top:1px dashed var(--line); padding-top:.28rem; margin-top:.28rem}
+  .remark b{color:var(--ink)}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; color:var(--greek)}
+  .zh{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .tag{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:.05rem .42rem; border-radius:4px; margin-right:.45rem; vertical-align:.06em; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif}
+  .t-ci{background:var(--rose-soft); color:var(--rose)}
+  .t-pun{background:var(--purple-soft); color:var(--purple)}
+  .t-zhu{background:var(--amber-soft); color:var(--amber)}
+  .t-cf{background:var(--teal-soft); color:var(--teal)}
+  .t-en{background:var(--blue-soft); color:var(--blue)}
+  footer{max-width:760px; margin:0 auto; padding:0 clamp(1rem,5vw,2rem) 4rem; font-family:system-ui,sans-serif; font-size:.78rem; color:var(--muted)}
+  .legend{display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+  .idea{margin:1.4rem 0 .4rem; padding:.9rem 1rem; border:1px dashed var(--line); border-radius:8px; background:#faf6ec; font-family:system-ui,"PingFang SC",sans-serif; font-size:.86rem; line-height:1.7; color:var(--muted)}
+  .idea h3{margin:.1rem 0 .5rem; font-size:.92rem; color:var(--ink)}
+  .history{margin:0 0 1.3rem; padding:.7rem 1rem; background:var(--brown-soft); border:1px solid #ddc9a3; border-left:3px solid var(--brown); border-radius:8px;
+    font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.84rem; line-height:1.8; color:#4a3a20}
+  .history summary{cursor:pointer; font-size:.88rem; font-weight:700; color:#3d2f18; padding:.15rem 0; list-style:revert}
+  .history summary::marker{color:var(--brown)}
+  .history[open] summary{margin-bottom:.5rem}
+  .history-body p{margin:.5rem 0}
+  .history-body p:first-child{margin-top:0}
+  .history-body p:last-child{margin-bottom:0}
+  .hide-history .history{display:none}
+  .painting{margin:0 0 1.3rem; text-align:center}
+  .painting img{max-width:100%; max-height:420px; border-radius:6px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .painting-cap{margin-top:.5rem; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.76rem; color:var(--muted)}
+  .painting-note{margin:.3rem auto 0; max-width:520px; font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif; font-size:.78rem; color:var(--muted); line-height:1.6}
+  .hide-art .painting{display:none}
+  .cite-group{margin-top:.7rem; padding-top:.6rem; border-top:1px dashed #ddc9a3}
+  .cite-group-label{font-family:system-ui,sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.04em;
+    color:#8b6a3f; text-transform:uppercase; margin-bottom:.4rem}
+  details.cite{margin:.3rem 0; padding:.35rem .6rem; background:#fffdf7; border:1px solid #e6d9bc; border-radius:6px}
+  details.cite summary{cursor:pointer; font-size:.78rem; font-weight:600; color:#7a5620; list-style:revert; padding:0}
+  details.cite summary::marker{color:#b07d2b}
+  details.cite .cite-body{margin-top:.4rem}
+  .cite-zh{font-family:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif; font-size:.92rem; line-height:1.7; margin:.2rem 0; color:var(--ink)}
+  .cite-gr{font-family:"GFS Didot","Palatino Linotype",Palatino,Georgia,serif; font-size:.82rem; line-height:1.6; margin:.3rem 0; color:var(--greek); display:flex; gap:.5rem}
+  .cite-note{font-family:system-ui,sans-serif; font-size:.72rem; color:var(--muted); margin:.2rem 0 0}
+</style>
+</head>
+<body class="hide-gr">
+<div class="bar">
+  <div class="crumb"><a href="../index.html" style="color:inherit">主页</a> &rsaquo; <a href="index.html" style="color:inherit">查经</a> &rsaquo; 路加福音 &rsaquo; <b>23:1–25</b> &nbsp;·&nbsp; 三语共读</div>
+  <button class="btn" id="t-ruby">希腊词</button>
+  <button class="btn off" id="t-gr">希腊原文</button>
+  <button class="btn" id="t-en">KJV</button>
+  <button class="btn" id="t-enotes">英语讲解</button>
+  <button class="btn" id="t-rem">注释</button>
+  <button class="btn" id="t-hist">背景</button>
+  <button class="btn" id="t-art">名画</button>
+</div>
+
+<main id="reader">
+  <header class="doc">
+    <h1>路加福音 23:1–25</h1>
+    <div class="sub">和合本(中文, 阅读对象) · Nestle 1904(希腊原文, 锚点) · KJV(英译, 平行参照 — 也可直接读)</div>
+    <div class="lead">
+      延续前几周的方法：和合本是既有译本，直接作为阅读对象；希腊文只作锚点，标出个别值得注意的词；KJV平行对照，分歧处标出来(对照)。<b>释义</b>留白，现场一起填。本周是受难叙事的审判段落：公会把耶稣解到<b>彼拉多</b>面前，彼拉多又转给<b>希律</b>，两人从仇敌变朋友；彼拉多三次宣告查无罪证，群众却要<b>巴拉巴</b>，最终「他们的声音就得了胜」。23:2的控告正是第4周(20:20-26)那次圈套的原话回收。
+    </div>
+    <div class="kjv-note">
+      <b>怎么读KJV(1611年英语)的几个常见古体：</b> thou/thee/thy/thine = 单数「你/你的」；ye = 复数「你们」；
+      动词词尾 <b>-est/-eth</b> 表第二/第三人称单数现在时(wilt=will、doth=does、hast=have、goeth=goes、saith=says、spake=spoke)；
+      unto = to。这些很常见，就不逐一标注了；下面只标真正会让人卡住的<b>词汇/古今异义词</b>，点「英语讲解」可以单独关/开。
+    </div>
+    <div class="mapbox">
+      <div id="geomap"></div>
+      <div class="map-cap">底图为 OpenStreetMap 实景地图(需要联网加载)。本周始终在城内，两个审判地点之间一次往返：彼拉多的总督府 → 希律处(23:7) → 彼拉多的总督府(23:11)。<b>彼拉多总督府的确切位置本身有争议</b>——传统常说是紧邻圣殿的安东尼堡，但现在学界更多倾向希律大帝旧王宫(西城)；希律·安提帕本周留驻的地点更不确定，图上标注仅供大致方位参考，均无从确证。</div>
+    </div>
+    <div class="toc"><a href="#beat1">23:1–5 该撒·基督·王 — 彼拉多的第一次审问</a> · <a href="#beat2">23:6–12 希律的审问</a> · <a href="#beat3">23:13–17 彼拉多再次宣告无罪</a> · <a href="#beat4">23:18–25 巴拉巴 · 第三次宣判 · 交出</a></div>
+  </header>
+
+<section id="beat1">
+  <h2><span class="ref-tag">23:1–5</span> 该撒·基督·王 — 彼拉多的第一次审问</h2>
+  <div class="beat-lead">公会把耶稣解到彼拉多面前，控告的三项罪名里，有一项是可以当场查证的假话。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>「禁止纳税给该撒」是个可查证的假指控：</b>23:2的三项控告——「诱惑国民」「禁止纳税给该撒」「自称是基督、是王」——直接就是第4周(20:20-26)那次没能得逞的圈套，被原样搬来当作正式控罪。可查的是：耶稣当时的真实回答恰恰相反——「该撒的物当归给该撒」(20:25)，用的还是同一个动词(δίδωμι「给」)。这不是各说各话，是经文自己就能对质的假指控。</p>
+<p><b>彼拉多其人：</b>本丢·彼拉多是主后26-36年间罗马派驻犹太的总督(prefect)，约瑟夫斯与塔西佗(《编年史》15.44)都提到过他；1961年在该撒利亚出土的「彼拉多石碑」(Pilate Stone)是目前唯一的同期考古实物证据，直接刻有他的名字与头衔。</p>
+<p><b>「你说的是」：</b>面对「你是犹太人的王吗」，耶稣只答Σὺ λέγεις(「你说的」)——不肯定也不否定。公会审问时(22:70)他用的是另一句「你们所说的是」(Ὑμεῖς λέγετε ὅτι ἐγώ εἰμι)，说法不完全相同，但同一种「把话推回去」的姿态在两场审讯里都出现了，这里不合并成同一句话处理。</p>
+<p><b>「我查不出这人有什么罪来」是第一次：</b>彼拉多这一周一共三次宣告耶稣无罪(23:4、23:14、23:22)，一次比一次更明确——这个三连重复是路加叙事上刻意的结构，比其他福音书都更强调。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音20:20-26(上次的圈套，本周被搬来当控罪) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">於是窺探耶穌, 打發奸細裝作好人, 要在他的話上得把柄, 好將他交在巡撫的政權之下. 奸細就問耶穌說, 夫子, 我們曉得你所講所傳都是正道, 也不取人的外貌, 乃是誠誠實實傳 神的道. 我們納稅給該撒, 可以不可以. 耶穌看出他們的詭詐, 就對他們說, 拿一個銀錢來給我看．這像和這號是誰的．他們說, 是該撒的. 耶穌說, 這樣, 該撒的物當歸給該撒, 神的物當歸給 神. 他們當著百姓, 在這話上得不著把柄．又希奇他的應對, 就閉口無言了.</p><p class="cite-gr"><span class="lbl">GR</span><span>Καὶ παρατηρήσαντες ἀπέστειλαν ἐνκαθέτους ὑποκρινομένους ἑαυτοὺς δικαίους εἶναι,ἵνα ἐπιλάβωνται αὐτοῦ λόγου,ὥστε παραδοῦναι αὐτὸν τῇ ἀρχῇ καὶ τῇ ἐξουσίᾳ τοῦ ἡγεμόνος. καὶ ἐπηρώτησαν αὐτὸν λέγοντες Διδάσκαλε,οἴδαμεν ὅτι ὀρθῶς λέγεις καὶ διδάσκεις καὶ οὐ λαμβάνεις πρόσωπον,ἀλλ’ἐπ’ἀληθείας τὴν ὁδὸν τοῦ Θεοῦ διδάσκεις· ἔξεστιν ἡμᾶς Καίσαρι φόρον δοῦναι ἢ οὔ; κατανοήσας δὲ αὐτῶν τὴν πανουργίαν εἶπεν πρὸς αὐτούς Δείξατέ μοι δηνάριον·τίνος ἔχει εἰκόνα καὶ ἐπιγραφήν;οἱ δὲ εἶπαν Καίσαρος. ὁ δὲ εἶπεν πρὸς αὐτούς Τοίνυν ἀπόδοτε τὰ Καίσαρος Καίσαρι καὶ τὰ τοῦ Θεοῦ τῷ Θεῷ. καὶ οὐκ ἴσχυσαν ἐπιλαβέσθαι αὐτοῦ ῥήματος ἐναντίον τοῦ λαοῦ,καὶ θαυμάσαντες ἐπὶ τῇ ἀποκρίσει αὐτοῦ ἐσίγησαν.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音22:70(公会前的「你们所说的是」，对照) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他們都說, 這樣, 你是 神的兒子麼.耶穌說, 你們所說的是.</p><p class="cite-gr"><span class="lbl">GR</span><span>εἶπαν δὲ πάντες Σὺ οὖν εἶ ὁ Υἱὸς τοῦ Θεοῦ;ὁ δὲ πρὸς αὐτοὺς ἔφη Ὑμεῖς λέγετε ὅτι ἐγώ εἰμι.</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v23-1">
+    <p class="sent"><span class="zh-body"><span class="n">23:1</span>眾人都起來, 把耶穌解到<ruby class="zh-ruby">彼拉多<rt>Πειλᾶτος</rt></ruby>面前.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Καὶ ἀναστὰν ἅπαν τὸ πλῆθος αὐτῶν ἤγαγον αὐτὸν ἐπὶ τὸν Πειλᾶτον.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the whole multitude of them arose, and led him unto Pilate.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-2">
+    <p class="sent"><span class="zh-body"><span class="n">23:2</span>就告他說, 我們見這人誘惑國民, 禁止納稅給<ruby class="zh-ruby">該撒<rt>Καῖσαρ</rt></ruby>, 並說自己是<ruby class="zh-ruby">基督<rt>Χριστόν</rt></ruby>, 是王.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἤρξαντο δὲ κατηγορεῖν αὐτοῦ λέγοντες Τοῦτον εὕραμεν διαστρέφοντα τὸ ἔθνος ἡμῶν καὶ κωλύοντα φόρους Καίσαρι διδόναι,καὶ λέγοντα ἑαυτὸν Χριστὸν βασιλέα εἶναι.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they began to accuse him, saying, We found this fellow perverting the nation, and forbidding to give tribute to Caesar, saying that he himself is Christ a King.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span>「禁止纳税给该撒」正是第4周(20:20-26)那次圈套的原话回收——耶稣当时说的其实是「该撒的物当归给该撒」，方向完全相反。</div>
+    </div>
+  </div>
+  <div class="unit" id="v23-3">
+    <p class="sent"><span class="zh-body"><span class="n">23:3</span>彼拉多問耶穌說, 你是猶太人的王麼.耶穌回答說, 你說的是.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ Πειλᾶτος ἠρώτησεν αὐτὸν λέγων Σὺ εἶ ὁ Βασιλεὺς τῶν Ἰουδαίων;ὁ δὲ ἀποκριθεὶς αὐτῷ ἔφη Σὺ λέγεις.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Pilate asked him, saying, Art thou the King of the Jews? And he answered him and said, Thou sayest it.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-4">
+    <p class="sent"><span class="zh-body"><span class="n">23:4</span>彼拉多對祭司長和眾人說, 我查不出這人有甚麼罪來.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ Πειλᾶτος εἶπεν πρὸς τοὺς ἀρχιερεῖς καὶ τοὺς ὄχλους Οὐδὲν εὑρίσκω αἴτιον ἐν τῷ ἀνθρώπῳ τούτῳ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then said Pilate to the chief priests and to the people, I find no fault in this man.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-5">
+    <p class="sent"><span class="zh-body"><span class="n">23:5</span>但他們越發極力的說, 他煽惑百姓, 在猶太遍地傳道, 從加利利起, 直到這裡了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ ἐπίσχυον λέγοντες ὅτι Ἀνασείει τὸν λαὸν,διδάσκων καθ’ὅλης τῆς Ἰουδαίας,καὶ ἀρξάμενος ἀπὸ τῆς Γαλιλαίας ἕως ὧδε.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they were the more fierce, saying, He stirreth up the people, teaching throughout all Jewry, beginning from Galilee to this place.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    彼拉多说「我查不出这人有什么罪来」，却还是一步步走到了定案——这中间他做了什么、没做什么？23:2的控告和20:20-26的真实对话正好相反，路加把这个矛盾摆在这里，是要读者自己发现，还是默认没人会去查？
+  </div>
+</section>
+
+<section id="beat2">
+  <h2><span class="ref-tag">23:6–12</span> 希律的审问</h2>
+  <div class="beat-lead">因耶稣是加利利人，彼拉多把他转送希律——路加独有的一幕，早有伏笔(9:7-9)。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>这场希律审讯只有路加记载：</b>四福音书中，把耶稣送到希律面前受审，是路加独有的一幕。这位希律是希律安提帕(Herod Antipas)，加利利与比利亚的分封王——3:19-20说他因希罗底的缘故收押了施洗约翰，9:7-9说他早就好奇想见耶稣、却「游移不定」。这一幕正好兑现了9:9那句悬着的「就想要见他」。</p>
+<p><b>他想看的是「神迹」(σημεῖον)：</b>与21:25「日月星辰要显出异兆」(σημεῖα)是同一个词根，但这里的用法完全是猎奇——希律要的是一场余兴表演，份量和21:25的用法完全不同，只是词根巧合，不必过度引申。</p>
+<p><b>「彼此有仇……就成了朋友」不是路加随手一笔：</b>使徒行传4:25-27(传统上与本书同一位作者)引诗篇2:1-2「外邦为什么争闹……世上的君王一齐起来」，然后直接点名「希律和本丢彼拉多，外邦人和以色列民，果然在这城里聚集」——把这一天希律、彼拉多摒弃旧怨联手的画面，读作诗篇2那幅「君王一同抵挡耶和华并他的受膏者」的应验。这个连结是路加福音／使徒行传两部书之间的呼应，不是本节经文自己写明的，此处只作参照。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>路加福音3:19-20(希律其人) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">只是分封的王希律, 因他兄弟之妻希羅底的緣故, 並因他所行的一切惡事, 受了約翰的責備． 又另外添了一件, 就是把約翰收在監裡.</p><p class="cite-gr"><span class="lbl">GR</span><span>ὁ δὲ Ἠρῴδης ὁ τετραάρχης,ἐλεγχόμενος ὑπ’αὐτοῦ περὶ Ἠρῳδιάδος τῆς γυναικὸς τοῦ ἀδελφοῦ αὐτοῦ καὶ περὶ πάντων ὧν ἐποίησεν πονηρῶν ὁ Ἠρῴδης, προσέθηκεν καὶ τοῦτο ἐπὶ πᾶσιν,κατέκλεισεν τὸν Ἰωάνην ἐν φυλακῇ.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>路加福音9:7-9(希律早就想见耶稣) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">分封的王希律聽見耶穌所作的一切事, 就游移不定．因為有人說, 是約翰從死裡復活． 又有人說, 是以利亞顯現．還有人說, 是古時的一個先知又活了. 希律說, 約翰我已經斬了, 這卻是甚麼人, 我竟聽見他這樣的事呢, 就想要見他.</p><p class="cite-gr"><span class="lbl">GR</span><span>Ἤκουσεν δὲ Ἠρῴδης ὁ τετραάρχης τὰ γινόμενα πάντα,καὶ διηπόρει διὰ τὸ λέγεσθαι ὑπό τινων ὅτι Ἰωάνης ἠγέρθη ἐκ νεκρῶν, ὑπό τινων δὲ ὅτι Ἠλείας ἐφάνη,ἄλλων δὲ ὅτι προφήτης τις τῶν ἀρχαίων ἀνέστη. εἶπεν δὲ Ἠρῴδης Ἰωάνην ἐγὼ ἀπεκεφάλισα·τίς δέ ἐστιν οὗτος περὶ οὗ ἀκούω τοιαῦτα;καὶ ἐζήτει ἰδεῖν αὐτόν.</span></p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>以赛亚书53:7(受苦仆人的沉默，参照) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">他被欺壓, 在受苦的時候卻不開口．〔或作他受欺壓卻自卑不開口〕他像羊羔被牽到宰殺之地, 又像羊在剪毛的人手下無聲, 他也是這樣不開口．</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>诗篇2:1-2 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">外邦為甚麼爭鬧, 萬民為甚麼謀算虛妄的事. 世上的君王一齊起來, 臣宰一同商議, 要敵擋耶和華, 並他的受膏者,</p>
+    </div>
+  </details>
+<details class="cite">
+    <summary>使徒行传4:25-27(引诗2，点名希律彼拉多) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">你曾藉著聖靈, 託你僕人我們祖宗大衛的口, 說, 『外邦為甚麼爭鬧, 萬民為甚麼謀算虛妄的事． 世上的君王一齊起來, 臣宰也聚集, 要敵擋主, 並主的受膏者.〔或作基督〕』 希律和本丟彼拉多, 外邦人和以色列民, 果然在這城裡聚集, 要攻打你所膏的聖僕耶穌, 〔僕或作子〕</p><p class="cite-gr"><span class="lbl">GR</span><span>ὁ τοῦ πατρὸς ἡμῶν διὰ Πνεύματος Ἁγίου στόματος Δαυεὶδ παιδός σου εἰπών Ἵνα τί ἐφρύαξαν ἔθνη καὶ λαοὶ ἐμελέτησαν κενά; παρέστησαν οἱ βασιλεῖς τῆς γῆς καὶ οἱ ἄρχοντες συνήχθησαν ἐπὶ τὸ αὐτὸ κατὰ τοῦ Κυρίου καὶ κατὰ τοῦ Χριστοῦ αὐτοῦ. συνήχθησαν γὰρ ἐπ’ἀληθείας ἐν τῇ πόλει ταύτῃ ἐπὶ τὸν ἅγιον Παῖδά σου Ἰησοῦν,ὃν ἔχρισας,Ἠρῴδης τε καὶ Πόντιος Πειλᾶτος σὺν ἔθνεσιν καὶ λαοῖς Ἰσραήλ,</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="unit para-start" id="v23-6">
+    <p class="sent"><span class="zh-body"><span class="n">23:6</span>彼拉多一聽見, 就問這人是加利利人麼.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Πειλᾶτος δὲ ἀκούσας ἐπηρώτησεν εἰ ὁ ἄνθρωπος Γαλιλαῖός ἐστιν,</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>When Pilate heard of Galilee, he asked whether the man were a Galilaean.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-7">
+    <p class="sent"><span class="zh-body"><span class="n">23:7</span>既曉得耶穌屬<ruby class="zh-ruby">希律<rt>Ἡρῴδης</rt></ruby>所管, 就把他送到希律那裡去．那時希律正在耶路撒冷.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ ἐπιγνοὺς ὅτι ἐκ τῆς ἐξουσίας Ἠρῴδου ἐστὶν,ἀνέπεμψεν αὐτὸν πρὸς Ἠρῴδην,ὄντα καὶ αὐτὸν ἐν Ἱεροσολύμοις ἐν ταύταις ταῖς ἡμέραις.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And as soon as he knew that he belonged unto Herod’s jurisdiction, he sent him to Herod, who himself also was at Jerusalem at that time.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-8">
+    <p class="sent"><span class="zh-body"><span class="n">23:8</span>希律看見耶穌, 就很歡喜．因為聽見過他的事, 久已想要見他．並且指望看他行一件神蹟.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ Ἠρῴδης ἰδὼν τὸν Ἰησοῦν ἐχάρη λίαν·ἦν γὰρ ἐξ ἱκανῶν χρόνων θέλων ἰδεῖν αὐτὸν διὰ τὸ ἀκούειν περὶ αὐτοῦ,καὶ ἤλπιζέν τι σημεῖον ἰδεῖν ὑπ’αὐτοῦ γινόμενον.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And when Herod saw Jesus, he was exceeding glad: for he was desirous to see him of a long season, because he had heard many things of him; and he hoped to have seen some miracle done by him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-9">
+    <p class="sent"><span class="zh-body"><span class="n">23:9</span>於是問他許多的話．耶穌卻一言不答.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐπηρώτα δὲ αὐτὸν ἐν λόγοις ἱκανοῖς·αὐτὸς δὲ οὐδὲν ἀπεκρίνατο αὐτῷ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Then he questioned with him in many words; but he answered him nothing.</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-cf">对照</span>以赛亚书53:7「他像羊羔被牵到宰杀之地……也是这样不开口」——经文本身没有点名引用，此处只作背景参照。</div>
+    </div>
+  </div>
+  <div class="unit" id="v23-10">
+    <p class="sent"><span class="zh-body"><span class="n">23:10</span>祭司長和文士, 都站著極力的告他.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἱστήκεισαν δὲ οἱ ἀρχιερεῖς καὶ οἱ γραμματεῖς εὐτόνως κατηγοροῦντες αὐτοῦ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the chief priests and scribes stood and vehemently accused him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-11">
+    <p class="sent"><span class="zh-body"><span class="n">23:11</span>希律和他的兵丁就藐視耶穌, 戲弄他, 給他穿上華麗衣服, 把他送回彼拉多那裡去.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐξουθενήσας δὲ αὐτὸν ὁ Ἠρῴδης σὺν τοῖς στρατεύμασιν αὐτοῦ καὶ ἐμπαίξας,περιβαλὼν ἐσθῆτα λαμπρὰν ἀνέπεμψεν αὐτὸν τῷ Πειλάτῳ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Herod with his men of war set him at nought, and mocked him, and arrayed him in a gorgeous robe, and sent him again to Pilate.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-12">
+    <p class="sent"><span class="zh-body"><span class="n">23:12</span>從前希律和彼拉多彼此有仇．在那一天就成了朋友.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἐγένοντο δὲ φίλοι ὅ τε Ἠρῴδης καὶ ὁ Πειλᾶτος ἐν αὐτῇ τῇ ἡμέρᾳ μετ’ἀλλήλων·προϋπῆρχον γὰρ ἐν ἔχθρᾳ ὄντες πρὸς αὑτούς.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And the same day Pilate and Herod were made friends together: for before they were at enmity between themselves.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    希律「很欢喜」，是这整段受难叙事里少见的正面情绪词——但他欢喜的理由(看神迹)和耶稣的沉默形成对照，这份欢喜说明了什么？「彼此有仇……成了朋友」，是两个政客的权宜之计，还是经文想让人看见更大的图景？
+  </div>
+</section>
+
+<section id="beat3">
+  <h2><span class="ref-tag">23:13–17</span> 彼拉多再次宣告无罪</h2>
+  <div class="beat-lead">彼拉多当众召集三方，第二次宣告查无罪证——但提出的处置是「责打后释放」。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>这次是公开召集三方：</b>23:13「彼拉多传齐了祭司长、和官府并百姓」——不是私下问话，是把三个群体一起召来，当众第二次宣告查无罪证，还特别加了一句「希律也是如此」。</p>
+<p><b>23:17是一处能直接在和合本上看到的抄本争议：</b>和合本这节经文自己就用括注标出「〔有古卷在此有〕」「〔每逢这节期巡抚必须释放一个囚犯给他们〕」——本项目所用的Nestle 1904希腊文本(现代主流校勘本)里，23:17这一节根本不存在，是马可15:6、马太27:15的说法被后来的抄本搬来这里补足文意。有没有这一节，23:18「众人却一齐喊着说」的因果其实都读得通。这是本系列目前唯一一处不需要外部工具书、单靠本地收藏的中希两份原文本身互相对照就足以看出的抄本差异。</p>
+    </div>
+  </details>
+  <div class="unit para-start" id="v23-13">
+    <p class="sent"><span class="zh-body"><span class="n">23:13</span>彼拉多傳齊了祭司長, 和, 官府並百姓,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>Πειλᾶτος δὲ συνκαλεσάμενος τοὺς ἀρχιερεῖς καὶ τοὺς ἄρχοντας καὶ τὸν λαὸν</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Pilate, when he had called together the chief priests and the rulers and the people,</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-14">
+    <p class="sent"><span class="zh-body"><span class="n">23:14</span>就對他們說, 你們解這人到我這裡, 說他是誘惑百姓的．看哪, 我也曾將你們告他的事, 在你們面前審問他, 並沒有查出他甚麼罪來．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>εἶπεν πρὸς αὐτούς Προσηνέγκατέ μοι τὸν ἄνθρωπον τοῦτον ὡς ἀποστρέφοντα τὸν λαόν,καὶ ἰδοὺ ἐγὼ ἐνώπιον ὑμῶν ἀνακρίνας οὐθὲν εὗρον ἐν τῷ ἀνθρώπῳ τούτῳ αἴτιον ὧν κατηγορεῖτε κατ’αὐτοῦ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Said unto them, Ye have brought this man unto me, as one that perverteth the people: and, behold, I, having examined him before you, have found no fault in this man touching those things whereof ye accuse him:</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-15">
+    <p class="sent"><span class="zh-body"><span class="n">23:15</span>就是希律也是如此, 所以把他送回來．可見他沒有作甚麼該死的事.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀλλ’οὐδὲ Ἠρῴδης·ἀνέπεμψεν γὰρ αὐτὸν πρὸς ἡμᾶς·καὶ ἰδοὺ οὐδὲν ἄξιον θανάτου ἐστὶν πεπραγμένον αὐτῷ·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>No, nor yet Herod: for I sent you to him; and, lo, nothing worthy of death is done unto him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-16">
+    <p class="sent"><span class="zh-body"><span class="n">23:16</span>故此我要責打他, 把他釋放了.〔有古卷在此有〕</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>παιδεύσας οὖν αὐτὸν ἀπολύσω.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>I will therefore chastise him, and release him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-17">
+    <p class="sent"><span class="zh-body"><span class="n">23:17</span>〔每逢這節期巡撫必須釋放一個囚犯給他們〕</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span><i>(此节不在Nestle 1904校勘本中 — 见本拍历史背景的抄本讨论)</i></span></p>
+      <p class="en"><span class="lbl">KJV</span><span>(For of necessity he must release one unto them at the feast.)</span></p>
+    </div>
+    <div class="remarks">
+      <div class="remark"><span class="tag t-zhu">注</span>和合本自己在此加了两个括注，标出这是抄本传统里有争议的一节——见本拍历史背景。</div>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    彼拉多两次说「查不出罪来」，提出的解决方案却是「责打他，把他释放了」——查无罪证却还要「责打」，这个矛盾要怎么读？
+  </div>
+</section>
+
+<section id="beat4">
+  <h2><span class="ref-tag">23:18–25</span> 巴拉巴 · 第三次宣判 · 交出</h2>
+  <div class="beat-lead">群众要巴拉巴，彼拉多第三次宣告无罪，声浪最终「得了胜」。</div>
+  <details class="history">
+    <summary>历史与人物背景</summary>
+    <div class="history-body">
+    <p><b>巴拉巴的名字：</b>Βαραββᾶς是亚兰文「Bar-Abba」的音译，字面是「……的儿子」+「Abba(父)」。「亚巴」在当时也是个真实的人名，所以更保守的读法是「亚巴的儿子」，不必然是刻意设计的「人的父亲之子」对「神的儿子」这种文字游戏——两种读法都存在，这里不代为选定，只指出巴拉巴本人是「因在城里作乱杀人」下监的要犯，很可能是当时反抗罗马统治的激进派人物之一。</p>
+<p><b>「彼拉多第三次」与ἐπέκρινεν：</b>23:22是彼拉多第三次宣告无罪，随后23:24「彼拉多这才照他们所求的定案」，动词ἐπικρίνω(「裁定、判给」)在新约全书只在这里出现过一次——用了一个带官方法律色彩的罕见词，为这场审讯的司法程序划下句点。</p>
+<p><b>「任凭他们的意思行」该怎么读：</b>约翰福音18:31记载犹太当局自己说「我们没有杀人的权柄」——在罗马治下，死刑的最终裁量权在罗马官员手里，这是当时的常态(虽非全无例外，如圣殿内院栏杆擅闯者可由犹太当局就地处决，见约瑟夫斯《犹太战记》6.124-126)。23:25的「交给他们，任凭他们的意思行」，说的是官府与部分祭司长在整个过程中扮演的角色，但最终签署死刑、执行钉十字架的仍然是罗马当局本身——这是一段历史上极易被简化、也曾造成过真实伤害的经文，此处只依经文与史料尽量说清楚各方角色，不作「谁该负责」的定论。</p>
+    <div class="cite-group">
+      <div class="cite-group-label">原文引用</div>
+<details class="cite">
+    <summary>约翰福音18:31(犹太当局无权处死刑) 原文</summary>
+    <div class="cite-body">
+      <p class="cite-zh">彼拉多說, 你們自己帶他去, 按著你們的律法審問他罷.猶太人說, 我們沒有殺人的權柄.</p><p class="cite-gr"><span class="lbl">GR</span><span>εἶπεν οὖν αὐτοῖς ὁ Πειλᾶτος Λάβετε αὐτὸν ὑμεῖς,καὶ κατὰ τὸν νόμον ὑμῶν κρίνατε αὐτόν.εἶπον αὐτῷ οἱ Ἰουδαῖοι Ἠμῖν οὐκ ἔξεστιν ἀποκτεῖναι οὐδένα·</span></p>
+    </div>
+  </details>
+    </div>
+    </div>
+  </details>
+  <div class="painting">
+    <a href="https://commons.wikimedia.org/wiki/File:Ecce_homo_by_Antonio_Ciseri_(1).jpg" target="_blank" rel="noopener"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ecce_homo_by_Antonio_Ciseri_(1).jpg" alt="《瞧,这个人》" loading="lazy"></a>
+    <div class="painting-cap">安东尼奥·奇塞里 (Antonio Ciseri) · 《瞧,这个人》(<i>Ecce Homo</i>) · 1871 · 圣方济各堂, 卢加诺。图片：Wikimedia Commons，公有领域。</div>
+    <p class="painting-note">画的正是彼拉多在群众面前展示耶稣的这一幕(常与约19:5「你们看这个人」连读，路加本身没有这句台词，但场景相同)。奇塞里刻意从背后画彼拉多，把镜头对准台下的人群——看画的人被摆在了「群众」的位置上。</p>
+  </div>
+  <div class="unit para-start" id="v23-18">
+    <p class="sent"><span class="zh-body"><span class="n">23:18</span>眾人卻一齊喊著說, 除掉這個人, 釋放<ruby class="zh-ruby">巴拉巴<rt>Βαραββᾶν</rt></ruby>給我們.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀνέκραγον δὲ πανπληθεὶ λέγοντες Αἶρε τοῦτον,ἀπόλυσον δὲ ἡμῖν τὸν Βαραββᾶν·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they cried out all at once, saying, Away with this man, and release unto us Barabbas:</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-19">
+    <p class="sent"><span class="zh-body"><span class="n">23:19</span>這巴拉巴是因在城裡作亂殺人下在監裡的.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὅστις ἦν διὰ στάσιν τινὰ γενομένην ἐν τῇ πόλει καὶ φόνον βληθεὶς ἐν τῇ φυλακῇ.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>(Who for a certain sedition made in the city, and for murder, was cast into prison.)</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-20">
+    <p class="sent"><span class="zh-body"><span class="n">23:20</span>彼拉多願意釋放耶穌, 就又勸解他們．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>πάλιν δὲ ὁ Πειλᾶτος προσεφώνησεν αὐτοῖς,θέλων ἀπολῦσαι τὸν Ἰησοῦν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>Pilate therefore, willing to release Jesus, spake again to them.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-21">
+    <p class="sent"><span class="zh-body"><span class="n">23:21</span>無奈他們喊著說, 釘他十字架, 釘他十字架.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ ἐπεφώνουν λέγοντες Σταύρου σταύρου αὐτόν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>But they cried, saying, Crucify him, crucify him.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-22">
+    <p class="sent"><span class="zh-body"><span class="n">23:22</span>彼拉多第三次對他們說, 為甚麼呢, 這人作了甚麼惡事呢, 我並沒有查出他甚麼該死的罪來．所以我要責打他, 把他釋放了.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ὁ δὲ τρίτον εἶπεν πρὸς αὐτούς Τί γὰρ κακὸν ἐποίησεν οὗτος;οὐδὲν αἴτιον θανάτου εὗρον ἐν αὐτῷ·παιδεύσας οὖν αὐτὸν ἀπολύσω.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he said unto them the third time, Why, what evil hath he done? I have found no cause of death in him: I will therefore chastise him, and let him go.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-23">
+    <p class="sent"><span class="zh-body"><span class="n">23:23</span>他們大聲催逼彼拉多, 求他把耶穌釘在十字架上.他們的聲音就得了勝,</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>οἱ δὲ ἐπέκειντο φωναῖς μεγάλαις αἰτούμενοι αὐτὸν σταυρωθῆναι,καὶ κατίσχυον αἱ φωναὶ αὐτῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And they were instant with loud voices, requiring that he might be crucified. And the voices of them and of the chief priests prevailed.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-24">
+    <p class="sent"><span class="zh-body"><span class="n">23:24</span>彼拉多這纔照他們所求的<ruby class="zh-ruby">定案<rt>ἐπέκρινεν</rt></ruby>．</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>καὶ Πειλᾶτος ἐπέκρινεν γενέσθαι τὸ αἴτημα αὐτῶν·</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And Pilate gave sentence that it should be as they required.</span></p>
+    </div>
+  </div>
+  <div class="unit" id="v23-25">
+    <p class="sent"><span class="zh-body"><span class="n">23:25</span>把他們所求的那作亂殺人下在監裡的, 釋放了．把耶穌交給他們, 任憑他們的意思行.</span></p>
+    <div class="refs">
+      <p class="gr"><span class="lbl">GR</span><span>ἀπέλυσεν δὲ τὸν διὰ στάσιν καὶ φόνον βεβλημένον εἰς φυλακὴν,ὃν ᾐτοῦντο,τὸν δὲ Ἰησοῦν παρέδωκεν τῷ θελήματι αὐτῶν.</span></p>
+      <p class="en"><span class="lbl">KJV</span><span>And he released unto them him that for sedition and murder was cast into prison, whom they had desired; but he delivered Jesus to their will.</span></p>
+    </div>
+  </div>
+  <div class="idea">
+    <h3>释义 (Idea) — 待读时填写</h3>
+    「释放巴拉巴」这个名字如果真是「……的儿子」的意思，会不会让这个选择显得更尖锐？彼拉多「愿意释放耶稣」，却在群众的声浪前退让——这场审判里，谁的意思才是真正「得了胜」的？
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="tag t-ci">词</span>关键词义</span>
+    <span><span class="tag t-cf">对照</span>希腊/中/英三方比较</span>
+    <span><span class="tag t-zhu">注</span>背景说明</span>
+    <span><span class="tag t-en">英</span>KJV 语言点</span>
+  </div>
+  希腊原文：Nestle 1904 (MACULA Greek, lowfat treebank)。中文：和合本(Chinese Union Version, Big5 数字化本)。英译：King James Version (1611/1769)。三者均为公共领域文本。标点保留原始数字化文本所用的半形符号。
+  <p style="margin-top:.8rem">历史背景部分引用：约瑟夫斯《犹太战记》6.124-126；塔西佗《编年史》15.44；旧约经文(赛53:7、诗2:1-2)；新约对照(路3:19-20、9:7-9、20:20-26、21:25、22:70、约18:31、徒4:25-27)。ἐπικρίνω「新约仅此一见」、23:17不在Nestle 1904校勘本中两项，系直接核对本地收藏的希腊语料库(macula-greek, Nestle 1904)与和合本(bible.txt)本身得出。彼拉多总督府/希律安提帕驻地在耶路撒冷城内的确切位置、Βαραββᾶς名字是否为刻意的文字游戏、23:25「任凭他们的意思行」应如何理解各方角色，均属无法在经文内部确定或存在学术分歧的问题，注中已尽量并列诸说。此拍内容经过一次独立的 codex 冷覆核，抓到并修正了「23:17抄本地位」以外的三处过度宣称(见本机记录)。</p>
+</footer>
+
+<script>
+  const body=document.body;
+  const toggleMap={'t-ruby':'hide-ruby','t-gr':'hide-gr','t-en':'hide-en','t-enotes':'hide-en-notes','t-rem':'hide-remarks','t-hist':'hide-history','t-art':'hide-art'};
+  for(const id in toggleMap){const btn=document.getElementById(id);
+    btn.onclick=()=>{ body.classList.toggle(toggleMap[id]); btn.classList.toggle('off'); };}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+  const geoMap = L.map('geomap', {scrollWheelZoom:false}).setView([31.7768,35.2300], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(geoMap);
+
+  L.marker([31.7767,35.2286]).addTo(geoMap)
+    .bindPopup('<b>彼拉多的总督府(传统推测位置)</b><br>希律大帝旧王宫, 西城<br>23:1-5, 13-25 两次审问在此<br><i>注: 现在学界多倾向此处而非安东尼堡, 但仍非定论</i>');
+
+  L.marker([31.7784,35.2354]).addTo(geoMap)
+    .bindPopup('<b>安东尼堡(传统但现在较少被采信的候选地点)</b><br>紧邻圣殿西北角<br><i>注: 过去的主流猜测, 近年考古/文献研究更倾向西城王宫说</i>');
+
+  L.marker([31.7757,35.2312]).addTo(geoMap)
+    .bindPopup('<b>哈斯蒙尼王宫(希律·安提帕本周留驻处, 推测位置)</b><br>23:6-12 希律审问在此<br><i>注: 比彼拉多的位置更不确定, 仅供方位参考</i>');
+
+  L.polyline([[31.7767,35.2286],[31.7757,35.2312]], {color:'#8c3d4f', weight:3, dashArray:'6 5'})
+    .addTo(geoMap).bindPopup('23:7 彼拉多把耶稣送到希律那里');
+  L.polyline([[31.7757,35.2312],[31.7767,35.2286]], {color:'#8c3d4f', weight:3, dashArray:'6 5'})
+    .addTo(geoMap).bindPopup('23:11 希律把耶稣送回彼拉多那里');
+
+  geoMap.fitBounds(L.latLngBounds([[31.7730,35.2260],[31.7800,35.2380]]));
+</script>
+
+</body>
+</html>
