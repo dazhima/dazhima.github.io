@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hurwitz's theorem — Hartshorne IV.2</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+  :root {
+    --ink: #1c1a17;
+    --sub: #6b625a;
+    --rule: #e4ddd3;
+    --accent: #7a4fae;
+    --accent-soft: #efe7fb;
+    --amber: #b9782f;
+    --amber-soft: #f8ecdd;
+    --bg: #fbf9f6;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 56px 28px 120px;
+  }
+  header {
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+  }
+  .status {
+    display: inline-block;
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--amber);
+    background: var(--amber-soft);
+    border: 1px solid #e8cda3;
+    border-radius: 999px;
+    padding: 3px 11px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 1.9rem;
+    line-height: 1.25;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  h2 {
+    font-size: 1.18rem;
+    font-weight: 600;
+    margin: 46px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+  }
+  h3 {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin: 34px 0 12px;
+  }
+  .meta {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    color: var(--sub);
+  }
+  .meta a { color: var(--accent); }
+  .preamble {
+    font-style: italic;
+    color: var(--sub);
+    font-size: 0.98rem;
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 16px;
+    margin: 24px 0 36px;
+  }
+  p { margin: 0.9em 0; }
+  ol, ul { padding-left: 1.3em; }
+  ol > li, ul > li { margin: 0.55em 0; padding-left: 0.15em; }
+  li::marker {
+    color: var(--accent);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 0.92em;
+  }
+  ul > li::marker { color: var(--amber); }
+  .stmt {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin: 22px 0;
+  }
+  .stmt > :first-child { margin-top: 0; }
+  .stmt > :last-child { margin-bottom: 0; }
+  .stmt .lbl {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-right: 0.5em;
+  }
+  .proof-line {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0.8em 0 0.4em 0.15em;
+  }
+  .remark {
+    border-left: 3px solid var(--amber);
+    background: var(--amber-soft);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 16px;
+    margin: 22px 0;
+    font-size: 0.96rem;
+  }
+  .remark > :first-child { margin-top: 0; }
+  .remark > :last-child { margin-bottom: 0; }
+  .remark .lbl {
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-right: 0.5em;
+  }
+  .example .lbl { color: var(--sub); }
+  .refs dt {
+    font-weight: 600;
+    margin-top: 1.1em;
+  }
+  .refs dd {
+    margin: 0.25em 0 0;
+    color: var(--sub);
+    font-size: 0.96rem;
+  }
+  code { background: var(--accent-soft); border-radius: 3px; padding: 0 3px; }
+  .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+  footer {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 12px;
+    color: var(--sub);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div style="font-family:-apple-system,'Segoe UI',sans-serif;font-size:12px;margin-bottom:10px"><a href="index.html" style="color:var(--sub);text-decoration:none">&larr; Undergraduate reading seminar</a></div>
+  <div class="status">in-progress · lecture note</div>
+  <h1>Hurwitz's theorem — Hartshorne IV.2</h1>
+  <div class="meta">source: <code>Hartshorne, Algebraic Geometry, IV.2</code> &nbsp;·&nbsp; prerequisites: <code>IV.1 Riemann–Roch</code></div>
+</header>
+
+<p class="preamble">
+This section studies finite morphisms $f:X\to Y$ between curves and examines the relation between the
+canonical divisors of the two curves. The resulting formula ties the genus of $X$, the genus of $Y$ and the
+ramification together, and is called Hurwitz's theorem. It is one of the most frequently used computational
+tools of this chapter: §3 will use it to identify strange curves, and §4 to analyse double covers of
+elliptic curves.
+</p>
+
+<h2>1. The ramification index</h2>
+
+<p>
+The <b>degree</b> of a finite morphism $f:X\to Y$ of curves is defined as the degree $[K(X):K(Y)]$ of the
+function field extension (II, §6).
+</p>
+
+<p>
+For a point $P\in X$, set $Q=f(P)$ and take $t\in\mathcal{O}_Q$ to be a local parameter at $Q$. Regarding
+$t$ as an element of $\mathcal{O}_P$ via the natural map $f^{\#}:\mathcal{O}_Q\to\mathcal{O}_P$, define the
+<b>ramification index</b> at $P$ to be
+$$e_P=v_P(t),$$
+where $v_P$ is the valuation of the valuation ring $\mathcal{O}_P$. If $e_P>1$ we say $f$ is <b>ramified</b>
+at $P$ and call $Q$ a <b>branch point</b> of $f$; if $e_P=1$ we say $f$ is <b>unramified</b> at $P$. Since
+the base field $k$ is algebraically closed, every point has $k(P)=k(Q)$, so this definition agrees with the
+earlier definition of unramified (III, Ex. 10.3). In particular, if $f$ is unramified everywhere then it is
+étale, since it is flat in any case (III, 9.7).
+</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — what the ramification index counts</span>
+$e_P$ measures how many times $f$ “winds around” near $P$. Taking a local parameter $t$ at $Q$ and a local
+parameter $u$ at $P$, the morphism pulls $t$ back locally to $u^{e_P}$ times a unit, so it looks like
+$z\mapsto z^{e}$. The counterpart in complex analysis is the multiplicity of a meromorphic map at a point,
+with $e_P=1$ meaning locally injective. The number of points in a fibre is related to the ramification
+indices by $\sum_{P\mapsto Q}e_P=\deg f$: counted with multiplicity, every fibre has exactly $\deg f$
+points, a fact already used repeatedly.</p>
+</div>
+
+<p>
+If $\operatorname{char}k=0$, or if $\operatorname{char}k=p$ and $p\nmid e_P$, the ramification at that point
+is called <b>tame</b>; if $p\mid e_P$ it is called <b>wild</b>. The distinction is essential in
+characteristic $p$, and we will see that wild ramification turns the formula into an inequality.
+</p>
+
+<p>
+We have already defined the homomorphism of divisor groups $f^*:\operatorname{Div}Y\to\operatorname{Div}X$,
+$$f^*(Q)=\sum_{P\mapsto Q}e_P\cdot P,$$
+extended by linearity (II, §6). If $D$ is a divisor on $Y$ then
+$f^*(\mathscr{L}(D))\cong\mathscr{L}(f^*D)$ (II, Ex. 6.8), so $f^*$ on divisors is compatible with $f^*$ on
+invertible sheaves, $\operatorname{Pic}Y\to\operatorname{Pic}X$.
+</p>
+
+<h2>2. The exact sequence of differentials</h2>
+
+<p>
+A morphism $f:X\to Y$ is <b>separable</b> if $K(X)$ is a separable field extension of $K(Y)$.
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 2.1</span> Let $f:X\to Y$ be a finite separable morphism of curves. Then
+there is an exact sequence on $X$,
+$$0\to f^*\Omega_Y\to\Omega_X\to\Omega_{X/Y}\to0.$$</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>The sequence is already available from (II, 8.11), except that the left-hand end need not be zero, so it
+suffices to prove that $f^*\Omega_Y\to\Omega_X$ is injective. Both are invertible sheaves on $X$, so it is
+enough to show the map is nonzero at the generic point. But $K(X)$ is separable over $K(Y)$, so
+$\Omega_{X/Y}$ vanishes at the generic point of $X$ (II, 8.6A), whence $f^*\Omega_Y\to\Omega_X$ is surjective
+there, and in particular nonzero. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — why checking the generic point is enough</span>
+For a map between invertible sheaves, if it is nonzero somewhere then by integrality it is nonzero at the
+generic point; and invertible sheaves are torsion free, so a map that is nonzero at the generic point is
+injective everywhere. This is the standard device on a curve for reducing a global question to a question at
+the generic point, and it depends on the assumption that $X$ is integral.</p>
+</div>
+
+<p>
+$\Omega_Y$ and $\Omega_X$ correspond to the canonical divisors of $Y$ and $X$, so the sheaf of relative
+differentials $\Omega_{X/Y}$ measures exactly the difference between them. Let us study this sheaf. For a
+point $P\in X$ with $Q=f(P)$, take $t$ a local parameter at $Q$ and $u$ a local parameter at $P$. Then $dt$
+generates the free $\mathcal{O}_Q$-module $\Omega_{Y,Q}$, and $du$ generates the free $\mathcal{O}_P$-module
+$\Omega_{X,P}$ (II, 8.7) and (II, 8.8). Hence there is a unique $g\in\mathcal{O}_P$ with
+$$f^*dt=g\cdot du,$$
+and this element is written $dt/du$.
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 2.2</span> Let $f:X\to Y$ be a finite separable morphism of curves. Then</p>
+<p>(a) $\Omega_{X/Y}$ is a torsion sheaf on $X$ whose support is the set of ramification points of $f$; in
+particular $f$ is ramified at only finitely many points;</p>
+<p>(b) for each $P\in X$ the stalk $(\Omega_{X/Y})_P$ is a principal $\mathcal{O}_P$-module of finite length,
+equal to $v_P(dt/du)$;</p>
+<p>(c) if $f$ is tamely ramified at $P$ then $\operatorname{length}(\Omega_{X/Y})_P=e_P-1$; if the
+ramification is wild then the length is greater than $e_P-1$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>(a) By (2.1) both $f^*\Omega_Y$ and $\Omega_X$ are invertible sheaves on $X$, so the quotient is a torsion
+sheaf. And $(\Omega_{X/Y})_P=0$ if and only if $f^*dt$ generates $\Omega_{X,P}$, which happens if and only if
+$t$ is a local parameter of $\mathcal{O}_P$, that is, if and only if $f$ is unramified at $P$.</p>
+
+<p>(b) The exact sequence of (2.1) gives
+$(\Omega_{X/Y})_P\cong\Omega_{X,P}/f^*\Omega_{Y,Q}$, which as an $\mathcal{O}_P$-module is isomorphic to
+$\mathcal{O}_P/(dt/du)$.</p>
+
+<p>(c) Let $e=e_P$ be the ramification index, so that $t=au^e$ with $a\in\mathcal{O}_P$ a unit.
+Differentiating,
+$$dt=aeu^{e-1}du+u^e\,da.$$
+If the ramification is tame then $e$ is nonzero in $k$, so the first term has valuation $e-1$ while the
+second has valuation at least $e$, whence $v_P(dt/du)=e-1$. Otherwise $e$ is zero in $k$, the first term
+vanishes, and $v_P(dt/du)\geq e$. $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — where wild ramification comes from</span>
+When the characteristic $p$ divides $e$, the derivative $eu^{e-1}$ of $u^e$ becomes zero: the differential
+cannot “see” that part of the ramification, and the length only goes up. This is why wild ramification
+degrades Hurwitz's formula into an inequality. In characteristic $0$ the situation does not arise and all
+ramification is tame.</p>
+</div>
+
+<h2>3. The ramification divisor and the comparison of canonical divisors</h2>
+
+<div class="stmt">
+<p><span class="lbl">Definition</span> Let $f:X\to Y$ be a finite separable morphism of curves. The
+<b>ramification divisor</b> of $f$ is
+$$R=\sum_{P\in X}\operatorname{length}(\Omega_{X/Y})_P\cdot P.$$
+By (2.2)(a) this is a finite sum, so it really is a divisor; by (2.2)(c), in the tame case its coefficients
+are $e_P-1$.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 2.3</span> Let $f:X\to Y$ be a finite separable morphism of curves, and let
+$K_X$ and $K_Y$ be canonical divisors of $X$ and $Y$. Then
+$$K_X\sim f^*K_Y+R.$$</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>Regard $R$ as a closed subscheme of $X$; by (2.2) its structure sheaf $\mathcal{O}_R$ is isomorphic to
+$\Omega_{X/Y}$. Tensoring the exact sequence of (2.1) by $\Omega_X^{-1}$ gives
+$$0\to f^*\Omega_Y\otimes\Omega_X^{-1}\to\mathcal{O}_X\to\mathcal{O}_R\to0.$$
+The ideal sheaf of $R$ is isomorphic to $\mathscr{L}(-R)$ (II, 6.18), so
+$$f^*\Omega_Y\otimes\Omega_X^{-1}\cong\mathscr{L}(-R).$$
+Passing to the corresponding divisors gives the result. Alternatively, one can prove the proposition by
+applying the $\det$ operation of (II, Ex. 6.11) to the exact sequence of (2.1). $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — what the formula says</span>
+Read it as $K_X-f^*K_Y=R$: the difference between the canonical divisors of the two curves is contributed
+entirely by ramification. If $f$ is unramified everywhere then $K_X=f^*K_Y$ and pulling back differential
+forms creates no extra zeros; at each ramification point the pulled-back differential acquires extra zeros,
+of exactly the order given by the coefficient of $R$. The computation $dt=aeu^{e-1}du$ in (2.2)(c) displays
+this directly: after pullback there is an extra factor $u^{e-1}$.</p>
+</div>
+
+<h2>4. Hurwitz's theorem</h2>
+
+<div class="stmt">
+<p><span class="lbl">Corollary 2.4 (Hurwitz)</span> Let $f:X\to Y$ be a finite separable morphism of curves
+and $n=\deg f$. Then
+$$2g(X)-2=n\cdot\big(2g(Y)-2\big)+\deg R.$$
+Moreover, if $f$ has only tame ramification, then
+$$\deg R=\sum_{P\in X}(e_P-1).$$</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>Take degrees in (2.3). The degree of a canonical divisor is $2g-2$ (1.3.3); $f^*$ multiplies degrees by
+$n$ (II, 6.9); and in the tame case the degree of $R$ is $\sum(e_P-1)$ by (2.2). $\blacksquare$</p>
+
+<div class="remark">
+<p><span class="lbl">Remark — the three inputs</span>
+The formula splices together three things: $\deg K=2g-2$ comes from Riemann–Roch in §1; $\deg f^*D=n\deg D$
+comes from the fact that a fibre has $n$ points counted with multiplicity; $\deg R=\sum(e_P-1)$ comes from
+the local computation with differentials. So Hurwitz is the composite of §1 with the local analysis of this
+section. In complex geometry it is the Riemann–Hurwitz formula, and is the same statement as the behaviour of
+the Euler characteristic of a compact surface under a covering, $\chi(X)=n\chi(Y)-\sum(e_P-1)$, bearing in
+mind that $\chi=2-2g$.</p>
+</div>
+
+<h2>5. Frobenius and the purely inseparable case</h2>
+
+<p>
+Everything above assumed separability. To complete the picture of finite morphisms we must handle the purely
+inseparable case, and for that we first define the Frobenius morphism.
+</p>
+
+<div class="stmt">
+<p><span class="lbl">Definition</span> Let $X$ be a scheme all of whose local rings have characteristic $p$
+(that is, contain $\mathbb{Z}/p$). The <b>Frobenius morphism</b> $F:X\to X$ is defined as follows: on the
+topological space $F$ is the identity map, and $F^{\#}:\mathcal{O}_X\to\mathcal{O}_X$ is the $p$-th power
+map. Since the local rings have characteristic $p$, $F^{\#}$ induces a local homomorphism on each local
+ring, so $F$ is indeed a morphism.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Remark 2.4.1</span> If $\pi:X\to\operatorname{Spec}k$ is a scheme over a field $k$ of
+characteristic $p$, then $F:X\to X$ is not $k$-linear; rather it commutes with the Frobenius of
+$\operatorname{Spec}k$, that is, with the $p$-th power map of $k$. To obtain a $k$-linear version, define a
+new scheme $X_p$ to be the same $X$ but with structure morphism $F\circ\pi$, so that $k$ acts on
+$\mathcal{O}_{X_p}$ through $p$-th powers. Then $F$ becomes a $k$-linear morphism $F':X_p\to X$, called the
+<b>$k$-linear Frobenius morphism</b>.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 2.4.2</span> $X_p$ need not be isomorphic to $X$ as a $k$-scheme, but for
+$X=\operatorname{Spec}k[t]$ with $k$ perfect they are isomorphic, because the $p$-th power map $k\to k$ is a
+bijection. Under this identification $F':X\to X$ corresponds to the ring homomorphism $k[t]\to k[t]$,
+$t\mapsto t^p$.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 2.4.3</span> If $X$ is a curve over an algebraically closed field $k$ of
+characteristic $p$, then $F':X_p\to X$ is a finite morphism of degree $p$, corresponding to the field
+extension $K\hookrightarrow K^{1/p}$, where $K$ is the function field of $X$.</p>
+</div>
+
+<div class="stmt">
+<p><span class="lbl">Proposition 2.5</span> Let $f:X\to Y$ be a finite morphism of curves with $K(X)$ a
+purely inseparable extension of $K(Y)$. Then $X$ and $Y$ are isomorphic as abstract schemes, and $f$ is a
+composite of $k$-linear Frobenius morphisms. In particular $g(X)=g(Y)$.</p>
+</div>
+
+<div class="proof-line">Proof</div>
+<p>Let $\deg f=p^r$; then $K(X)^{p^r}\subseteq K(Y)$, that is $K(X)\subseteq K(Y)^{1/p^r}$. On the other hand
+consider the composite of $k$-linear Frobenius morphisms
+$$Y_{p^r}\to Y_{p^{r-1}}\to\cdots\to Y_p\to Y,$$
+a morphism $f':Y_{p^r}\to Y$ of degree $p^r$. Since $K(X)\subseteq K(Y)^{1/p^r}$ and both have the same
+degree over $K(Y)$, we get $K(X)=K(Y)^{1/p^r}$. A curve is determined by its function field (I, 6.12), so
+$X\cong Y_{p^r}$ and $f=f'$. Hence $X$ and $Y$ are isomorphic as abstract schemes, and the genus does not
+depend on the $k$-structure, so it is the same. $\blacksquare$</p>
+
+<div class="stmt example">
+<p><span class="lbl">Example 2.5.1</span> If $X=Y_p$ and $f$ is the $k$-linear Frobenius, then $f$ is
+ramified everywhere with all ramification indices equal to $p$. Indeed $f$ is the identity on points and the
+$p$-th power map on the structure sheaf, so a local parameter $t$ pulls back to $t^p$. And $d(t^p)=0$, so
+$f^*\Omega_Y\to\Omega_X$ is the zero map and $\Omega_{X/Y}\cong\Omega_X$. This does not contradict the
+separability hypothesis of (2.1); on the contrary, it shows exactly how that exact sequence fails in the
+purely inseparable case.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 2.5.2</span> If $f:X\to Y$ is separable, then the degree of the ramification
+divisor $R$ is always even, as one sees directly from the formula (2.4), since every other term there is
+even.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 2.5.3</span> An <b>étale covering</b> of a scheme $Y$ is a scheme $X$ together
+with a finite étale morphism $f:X\to Y$; the covering is <b>trivial</b> if $X$ is isomorphic to a disjoint
+union of finitely many copies of $Y$, and $Y$ is <b>simply connected</b> if it has no nontrivial étale
+covering.</p>
+<p>We now show $\mathbb{P}^1$ is simply connected. Let $f:X\to\mathbb{P}^1$ be an étale covering; we may
+assume $X$ connected. Since $f$ is étale, $X$ is smooth over $k$ (III, 10.1); since $f$ is finite, $X$ is
+proper over $k$; so $X$ is a curve (connected plus regular implies irreducible). Étale implies separable, so
+Hurwitz's theorem applies. Being unramified gives $R=0$, hence
+$$2g(X)-2=n\cdot(-2).$$
+Since $g(X)\geq0$, the only possibility is $g(X)=0$ and $n=1$, so $X=\mathbb{P}^1$.</p>
+</div>
+
+<div class="remark">
+<p><span class="lbl">Remark — the shape of this argument</span>
+The left-hand side satisfies $2g(X)-2\geq-2$ and the right-hand side satisfies $-2n\leq-2$; squeezing the two
+forces $n=1$. Most conclusions of the form “every covering is trivial” are read off from the sign constraints
+in Hurwitz's formula this way: when $g(Y)=0$ the right-hand side plunges as $n$ grows, while the left-hand
+side is bounded below, so $n$ cannot be large.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 2.5.4</span> If $f:X\to Y$ is any finite morphism of curves, then
+$g(X)\geq g(Y)$. Decompose the field extension $K(Y)\subseteq K(X)$ into a separable extension followed by a
+purely inseparable one; by (2.5) the purely inseparable part does not change the genus, so we may assume $f$
+separable. If $g(Y)=0$ there is nothing to prove, so assume $g(Y)\geq1$ and rewrite (2.4) as
+$$g(X)=g(Y)+(n-1)\big(g(Y)-1\big)+\tfrac12\deg R.$$
+The claim follows from $n-1\geq0$, $g(Y)-1\geq0$ and $\deg R\geq0$. Incidentally, in the separable case
+equality holds only when $n=1$, or when $g(Y)=1$ and $f$ is unramified.</p>
+</div>
+
+<div class="stmt example">
+<p><span class="lbl">Example 2.5.5 (Lüroth's theorem)</span> If $L$ is a subfield of the purely transcendental
+extension $k(t)$ containing $k$, then $L$ is also purely transcendental. We may assume $L\neq k$, so $L$ has
+transcendence degree $1$ over $k$ and is therefore the function field of some curve $Y$, and the inclusion
+$L\subseteq k(t)$ corresponds to a finite morphism $f:\mathbb{P}^1\to Y$. By (2.5.4) we get $g(Y)=0$, and by
+(1.3.5) $Y\cong\mathbb{P}^1$, so $L\cong k(u)$.</p>
+</div>
+
+<div class="remark">
+<p><span class="lbl">Remark</span>
+This proof only works over an algebraically closed $k$, but the theorem holds over any field. The analogous
+statement in dimension $2$ over an algebraically closed field is also true (V, 6.2.1); in dimension $3$ it
+fails, since there are unirational threefolds that are not rational — see the work of Clemens–Griffiths and
+of Iskovskih–Manin.</p>
+</div>
+
+<h2>6. Summary of this section</h2>
+
+<p>
+The ramification index $e_P=v_P(t)$ measures the local winding number, and fibres satisfy
+$\sum e_P=\deg f$. In the separable case there is an exact sequence
+$0\to f^*\Omega_Y\to\Omega_X\to\Omega_{X/Y}\to0$, whose quotient is a torsion sheaf supported on the
+ramification points, of local length $e_P-1$ in the tame case and larger in the wild case. This yields the
+comparison of canonical divisors $K_X\sim f^*K_Y+R$, and taking degrees gives Hurwitz's formula
+$$2g(X)-2=n\big(2g(Y)-2\big)+\deg R.$$
+</p>
+
+<p>
+The purely inseparable case is completely described by Frobenius, and there the genus is unchanged. The
+typical use of Hurwitz's formula is to read a conclusion off its sign constraints: the simple connectedness
+of $\mathbb{P}^1$, the fact that a finite morphism cannot lower the genus, and Lüroth's theorem are all
+obtained this way.
+</p>
+
+<p>
+Later, §3 uses it to prove that the only strange curves are lines and conics in characteristic $2$ (3.9),
+and §4 uses it to show that a double cover of $\mathbb{P}^1$ by an elliptic curve has exactly four branch
+points, which is what makes the $\lambda$ and $j$ invariants possible.
+</p>
+
+<h2>Appendix: external results cited in this section</h2>
+
+<dl class="refs">
+<dt>(II, §6)</dt>
+<dd>The chapter on divisors. The definition of the degree of a finite morphism as the degree of the function
+field extension, and the definition of $f^*:\operatorname{Div}Y\to\operatorname{Div}X$, are both here.</dd>
+
+<dt>(II, 6.9)</dt>
+<dd>$f^*$ multiplies the degree of a divisor by $\deg f$, that is $\deg f^*D=n\deg D$. This is the source of
+the factor $n$ on the right-hand side of Hurwitz's formula; geometrically, it is the statement that a fibre
+has $n$ points counted with multiplicity.</dd>
+
+<dt>(II, 6.18)</dt>
+<dd>The ideal sheaf of the closed subscheme corresponding to an effective divisor $R$ is $\mathscr{L}(-R)$.
+The last step of Proposition 2.3 uses it to translate an isomorphism of sheaves into a relation between
+divisors.</dd>
+
+<dt>(II, Ex. 6.8)</dt>
+<dd>$f^*(\mathscr{L}(D))\cong\mathscr{L}(f^*D)$: pullback of divisors is compatible with pullback of
+invertible sheaves.</dd>
+
+<dt>(II, Ex. 6.11)</dt>
+<dd>The $\det$ operation on locally free sheaves, that is, taking the top exterior power to get an invertible
+sheaf. Proposition 2.3 can be proved alternatively by taking determinants of the exact sequence.</dd>
+
+<dt>(II, §8)</dt>
+<dd>The chapter on differentials: the definition and basic properties of the sheaf of relative differentials
+$\Omega_{X/Y}$.</dd>
+
+<dt>(II, 8.6A)</dt>
+<dd>The relative differentials of a separable field extension vanish. Proposition 2.1 uses this to show
+$\Omega_{X/Y}$ vanishes at the generic point.</dd>
+
+<dt>(II, 8.7), (II, 8.8)</dt>
+<dd>On a nonsingular curve $\Omega_X$ is an invertible sheaf, freely generated at a point $P$ by $du$ where
+$u$ is a local parameter. This is what makes $dt/du$ well defined.</dd>
+
+<dt>(II, 8.11)</dt>
+<dd>The exact sequence of relative differentials of a morphism,
+$f^*\Omega_Y\to\Omega_X\to\Omega_{X/Y}\to0$, exact on the right but not necessarily on the left.
+Proposition 2.1 supplies the zero on the left.</dd>
+
+<dt>(I, 6.12)</dt>
+<dd>A complete nonsingular curve is determined by its function field; birational equivalence is isomorphism.
+Proposition 2.5 uses it to deduce $X\cong Y_{p^r}$ from $K(X)=K(Y)^{1/p^r}$.</dd>
+
+<dt>(III, 9.7)</dt>
+<dd>A finite morphism between curves is flat. This is what makes unramified imply étale.</dd>
+
+<dt>(III, 10.1)</dt>
+<dd>Étale morphisms preserve smoothness. Example 2.5.3 uses it to show that the total space of an étale
+covering is smooth.</dd>
+
+<dt>(III, Ex. 10.3)</dt>
+<dd>The general definition of unramified. The condition $e_P=1$ used here agrees with it, because $k$
+algebraically closed makes the residue field extension trivial.</dd>
+
+<dt>Within this chapter</dt>
+<dd>(1.3.3) gives $\deg K=2g-2$, the source of both sides of Hurwitz's formula; (1.3.5) gives “genus $0$
+means $\mathbb{P}^1$”, used in the last step of Lüroth's theorem; the curves of type $(g+1,2)$ constructed in
+(1.1.1) provide the hyperelliptic examples of Exercise 1.7(b) in §1, and their double covers of
+$\mathbb{P}^1$ are exactly the objects studied in this section.</dd>
+</dl>
+
+<footer>Hurwitz's theorem · Hartshorne IV.2 · undergraduate reading seminar</footer>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ],
+      throwOnError: false
+    });
+  });
+</script>
+</body>
+</html>
